@@ -1,0 +1,8 @@
+node_modules/*
+.next
+dist
+.changeset
+generated
+*.md
+pnpm-lock.yaml
+.tsup

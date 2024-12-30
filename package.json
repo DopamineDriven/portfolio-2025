@@ -1,0 +1,51 @@
+{
+  "name": "@portfolio/root",
+  "license": "MIT",
+  "private": true,
+  "packageManager": "pnpm@9.15.2+sha512.93e57b0126f0df74ce6bff29680394c0ba54ec47246b9cf321f0121d8d9bb03f750a705f24edc3c1180853afd7c2c3b94196d0a3d53d3e069d9e2793ef11f321",
+  "scripts": {
+    "build:web": "turbo build --filter=@portfolio/web",
+    "changeset": "changeset",
+    "clean": "git clean -xdf node_modules",
+    "dev": "turbo dev --parallel --continue",
+    "format": "prettier --write \"**/*.{ts,tsx,cts,mts,js,jsx,mjs,cjs,json,yaml,yml,css,html,md,mdx}\" --ignore-unknown --cache",
+    "lint": "turbo lint",
+    "prepare": "husky",
+    "typecheck": "turbo typecheck",
+    "clean:test": "git clean -xdf -e **/*{node_modules,.next,dist} && pnpm latest:pnpm",
+    "clean:house": "cd tooling/eslint && git clean -xdf node_modules .turbo && cd ../prettier && git clean -xdf node_modules .turbo && cd ../typescript && git clean -xdf .turbo node_modules && cd ../jest-presets && git clean -xdf node_modules .turbo && cd ../.. && git clean -xdf node_modules pnpm-lock.yaml && pnpm install",
+    "generate:base64": "openssl rand -base64 64",
+    "generate:hex": "openssl rand -hex 64",
+    "npm:registry": "npm set registry https://registry.npmjs.org",
+    "run:web": "turbo dev --filter=@portfolio/web",
+    "sync:time": "sudo ntpdate time.windows.com",
+    "latest:pnpm": "corepack use pnpm@latest",
+    "update:pnpm": "curl -fsSL https://get.pnpm.io/install.sh | sh -"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.11",
+    "@portfolio/eslint-config": "workspace:*",
+    "@portfolio/prettier-config": "workspace:*",
+    "@portfolio/tsconfig": "workspace:*",
+    "@d0paminedriven/turbogen": "^0.6.0",
+    "@total-typescript/ts-reset": "^0.6.1",
+    "@types/node": "^22.10.2",
+    "dotenv": "^16.4.7",
+    "dotenv-cli": "^8.0.0",
+    "dotenv-expand": "^12.0.1",
+    "eslint": "latest",
+    "husky": "^9.1.7",
+    "jiti": "^2.4.2",
+    "prettier": "latest",
+    "tsx": "latest",
+    "turbo": "latest",
+    "typescript": "latest",
+    "vercel": "latest"
+  },
+  "prettier": "@portfolio/prettier-config",
+  "engines": {
+    "node": ">=22",
+    "npm": ">=10",
+    "pnpm": ">=9"
+  }
+}

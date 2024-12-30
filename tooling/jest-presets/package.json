@@ -1,0 +1,27 @@
+{
+  "name": "@portfolio/jest-presets",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "files": [
+    "browser/jest-preset.js",
+    "node/jest-preset.js"
+  ],
+  "scripts": {
+    "clean": "git clean -xdf node_modules"
+  },
+  "peerDependencies": {
+    "jest": "latest"
+  },
+  "dependencies": {
+    "ts-jest": "latest"
+  },
+  "devDependencies": {
+    "@portfolio/prettier-config": "workspace:*",
+    "@portfolio/tsconfig": "workspace:*",
+    "jest-environment-jsdom": "latest",
+    "prettier": "latest",
+    "typescript": "latest"
+  },
+  "prettier": "@portfolio/prettier-config"
+}

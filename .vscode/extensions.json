@@ -1,0 +1,24 @@
+{
+  "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "dbaeumer.vscode-eslint",
+    "donjayamanne.githistory",
+    "eamodio.gitlens",
+    "editorconfig.editorconfig",
+    "esbenp.prettier-vscode",
+    "ghmcadams.lintlens",
+    "hilleer.yaml-plus-json",
+    "ipatalas.vscode-postfix-ts",
+    "meganrogge.template-string-converter",
+    "ms-vscode.vscode-typescript-next",
+    "pascalreitermann93.vscode-yaml-sort",
+    "pflannery.vscode-versionlens",
+    "redhat.vscode-yaml",
+    "rvest.vs-code-prettier-eslint",
+    "visualstudioexptteam.intellicode-api-usage-examples",
+    "visualstudioexptteam.vscodeintellicode",
+    "xshrim.txt-syntax",
+    "yoavbls.pretty-ts-errors"
+  ],
+  "unwantedRecommendations": []
+}

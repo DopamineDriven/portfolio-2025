@@ -1,0 +1,68 @@
+{
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[postcss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "C_Cpp.dimInactiveRegions": false,
+  "css.completion.completePropertyWithSemicolon": true,
+  "css.format.enable": true,
+  "css.format.newlineBetweenSelectors": true,
+  "css.hover.documentation": true,
+  "css.hover.references": true,
+  "editor.bracketPairColorization.enabled": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.suggest.showStatusBar": true,
+  "eslint.enable": true,
+  "eslint.useFlatConfig": true,
+  "eslint.rules.customizations": [
+    {
+      "rule": "*",
+      "severity": "warn"
+    }
+  ],
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    },
+    {
+      "pattern": "apps/*/"
+    },
+    {
+      "pattern": "packages/*/"
+    },
+    {
+      "pattern": "tooling/*/"
+    }
+  ],
+  "files.autoSave": "afterDelay",
+  "javascript.referencesCodeLens.showOnAllFunctions": true,
+  "openInDefaultBrowser.run.openWithLocalHttpServer": false,
+  "tailwindCSS.classAttributes": [
+    "class",
+    "className",
+    "classNames",
+    "ngClass",
+    "rootClassName",
+    ".*Variant.*",
+    ".*variant.*",
+    ".*Styles.*"
+  ],
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.tsserver.web.typeAcquisition.enabled": true,
+  "typescript.implementationsCodeLens.enabled": true,
+  "typescript.implementationsCodeLens.showOnInterfaceMethods": true,
+  "typescript.locale": "en",
+  "typescript.referencesCodeLens.enabled": true,
+  "typescript.referencesCodeLens.showOnAllFunctions": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "yaml.hover": true,
+  "yaml.validate": true
+}

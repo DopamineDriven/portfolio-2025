@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "alwaysStrict": true,
+    "module": "Node16",
+    "moduleResolution": "NodeNext",
+    "target": "ESNext",
+    "incremental": false,
+    "sourceMap": true,
+    "useDefineForClassFields": true,
+    "disableSourceOfProjectReferenceRedirect": false,
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "declarationMap": true,
+    "importHelpers": false,
+    "baseUrl": "./",
+    "noEmit": true
+  }
+}
