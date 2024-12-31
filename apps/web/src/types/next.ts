@@ -1,4 +1,5 @@
 import type { Unenumerate } from "@/types/helpers";
+
 /**
  * RT->ReturnType
  *
@@ -26,7 +27,8 @@ export type InferIt<T, V extends "RT" | "P" | "B"> = T extends (
   export default async function DynamicPage({
     params
   }: InferGSPRT<typeof generateStaticParams>) {
-    // your code here
+    const yourParamsBoundIdentifier = await params;
+    // rest...
   }
   ```
 */
