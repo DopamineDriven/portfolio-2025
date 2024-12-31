@@ -1,29 +1,15 @@
-import type { NextConfig } from "next";
 import createMDX from "@next/mdx";
-import rehypeShiki from "@shikijs/rehype";
-import type { RehypeShikiOptions } from "@shikijs/rehype";
 
-const withMDX = createMDX({
-  options: {
-    remarkPlugins: [],
-    rehypePlugins: [
-      [
-        rehypeShiki,
-        {
-          theme: "dark-plus",
-          langs: ["typescript", "tsx"]
-        } satisfies RehypeShikiOptions
-      ]
-    ]
-  }
-});
+const withMDX = createMDX();
 
-export default withMDX({
-  reactStrictMode: true,
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   eslint: { ignoreDuringBuilds: false },
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+  experimental: {
+    mdxRs: true
+  },
   typescript: { ignoreBuildErrors: false, tsconfigPath: "./tsconfig.json" },
-  // serverExternalPackages: ["@shikijs/twoslash"],
   images: {
     loader: "default",
     formats: ["image/avif", "image/webp"],
@@ -34,9 +20,15 @@ export default withMDX({
         port: "3008",
         protocol: "http"
       },
+      {
+        protocol: "https",
+        hostname: "**.vercel-storage.com"
+      },
+      { hostname: "api.dicebear.com", protocol: "https" },
       { hostname: "images.unsplash.com", protocol: "https" },
       { hostname: "tailwindui.com", protocol: "https" }
     ]
-  },
-  productionBrowserSourceMaps: true
-} satisfies NextConfig);
+  }
+};
+
+export default withMDX(nextConfig);

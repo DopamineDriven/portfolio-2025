@@ -1,16 +1,20 @@
 "use client";
 
-import type { ComponentPropsWithoutRef, ComponentProps, ElementRef } from "react";
-import { forwardRef } from "react";
+import type { ComponentProps, FC } from "react";
 import Image from "next/image";
 import { motion } from "motion/react";
 import { shimmer } from "@/lib/shimmer";
 import { cn } from "@/lib/utils";
 
-const ImageScaffolder = forwardRef<
-  ElementRef<typeof Image>,
-  ComponentPropsWithoutRef<typeof Image>
->(({ src, alt, width = 176, height = 264, className, ...rest }, ref) => {
+const ImageScaffolder: FC<ComponentProps<typeof Image>> = ({
+  src,
+  alt,
+  width = 176,
+  height = 264,
+  className,
+  ref,
+  ...rest
+}) => {
   return (
     <motion.div
       className="relative"
@@ -42,7 +46,7 @@ const ImageScaffolder = forwardRef<
       <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-zinc-900/10" />
     </motion.div>
   );
-});
+};
 
 ImageScaffolder.displayName = "ImageScaffolder";
 
