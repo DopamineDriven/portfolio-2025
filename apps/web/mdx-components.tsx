@@ -1,6 +1,7 @@
 import type { MDXComponents } from "mdx/types";
+import type { ImageProps } from "next/image";
+import Image from "next/image";
 import { CodeBlock } from "./src/components/CodeBlock";
-import Image, { type ImageProps } from 'next/image'
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -8,12 +9,12 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     pre: ({ children, ...props }: React.ComponentPropsWithoutRef<"pre">) => {
       return <CodeBlock {...props}>{children}</CodeBlock>;
     },
-    img: (props) => (
+    img: props => (
       <Image
         sizes="100vw"
-        style={{ width: '100%', height: 'auto' }}
+        style={{ width: "100%", height: "auto" }}
         {...(props as ImageProps)}
       />
-    ),
+    )
   };
 }
