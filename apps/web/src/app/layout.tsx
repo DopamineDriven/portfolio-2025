@@ -54,7 +54,7 @@ export default function RootLayout({
           disableTransitionOnChange>
           <LoadingAnimation />
           <Navbar />
-          <div className="transition-colors flex min-h-screen flex-col">
+          <div className="transition-colors duration-300 flex min-h-screen flex-col">
             <main className="transition-colors container mx-auto flex-grow px-4 py-8">
               {children}
             </main>
