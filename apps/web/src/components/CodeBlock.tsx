@@ -1,29 +1,31 @@
 "use client";
-import React from 'react'
-import { CopyButton } from './CopyButton'
+
+import React from "react";
+import { cn } from "@/lib/utils";
+import { CopyButton } from "./CopyButton";
 
 interface CodeBlockProps {
-  children: React.ReactNode
-  className?: string
+  children: React.ReactNode;
+  className?: string;
 }
 
 export function CodeBlock({ children, className }: CodeBlockProps) {
-  const codeRef = React.useRef<HTMLPreElement>(null)
+  const codeRef = React.useRef<HTMLPreElement>(null);
 
   const getCode = () => {
     if (codeRef.current) {
-      return codeRef.current.textContent ?? ''
+      const codeElement = codeRef.current.querySelector("code");
+      return codeElement ? codeElement.innerText : "";
     }
-    return ''
-  }
+    return "";
+  };
 
   return (
     <div className="relative">
-      <pre ref={codeRef} className={`${className} overflow-x-auto p-4`}>
+      <pre ref={codeRef} className={cn(className, `overflow-x-auto`)}>
         <CopyButton getCodeAction={getCode} />
         {children}
       </pre>
     </div>
-  )
+  );
 }
-

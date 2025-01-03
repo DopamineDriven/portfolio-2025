@@ -88,19 +88,32 @@ body {
 }
 
 pre {
-  @apply p-4 rounded-lg overflow-x-auto;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
 }
 
 pre > code {
-  @apply grid;
+  display: grid;
+  counter-reset: line;
+}
+
+pre > code > .line::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 1rem;
+  margin-right: 1rem;
+  text-align: right;
+  color: #6b7280;
 }
 
 .highlighted {
-  @apply bg-yellow-500 bg-opacity-25 border-l-4 border-yellow-500 -ml-4 pl-3;
+  @apply -ml-4 border-l-4 border-yellow-500 bg-yellow-500 bg-opacity-25 pl-3;
 }
 
 .word {
-  @apply bg-yellow-500 bg-opacity-50 rounded p-1;
+  @apply rounded bg-yellow-500 bg-opacity-50 p-1;
 }
 
 .prose {
@@ -108,40 +121,47 @@ pre > code {
 }
 
 .prose pre {
-  @apply bg-gray-800 text-white relative;
+  @apply relative bg-gray-800 text-white;
 }
 
 .prose code {
-  @apply text-white bg-transparent p-0;
+  @apply bg-transparent p-0 text-white;
 }
 
 .prose a {
   @apply text-blue-500 hover:underline;
 }
 
-.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
   @apply text-gray-900 dark:text-white;
 }
 
-.prose p, .prose ul, .prose ol {
+.prose p,
+.prose ul,
+.prose ol {
   @apply text-gray-700 dark:text-gray-300;
 }
 
 /* Syntax highlighting */
 code[class*="language-"],
 pre[class*="language-"] {
-  @apply text-gray-100;
+  color: #f3f4f6;
 }
 
 .token.comment,
 .token.prolog,
 .token.doctype,
 .token.cdata {
-  @apply text-gray-400;
+  color: #9ca3af;
 }
 
 .token.punctuation {
-  @apply text-gray-300;
+  color: #d1d5db;
 }
 
 .token.property,
@@ -151,7 +171,7 @@ pre[class*="language-"] {
 .token.constant,
 .token.symbol,
 .token.deleted {
-  @apply text-green-400;
+  color: #4ade80;
 }
 
 .token.selector,
@@ -160,7 +180,7 @@ pre[class*="language-"] {
 .token.char,
 .token.builtin,
 .token.inserted {
-  @apply text-purple-400;
+  color: #c084fc;
 }
 
 .token.operator,
@@ -168,23 +188,22 @@ pre[class*="language-"] {
 .token.url,
 .language-css .token.string,
 .style .token.string {
-  @apply text-yellow-300;
+  color: #fde047;
 }
 
 .token.atrule,
 .token.attr-value,
 .token.keyword {
-  @apply text-blue-400;
+  color: #60a5fa;
 }
 
 .token.function,
 .token.class-name {
-  @apply text-pink-400;
+  color: #f472b6;
 }
 
 .token.regex,
 .token.important,
 .token.variable {
-  @apply text-yellow-400;
+  color: #facc15;
 }
-

@@ -2,12 +2,16 @@ import { promises as fs } from "fs";
 import path from "path";
 import type { Options as RehypeOptions } from "rehype-pretty-code";
 import rehypePrettyCode from "rehype-pretty-code";
-import { InferGSPRT } from "@/types/next";
+import type { InferGSPRT } from "@/types/next";
 import { MdxRenderer } from "@/components/MDXHandler";
 
 const options = {
+  grid: true,
+  keepBackground: true,
   theme: "dark-plus",
   onVisitLine(node) {
+    // Prevent lines from collapsing in `display: grid` mode
+    // and allow empty lines to be copy/pasted
     if (node.children.length === 0) {
       node.children = [{ type: "text", value: " " }];
     }
@@ -29,7 +33,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function Post({ params }: InferGSPRT<typeof generateStaticParams>) {
+export default async function Post({
+  params
+}: InferGSPRT<typeof generateStaticParams>) {
   const { slug } = await params;
   const filePath = path.join(process.cwd(), "content", `${slug}.mdx`);
   const source = await fs.readFile(filePath, "utf8");

@@ -2,8 +2,7 @@ import type React from "react";
 
 /* Typed JSON stringify and parse helpers BEGIN */
 
-
-export type UndefinedAsNull<T> = T extends undefined ? null : T
+export type UndefinedAsNull<T> = T extends undefined ? null : T;
 
 export function stringifyJson<
   const T,
@@ -226,3 +225,23 @@ export function omitFields<
 }
 
 /* Helper functions END */
+
+/**
+ * RT->ReturnType
+ *
+ * P->Parameters
+ *
+ * B->Both->{ readonly params: P; readonly returnType: RT; }
+ */
+
+export type InferIt<T, V extends "RT" | "P" | "B"> = T extends (
+  ...args: infer P
+) => infer RT | Promise<infer RT> | PromiseLike<infer RT> | Awaited<infer RT>
+  ? V extends "B"
+    ? { readonly params: P; readonly returnType: RT }
+    : V extends "RT"
+      ? RT
+      : V extends "P"
+        ? P
+        : T
+  : T;
