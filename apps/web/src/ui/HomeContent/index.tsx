@@ -135,9 +135,11 @@ export function HomeContent({ posts }: { posts: Post[] }) {
           <h2 className="theme-transition mb-4 text-2xl font-semibold">
             Key Skills
           </h2>
-          <ul className="grid list-inside list-disc grid-cols-2 gap-2 bg-background/80 text-foreground">
+          <ul className="grid list-inside list-none grid-flow-row bg-background/80 text-foreground">
             {proficiencies.map((proficiency, i) => (
-              <li className="theme-transition" key={`proficiency-${i++}`}>
+              <li
+                className="theme-transition gap-3 rounded-lg bg-primary text-primary-foreground dark:bg-foreground/80 dark:text-background"
+                key={`proficiency-${i++}`}>
                 {proficiency}
               </li>
             ))}
