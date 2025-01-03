@@ -132,18 +132,24 @@ export function HomeContent({ posts }: { posts: Post[] }) {
           </div>
         </section>
         <section>
-          <h2 className="theme-transition mb-4 text-2xl font-semibold">
-            Key Skills
-          </h2>
-          <ul className="theme-transition grid list-inside list-none grid-flow-col bg-background/80 text-foreground sm:grid-cols-3 lg:grid-cols-5">
-            {proficiencies.map((proficiency, i) => (
-              <li
-                className="theme-transition gap-3 rounded-lg bg-primary px-2 py-1 text-center align-middle text-primary-foreground dark:bg-foreground/80 dark:text-background"
-                key={`proficiency-${i++}`}>
-                {proficiency}
-              </li>
-            ))}
-          </ul>
+          <div className="theme-transition bg-current py-24 sm:py-32">
+            <div className="theme-transition mx-auto max-w-7xl px-6 lg:px-8">
+              <h2 className="theme-transition mb-4 text-2xl font-semibold">
+                Key Skills
+              </h2>
+              <ul
+                role="list"
+                className="theme-transition -mx-6 grid list-none grid-cols-2 gap-0.5 overflow-hidden bg-background/80 text-foreground sm:mx-0 sm:rounded-2xl md:grid-cols-3">
+                {proficiencies.map((proficiency, i) => (
+                  <li
+                    className="theme-transition rounded-lg bg-primary p-8 text-center align-middle text-primary-foreground dark:bg-foreground/80 dark:text-background sm:p-10"
+                    key={`proficiency-${i++}`}>
+                    {proficiency}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </section>
       </div>
     </div>
