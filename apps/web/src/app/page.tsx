@@ -35,7 +35,7 @@ export default async function Home() {
             className="transition-bg transition-color block rounded-lg bg-secondary p-4 hover:opacity-90">
             <h3 className="text-lg font-semibold">The Fade Room Inc</h3>
             <p>
-              Modern website for a Highland Park barbershop featuring dark theme
+              Modern website for a Highland Park barbershop featuring customer reviews, a sizable gallery,
               and online booking.
             </p>
           </a>
