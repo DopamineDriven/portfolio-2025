@@ -33,8 +33,8 @@ export const viewport = {
 
 export const metadata = {
   title: {
-    default: "portfolio",
-    template: "%s | portfolio"
+    default: "Portfolio",
+    template: "%s | Portfolio"
   },
   description: "portfolio scaffolded by @d0paminedriven/turbogen"
 } satisfies Metadata;
