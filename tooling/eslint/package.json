@@ -15,7 +15,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@eslint/compat": "^1.1.1",
+    "@eslint/compat": "^1.2.4",
     "@next/eslint-plugin-next": "latest",
     "eslint-config-turbo": "latest",
     "eslint-plugin-import": "^2.31.0",

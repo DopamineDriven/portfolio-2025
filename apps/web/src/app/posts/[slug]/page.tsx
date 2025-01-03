@@ -4,6 +4,7 @@ import type { Options as RehypeOptions } from "rehype-pretty-code";
 import rehypePrettyCode from "rehype-pretty-code";
 import type { InferGSPRT } from "@/types/next";
 import { MdxRenderer } from "@/components/MDXHandler";
+import { transformerMetaWordHighlight } from "@shikijs/transformers";
 
 const options = {
   grid: true,
@@ -21,7 +22,8 @@ const options = {
   },
   onVisitHighlightedChars(node) {
     node.properties.className = ["word"];
-  }
+  },
+  transformers: [transformerMetaWordHighlight()]
 } satisfies RehypeOptions;
 
 export async function generateStaticParams() {
