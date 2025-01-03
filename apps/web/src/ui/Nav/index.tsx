@@ -18,13 +18,13 @@ export function Navbar() {
           <div>
             <button
               onClick={toggleTheme}
-              className="theme-transition rounded-full bg-primary p-2 text-primary-foreground shadow-lg hover:bg-primary/90"
+              className="theme-transition rounded-full bg-primary p-2 text-primary-foreground shadow-lg hover:bg-primary/90 dark:text-foreground"
               disabled={transitioning}
               aria-label="Toggle theme">
               {transitionTheme === "dark" ? (
-                <Sun className="h-5 w-5" />
+                <Sun className="theme-transition h-5 w-5" />
               ) : (
-                <Moon className="h-5 w-5" />
+                <Moon className="theme-transition h-5 w-5" />
               )}
             </button>
           </div>
