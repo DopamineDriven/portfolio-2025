@@ -68,7 +68,7 @@ export default async function Home() {
           ))}
         </div>
         <div className="mt-6">
-          <Link href="/blog" className="text-primary hover:underline">
+          <Link href="/posts" className="text-primary hover:underline">
             View all blog posts →
           </Link>
         </div>
