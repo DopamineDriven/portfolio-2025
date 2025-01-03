@@ -24,9 +24,8 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
-    --foreground-rgb: 0, 0, 0;
-    --background-start-rgb: 214, 219, 220;
-    --background-end-rgb: 255, 255, 255;
+    --theme-transition-duration: 0.5s;
+    --loading-animation-duration: 2s;
   }
 
   .dark {
@@ -49,9 +48,6 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 224.3 76.3% 48%;
-    --foreground-rgb: 0, 0, 0;
-    --background-start-rgb: 214, 219, 220;
-    --background-end-rgb: 255, 255, 255;
   }
 }
 
@@ -61,13 +57,6 @@
   box-sizing: border-box;
 }
 
-* {
-  transition-property: color, background-color, border-color,
-    text-decoration-color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 300ms;
-}
-
 input,
 button,
 textarea,
@@ -75,10 +64,28 @@ select {
   font: inherit;
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    transition: background-color var(--theme-transition-duration) ease-in-out,
+                color var(--theme-transition-duration) ease-in-out;
+  }
+}
+
+.theme-transition {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: var(--theme-transition-duration);
+  transition-timing-function: ease-in-out;
+}
+
+@supports not (backdrop-filter: blur(4px)) {
+  .backdrop-blur-sm {
+    background-color: rgba(var(--background), 0.9);
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -89,7 +96,7 @@ body {
 
 pre {
   padding: 1rem;
-  border-radius: 0.5rem;
+  border-radius: var(--radius);
   overflow-x: auto;
 }
 

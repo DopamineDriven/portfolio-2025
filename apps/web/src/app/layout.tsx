@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import React from "react";
 import "./global.css";
-import { Inter, Poppins } from "next/font/google";
-import Footer from "@/ui/Footer";
+import { Poppins as _Poppins, Inter } from "next/font/google";
 import { LoadingAnimation } from "@/ui/LoadingAnimation";
+import { Footer } from "@/ui/Footer";
 import { Navbar } from "@/ui/Nav";
 import { ThemeProvider } from "@/ui/Providers/ThemeProvider";
 
@@ -19,7 +19,7 @@ import { ThemeProvider } from "@/ui/Providers/ThemeProvider";
 // });
 
 const inter = Inter({ subsets: ["latin"] });
-const poppins = Poppins({ weight: ["400", "600", "700"], subsets: ["latin"] });
+// const poppins = Poppins({ weight: ["400", "600", "700"], subsets: ["latin"] });
 
 export const viewport = {
   colorScheme: "normal",
@@ -46,16 +46,12 @@ export default function RootLayout({
 }) {
   return (
     <html suppressHydrationWarning lang="en">
-      <body className={`antialised ${inter.className} ${poppins.className}`}>
-        <ThemeProvider
-          attribute={"class"}
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange>
+      <body className={inter.className}>
+        <ThemeProvider>
           <LoadingAnimation />
-          <Navbar />
-          <div className="flex min-h-screen flex-col transition-colors duration-300">
-            <main className="container mx-auto flex-grow px-4 py-8 transition-colors">
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            <main className="flex-grow theme-transition">
               {children}
             </main>
             <Footer />
