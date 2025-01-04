@@ -19,7 +19,7 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
     <NextThemesProvider
       {...props}
       defaultTheme="system"
-      enableSystem={true}
+      enableSystem
       attribute="class">
       {children}
     </NextThemesProvider>

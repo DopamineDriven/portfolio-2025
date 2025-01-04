@@ -20,6 +20,7 @@
     "next.config.mjs",
     "postcss.config.mjs",
     "tailwind.config.ts",
+    "mdx-components.tsx",
     "src/**/*.tsx",
     "src/**/*.ts",
     ".next/types/**/*.ts",

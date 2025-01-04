@@ -1,11 +1,8 @@
 import type { Config as TailwindConfig } from "tailwindcss";
-import forms from "@tailwindcss/forms";
-import typography from "@tailwindcss/typography";
-import animated from "tailwindcss-animated";
 import { fontFamily } from "tailwindcss/defaultTheme";
 
 export default {
-  content: ["src/**/*.{js,ts,jsx,tsx,md,mdx}"],
+  content: ["src/**/*.{js,ts,jsx,tsx,md,mdx}", "content/**/*.mdx"],
   darkMode: ["selector"],
   future: { hoverOnlyWhenSupported: true },
   theme: {
@@ -84,5 +81,9 @@ export default {
       }
     }
   },
-  plugins: [animated, forms, typography]
+  plugins: [
+    require("tailwindcss-animated"),
+    require("@tailwindcss/forms"),
+    require("@tailwindcss/typography")
+  ]
 } satisfies TailwindConfig;

@@ -10,15 +10,16 @@
     "hilleer.yaml-plus-json",
     "ipatalas.vscode-postfix-ts",
     "meganrogge.template-string-converter",
+    "meouwu.css-var-color-decorator",
     "ms-vscode.vscode-typescript-next",
     "pascalreitermann93.vscode-yaml-sort",
-    "pflannery.vscode-versionlens",
     "redhat.vscode-yaml",
     "rvest.vs-code-prettier-eslint",
     "visualstudioexptteam.intellicode-api-usage-examples",
     "visualstudioexptteam.vscodeintellicode",
     "xshrim.txt-syntax",
-    "yoavbls.pretty-ts-errors"
+    "yoavbls.pretty-ts-errors",
+    "yutengjing.vscode-versionlens-plus"
   ],
   "unwantedRecommendations": []
 }
