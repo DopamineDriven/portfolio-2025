@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 
 export const useThemeTransition = () => {
-  const { theme, setTheme, systemTheme } = useTheme();
+  const { theme, setTheme, systemTheme, resolvedTheme } = useTheme();
   const [transitioning, setTransitioning] = useState(false);
   const [transitionTheme, setTransitionTheme] = useState<string | undefined>(
     undefined
   );
-
+  console.log(`resolved: ${resolvedTheme} \n system: ${systemTheme}`);
   useEffect(() => {
     if (theme === "system") {
       setTransitionTheme(systemTheme);

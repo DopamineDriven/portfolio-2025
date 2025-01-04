@@ -6,7 +6,7 @@ import { fontFamily } from "tailwindcss/defaultTheme";
 
 export default {
   content: ["src/**/*.{js,ts,jsx,tsx,md,mdx}"],
-  darkMode: ["class"],
+  darkMode: ["selector"],
   future: { hoverOnlyWhenSupported: true },
   theme: {
     container: {

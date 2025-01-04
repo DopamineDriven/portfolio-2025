@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import React from "react";
-import "./global.css";
 import { Poppins as _Poppins, Inter } from "next/font/google";
-import { LoadingAnimation } from "@/ui/LoadingAnimation";
 import { Footer } from "@/ui/Footer";
+import { LoadingAnimation } from "@/ui/LoadingAnimation";
 import { Navbar } from "@/ui/Nav";
 import { ThemeProvider } from "@/ui/Providers/ThemeProvider";
+import "./global.css";
 
 /* populate relevant values in src/lib/site-url.ts and uncomment for url injetion */
 // import { getSiteUrl } from "@/lib/site-url";
@@ -47,13 +47,11 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <body className={inter.className}>
-        <ThemeProvider>
+        <ThemeProvider >
           <LoadingAnimation />
-          <div className="flex flex-col min-h-screen">
+          <div className="flex min-h-[100dvh] flex-col">
             <Navbar />
-            <main className="flex-grow theme-transition">
-              {children}
-            </main>
+            <main className="theme-transition flex-grow">{children}</main>
             <Footer />
           </div>
         </ThemeProvider>
