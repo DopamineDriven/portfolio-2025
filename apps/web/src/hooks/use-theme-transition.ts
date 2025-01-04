@@ -12,18 +12,18 @@ export const useThemeTransition = () => {
   console.log(`resolved: ${resolvedTheme} \n system: ${systemTheme}`);
   useEffect(() => {
     if (theme === "system") {
-      setTransitionTheme(systemTheme);
+      setTransitionTheme(resolvedTheme);
     } else {
-      setTransitionTheme(theme);
+      setTransitionTheme(resolvedTheme);
     }
-  }, [theme, systemTheme]);
+  }, [theme, resolvedTheme]);
 
   useEffect(() => {
     if (transitionTheme !== undefined) {
       setTransitioning(true);
       const timer = setTimeout(() => {
         setTransitioning(false);
-      }, 500); // match timeout delay with --theme-transition-duration css variable
+      }, 500); // Match this with the --theme-transition-duration in CSS
       return () => clearTimeout(timer);
     }
   }, [transitionTheme]);
@@ -32,5 +32,5 @@ export const useThemeTransition = () => {
     setTheme(transitionTheme === "dark" ? "light" : "dark");
   };
 
-  return { transitionTheme, transitioning, toggleTheme };
+  return { transitionTheme, transitioning, toggleTheme, resolvedTheme };
 };
