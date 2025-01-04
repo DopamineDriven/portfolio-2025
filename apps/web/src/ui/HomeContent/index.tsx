@@ -38,7 +38,7 @@ export function HomeContent({ posts }: { posts: Post[] }) {
       <div className="theme-transition space-y-12">
         <section>
           <h1 className="theme-transition mb-4 text-4xl font-bold">
-            Welcome to My Portfolio
+            Portfolio 2025
           </h1>
           <p className="theme-transition text-xl">
             I'm Andrew S. Ross, a passionate engineer and tinkerer creating

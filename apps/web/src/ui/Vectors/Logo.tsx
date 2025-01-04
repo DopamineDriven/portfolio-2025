@@ -1,13 +1,15 @@
-import type { FC, SVGProps } from "react";
+import type { FC } from "react";
+import type { TsxExclude } from "@/types/helpers";
 import { cn } from "@/lib/utils";
 
-export const Logo: FC<
-  Omit<SVGProps<SVGSVGElement>, "fill" | "viewBox" | "xmlns">
-> = ({ className, ...svg }) => (
+export const Logo: FC<TsxExclude<"svg", "fill" | "viewBox" | "xmlns">> = ({
+  className,
+  ...svg
+}) => (
   <svg
     viewBox="0 0 65 65"
     fill="none"
-    className={cn("h-9 w-9", className)}
+    className={cn("theme-transition h-9 w-9", className)}
     xmlns="http://www.w3.org/2000/svg"
     {...svg}>
     <circle
