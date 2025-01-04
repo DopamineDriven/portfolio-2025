@@ -1,3 +1,5 @@
+"use clinet";
+
 export function Footer() {
   return (
     <footer className="theme-transition mt-8 bg-primary p-4 text-primary-foreground dark:bg-background/80 dark:text-foreground">

@@ -18,7 +18,7 @@ export function Navbar() {
           <div>
             <button
               onClick={toggleTheme}
-              className="theme-transition rounded-full bg-primary p-2 text-primary-foreground shadow-lg hover:bg-primary/90"
+              className="theme-transition dark:hover:bg-current/90 rounded-full bg-primary p-2 text-primary-foreground shadow-lg hover:bg-primary/90 dark:bg-foreground dark:text-background"
               disabled={transitioning}
               aria-label="Toggle theme">
               {transitionTheme === "dark" ? (
