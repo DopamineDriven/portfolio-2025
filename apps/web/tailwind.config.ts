@@ -1,4 +1,7 @@
 import type { Config as TailwindConfig } from "tailwindcss";
+import formsPlugin from "@tailwindcss/forms";
+import typographyPlugin from "@tailwindcss/typography";
+import * as motionPlugin from "tailwindcss-motion";
 import { fontFamily } from "tailwindcss/defaultTheme";
 
 export default {
@@ -81,9 +84,5 @@ export default {
       }
     }
   },
-  plugins: [
-    require("tailwindcss-animated"),
-    require("@tailwindcss/forms"),
-    require("@tailwindcss/typography")
-  ]
+  plugins: [motionPlugin, formsPlugin, typographyPlugin]
 } satisfies TailwindConfig;

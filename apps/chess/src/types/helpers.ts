@@ -245,14 +245,3 @@ export type InferIt<T, V extends "RT" | "P" | "B"> = T extends (
         ? P
         : T
   : T;
-
-export type ComputeRange<
-  N extends number,
-  Result extends unknown[] | readonly unknown[] = []
-> = Result["length"] extends N
-  ? Result
-  : ComputeRange<N, [...Result, Result["length"]]>;
-
-export type Computed<T extends readonly unknown[] | unknown[]> = [
-  ...ComputeRange<T["length"]>
-]["length"];

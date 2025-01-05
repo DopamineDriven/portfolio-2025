@@ -4,6 +4,7 @@
   "private": true,
   "packageManager": "pnpm@9.15.2+sha512.93e57b0126f0df74ce6bff29680394c0ba54ec47246b9cf321f0121d8d9bb03f750a705f24edc3c1180853afd7c2c3b94196d0a3d53d3e069d9e2793ef11f321",
   "scripts": {
+    "build:chess": "turbo build --filter=@portfolio/chess",
     "build:web": "turbo build --filter=@portfolio/web",
     "changeset": "changeset",
     "clean": "git clean -xdf node_modules",
@@ -17,6 +18,7 @@
     "generate:base64": "openssl rand -base64 64",
     "generate:hex": "openssl rand -hex 64",
     "npm:registry": "npm set registry https://registry.npmjs.org",
+    "run:chess": "turbo dev --filter=@portfolio/chess",
     "run:web": "turbo dev --filter=@portfolio/web",
     "sync:time": "sudo ntpdate time.windows.com",
     "latest:pnpm": "corepack use pnpm@latest",
