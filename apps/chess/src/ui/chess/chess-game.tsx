@@ -26,8 +26,6 @@ const ChessGame: React.FC = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-600 py-8 text-gray-300">
-      <h1 className="mb-8 text-4xl font-bold">Chess Game</h1>
-
       {/* Fixed height container for black's captured pieces */}
       <div className="h-12 w-full max-w-md">
         <CapturedPieces
@@ -37,7 +35,6 @@ const ChessGame: React.FC = () => {
           opponentScore={score.white}
         />
       </div>
-
       <div className="mb-4 flex h-20 flex-col items-center justify-center">
         <p className="text-xl">{currentPlayer + "s move"}</p>
         {isCheck && !isCheckmate && (
@@ -54,7 +51,6 @@ const ChessGame: React.FC = () => {
           </div>
         )}
       </div>
-
       <Chessboard
         board={board}
         selectedSquare={selectedSquare}
@@ -62,7 +58,6 @@ const ChessGame: React.FC = () => {
         onSquareClick={isCheckmate ? undefined : handleSquareClick}
         className={isCheckmate ? "pointer-events-none opacity-80" : ""}
       />
-
       {/* Fixed height container for white's captured pieces */}
       <div className="h-12 w-full max-w-md">
         <CapturedPieces
@@ -72,7 +67,6 @@ const ChessGame: React.FC = () => {
           opponentScore={score.black}
         />
       </div>
-
       <motion.button
         className="mt-8 rounded bg-blue-500 px-4 py-2 text-white transition-colors hover:bg-blue-600"
         onClick={resetGame}
