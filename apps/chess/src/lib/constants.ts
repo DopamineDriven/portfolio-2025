@@ -2,14 +2,14 @@ import { Board, Piece, PieceColor, PieceType } from "@/types/chess";
 
 export const BOARD_SIZE = 8;
 
-export const PIECE_VALUES: Record<PieceType, number> = {
+export const PIECE_VALUES = {
   pawn: 1,
   bishop: 3,
   knight: 3,
   rook: 5,
   queen: 9,
   king: 0 // King has no point value as it cannot be captured
-};
+} as const;
 
 // Helper function to create typed pieces
 function createPiece(type: PieceType, color: PieceColor): Piece {

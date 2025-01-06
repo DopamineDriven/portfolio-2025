@@ -1,5 +1,6 @@
 import React from "react";
 import { PIECE_VALUES } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 import { Piece, PieceColor } from "@/types/chess";
 
 export interface CapturedPiecesProps {
@@ -26,12 +27,17 @@ export const CapturedPieces: React.FC<CapturedPiecesProps> = ({
 
   return (
     <div
-      className={`select-none flex h-12 items-center gap-1 p-2 ${color === "black" ? "flex-row" : "flex-row-reverse"}`}>
+      className={cn(
+        `flex h-12 select-none items-center gap-1 p-2`,
+        color === "black" ? "flex-row" : "flex-row-reverse"
+      )}>
       <div className="flex gap-1">
         {sortedPieces.map((piece, index) => (
           <div
             key={index}
-            className={`text-2xl ${piece.color === "white" ? "text-white" : "text-black"}`}>
+            className={cn(
+              `text-2xl ${piece.color === "white" ? "text-white" : "text-black"}`
+            )}>
             {getPieceSymbol(piece.type, piece.color)}
           </div>
         ))}
