@@ -1,10 +1,11 @@
 import { FC } from "react";
 import type { TsxExclude } from "@/types/helpers";
 
-export const BlackRook: FC<TsxExclude<"svg", "fill" | "viewBox" | "xmlns">> = ({
+export const BlackPawn: FC<TsxExclude<"svg", "fill" | "viewBox" | "xmlns">> = ({
   ...svg
 }) => (
   <svg
+  
     viewBox="0 0 26 33"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
