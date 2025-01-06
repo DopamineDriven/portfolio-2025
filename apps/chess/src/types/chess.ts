@@ -14,6 +14,19 @@ export const pieceColorArr = ["white", "black"] as const;
 export type PieceType = Unenumerate<typeof piecesArr>;
 export type PieceColor = Unenumerate<typeof pieceColorArr>;
 
+export type CastlingRights = {
+  whiteKingside: boolean;
+  whiteQueenside: boolean;
+  blackKingside: boolean;
+  blackQueenside: boolean;
+};
+
+export type CastlingMove = {
+  kingFrom: [number, number];
+  kingTo: [number, number];
+  rookFrom: [number, number];
+  rookTo: [number, number];
+};
 
 export const piecesObj = {
   type: piecesArr.reduce(val => val),
@@ -43,6 +56,7 @@ export type GameState = {
     white: number;
     black: number;
   };
+  castlingRights: CastlingRights;
 };
 
 export type GameAction =

@@ -2,6 +2,7 @@ import React from "react";
 import { PIECE_VALUES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { Piece, PieceColor } from "@/types/chess";
+import { getCapturedPieceJsxElement } from "./piece-helper";
 
 export interface CapturedPiecesProps {
   pieces: Piece[];
@@ -34,11 +35,9 @@ export const CapturedPieces: React.FC<CapturedPiecesProps> = ({
       <div className="flex gap-1">
         {sortedPieces.map((piece, index) => (
           <div
-            key={index}
-            className={cn(
-              `text-2xl ${piece.color === "white" ? "text-white" : "text-black"}`
-            )}>
-            {getPieceSymbol(piece.type, piece.color)}
+            key={`${piece.color}-${piece.type}-${index}`}
+            className={cn(`h-6 w-6`)}>
+            {getCapturedPieceJsxElement(piece.type, piece.color)}
           </div>
         ))}
       </div>
@@ -50,21 +49,3 @@ export const CapturedPieces: React.FC<CapturedPiecesProps> = ({
     </div>
   );
 };
-
-function getPieceSymbol(type: string, color: string) {
-  const symbols: { [key: string]: string } = {
-    "white-king": "♔",
-    "white-queen": "♕",
-    "white-rook": "♖",
-    "white-bishop": "♗",
-    "white-knight": "♘",
-    "white-pawn": "♙",
-    "black-king": "♚",
-    "black-queen": "♛",
-    "black-rook": "♜",
-    "black-bishop": "♝",
-    "black-knight": "♞",
-    "black-pawn": "♟"
-  };
-  return symbols[`${color}-${type}`] ?? "";
-}
