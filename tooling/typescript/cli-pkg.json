@@ -12,6 +12,8 @@
     "useDefineForClassFields": true,
     "disableSourceOfProjectReferenceRedirect": false,
     "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
     "declaration": true,
     "declarationMap": true,
     "importHelpers": false,
