@@ -53,7 +53,7 @@ const ChessGame: React.FC = () => {
           </p>
         )}
         {isCheckmate && (
-          <div>
+          <div className="motion-preset-confetti motion-duration-[5000ms]">
             <p className="mb-2 text-2xl font-bold text-red-600">Checkmate!</p>
             <p className="text-xl font-semibold">
               {currentPlayer === "white" ? "Black" : "White"} wins!
