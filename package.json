@@ -2,7 +2,7 @@
   "name": "@portfolio/root",
   "license": "MIT",
   "private": true,
-  "packageManager": "pnpm@9.15.2+sha512.93e57b0126f0df74ce6bff29680394c0ba54ec47246b9cf321f0121d8d9bb03f750a705f24edc3c1180853afd7c2c3b94196d0a3d53d3e069d9e2793ef11f321",
+  "packageManager": "pnpm@9.15.3+sha512.1f79bc245a66eb0b07c5d4d83131240774642caaa86ef7d0434ab47c0d16f66b04e21e0c086eb61e62c77efc4d7f7ec071afad3796af64892fae66509173893a",
   "scripts": {
     "build:chess": "turbo build --filter=@portfolio/chess",
     "build:web": "turbo build --filter=@portfolio/web",
@@ -14,7 +14,7 @@
     "prepare": "husky",
     "typecheck": "turbo typecheck",
     "clean:test": "git clean -xdf -e **/*{node_modules,.next,dist} && pnpm latest:pnpm",
-    "clean:house": "cd tooling/eslint && git clean -xdf node_modules .turbo && cd ../prettier && git clean -xdf node_modules .turbo && cd ../typescript && git clean -xdf .turbo node_modules && cd ../jest-presets && git clean -xdf node_modules .turbo && cd ../.. && git clean -xdf node_modules pnpm-lock.yaml && pnpm install",
+    "clean:house": "cd tooling/eslint && git clean -xdf node_modules .turbo && cd ../prettier && git clean -xdf node_modules .turbo && cd ../typescript && git clean -xdf .turbo node_modules && cd ../jest-presets && git clean -xdf node_modules .turbo && cd ../../apps/web && git clean -xdf .next node_modules  && cd ../chess && git clean -xdf .next node_modules && cd ../.. && git clean -xdf node_modules pnpm-lock.yaml && pnpm install",
     "generate:base64": "openssl rand -base64 64",
     "generate:hex": "openssl rand -hex 64",
     "npm:registry": "npm set registry https://registry.npmjs.org",
