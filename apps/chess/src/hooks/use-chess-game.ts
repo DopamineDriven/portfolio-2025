@@ -11,6 +11,7 @@ import type {
   PieceColor
 } from "@/types/chess";
 import { useToast } from "@/hooks/use-toast";
+import { copyBoard, getPiece, setPiece } from "@/lib/board-utils";
 import {
   BOARD_SIZE,
   INITIAL_BOARD,
@@ -22,12 +23,12 @@ const initialState = {
   board: INITIAL_BOARD,
   currentPlayer: "white",
   selectedSquare: null,
-  possibleMoves: [],
+  possibleMoves: Array.of<[number, number]>(),
   isCheck: false,
   isCheckmate: false,
   capturedPieces: {
-    white: [],
-    black: []
+    white: Array.of<Piece>(),
+    black: Array.of<Piece>()
   },
   score: {
     white: 0,
@@ -43,7 +44,7 @@ function isSquareUnderAttack(
 ) {
   for (let row = 0; row < BOARD_SIZE; row++) {
     for (let col = 0; col < BOARD_SIZE; col++) {
-      const piece = board?.[row]?.[col];
+      const piece = board[row]?.[col] ?? null;
       if (piece && piece.color === attackingColor) {
         const possibleMoves = getPossibleMoves(board, row, col);
         if (
@@ -72,8 +73,8 @@ function getCastlingMoves(
     (color === "black" && castlingRights.blackKingside)
   ) {
     if (
-      !board?.[row]?.[5] &&
-      !board?.[row]?.[6] && // Squares between king and rook are empty
+      !board[row]?.[5] &&
+      !board[row]?.[6] && // Squares between king and rook are empty
       !isSquareUnderAttack(board, [row, 4], enemyColor) && // King is not in check
       !isSquareUnderAttack(board, [row, 5], enemyColor) && // King doesn't pass through check
       !isSquareUnderAttack(board, [row, 6], enemyColor)
@@ -94,9 +95,9 @@ function getCastlingMoves(
     (color === "black" && castlingRights.blackQueenside)
   ) {
     if (
-      !board?.[row]?.[1] &&
-      !board?.[row]?.[2] &&
-      !board?.[row]?.[3] && // Squares between king and rook are empty
+      !board[row]?.[1] &&
+      !board[row]?.[2] &&
+      !board[row]?.[3] && // Squares between king and rook are empty
       !isSquareUnderAttack(board, [row, 4], enemyColor) && // King is not in check
       !isSquareUnderAttack(board, [row, 3], enemyColor) && // King doesn't pass through check
       !isSquareUnderAttack(board, [row, 2], enemyColor)
@@ -128,7 +129,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         return {
           ...state,
           selectedSquare: null,
-          possibleMoves: []
+          possibleMoves: Array.of<[number, number]>()
         };
       }
 
@@ -176,7 +177,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         );
         const nextPlayer = state.currentPlayer === "white" ? "black" : "white";
         const isCheck = isKingInCheck(newBoard, nextPlayer);
-        const isCheckmate = isCheck && isCheckmateState(newBoard, nextPlayer);
+        const isCheckmate =
+          isCheck && isCheckmateState(newBoard, nextPlayer, state);
 
         // Update captured pieces and score
         const newCapturedPieces = { ...state.capturedPieces };
@@ -192,6 +194,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         }
 
         return {
+          ...state,
           board: newBoard,
           currentPlayer: nextPlayer,
           selectedSquare: null,
@@ -218,8 +221,6 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       return state;
   }
 }
-const getPieceHelper = (board: Board, [row, col]: [number, number]) =>
-  board[row]?.[col] ?? null;
 
 function wouldMoveExposeKing(
   board: Board,
@@ -227,18 +228,110 @@ function wouldMoveExposeKing(
   fromCol: number,
   toRow: number,
   toCol: number
-): boolean {
-  const newBoard = board.map(row => [...row]);
-  const movingPiece = newBoard?.[fromRow]?.[fromCol] ?? null;
+) {
+  const newBoard = copyBoard(board);
+  const movingPiece = getPiece(newBoard, fromRow, fromCol);
 
   if (!movingPiece) return false;
 
   // Make the move
-  newBoard[toRow]![toCol] = movingPiece;
-  newBoard[fromRow]![fromCol] = null;
+  setPiece(newBoard, toRow, toCol, movingPiece);
+  setPiece(newBoard, fromRow, fromCol, null);
 
-  // Check if the move would put the king in check
-  return isKingInCheck(newBoard, movingPiece.color);
+  // Find the king's position
+  let kingRow = -1;
+  let kingCol = -1;
+  for (let r = 0; r < BOARD_SIZE; r++) {
+    for (let c = 0; c < BOARD_SIZE; c++) {
+      const piece = getPiece(newBoard, r, c);
+      if (piece?.type === "king" && piece.color === movingPiece.color) {
+        kingRow = r;
+        kingCol = c;
+        break;
+      }
+    }
+    if (kingRow !== -1) break;
+  }
+
+  // Check if any opponent's piece can attack the king
+  const opponentColor = movingPiece.color === "white" ? "black" : "white";
+  for (let r = 0; r < BOARD_SIZE; r++) {
+    for (let c = 0; c < BOARD_SIZE; c++) {
+      const piece = newBoard[r]?.[c] ?? null;
+      if (piece && piece.color === opponentColor) {
+        if (canPieceAttackSquare(newBoard, r, c, kingRow, kingCol)) {
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
+function canPieceAttackSquare(
+  board: Board,
+  fromRow: number,
+  fromCol: number,
+  toRow: number,
+  toCol: number
+) {
+  const piece = getPiece(board, fromRow, fromCol);
+  if (!piece) return false;
+
+  // First check if the move is theoretically possible for the piece type
+  const isValidPattern = (() => {
+    switch (piece.type) {
+      case "pawn":
+        // eslint-disable-next-line no-case-declarations
+        const direction = piece.color === "white" ? -1 : 1;
+        return fromRow + direction === toRow && Math.abs(fromCol - toCol) === 1;
+      case "rook":
+        return fromRow === toRow || fromCol === toCol;
+      case "knight":
+        // eslint-disable-next-line no-case-declarations
+        const rowDiff = Math.abs(fromRow - toRow);
+        // eslint-disable-next-line no-case-declarations
+        const colDiff = Math.abs(fromCol - toCol);
+        return (
+          (rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2)
+        );
+      case "bishop":
+        return Math.abs(fromRow - toRow) === Math.abs(fromCol - toCol);
+      case "queen":
+        return (
+          fromRow === toRow ||
+          fromCol === toCol ||
+          Math.abs(fromRow - toRow) === Math.abs(fromCol - toCol)
+        );
+      case "king":
+        return Math.abs(fromRow - toRow) <= 1 && Math.abs(fromCol - toCol) <= 1;
+      default:
+        return false;
+    }
+  })();
+
+  if (!isValidPattern) return false;
+
+  // For pieces that can be blocked (all except knight), check if there are any pieces in the way
+  if (piece.type !== "knight") {
+    const rowStep = toRow > fromRow ? 1 : toRow < fromRow ? -1 : 0;
+    const colStep = toCol > fromCol ? 1 : toCol < fromCol ? -1 : 0;
+
+    let currentRow = fromRow + rowStep;
+    let currentCol = fromCol + colStep;
+
+    // Check all squares between the piece and the target (exclusive)
+    while (currentRow !== toRow || currentCol !== toCol) {
+      if (board[currentRow]?.[currentCol] != null) {
+        return false; // There's a piece blocking the path
+      }
+      currentRow += rowStep;
+      currentCol += colStep;
+    }
+  }
+
+  return true;
 }
 
 function getPossibleMoves(
@@ -246,8 +339,8 @@ function getPossibleMoves(
   row: number,
   col: number,
   castlingRights?: CastlingRights
-): [number, number][] {
-  const piece = getPieceHelper(board, [row, col]);
+) {
+  const piece = getPiece(board, row, col);
 
   if (!piece) return [];
 
@@ -296,28 +389,40 @@ function getPawnMoves(
   row: number,
   col: number,
   color: PieceColor
-): [number, number][] {
+) {
   const moves = Array.of<[number, number]>();
   const direction = color === "white" ? -1 : 1;
 
-  if (
-    row + direction >= 0 &&
-    row + direction < BOARD_SIZE &&
-    !board?.[row + direction]?.[col]
-  ) {
-    moves.push([row + direction, col]);
+  if (row + direction >= 0 && row + direction < BOARD_SIZE) {
+    if (!board[row + direction]?.[col]) {
+      moves.push([row + direction, col]);
 
-    if ((color === "white" && row === 6) || (color === "black" && row === 1)) {
-      if (!board?.[row + 2 * direction]?.[col]) {
-        moves.push([row + 2 * direction, col]);
+      // Check double forward move for pawns on their starting row
+      if (
+        (color === "white" && row === 6) ||
+        (color === "black" && row === 1)
+      ) {
+        if (
+          row + 2 * direction >= 0 &&
+          row + 2 * direction < BOARD_SIZE &&
+          !board[row + 2 * direction]?.[col]
+        ) {
+          moves.push([row + 2 * direction, col]);
+        }
       }
     }
   }
 
+  // Check diagonal captures
   for (const colOffset of [-1, 1]) {
     const newCol = col + colOffset;
-    if (newCol >= 0 && newCol < BOARD_SIZE) {
-      const targetPiece = board?.[row + direction]?.[newCol];
+    if (
+      newCol >= 0 &&
+      newCol < BOARD_SIZE &&
+      row + direction >= 0 &&
+      row + direction < BOARD_SIZE
+    ) {
+      const targetPiece = board[row + direction]?.[newCol];
       if (targetPiece && targetPiece.color !== color) {
         moves.push([row + direction, newCol]);
       }
@@ -327,11 +432,7 @@ function getPawnMoves(
   return moves;
 }
 
-function getRookMoves(
-  board: Board,
-  row: number,
-  col: number
-): [number, number][] {
+function getRookMoves(board: Board, row: number, col: number) {
   const moves = Array.of<[number, number]>();
   const directions = [
     [-1, 0],
@@ -349,10 +450,10 @@ function getRookMoves(
       newCol >= 0 &&
       newCol < BOARD_SIZE
     ) {
-      if (!board?.[newRow]?.[newCol]) {
+      if (!board[newRow]?.[newCol]) {
         moves.push([newRow, newCol]);
       } else {
-        if (board?.[newRow]?.[newCol]?.color !== board?.[row]?.[col]?.color) {
+        if (board[newRow]?.[newCol]?.color !== board[row]?.[col]?.color) {
           moves.push([newRow, newCol]);
         }
         break;
@@ -365,11 +466,7 @@ function getRookMoves(
   return moves;
 }
 
-function getKnightMoves(
-  board: Board,
-  row: number,
-  col: number
-): [number, number][] {
+function getKnightMoves(board: Board, row: number, col: number) {
   const moves = Array.of<[number, number]>();
   const offsets = [
     [-2, -1],
@@ -392,8 +489,8 @@ function getKnightMoves(
       newCol < BOARD_SIZE
     ) {
       if (
-        !board?.[newRow]?.[newCol] ||
-        board[newRow][newCol]?.color !== board?.[row]?.[col]?.color
+        !board[newRow]?.[newCol] ||
+        board[newRow][newCol].color !== board[row]?.[col]?.color
       ) {
         moves.push([newRow, newCol]);
       }
@@ -403,11 +500,7 @@ function getKnightMoves(
   return moves;
 }
 
-function getBishopMoves(
-  board: Board,
-  row: number,
-  col: number
-): [number, number][] {
+function getBishopMoves(board: Board, row: number, col: number) {
   const moves = Array.of<[number, number]>();
   const directions = [
     [-1, -1],
@@ -425,10 +518,10 @@ function getBishopMoves(
       newCol >= 0 &&
       newCol < BOARD_SIZE
     ) {
-      if (!board?.[newRow]?.[newCol]) {
+      if (!board[newRow]?.[newCol]) {
         moves.push([newRow, newCol]);
       } else {
-        if (board?.[newRow]?.[newCol]?.color !== board?.[row]?.[col]?.color) {
+        if (board[newRow]?.[newCol]?.color !== board[row]?.[col]?.color) {
           moves.push([newRow, newCol]);
         }
         break;
@@ -441,11 +534,7 @@ function getBishopMoves(
   return moves;
 }
 
-function getKingMoves(
-  board: Board,
-  row: number,
-  col: number
-): [number, number][] {
+function getKingMoves(board: Board, row: number, col: number) {
   const moves = Array.of<[number, number]>();
   const offsets = [
     [-1, -1],
@@ -468,8 +557,8 @@ function getKingMoves(
       newCol < BOARD_SIZE
     ) {
       if (
-        !board?.[newRow]?.[newCol] ||
-        board?.[newRow]?.[newCol]?.color !== board?.[row]?.[col]?.color
+        !board[newRow]?.[newCol] ||
+        board[newRow][newCol].color !== board[row]?.[col]?.color
       ) {
         moves.push([newRow, newCol]);
       }
@@ -483,7 +572,7 @@ function isValidMove(
   possibleMoves: [number, number][],
   row: number,
   col: number
-): boolean {
+) {
   return possibleMoves.some(([r, c]) => r === row && c === col);
 }
 
@@ -493,15 +582,11 @@ function movePiece(
   fromCol: number,
   toRow: number,
   toCol: number,
-  castlingRights?: CastlingRights
-): {
-  newBoard: Board;
-  capturedPiece: Piece | null;
-  newCastlingRights?: CastlingRights;
-} {
-  const newBoard = board && (board.map(row => [...row]) as Board);
-  const movingPiece = newBoard[fromRow]?.[fromCol] ?? null;
-  const capturedPiece = newBoard[toRow]?.[toCol] ?? null;
+  castlingRights: CastlingRights
+) {
+  const newBoard = copyBoard(board);
+  const movingPiece = getPiece(newBoard, fromRow, fromCol);
+  const capturedPiece = getPiece(newBoard, toRow, toCol);
 
   // Update castling rights
   const newCastlingRights = { ...castlingRights };
@@ -515,13 +600,12 @@ function movePiece(
       if (fromRow === 7 && fromCol === 4) {
         if (toCol === 6) {
           // Kingside castling
-
-          newBoard[7]![5] = newBoard[7]?.[7] ?? null; // Move rook
-          newBoard[7]![7] = null;
+          setPiece(newBoard, 7, 5, getPiece(newBoard, 7, 7));
+          setPiece(newBoard, 7, 7, null);
         } else if (toCol === 2) {
           // Queenside castling
-          newBoard[7]![3] = newBoard[7]?.[0] ?? null; // Move rook
-          newBoard[7]![0] = null;
+          setPiece(newBoard, 7, 3, getPiece(newBoard, 7, 0));
+          setPiece(newBoard, 7, 0, null);
         }
       }
     } else {
@@ -532,12 +616,12 @@ function movePiece(
       if (fromRow === 0 && fromCol === 4) {
         if (toCol === 6) {
           // Kingside castling
-          newBoard[0]![5] = newBoard[0]?.[7] ?? null; // Move rook
-          newBoard[0]![7] = null;
+          setPiece(newBoard, 0, 5, getPiece(newBoard, 0, 7));
+          setPiece(newBoard, 0, 7, null);
         } else if (toCol === 2) {
           // Queenside castling
-          newBoard[0]![3] = newBoard[0]?.[0] ?? null; // Move rook
-          newBoard[0]![0] = null;
+          setPiece(newBoard, 0, 3, getPiece(newBoard, 0, 0));
+          setPiece(newBoard, 0, 0, null);
         }
       }
     }
@@ -553,20 +637,25 @@ function movePiece(
     if (fromRow === 0 && fromCol === 7) newCastlingRights.blackKingside = false;
   }
 
-  newBoard[toRow]![toCol] = movingPiece;
-  newBoard[fromRow]![fromCol] = null;
+  setPiece(newBoard, toRow, toCol, movingPiece);
+  setPiece(newBoard, fromRow, fromCol, null);
 
   return {
     newBoard,
-    capturedPiece: capturedPiece ?? null
+    capturedPiece: capturedPiece ?? null,
+    newCastlingRights: newCastlingRights
+  } satisfies {
+    newBoard: Board;
+    capturedPiece: Piece | null;
+    newCastlingRights: CastlingRights;
   };
 }
 
-function isKingInCheck(board: Board, playerColor: PieceColor): boolean {
+function isKingInCheck(board: Board, playerColor: PieceColor) {
   let kingPosition: [number, number] | null = null;
   for (let row = 0; row < BOARD_SIZE; row++) {
     for (let col = 0; col < BOARD_SIZE; col++) {
-      const piece = board[row]?.[col] ?? null;
+      const piece = getPiece(board, row, col);
       if (piece && piece.type === "king" && piece.color === playerColor) {
         kingPosition = [row, col];
         break;
@@ -580,13 +669,11 @@ function isKingInCheck(board: Board, playerColor: PieceColor): boolean {
   const opponentColor = playerColor === "white" ? "black" : "white";
   for (let row = 0; row < BOARD_SIZE; row++) {
     for (let col = 0; col < BOARD_SIZE; col++) {
-      const piece = board[row]?.[col] ?? null;
+      const piece = getPiece(board, row, col);
       if (piece && piece.color === opponentColor) {
         const moves = getPossibleMoves(board, row, col);
         if (
-          moves.some(
-            ([r, c]) => r === kingPosition![0] && c === kingPosition![1]
-          )
+          moves.some(([r, c]) => r === kingPosition[0] && c === kingPosition[1])
         ) {
           return true;
         }
@@ -597,18 +684,29 @@ function isKingInCheck(board: Board, playerColor: PieceColor): boolean {
   return false;
 }
 
-function isCheckmateState(board: Board, playerColor: PieceColor): boolean {
-  // Check all pieces of the current player
+function isCheckmateState(
+  board: Board,
+  playerColor: PieceColor,
+  state: GameState
+) {
+  // Check all pieces for the current player
   for (let row = 0; row < BOARD_SIZE; row++) {
     for (let col = 0; col < BOARD_SIZE; col++) {
-      const piece = board[row]?.[col] ?? null;
+      const piece = getPiece(board, row, col);
       if (piece && piece.color === playerColor) {
         // Get all possible moves for this piece
-        const moves = getPossibleMoves(board, row, col);
+        const moves = getPossibleMoves(board, row, col, state.castlingRights);
 
         // Check if any move resolves the check
         for (const [toRow, toCol] of moves) {
-          const newBoard = movePiece(board, row, col, toRow, toCol).newBoard; //castlingRights not needed here
+          const newBoard = movePiece(
+            board,
+            row,
+            col,
+            toRow,
+            toCol,
+            state.castlingRights
+          ).newBoard;
           if (!isKingInCheck(newBoard, playerColor)) {
             // If we find a move that resolves the check, it's not checkmate
             return false;
@@ -617,8 +715,7 @@ function isCheckmateState(board: Board, playerColor: PieceColor): boolean {
       }
     }
   }
-
-  // If we've checked all pieces and moves and haven't found a resolution, it's checkmate
+  // If there are 0 moves to resolve check, it's checkmate
   return true;
 }
 
