@@ -45,7 +45,7 @@ const Chessboard: React.FC<ChessboardProps> = ({
                 isLight ? "bg-amber-200" : "bg-amber-800",
                 isSelected ? "bg-[hsl(60,100%,50%)]/90" : "",
                 isPossibleMove
-                  ? "before:-translate-y-1/ relative before:absolute before:left-1/2 before:top-1/2 before:h-4 before:w-4 before:-translate-x-1/2 before:rounded-full before:bg-black/15"
+                  ? " relative before:-translate-x-1/2 before:-translate-y-1.5 before:absolute before:top-1/2 before:left-1/2 before:h-4 before:w-4 before:rounded-full before:bg-black/15"
                   : "",
                 `flex h-12 w-12 cursor-pointer items-center justify-center`
               )}
