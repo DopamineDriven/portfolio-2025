@@ -98,6 +98,49 @@ export type FilterOptionalOrRequired<
   T extends "conditional" | "required"
 > = T extends "conditional" ? OnlyOptional<V> : OnlyRequired<V>;
 
+export type SortUnion<T extends string> =
+  T extends `${infer First}${infer Rest}`
+    ? First extends
+        | "a"
+        | "b"
+        | "c"
+        | "d"
+        | "e"
+        | "f"
+        | "g"
+        | "h"
+        | "i"
+        | "j"
+        | "k"
+        | "l"
+        | "m"
+        | "n"
+        | "o"
+        | "p"
+        | "q"
+        | "r"
+        | "s"
+        | "t"
+        | "u"
+        | "v"
+        | "w"
+        | "x"
+        | "y"
+        | "z"
+        | "0"
+        | "1"
+        | "2"
+        | "3"
+        | "4"
+        | "5"
+        | "6"
+        | "7"
+        | "8"
+        | "9"
+      ? `${First}${SortUnion<Rest>}`
+      : `${SortUnion<Rest>}${First}`
+    : T;
+
 /* General Helper Types END */
 
 /* React Helper Types BEGIN */

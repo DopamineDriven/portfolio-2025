@@ -24,7 +24,7 @@ const Chessboard: React.FC<ChessboardProps> = ({
   return (
     <div
       className={cn(
-        `grid h-96 w-96 grid-cols-8 gap-0 border-4 border-gray-800`,
+        `relative grid h-96 w-96 grid-cols-8 gap-0 border-4 border-gray-800`,
         (className ??= "")
       )}>
       {board.map((row, rowIndex) =>
@@ -43,8 +43,10 @@ const Chessboard: React.FC<ChessboardProps> = ({
               key={`${rowIndex}-${colIndex}`}
               className={cn(
                 isLight ? "bg-amber-200" : "bg-amber-800",
-                isSelected ? "ring-4 ring-blue-500" : "",
-                isPossibleMove ? "ring-4 ring-green-500" : "",
+                isSelected ? "bg-[hsl(60,100%,50%)]/90" : "",
+                isPossibleMove
+                  ? "before:-translate-y-1/ relative before:absolute before:left-1/2 before:top-1/2 before:h-4 before:w-4 before:-translate-x-1/2 before:rounded-full before:bg-black/15"
+                  : "",
                 `flex h-12 w-12 cursor-pointer items-center justify-center`
               )}
               onClick={() => onSquareClick && onSquareClick(rowIndex, colIndex)}
