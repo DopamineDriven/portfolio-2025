@@ -1,8 +1,7 @@
 "use client";
 
 import * as React from "react";
-import type { ToastActionElement, ToastProps } from "@/ui/toast";
-import { RemoveFields } from "@/types/helpers";
+import type { ToastActionElement, ToastProps } from "@/ui/toast/toast";
 
 const TOAST_LIMIT = 1;
 const TOAST_REMOVE_DELAY = 1000000;
@@ -29,22 +28,6 @@ function genId() {
 }
 
 type ActionType = typeof actionTypes;
-
-
-// works well
-// type ActionMapped<T extends keyof ActionType> = {
-//   [P in T]: P extends "ADD_TOAST"
-//     ? { type: ActionType[P]; toast: ToasterToast }
-//     : P extends "UPDATE_TOAST"
-//       ? { type: ActionType[P]; toast: Partial<ToasterToast> }
-//       : P extends "UPDATE_TOAST"
-//         ? { type: ActionType[P]; toastId?: ToasterToast["id"] }
-//         : { type: ActionType[P]; toastId?: ToasterToast["id"] };
-// }[T];
-
-
-
-
 
 type Action =
   | {
@@ -150,7 +133,7 @@ function dispatch(action: Action) {
   });
 }
 
-type Toast = RemoveFields<ToasterToast, "id">;
+type Toast = Omit<ToasterToast, "id">;
 
 function toast<const T extends Toast>({ ...props }: T) {
   const id = genId();

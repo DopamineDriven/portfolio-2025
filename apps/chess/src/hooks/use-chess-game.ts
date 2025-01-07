@@ -7,11 +7,18 @@ import type {
   CastlingRights,
   GameAction,
   GameState,
+  Move,
   Piece,
-  PieceColor
+  PieceColor,
+  PieceType
 } from "@/types/chess";
 import { useToast } from "@/hooks/use-toast";
-import { copyBoard, getPiece, setPiece } from "@/lib/board-utils";
+import {
+  copyBoard,
+  getPiece,
+  isValidPosition,
+  setPiece
+} from "@/lib/board-utils";
 import {
   BOARD_SIZE,
   INITIAL_BOARD,
@@ -34,7 +41,9 @@ const initialState = {
     white: 0,
     black: 0
   },
-  castlingRights: INITIAL_CASTLING_RIGHTS
+  castlingRights: INITIAL_CASTLING_RIGHTS,
+  lastMove: null,
+  promotionSquare: null
 } satisfies GameState;
 
 function isSquareUnderAttack(
@@ -44,7 +53,7 @@ function isSquareUnderAttack(
 ) {
   for (let row = 0; row < BOARD_SIZE; row++) {
     for (let col = 0; col < BOARD_SIZE; col++) {
-      const piece = board[row]?.[col] ?? null;
+      const piece = getPiece(board, row, col);
       if (piece && piece.color === attackingColor) {
         const possibleMoves = getPossibleMoves(board, row, col);
         if (
@@ -119,7 +128,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case "SELECT_SQUARE": {
       const [row, col] = action.payload;
-      const piece = state.board[row]?.[col] ?? null;
+      const piece = getPiece(state.board, row, col);
 
       if (
         state.selectedSquare &&
@@ -134,12 +143,10 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       }
 
       if (piece && piece.color === state.currentPlayer) {
-        let possibleMoves = getPossibleMoves(
-          state.board,
-          row,
-          col,
-          state.castlingRights
-        );
+        let possibleMoves =
+          piece.type === "pawn"
+            ? getPawnMoves(state.board, row, col, piece.color, state.lastMove)
+            : getPossibleMoves(state.board, row, col, state.castlingRights);
 
         if (state.isCheck) {
           possibleMoves = possibleMoves.filter(
@@ -151,7 +158,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
                   col,
                   toRow,
                   toCol,
-                  state.castlingRights
+                  state.castlingRights,
+                  state.lastMove
                 ).newBoard,
                 state.currentPlayer
               )
@@ -167,32 +175,56 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 
       if (state.selectedSquare && isValidMove(state.possibleMoves, row, col)) {
         const [fromRow, fromCol] = state.selectedSquare;
-        const { newBoard, capturedPiece, newCastlingRights } = movePiece(
-          state.board,
-          fromRow,
-          fromCol,
-          row,
-          col,
-          state.castlingRights
-        );
+        const { newBoard, capturedPiece, newCastlingRights, enPassantCapture } =
+          movePiece(
+            state.board,
+            fromRow,
+            fromCol,
+            row,
+            col,
+            state.castlingRights,
+            state.lastMove
+          );
         const nextPlayer = state.currentPlayer === "white" ? "black" : "white";
         const isCheck = isKingInCheck(newBoard, nextPlayer);
         const isCheckmate =
-          isCheck && isCheckmateState(newBoard, nextPlayer, state);
+          isCheck &&
+          isCheckmateState(newBoard, nextPlayer, {
+            ...state,
+            board: newBoard,
+            castlingRights: newCastlingRights
+          });
 
         // Update captured pieces and score
         const newCapturedPieces = { ...state.capturedPieces };
         const newScore = { ...state.score };
 
-        if (capturedPiece) {
+        if (capturedPiece || enPassantCapture) {
           const capturingColor = state.currentPlayer;
-          newCapturedPieces[capturingColor] = [
-            ...newCapturedPieces[capturingColor],
-            capturedPiece
-          ];
-          newScore[capturingColor] += PIECE_VALUES[capturedPiece.type];
+          if (capturedPiece) {
+            newCapturedPieces[capturingColor] = [
+              ...newCapturedPieces[capturingColor],
+              capturedPiece
+            ];
+            newScore[capturingColor] += PIECE_VALUES[capturedPiece.type];
+          }
         }
 
+        const movingPiece = getPiece(state.board, fromRow, fromCol);
+        if (!movingPiece) {
+          throw new Error("No piece to move");
+        }
+
+        const newLastMove = {
+          from: [fromRow, fromCol] as [number, number],
+          to: [row, col] as [number, number],
+          piece: movingPiece
+        } satisfies Move;
+        // Check for pawn promotion
+        let promotionSquare: [number, number] | null = null;
+        if (movingPiece.type === "pawn" && (row === 0 || row === 7)) {
+          promotionSquare = [row, col];
+        }
         return {
           ...state,
           board: newBoard,
@@ -203,7 +235,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
           isCheckmate,
           capturedPieces: newCapturedPieces,
           score: newScore,
-          castlingRights: newCastlingRights!
+          castlingRights: newCastlingRights,
+          lastMove: newLastMove,
+          promotionSquare
         };
       }
 
@@ -212,6 +246,34 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         selectedSquare: null,
         possibleMoves: []
       };
+    }
+
+    case "PROMOTE_PAWN": {
+      const { square, pieceType } = action.payload;
+      const [row, col] = square;
+      const newBoard = copyBoard(state.board);
+      const pawn = getPiece(newBoard, row, col);
+
+      if (pawn && pawn.type === "pawn") {
+        setPiece(newBoard, row, col, { type: pieceType, color: pawn.color });
+
+        // Adjust the score
+        const promotedPieceValue = PIECE_VALUES[pieceType];
+        const pawnValue = PIECE_VALUES["pawn"];
+        const scoreAdjustment = promotedPieceValue - pawnValue;
+
+        const newScore = { ...state.score };
+        newScore[pawn.color] += scoreAdjustment;
+
+        return {
+          ...state,
+          board: newBoard,
+          promotionSquare: null,
+          score: newScore
+        };
+      }
+
+      return state;
     }
 
     case "RESET_GAME":
@@ -257,7 +319,7 @@ function wouldMoveExposeKing(
   const opponentColor = movingPiece.color === "white" ? "black" : "white";
   for (let r = 0; r < BOARD_SIZE; r++) {
     for (let c = 0; c < BOARD_SIZE; c++) {
-      const piece = newBoard[r]?.[c] ?? null;
+      const piece = getPiece(newBoard, r, c);
       if (piece && piece.color === opponentColor) {
         if (canPieceAttackSquare(newBoard, r, c, kingRow, kingCol)) {
           return true;
@@ -348,7 +410,8 @@ function getPossibleMoves(
 
   switch (piece.type) {
     case "pawn":
-      moves = getPawnMoves(board, row, col, piece.color);
+      // null for lastMove as it's not relevant when assessing possible moves to make
+      moves = getPawnMoves(board, row, col, piece.color, null);
       break;
     case "rook":
       moves = getRookMoves(board, row, col);
@@ -388,45 +451,47 @@ function getPawnMoves(
   board: Board,
   row: number,
   col: number,
-  color: PieceColor
+  color: PieceColor,
+  lastMove: Move | null
 ) {
   const moves = Array.of<[number, number]>();
   const direction = color === "white" ? -1 : 1;
 
-  if (row + direction >= 0 && row + direction < BOARD_SIZE) {
-    if (!board[row + direction]?.[col]) {
-      moves.push([row + direction, col]);
+  // Forward move
+  if (
+    isValidPosition(row + direction, col) &&
+    !getPiece(board, row + direction, col)
+  ) {
+    moves.push([row + direction, col]);
 
-      // Check double forward move for pawns on their starting row
-      if (
-        (color === "white" && row === 6) ||
-        (color === "black" && row === 1)
-      ) {
-        if (
-          row + 2 * direction >= 0 &&
-          row + 2 * direction < BOARD_SIZE &&
-          !board[row + 2 * direction]?.[col]
-        ) {
-          moves.push([row + 2 * direction, col]);
-        }
+    // Double forward move for pawns on their starting row
+    if ((color === "white" && row === 6) || (color === "black" && row === 1)) {
+      if (!getPiece(board, row + 2 * direction, col)) {
+        moves.push([row + 2 * direction, col]);
       }
     }
   }
 
-  // Check diagonal captures
+  // Diagonal captures
   for (const colOffset of [-1, 1]) {
     const newCol = col + colOffset;
-    if (
-      newCol >= 0 &&
-      newCol < BOARD_SIZE &&
-      row + direction >= 0 &&
-      row + direction < BOARD_SIZE
-    ) {
-      const targetPiece = board[row + direction]?.[newCol];
+    if (isValidPosition(row + direction, newCol)) {
+      const targetPiece = getPiece(board, row + direction, newCol);
       if (targetPiece && targetPiece.color !== color) {
         moves.push([row + direction, newCol]);
       }
     }
+  }
+
+  // En passant
+  if (
+    lastMove &&
+    lastMove.piece.type === "pawn" &&
+    Math.abs(lastMove.from[0] - lastMove.to[0]) === 2 &&
+    lastMove.to[0] === row &&
+    Math.abs(lastMove.to[1] - col) === 1
+  ) {
+    moves.push([row + direction, lastMove.to[1]]);
   }
 
   return moves;
@@ -582,16 +647,36 @@ function movePiece(
   fromCol: number,
   toRow: number,
   toCol: number,
-  castlingRights: CastlingRights
+  castlingRights: CastlingRights,
+  lastMove: Move | null
 ) {
   const newBoard = copyBoard(board);
   const movingPiece = getPiece(newBoard, fromRow, fromCol);
-  const capturedPiece = getPiece(newBoard, toRow, toCol);
+  let capturedPiece = getPiece(newBoard, toRow, toCol);
+
+  if (!movingPiece) {
+    throw new Error("No piece to move");
+  }
 
   // Update castling rights
   const newCastlingRights = { ...castlingRights };
 
-  if (movingPiece?.type === "king") {
+  let enPassantCapture = false;
+  // en passant handling
+  if (
+    movingPiece.type === "pawn" &&
+    lastMove &&
+    lastMove.piece.type === "pawn" &&
+    Math.abs(lastMove.from[0] - lastMove.to[0]) === 2 &&
+    lastMove.to[0] === fromRow &&
+    lastMove.to[1] === toCol &&
+    Math.abs(fromCol - toCol) === 1
+  ) {
+    capturedPiece = getPiece(newBoard, lastMove.to[0], lastMove.to[1]);
+    setPiece(newBoard, lastMove.to[0], lastMove.to[1], null);
+    enPassantCapture = true;
+  }
+  if (movingPiece.type === "king") {
     if (movingPiece.color === "white") {
       newCastlingRights.whiteKingside = false;
       newCastlingRights.whiteQueenside = false;
@@ -642,12 +727,14 @@ function movePiece(
 
   return {
     newBoard,
-    capturedPiece: capturedPiece ?? null,
-    newCastlingRights: newCastlingRights
+    capturedPiece,
+    newCastlingRights: newCastlingRights,
+    enPassantCapture
   } satisfies {
     newBoard: Board;
     capturedPiece: Piece | null;
     newCastlingRights: CastlingRights;
+    enPassantCapture: boolean;
   };
 }
 
@@ -705,7 +792,8 @@ function isCheckmateState(
             col,
             toRow,
             toCol,
-            state.castlingRights
+            state.castlingRights,
+            state.lastMove
           ).newBoard;
           if (!isKingInCheck(newBoard, playerColor)) {
             // If we find a move that resolves the check, it's not checkmate
@@ -731,6 +819,13 @@ export function useChessGame() {
     dispatch({ type: "RESET_GAME" });
   }, []);
 
+  const promotePawn = useCallback(
+    (square: [number, number], pieceType: PieceType) => {
+      dispatch({ type: "PROMOTE_PAWN", payload: { square, pieceType } });
+    },
+    []
+  );
+
   useEffect(() => {
     if (state.isCheck) {
       if (state.isCheckmate) {
@@ -752,6 +847,7 @@ export function useChessGame() {
   return {
     ...state,
     selectSquare,
-    resetGame
+    resetGame,
+    promotePawn
   };
 }

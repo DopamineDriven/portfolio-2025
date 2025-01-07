@@ -2,9 +2,11 @@
 
 import React from "react";
 import { motion } from "motion/react";
+import type { PieceType } from "@/types/chess";
 import { useChessGame } from "@/hooks/use-chess-game";
 import { CapturedPieces } from "./captured-pieces";
 import Chessboard from "./chessboard";
+import PawnPromotionModal from "./pawn-promotion";
 
 const ChessGame: React.FC = () => {
   const {
@@ -17,11 +19,19 @@ const ChessGame: React.FC = () => {
     capturedPieces,
     score,
     selectSquare,
-    resetGame
+    resetGame,
+    promotionSquare,
+    promotePawn
   } = useChessGame();
 
   const handleSquareClick = (row: number, col: number) => {
     selectSquare(row, col);
+  };
+
+  const handlePromotion = (pieceType: PieceType) => {
+    if (promotionSquare) {
+      promotePawn(promotionSquare, pieceType);
+    }
   };
 
   return (
@@ -36,7 +46,7 @@ const ChessGame: React.FC = () => {
         />
       </div>
       <div className="mb-4 flex h-20 flex-col items-center justify-center">
-        <p className="text-xl">{currentPlayer + "s move"}</p>
+        <p className="text-xl">{currentPlayer + " to move"}</p>
         {isCheck && !isCheckmate && (
           <p className="text-xl font-bold text-red-600">
             {currentPlayer} is in check!
@@ -74,6 +84,9 @@ const ChessGame: React.FC = () => {
         whileTap={{ scale: 0.95 }}>
         Reset Game
       </motion.button>
+      {promotionSquare && (
+        <PawnPromotionModal color={currentPlayer} onSelect={handlePromotion} />
+      )}
     </div>
   );
 };

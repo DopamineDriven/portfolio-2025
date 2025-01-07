@@ -35,8 +35,10 @@ export const piecesObj = {
 
 export type Piece = typeof piecesObj;
 
-export type MapPiece = {
-  [P in keyof Piece]: Piece[P];
+export type Move = {
+  from: [number, number];
+  to: [number, number];
+  piece: Piece;
 };
 
 export type Board = (Piece | null)[][];
@@ -57,8 +59,15 @@ export type GameState = {
     black: number;
   };
   castlingRights: CastlingRights;
+  lastMove: Move | null;
+  promotionSquare: [number, number] | null;
 };
+export type PromotionPieceType = Exclude<PieceType, "pawn" | "king">;
 
 export type GameAction =
   | { type: "SELECT_SQUARE"; payload: [number, number] }
-  | { type: "RESET_GAME" };
+  | { type: "RESET_GAME" }
+  | {
+      type: "PROMOTE_PAWN";
+      payload: { square: [number, number]; pieceType: PieceType };
+    };

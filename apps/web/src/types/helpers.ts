@@ -256,3 +256,4 @@ export type ComputeRange<
 export type Computed<T extends readonly unknown[] | unknown[]> = [
   ...ComputeRange<T["length"]>
 ]["length"];
+// type Tester = `${ComputeRange<2>[number]}`
