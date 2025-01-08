@@ -1,0 +1,17 @@
+import type { Key } from "chessground/types";
+
+export type Dests = Map<Key, Key[]>;
+
+export type ChessboardProps = {
+  position: string;
+  onMoveAction: (from: string, to: string) => void;
+};
+
+
+export const files = (['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'] as const).reduce(p => p);
+export const ranks = (['1', '2', '3', '4', '5', '6', '7', '8'] as const).reduce(p => p);
+
+
+
+export type MyKey = 'a0' | `${typeof files}${typeof ranks}`;
+

@@ -1,0 +1,29 @@
+{
+  "extends": "@portfolio/tsconfig/next.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
+  },
+  "include": [
+    ".",
+    "index.d.ts",
+    "global.d.ts",
+    "next-env.d.ts",
+    "next.config.mjs",
+    "postcss.config.mjs",
+    "tailwind.config.ts",
+    "src/**/*.tsx",
+    "src/**/*.ts",
+    ".next/types/**/*.ts",
+    "../../reset.d.ts"
+  ],
+  "exclude": ["node_modules", "public/**/*.js"]
+}
