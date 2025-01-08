@@ -8,7 +8,7 @@ export default [
   ...reactConfig,
   ...nextjsConfig,
   {
-    ignores: [".next/**", "!.next/types/**/*"],
+    ignores: [".next/**", "!.next/types/**/*", "public/scripts/stockfish-16.1.js"],
     rules: {
       "@typescript-eslint/consistent-type-assertions": "off",
       "@typescript-eslint/require-await": "off",
