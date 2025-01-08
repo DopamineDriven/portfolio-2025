@@ -15,6 +15,6 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "importHelpers": false,
-    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"]
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost","WebWorker"]
   }
 }

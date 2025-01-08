@@ -43,3 +43,49 @@ export function setPiece(
 export function copyBoard(board: Board) {
   return board.map(row => [...row]) satisfies Board;
 }
+
+
+function getPieceChar(piece: Piece) {
+  switch (piece.type) {
+    case 'pawn': return 'p';
+    case 'rook': return 'r';
+    case 'knight': return 'n';
+    case 'bishop': return 'b';
+    case 'queen': return 'q';
+    case 'king': return 'k';
+    default: return '';
+  }
+}
+
+export function boardToFen(board: Board): string {
+  let fen = '';
+  let emptyCount = 0;
+
+  for (let row = 0; row < BOARD_SIZE; row++) {
+    for (let col = 0; col < BOARD_SIZE; col++) {
+      const piece = getPiece(board, row, col);
+      if (piece) {
+        if (emptyCount > 0) {
+          fen += emptyCount;
+          emptyCount = 0;
+        }
+        const pieceChar = getPieceChar(piece);
+        fen += piece.color === 'white' ? pieceChar.toUpperCase() : pieceChar.toLowerCase();
+      } else {
+        emptyCount++;
+      }
+    }
+    if (emptyCount > 0) {
+      fen += emptyCount;
+      emptyCount = 0;
+    }
+    if (row < BOARD_SIZE - 1) {
+      fen += '/';
+    }
+  }
+
+  // Add other FEN components (active color, castling availability, etc.)
+  fen += ' w KQkq - 0 1';  // Simplified version, you may need to adjust this based on the actual game state
+
+  return fen;
+}

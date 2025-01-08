@@ -35,7 +35,7 @@ const ChessGame: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-600 py-8 text-gray-300">
+    <div className="flex h-full flex-col items-center justify-center bg-gray-600 py-8 text-gray-300">
       {/* Fixed height container for black's captured pieces */}
       <div className="h-12 w-full max-w-md">
         <CapturedPieces
