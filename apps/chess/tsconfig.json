@@ -20,11 +20,10 @@
     "next.config.mjs",
     "postcss.config.mjs",
     "tailwind.config.ts",
-    "stockfish.d.ts",
     "src/**/*.tsx",
     "src/**/*.ts",
     ".next/types/**/*.ts",
     "../../reset.d.ts"
   ],
-  "exclude": ["node_modules", "public/scripts/stockfish-16.1.js", "public/scripts/stockfish-16.1.cjs"]
+  "exclude": ["node_modules", "public/scripts/stockfish-16.1.js"]
 }
