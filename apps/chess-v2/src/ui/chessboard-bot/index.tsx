@@ -9,18 +9,9 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
+import type { ColorExtended } from "@/types/chess";
+import { getStockfishDifficulty, stockfishDifficulty } from "@/types/chess";
 import { Engine } from "@/utils/engine";
-
-
-const stockfishDifficulty = {
-  beginner: 2,
-  intermediate: 6,
-  expert: 12
-} as const;
-
-const getStockfishDifficulty = (target: keyof typeof stockfishDifficulty) => {
-  return stockfishDifficulty[target];
-}
 
 export interface OptionSquares {
   [key: string]: {
@@ -38,7 +29,8 @@ export interface RightClickedSquares {
 }
 
 const ChessboardBot: React.FC = () => {
-  const [difficulty, useDifficulty] = useState<keyof typeof stockfishDifficulty>("intermediate")
+  const [difficulty, useDifficulty] =
+    useState<keyof typeof stockfishDifficulty>("intermediate");
   const engine = useMemo(() => new Engine(), []);
   const [game, setGame] = useState<InstanceType<typeof Chess>>(new Chess());
   const [moveFrom, setMoveFrom] = useState<Square | null>(null);

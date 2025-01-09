@@ -2,7 +2,7 @@
 
 import type { Api } from "chessground/api";
 import type { Config } from "chessground/config";
-import type { Key } from "chessground/types";
+import type { Key, Dests } from "chessground/types";
 import { useCallback, useEffect, useState } from "react";
 import { Chess } from "chess.js";
 import { Chessground } from "chessground";
@@ -16,8 +16,6 @@ interface ChessboardProps {
   position: string;
   onMoveAction: (from: string, to: string) => void;
 }
-
-type Dests = Map<Key, Key[]>;
 
 export default function Chessboard({
   position,
@@ -49,6 +47,7 @@ export default function Chessboard({
 
     const config = {
       fen: position,
+      turnColor: chess.turn() === "b" ? "black" : "white",
       movable: {
         free: false,
         color: "white",
@@ -62,7 +61,7 @@ export default function Chessboard({
         showGhost: true
       },
       highlight: {
-        lastMove: true,
+        lastMove: false,
         check: true
       },
       premovable: {

@@ -2,6 +2,7 @@ import type { VariantProps } from "class-variance-authority";
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
+import type { TsxTargetedReact19 } from "@/types/react";
 
 const variants = {
   variant: {
@@ -36,7 +37,7 @@ const buttonVariants = cva(rootClassName.root, {
 });
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends TsxTargetedReact19<"button">,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
 }
@@ -48,7 +49,7 @@ function Button({
   asChild = false,
   ref,
   ...props
-}: ButtonProps & { ref?: React.Ref<HTMLButtonElement> }) {
+}: ButtonProps) {
   const Comp = asChild ? Slot : "button";
   return (
     <Comp

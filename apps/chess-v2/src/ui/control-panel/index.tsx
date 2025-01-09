@@ -1,7 +1,7 @@
 import { Chess } from "chess.js";
 
 interface ControlPanelProps {
-  game: Chess;
+  game: InstanceType<typeof Chess>;
 }
 
 export default function ControlPanel({ game }: ControlPanelProps) {
@@ -10,7 +10,7 @@ export default function ControlPanel({ game }: ControlPanelProps) {
       <h2 className="mb-4 text-xl font-bold">Game Info</h2>
       <div className="space-y-2">
         <p>Turn: {game.turn() === "w" ? "White" : "Black"}</p>
-        <p>Fullmoves: {game.moves.length}</p>
+        <p>Fullmoves: {game.moveNumber()}</p>
         <p>In check: {game.inCheck() ? "Yes" : "No"}</p>
         <p>Game over: {game.isGameOver() ? "Yes" : "No"}</p>
         {game.isGameOver() && (
