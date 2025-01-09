@@ -12,7 +12,7 @@ const nextConfig = {
     remotePatterns: [
       {
         hostname: "localhost",
-        port: "3009",
+        port: "3010",
         protocol: "http"
       },
       {
@@ -22,7 +22,7 @@ const nextConfig = {
       { hostname: "api.dicebear.com", protocol: "https" },
       { hostname: "images.unsplash.com", protocol: "https" },
       { hostname: "tailwindui.com", protocol: "https" },
-      { hostname: "chess-2025.vercel.app", protocol: "https" }
+      { hostname: "chess-challenge-2025.vercel.app", protocol: "https" }
     ]
   }
 };
