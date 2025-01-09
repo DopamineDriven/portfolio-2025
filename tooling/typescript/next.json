@@ -4,7 +4,7 @@
   "compilerOptions": {
     "alwaysStrict": true,
     "module": "ESNext",
-    "target": "ESNext",
+    "target": "es5",
     "incremental": true,
     "sourceMap": true,
     "useDefineForClassFields": true,
@@ -14,7 +14,8 @@
     "declarationMap": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "moduleResolution": "bundler",
     "importHelpers": false,
-    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost","WebWorker"]
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost", "WebWorker"]
   }
 }

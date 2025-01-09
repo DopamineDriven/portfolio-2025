@@ -13,7 +13,7 @@ export type DifficultyOptions = "challenge" | "friendly" | "assisted";
 
 export interface UserGameSettings {
   playerColor: ColorExtended
-  difficulty: DifficultyOptions
+  difficulty: StockfishDifficulty
 }
 
 // export const files = (["a", "b", "c", "d", "e", "f", "g", "h"] as const).reduce(

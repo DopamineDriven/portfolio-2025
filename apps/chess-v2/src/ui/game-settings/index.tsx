@@ -9,14 +9,19 @@ import {
   DialogHeader,
   DialogTitle
 } from "@/ui/atoms/dialog";
-import type { UserGameSettings}from "@/types/chess";
 import { BlackKing, PlayAsRandom, WhiteKing } from "@/ui/chess-vectors";
+import { Color } from "chessground/types";
 
-interface GameSettingsProps {
-  onStartAction: (settings: UserGameSettings) => void;
+export interface GameSettingsProps {
+  onStartAction: (settings: UserGameSettingsLocal) => void;
   open: boolean;
   onOpenChangeAction: (open: boolean) => void;
   allowClose: boolean;
+}
+
+export interface UserGameSettingsLocal {
+  playerColor: Color | "random"
+  difficulty: "challenge" | "friendly" | "assisted"
 }
 
 export default function GameSettings({
@@ -25,9 +30,9 @@ export default function GameSettings({
   onOpenChangeAction: onOpenChange,
   allowClose
 }: GameSettingsProps) {
-  const [selectedColor, setSelectedColor] = useState<UserGameSettings['playerColor']>("white");
+  const [selectedColor, setSelectedColor] = useState<UserGameSettingsLocal['playerColor']>("white");
   const [selectedDifficulty, setSelectedDifficulty] =
-    useState<UserGameSettings["difficulty"]>("friendly");
+    useState<UserGameSettingsLocal["difficulty"]>("challenge");
 
   const handleStart = () => {
     onStart({
@@ -52,7 +57,7 @@ export default function GameSettings({
         </DialogHeader>
         <div className="space-y-6">
           <div>
-            <h3 className="mb-3 text-lg font-semibold">I play as:</h3>
+            <h3 className="mb-3 text-lg font-semibold">Play as:</h3>
             <div className="flex justify-center gap-4">
               <Button
                 variant="outline"

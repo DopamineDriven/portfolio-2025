@@ -2,11 +2,10 @@
 
 import type { Api } from "chessground/api";
 import type { Config } from "chessground/config";
-import type { Dests, Key } from "chessground/types";
+import type { Key, Dests } from "chessground/types";
 import { useCallback, useEffect, useRef } from "react";
-import { Chess } from "chess.js";
+import { Chess, Color } from "chess.js";
 import { Chessground } from "chessground";
-import type { ColorExtended } from "@/types/chess";
 import "chessground/assets/chessground.base.css";
 import "chessground/assets/chessground.brown.css";
 import "chessground/assets/chessground.cburnett.css";
@@ -14,12 +13,14 @@ import "chessground/assets/chessground.cburnett.css";
 interface ChessboardProps {
   position: string;
   onMoveAction: (from: string, to: string) => void;
-  playerColor: ColorExtended;
+  playerColor: Color;
   orientation: "white" | "black";
   isPlayerTurn: boolean;
   check: boolean;
   lastMove?: [Key, Key];
 }
+
+
 
 export default function Chessboard({
   position,
@@ -58,15 +59,15 @@ export default function Chessboard({
   useEffect(() => {
     const chess = new Chess(position);
     chessRef.current = chess;
-    const chessColorHelper = (val: "b" | "w") =>
-      val === "b" ? "black" : "white";
+    const chessColorHelper = (val: "b" | "w") => val === "b" ? "black" : "white";
 
     const config: Config = {
+
       fen: position,
       orientation: orientation,
       coordinates: true,
       coordinatesOnSquares: false,
-      autoCastle: true,
+autoCastle: true,
       turnColor: chessColorHelper(chess.turn()),
       movable: {
         free: false,
@@ -86,7 +87,9 @@ export default function Chessboard({
         lastMove: false,
         check: true
       },
-      premovable: { showDests: true, castle: true, enabled: true },
+      premovable: {showDests: true,castle: true,
+        enabled: true
+      },
       predroppable: {
         enabled: false
       },
