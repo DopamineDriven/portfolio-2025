@@ -1,17 +1,16 @@
 {
-  "name": "@portfolio/chess-v2",
+  "name": "@portfolio/chess-minimal",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "license": "MIT",
   "prettier": "@portfolio/prettier-config",
   "scripts": {
-    "dev": "next dev -p 3010 --turbo",
+    "dev": "next dev -p 3011",
     "build": "next build",
     "format": "prettier --write \"**/*.{ts,tsx,cts,mts,js,jsx,mjs,cjs,json,yaml,yml,css,html,md,mdx,graphql,gql}\" --ignore-unknown --cache",
     "start": "next start",
-    "lint": "eslint",
-    "watch:stockfish": "node public/scripts/stockfish.js -s ASSERTIONS=1 --watch"
+    "lint": "eslint"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.4",
@@ -20,7 +19,6 @@
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-toast": "^1.2.4",
     "chess.js": "^1.0.0-beta.8",
-    "chessground": "^9.1.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "country-flag-icons": "^1.5.14",
@@ -33,21 +31,18 @@
     "react-dom": "^19.0.0",
     "stockfish": "^16.0.0",
     "tailwind-merge": "^2.6.0"
-    },
+  },
   "devDependencies": {
     "@edge-runtime/cookies": "^6.0.0",
     "@edge-runtime/types": "^4.0.0",
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
     "@portfolio/tsconfig": "workspace:*",
-    "@types/gtag.js": "^0.0.20",
-    "@types/lodash": "^4.17.14",
     "@types/node": "^22.10.5",
     "@types/react": "^19.0.4",
     "@types/react-dom": "^19.0.2",
     "@vercel/functions": "^1.5.2",
     "autoprefixer": "^10.4.20",
-    "concurrently": "^9.1.2",
     "csstype": "^3.1.3",
     "dotenv": "^16.4.7",
     "dotenv-cli": "^8.0.0",

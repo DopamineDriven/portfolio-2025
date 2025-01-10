@@ -5,6 +5,7 @@
   "packageManager": "pnpm@9.15.3+sha512.1f79bc245a66eb0b07c5d4d83131240774642caaa86ef7d0434ab47c0d16f66b04e21e0c086eb61e62c77efc4d7f7ec071afad3796af64892fae66509173893a",
   "scripts": {
     "build:chess": "turbo build --filter=@portfolio/chess",
+    "build:chess-minimal": "turbo build --filter=@portfolio/chess-minimal",
     "build:chess-v2": "turbo build --filter=@portfolio/chess-v2",
     "build:web": "turbo build --filter=@portfolio/web",
     "changeset": "changeset",
@@ -20,6 +21,7 @@
     "generate:hex": "openssl rand -hex 64",
     "npm:registry": "npm set registry https://registry.npmjs.org",
     "run:chess": "turbo dev --filter=@portfolio/chess",
+    "run:chess-minimal": "turbo dev --filter=@portfolio/chess-minimal",
     "run:chess-v2": "turbo dev --filter=@portfolio/chess-v2",
     "run:web": "turbo dev --filter=@portfolio/web",
     "sync:time": "sudo ntpdate time.windows.com",
