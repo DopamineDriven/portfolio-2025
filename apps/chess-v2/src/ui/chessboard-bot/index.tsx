@@ -1,15 +1,25 @@
 "use client";
 
 import type { Square } from "chess.js";
-import type {
-  BoardOrientation,
-  PromotionPieceOption
-} from "react-chessboard/dist/chessboard/types";
+import type { Key } from "chessground/types";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { Chess } from "chess.js";
-import { Chessboard } from "react-chessboard";
+import { RotateCcw } from "lucide-react";
+import type { StockfishDifficulty } from "@/types/chess";
+import type { ChessColor } from "@/utils/chess-types";
+import { getStockfishDifficulty } from "@/types/chess";
+import { Button } from "@/ui/atoms/button";
+import Chessboard from "@/ui/chessboard";
+import { GameSettings } from "@/ui/game-settings";
+import MoveHistory from "@/ui/move-history";
+import { toChessgroundColor, toChessJSColor } from "@/utils/chess-types";
 import { Engine } from "@/utils/engine";
+
+interface ChessboardBotProps {
+  initialSettings: GameSettings;
+  difficulty: StockfishDifficulty;
+  onRestart: () => void;
+}
 
 export interface OptionSquares {
   [key: string]: {
@@ -26,58 +36,42 @@ export interface RightClickedSquares {
     | undefined;
 }
 
-const ChessboardBot: React.FC = () => {
+const ChessboardBot: React.FC<ChessboardBotProps> = ({
+  initialSettings,
+  difficulty,
+  onRestart
+}) => {
   const engine = useMemo(() => new Engine(), []);
-  const [game, setGame] = useState<InstanceType<typeof Chess>>(new Chess());
-  const [moveFrom, setMoveFrom] = useState<Square | null>(null);
-  const [moveTo, setMoveTo] = useState<Square | null>(null);
-  const [showPromotionDialog, setShowPromotionDialog] = useState(false);
-  const [rightClickedSquares, setRightClickedSquares] =
-    useState<RightClickedSquares>({});
-  const [optionSquares, setOptionSquares] = useState<OptionSquares>({});
-  const searchParams = useSearchParams();
-  const stockfishLevel = Number.parseInt(
-    searchParams.get("stockfishLevel") ?? "10",
-    10
-  );
-  const playAs = searchParams.get("playAs") ?? "white";
+  const [game, setGame] = useState<Chess>(new Chess());
+  const [playerColor, _setPlayerColor] = useState<ChessColor>(() => {
+    if (initialSettings.playerColor === "random") {
+      return Math.random() < 0.5 ? "white" : "black";
+    }
+    // Ensure we're using chessground format for the board
+    return initialSettings.playerColor === "w"
+      ? "white"
+      : initialSettings.playerColor === "b"
+        ? "black"
+        : initialSettings.playerColor;
+  });
   const [gameResult, setGameResult] = useState<string | null>(null);
   const [showGameModal, setShowGameModal] = useState(false);
-  const [boardWidth, setBoardWidth] = useState(560);
-  const [isPlayerTurn, setIsPlayerTurn] = useState(playAs === "white");
-
-  const makeStockfishMove = useCallback(() => {
-    if (game.isGameOver()) return;
-
-    setIsPlayerTurn(false);
-    engine.evaluatePosition(game.fen(), stockfishLevel);
-    engine.onMessage(({ bestMove }) => {
-      if (bestMove) {
-        const move = game.move({
-          from: bestMove.substring(0, 2) as Square,
-          to: bestMove.substring(2, 4) as Square,
-          promotion: bestMove.substring(4, 5) as
-            | "q"
-            | "r"
-            | "b"
-            | "n"
-            | undefined
-        });
-
-        if (move) {
-          setGame(new Chess(game.fen()));
-          setIsPlayerTurn(true);
-        }
-      }
-    });
-  }, [engine, game, stockfishLevel]);
+  const [isPlayerTurn, setIsPlayerTurn] = useState(() => {
+    const chessJSColor = toChessJSColor(playerColor);
+    return chessJSColor === "w";
+  });
+  const [lastMove, setLastMove] = useState<[Key, Key] | undefined>(undefined);
+  const [optionSquares, setOptionSquares] = useState<OptionSquares>({});
+  const [rightClickedSquares, setRightClickedSquares] =
+    useState<RightClickedSquares>({});
+  const [moves, setMoves] = useState<string[]>([]);
 
   useEffect(() => {
-    if (playAs === "black") {
+    if (playerColor === "black") {
       makeStockfishMove();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playAs]);
+  }, [playerColor]);
 
   useEffect(() => {
     if (game.isGameOver()) {
@@ -91,6 +85,38 @@ const ChessboardBot: React.FC = () => {
       setShowGameModal(true);
     }
   }, [game]);
+
+  const makeStockfishMove = useCallback(() => {
+    if (game.isGameOver()) return;
+
+    setIsPlayerTurn(false);
+    const stockfishLevel = getStockfishDifficulty(difficulty);
+
+    engine.evaluatePosition(game.fen(), stockfishLevel);
+    engine.onMessage(({ bestMove }) => {
+      if (bestMove) {
+        const from = bestMove.substring(0, 2) as Square;
+        const to = bestMove.substring(2, 4) as Square;
+        const move = game.move({
+          from,
+          to,
+          promotion: bestMove.substring(4, 5) as
+            | "q"
+            | "r"
+            | "b"
+            | "n"
+            | undefined
+        });
+
+        if (move) {
+          setGame(new Chess(game.fen()));
+          setLastMove([from as Key, to as Key]);
+          setIsPlayerTurn(true);
+          setMoves(prev => [...prev, move.san]);
+        }
+      }
+    });
+  }, [engine, game, difficulty]);
 
   function getMoveOptions(square: Square) {
     const moves = game.moves({
@@ -121,80 +147,24 @@ const ChessboardBot: React.FC = () => {
     return true;
   }
 
-  function onSquareClick(square: Square) {
+  function onSquareClick(from: Exclude<Key, "a0">, to: Exclude<Key, "a0">) {
     if (!isPlayerTurn) return;
 
     setRightClickedSquares({});
 
-    if (!moveFrom) {
-      const hasMoveOptions = getMoveOptions(square);
-      if (hasMoveOptions) setMoveFrom(square);
-      return;
-    }
+    const gameCopy = new Chess(game.fen());
+    const move = gameCopy.move({ from, to, promotion: "q" });
 
-    if (!moveTo) {
-      const moves = game.moves({ square: moveFrom, verbose: true });
-      const foundMove = moves.find(m => m.to === square);
-      if (!foundMove) {
-        const hasMoveOptions = getMoveOptions(square);
-        setMoveFrom(hasMoveOptions ? square : null);
-        return;
-      }
-
-      setMoveTo(square);
-
-      if (
-        game.get(moveFrom)?.type === "p" &&
-        ((game.get(moveFrom)?.color === "w" && square[1] === "8") ||
-          (game.get(moveFrom)?.color === "b" && square[1] === "1"))
-      ) {
-        setShowPromotionDialog(true);
-        return;
-      }
-
-      const gameCopy = new Chess(game.fen());
-      const move = gameCopy.move({
-        from: moveFrom,
-        to: square,
-        promotion: "q"
-      });
-
-      if (move === null) {
-        const hasMoveOptions = getMoveOptions(square);
-        if (hasMoveOptions) setMoveFrom(square);
-        return;
-      }
-
+    if (move) {
       setGame(gameCopy);
-      setMoveFrom(null);
-      setMoveTo(null);
+      setLastMove([from as Key, to as Key]);
       setOptionSquares({});
+      setIsPlayerTurn(false);
+      setMoves(prev => [...prev, move.san]);
       setTimeout(makeStockfishMove, 300);
+    } else {
+      getMoveOptions(from);
     }
-  }
-
-  function onPromotionPieceSelect(
-    piece?: PromotionPieceOption,
-    promoteFromSquare?: Square,
-    promoteToSquare?: Square
-  ) {
-    if (piece) {
-      const gameCopy = new Chess(game.fen());
-      gameCopy.move({
-        from: (promoteFromSquare ??= moveFrom!),
-        to: (promoteToSquare ??= moveTo!),
-        promotion: piece?.[1]?.toLowerCase() ?? "q"
-      });
-      setGame(gameCopy);
-      setTimeout(makeStockfishMove, 300);
-      return true;
-    }
-
-    setMoveFrom(null);
-    setMoveTo(null);
-    setShowPromotionDialog(false);
-    setOptionSquares({});
-    return false;
   }
 
   function onSquareRightClick(square: Square) {
@@ -209,67 +179,66 @@ const ChessboardBot: React.FC = () => {
     });
   }
 
-  useEffect(() => {
-    const handleResize = () => {
-      const screenWidth = window.innerWidth;
-      if (screenWidth < 600) {
-        setBoardWidth(260);
-      } else if (screenWidth < 960) {
-        setBoardWidth(400);
-      } else {
-        setBoardWidth(560);
-      }
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
   return (
-    <>
-      <Chessboard
-        animationDuration={200}
-        arePiecesDraggable={false}
-        boardOrientation={playAs as BoardOrientation}
-        position={game.fen()}
-        boardWidth={boardWidth}
-        onSquareClick={onSquareClick}
-        onSquareRightClick={onSquareRightClick}
-        onPromotionPieceSelect={onPromotionPieceSelect}
-        customBoardStyle={{
-          borderRadius: "4px",
-          boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)"
-        }}
-        customSquareStyles={{
-          ...optionSquares,
-          ...rightClickedSquares
-        }}
-        promotionToSquare={moveTo}
-        showPromotionDialog={showPromotionDialog}
-      />
+    <div className="relative flex gap-8">
+      <div>
+        <Button
+          variant="outline"
+          size="icon"
+          className="absolute -top-12 right-0"
+          onClick={onRestart}>
+          <RotateCcw className="h-4 w-4" />
+        </Button>
+        <Chessboard
+          position={game.fen()}
+          onMoveAction={onSquareClick}
+          onSquareRightClick={onSquareRightClick}
+          playerColor={toChessgroundColor(playerColor)}
+          orientation={toChessgroundColor(playerColor)}
+          isPlayerTurn={isPlayerTurn}
+          check={game.isCheck()}
+          lastMove={lastMove}
+          customSquareStyles={{
+            ...optionSquares,
+            ...rightClickedSquares
+          }}
+        />
+      </div>
+      <div className="flex-1">
+        <MoveHistory moves={moves} />
+      </div>
       {showGameModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="rounded-lg bg-white p-4">
-            <h2 className="mb-2 text-xl font-bold">{gameResult}</h2>
-            <button
-              className="rounded bg-blue-500 px-4 py-2 text-white"
-              onClick={() => {
-                setGame(new Chess());
-                setShowGameModal(false);
-                setGameResult(null);
-                setIsPlayerTurn(playAs === "white");
-                if (playAs === "black") {
-                  setTimeout(makeStockfishMove, 300);
-                }
-              }}>
-              New Game
-            </button>
+            <h2 className="mb-2 text-xl font-bold text-gray-900">
+              {gameResult}
+            </h2>
+            <div className="flex gap-2">
+              <Button
+                variant="default"
+                onClick={() => {
+                  setGame(new Chess());
+                  setShowGameModal(false);
+                  setGameResult(null);
+                  setIsPlayerTurn(toChessJSColor(playerColor) === "w");
+                  setLastMove(undefined);
+                  setOptionSquares({});
+                  setRightClickedSquares({});
+                  setMoves([]);
+                  if (playerColor === "black") {
+                    setTimeout(makeStockfishMove, 300);
+                  }
+                }}>
+                New Game
+              </Button>
+              <Button variant="outline" onClick={onRestart}>
+                Change Settings
+              </Button>
+            </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

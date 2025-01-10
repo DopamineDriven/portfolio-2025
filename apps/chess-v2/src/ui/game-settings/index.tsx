@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Crown } from "lucide-react";
+import type { StockfishMode } from "@/types/chess";
+import type { ChessColor } from "@/utils/chess-types";
 import { Button } from "@/ui/atoms/button";
 import {
   Dialog,
@@ -10,39 +13,49 @@ import {
   DialogTitle
 } from "@/ui/atoms/dialog";
 import { BlackKing, PlayAsRandom, WhiteKing } from "@/ui/chess-vectors";
-import { Color } from "chessground/types";
 
-export interface GameSettingsProps {
-  onStartAction: (settings: UserGameSettingsLocal) => void;
+interface GameSettingsProps {
+  onStartAction: (settings: GameSettings) => void;
   open: boolean;
   onOpenChangeAction: (open: boolean) => void;
   allowClose: boolean;
 }
 
-export interface UserGameSettingsLocal {
-  playerColor: Color | "random"
-  difficulty: "challenge" | "friendly" | "assisted"
+export interface GameSettings {
+  playerColor: ChessColor | "random";
+  mode: StockfishMode;
 }
 
 export default function GameSettings({
-  onStartAction: onStart,
+  onStartAction,
   open,
-  onOpenChangeAction: onOpenChange,
+  onOpenChangeAction,
   allowClose
 }: GameSettingsProps) {
-  const [selectedColor, setSelectedColor] = useState<UserGameSettingsLocal['playerColor']>("white");
-  const [selectedDifficulty, setSelectedDifficulty] =
-    useState<UserGameSettingsLocal["difficulty"]>("challenge");
+  const searchParams = useSearchParams();
+  const initialColor =
+    (searchParams.get("color") as ChessColor | "random") || "white";
+  const [selectedColor, setSelectedColor] = useState<ChessColor | "random">(
+    initialColor === "w"
+      ? "white"
+      : initialColor === "b"
+        ? "black"
+        : initialColor
+  );
+  const [selectedMode, setSelectedMode] =
+    useState<GameSettings["mode"]>("challenge");
 
   const handleStart = () => {
-    onStart({
+    onStartAction({
       playerColor: selectedColor,
-      difficulty: selectedDifficulty
+      mode: selectedMode
     });
   };
 
   return (
-    <Dialog open={open} onOpenChange={allowClose ? onOpenChange : undefined}>
+    <Dialog
+      open={open}
+      onOpenChange={allowClose ? onOpenChangeAction : undefined}>
       <DialogContent
         className="bg-gray-900 text-white sm:max-w-md"
         aria-describedby="dialog-description">
@@ -57,9 +70,10 @@ export default function GameSettings({
         </DialogHeader>
         <div className="space-y-6">
           <div>
-            <h3 className="mb-3 text-lg font-semibold">Play as:</h3>
+            <h3 className="mb-3 text-lg font-semibold">I play as:</h3>
             <div className="flex justify-center gap-4">
               <Button
+                size="random"
                 variant="outline"
                 onClick={() => setSelectedColor("white")}
                 className={`h-16 w-16 ${
@@ -70,7 +84,7 @@ export default function GameSettings({
                 <WhiteKing className="h-12 w-12" />
               </Button>
               <Button
-                       size="random"
+                size="random"
                 variant="outline"
                 onClick={() => setSelectedColor("random")}
                 className={`h-16 w-16 ${
@@ -78,12 +92,10 @@ export default function GameSettings({
                     ? "ring-2 ring-white ring-offset-2 ring-offset-gray-900"
                     : ""
                 }`}>
-                <PlayAsRandom
-                  className="h-16 w-16 object-cover"
-
-                />
+                <PlayAsRandom className="h-16 w-16 object-cover" />
               </Button>
               <Button
+                size="random"
                 variant="outline"
                 onClick={() => setSelectedColor("black")}
                 className={`h-16 w-16 ${
@@ -98,9 +110,9 @@ export default function GameSettings({
 
           <div className="space-y-4">
             <button
-              onClick={() => setSelectedDifficulty("challenge")}
+              onClick={() => setSelectedMode("challenge")}
               className={`w-full rounded-lg p-4 text-left transition ${
-                selectedDifficulty === "challenge"
+                selectedMode === "challenge"
                   ? "bg-green-600"
                   : "bg-gray-800 hover:bg-gray-700"
               }`}>
@@ -118,9 +130,9 @@ export default function GameSettings({
             </button>
 
             <button
-              onClick={() => setSelectedDifficulty("friendly")}
+              onClick={() => setSelectedMode("friendly")}
               className={`w-full rounded-lg p-4 text-left transition ${
-                selectedDifficulty === "friendly"
+                selectedMode === "friendly"
                   ? "bg-green-600"
                   : "bg-gray-800 hover:bg-gray-700"
               }`}>
@@ -137,9 +149,9 @@ export default function GameSettings({
             </button>
 
             <button
-              onClick={() => setSelectedDifficulty("assisted")}
+              onClick={() => setSelectedMode("assisted")}
               className={`w-full rounded-lg p-4 text-left transition ${
-                selectedDifficulty === "assisted"
+                selectedMode === "assisted"
                   ? "bg-green-600"
                   : "bg-gray-800 hover:bg-gray-700"
               }`}>

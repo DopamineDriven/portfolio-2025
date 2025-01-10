@@ -12,8 +12,8 @@ export type ColorExtended = Color | "random";
 export type DifficultyOptions = "challenge" | "friendly" | "assisted";
 
 export interface UserGameSettings {
-  playerColor: ColorExtended
-  difficulty: StockfishDifficulty
+  playerColor: ColorExtended;
+  difficulty: StockfishDifficulty;
 }
 
 // export const files = (["a", "b", "c", "d", "e", "f", "g", "h"] as const).reduce(
@@ -38,3 +38,5 @@ export const getStockfishDifficulty = (
 };
 
 export type StockfishDifficulty = keyof typeof stockfishDifficulty;
+
+export type StockfishMode = "challenge" | "friendly" | "assisted";
