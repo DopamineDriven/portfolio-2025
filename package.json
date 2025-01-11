@@ -6,6 +6,7 @@
   "scripts": {
     "build:chess": "turbo build --filter=@portfolio/chess",
     "build:chess-minimal": "turbo build --filter=@portfolio/chess-minimal",
+    "build:chess-next-ui": "turbo build --filter=@portfolio/chess-next-ui",
     "build:chess-v2": "turbo build --filter=@portfolio/chess-v2",
     "build:web": "turbo build --filter=@portfolio/web",
     "changeset": "changeset",
@@ -22,6 +23,7 @@
     "npm:registry": "npm set registry https://registry.npmjs.org",
     "run:chess": "turbo dev --filter=@portfolio/chess",
     "run:chess-minimal": "turbo dev --filter=@portfolio/chess-minimal",
+    "run:chess-next-ui":"turbo dev --filter=@portfolio/chess-next-ui",
     "run:chess-v2": "turbo dev --filter=@portfolio/chess-v2",
     "run:web": "turbo dev --filter=@portfolio/web",
     "sync:time": "sudo ntpdate time.windows.com",
