@@ -19,7 +19,7 @@ export default tseslint.config(
       "**/*.config.cjs",
       "tailwind.config.ts",
       "tsup.config.ts",
-      "stockfish.js",
+      "public/**/*.js",
       "**/*.presets.cjs"
     ]
   },
@@ -44,6 +44,7 @@ export default tseslint.config(
       "stockfish.js",
       "**/*.config.mjs",
       "**/*.config.js",
+      "public/**/*.js",
       "**/*.config.cjs",
       "**/*.presets.cjs"
     ],

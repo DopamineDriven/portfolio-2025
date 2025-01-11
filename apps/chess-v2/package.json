@@ -6,7 +6,7 @@
   "license": "MIT",
   "prettier": "@portfolio/prettier-config",
   "scripts": {
-    "dev": "next dev -p 3010 --turbo",
+    "dev": "next dev -p 3010",
     "build": "next build",
     "format": "prettier --write \"**/*.{ts,tsx,cts,mts,js,jsx,mjs,cjs,json,yaml,yml,css,html,md,mdx,graphql,gql}\" --ignore-unknown --cache",
     "start": "next start",

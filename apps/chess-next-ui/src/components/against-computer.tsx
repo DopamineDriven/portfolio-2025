@@ -15,7 +15,7 @@ const AgainstComputer: FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const searchParams = useSearchParams();
   const stockfishLevel = Number.parseInt(
-    searchParams.get("stockfishLevel"),
+    searchParams.get("stockfishLevel") ?? "5",
     10
   );
   const stockfishLevelSymbol =

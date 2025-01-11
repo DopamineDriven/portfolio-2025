@@ -15,13 +15,13 @@ import {
 import { BlackKing, PlayAsRandom, WhiteKing } from "@/ui/chess-vectors";
 
 interface GameSettingsProps {
-  onStartAction: (settings: GameSettings) => void;
+  onStartAction: (settings: GameSettingsEntity) => void;
   open: boolean;
   onOpenChangeAction: (open: boolean) => void;
   allowClose: boolean;
 }
 
-export interface GameSettings {
+export interface GameSettingsEntity {
   playerColor: ChessColor | "random";
   mode: StockfishMode;
 }
@@ -43,7 +43,7 @@ export default function GameSettings({
         : initialColor
   );
   const [selectedMode, setSelectedMode] =
-    useState<GameSettings["mode"]>("challenge");
+    useState<GameSettingsEntity["mode"]>("challenge");
 
   const handleStart = () => {
     onStartAction({

@@ -2,21 +2,68 @@
 
 import type { Square } from "chess.js";
 import type { Key } from "chessground/types";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import type { CSSProperties, FC } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Chess } from "chess.js";
 import { RotateCcw } from "lucide-react";
 import type { StockfishDifficulty } from "@/types/chess";
+import type { GameSettingsEntity } from "@/ui/game-settings";
 import type { ChessColor } from "@/utils/chess-types";
 import { getStockfishDifficulty } from "@/types/chess";
 import { Button } from "@/ui/atoms/button";
 import Chessboard from "@/ui/chessboard";
-import { GameSettings } from "@/ui/game-settings";
 import MoveHistory from "@/ui/move-history";
 import { toChessgroundColor, toChessJSColor } from "@/utils/chess-types";
-import { Engine } from "@/utils/engine";
+
+class Engine {
+  private stockfish: Worker | null;
+
+  constructor() {
+    this.stockfish =
+      typeof Worker !== "undefined" ? new Worker("/stockfish.js") : null;
+    this.onMessage = this.onMessage.bind(this);
+
+    if (this.stockfish) {
+      this.sendMessage("uci");
+      this.sendMessage("isready");
+    }
+  }
+
+  onMessage(callback: (data: { bestMove: string }) => void) {
+    if (this.stockfish) {
+      this.stockfish.addEventListener("message", (e: MessageEvent<string>) => {
+        const bestMove = e.data?.match(/bestmove\s+(\S+)/)?.[1];
+        console.log(`[evaluating-best move]: ${bestMove}`);
+        callback({ bestMove: bestMove ?? "" });
+      });
+    }
+  }
+
+  evaluatePosition(fen: string, depth: number) {
+    console.log(`[evaluating-position]: \nfen:${fen} \ndepth:${depth}`);
+    if (this.stockfish) {
+      this.stockfish.postMessage(`position fen ${fen}`);
+      this.stockfish.postMessage(`go depth ${depth}`);
+    }
+  }
+
+  stop() {
+    this.sendMessage("stop");
+  }
+
+  quit() {
+    this.sendMessage("quit");
+  }
+
+  private sendMessage(message: string) {
+    if (this.stockfish) {
+      this.stockfish.postMessage(message);
+    }
+  }
+}
 
 interface ChessboardBotProps {
-  initialSettings: GameSettings;
+  initialSettings: GameSettingsEntity;
   difficulty: StockfishDifficulty;
   onRestart: () => void;
 }
@@ -36,13 +83,13 @@ export interface RightClickedSquares {
     | undefined;
 }
 
-const ChessboardBot: React.FC<ChessboardBotProps> = ({
+const ChessboardBot: FC<ChessboardBotProps> = ({
   initialSettings,
   difficulty,
   onRestart
 }) => {
   const engine = useMemo(() => new Engine(), []);
-  const [game, setGame] = useState<Chess>(new Chess());
+  const [game, setGame] = useState<InstanceType<typeof Chess>>(new Chess());
   const [playerColor, _setPlayerColor] = useState<ChessColor>(() => {
     if (initialSettings.playerColor === "random") {
       return Math.random() < 0.5 ? "white" : "black";
@@ -83,7 +130,10 @@ const ChessboardBot: React.FC<ChessboardBotProps> = ({
         setGameResult("Game over!");
       }
       setShowGameModal(true);
+    } else {
+      setGameResult("You Resigned!");
     }
+    setMoves(game.history());
   }, [game]);
 
   const makeStockfishMove = useCallback(() => {
@@ -92,30 +142,28 @@ const ChessboardBot: React.FC<ChessboardBotProps> = ({
     setIsPlayerTurn(false);
     const stockfishLevel = getStockfishDifficulty(difficulty);
 
-    engine.evaluatePosition(game.fen(), stockfishLevel);
     engine.onMessage(({ bestMove }) => {
       if (bestMove) {
+        const gameCopy = new Chess(game.fen());
         const from = bestMove.substring(0, 2) as Square;
         const to = bestMove.substring(2, 4) as Square;
-        const move = game.move({
-          from,
-          to,
-          promotion: bestMove.substring(4, 5) as
-            | "q"
-            | "r"
-            | "b"
-            | "n"
-            | undefined
-        });
+        const promotion =
+          bestMove.length > 4
+            ? (bestMove.substring(4, 5) as "q" | "r" | "b" | "n")
+            : undefined;
+
+        const move = gameCopy.move({ from, to, promotion });
 
         if (move) {
-          setGame(new Chess(game.fen()));
+          setGame(gameCopy);
           setLastMove([from as Key, to as Key]);
           setIsPlayerTurn(true);
-          setMoves(prev => [...prev, move.san]);
+          setMoves(gameCopy.history());
         }
       }
     });
+
+    engine.evaluatePosition(game.fen(), stockfishLevel);
   }, [engine, game, difficulty]);
 
   function getMoveOptions(square: Square) {
@@ -147,20 +195,33 @@ const ChessboardBot: React.FC<ChessboardBotProps> = ({
     return true;
   }
 
-  function onSquareClick(from: Exclude<Key, "a0">, to: Exclude<Key, "a0">) {
+  function onSquareClick(from: Square, to: Square) {
     if (!isPlayerTurn) return;
 
     setRightClickedSquares({});
 
     const gameCopy = new Chess(game.fen());
-    const move = gameCopy.move({ from, to, promotion: "q" });
+    const piece = gameCopy.get(from);
+    const isPromotion =
+      piece?.type === "p" &&
+      ((piece.color === "w" && to.endsWith("8")) ||
+        (piece.color === "b" && to.endsWith("1")));
+
+    let move;
+    if (isPromotion) {
+      // For simplicity, we're auto-promoting to queen.
+      // In a full implementation, you'd want to show a dialog for piece selection.
+      move = gameCopy.move({ from, to, promotion: "q" });
+    } else {
+      move = gameCopy.move({ from, to });
+    }
 
     if (move) {
       setGame(gameCopy);
       setLastMove([from as Key, to as Key]);
       setOptionSquares({});
       setIsPlayerTurn(false);
-      setMoves(prev => [...prev, move.san]);
+      setMoves(gameCopy.history());
       setTimeout(makeStockfishMove, 300);
     } else {
       getMoveOptions(from);
@@ -191,17 +252,19 @@ const ChessboardBot: React.FC<ChessboardBotProps> = ({
         </Button>
         <Chessboard
           position={game.fen()}
-          onMoveAction={onSquareClick}
-          onSquareRightClick={onSquareRightClick}
+          onMoveAction={onSquareClick as (from: Key, to: Key) => void}
+          onSquareRightClickAction={onSquareRightClick}
           playerColor={toChessgroundColor(playerColor)}
           orientation={toChessgroundColor(playerColor)}
           isPlayerTurn={isPlayerTurn}
           check={game.isCheck()}
           lastMove={lastMove}
-          customSquareStyles={{
-            ...optionSquares,
-            ...rightClickedSquares
-          }}
+          customSquareStyles={
+            {
+              ...optionSquares,
+              ...rightClickedSquares
+            } as Record<string, CSSProperties>
+          }
         />
       </div>
       <div className="flex-1">

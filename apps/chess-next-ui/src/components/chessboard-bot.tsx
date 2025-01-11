@@ -1,11 +1,11 @@
 "use client";
 
-import type { PieceSymbol, Square } from "chess.js";
+import type { Square } from "chess.js";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
-import { type BoardOrientation } from "react-chessboard/dist/chessboard/types";
+import type { BoardOrientation, PromotionPieceOption } from "react-chessboard/dist/chessboard/types";
 import { useBoardStore } from "@/app/store";
 import {
   convertCSSPropertiesToStringObject,
@@ -33,7 +33,7 @@ class Engine {
   onMessage(callback: (data: { bestMove: string }) => void) {
     if (this.stockfish) {
       this.stockfish.addEventListener("message", (e: MessageEvent<string>) => {
-        const bestMove = e.data?.match(/bestmove\s+(\S+)/)?.[1];
+        const bestMove = e.data?.match(/bestmove\s+(\S+)/)?.[1] ?? "";
         callback({ bestMove });
       });
     }
@@ -214,13 +214,13 @@ const ChessboardBot: React.FC = () => {
     }
   }
 
-  function onPromotionPieceSelect(piece: PieceSymbol) {
+  function onPromotionPieceSelect(piece?: PromotionPieceOption) {
     if (piece) {
       const gameCopy = new Chess(game.fen());
       gameCopy.move({
         from: moveFrom!,
         to: moveTo!,
-        promotion: piece[1].toLowerCase() ?? "q"
+        promotion: piece?.[1]?.toLowerCase() ?? "q"
       });
       setGame(gameCopy);
       setTimeout(makeStockfishMove, 500);
@@ -297,7 +297,7 @@ const ChessboardBot: React.FC = () => {
         boardWidth={boardWidth}
         onSquareClick={onSquareClick}
         onSquareRightClick={onSquareRightClick}
-        onPromotionPieceSelect={onPromotionPieceSelect}
+        onPromotionPieceSelect={onPromotionPieceSelect!}
         customBoardStyle={{
           borderRadius: "4px",
           boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)"

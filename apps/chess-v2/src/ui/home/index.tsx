@@ -1,225 +1,132 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useCallback } from "react";
-import { Chess, Square, Color } from "chess.js";
-import { Engine } from "@/utils/engine";
-import { Key } from "chessground/types";
-import Chessboard from "../chessboard";
-import MoveHistory from "./MoveHistory";
-import { GameSettings } from "@/ui/game-settings";
+import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import type { StockfishDifficulty } from "@/types/chess";
+import type { GameSettingsEntity as GameSettingsType } from "@/ui/game-settings";
+import type { ChessColor } from "@/utils/chess-types";
 import { Button } from "@/ui/atoms/button";
-import { RotateCcw } from 'lucide-react';
-import { getStockfishDifficulty } from "@/types/difficulty";
-import { ColorExtended } from "@/types/chess";
+import ChessboardBot from "@/ui/chessboard-bot";
+import DifficultySelection from "@/ui/difficulty-selection";
+import GameSettings from "@/ui/game-settings";
 
-interface ChessboardBotProps {
-  initialSettings: GameSettings;
-  onRestart: () => void;
-}
+export default function Home() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-export interface OptionSquares {
-  [key: string]: {
-    background: string;
-    borderRadius: string;
+  const initialDifficulty =
+    (searchParams.get("difficulty") as StockfishDifficulty) || "intermediate";
+  const _initialColor =
+    (searchParams.get("color") as ChessColor | "random") || "white";
+
+  const [messages, setMessages] = useState<
+    { username: string; content: string }[]
+  >([]);
+  const [showDifficultySelection, setShowDifficultySelection] = useState(true);
+  const [showSettings, setShowSettings] = useState(false);
+  const [gameSettings, setGameSettings] = useState<GameSettingsType | null>(
+    null
+  );
+  const [selectedDifficulty, setSelectedDifficulty] =
+    useState<StockfishDifficulty>(initialDifficulty);
+  const [gameStarted, setGameStarted] = useState(false);
+
+  const handleSendMessage = (message: string) => {
+    if (message.trim() !== "") {
+      setMessages(prevMessages => [
+        ...prevMessages,
+        { username: "User", content: message }
+      ]);
+    }
   };
-}
 
-export interface RightClickedSquares {
-  [key: string]: {
-    backgroundColor: string;
-  } | undefined;
-}
+  const handleDifficultySelect = (difficulty: StockfishDifficulty) => {
+    setSelectedDifficulty(difficulty);
+    router.push(`?difficulty=${difficulty}`, { scroll: false });
+    setShowDifficultySelection(false);
+    setShowSettings(true);
+  };
 
-const ChessboardBot: React.FC<ChessboardBotProps> = ({ initialSettings, onRestart }) => {
-  const engine = useMemo(() => new Engine(), []);
-  const [game, setGame] = useState<Chess>(new Chess());
-  const [playerColor, setPlayerColor] = useState<ColorExtended>(() => {
-    if (initialSettings.playerColor === "random") {
-      return Math.random() < 0.5 ? "white" : "black";
-    }
-    return initialSettings.playerColor as Color;
-  });
-  const [gameResult, setGameResult] = useState<string | null>(null);
-  const [showGameModal, setShowGameModal] = useState(false);
-  const [isPlayerTurn, setIsPlayerTurn] = useState(playerColor === "white");
-  const [lastMove, setLastMove] = useState<[Key, Key] | undefined>(undefined);
-  const [optionSquares, setOptionSquares] = useState<OptionSquares>({});
-  const [rightClickedSquares, setRightClickedSquares] = useState<RightClickedSquares>({});
-  const [moveFrom, setMoveFrom] = useState<Square | null>(null);
-  const [moves, setMoves] = useState<string[]>([]);
+  const handleGameStart = (settings: GameSettingsType) => {
+    setGameSettings(settings);
+    router.push(
+      `?difficulty=${selectedDifficulty}&color=${settings.playerColor}&mode=${settings.mode}`,
+      { scroll: false }
+    );
+    setShowSettings(false);
+    setGameStarted(true);
+  };
 
-  useEffect(() => {
-    if (playerColor === "black") {
-      makeStockfishMove();
-    }
-  }, [playerColor]);
-
-  useEffect(() => {
-    if (game.isGameOver()) {
-      if (game.isCheckmate()) {
-        setGameResult(game.turn() === 'w' ? "Black wins!" : "White wins!");
-      } else if (game.isDraw()) {
-        setGameResult("It's a draw!");
-      } else {
-        setGameResult("Game over!");
-      }
-      setShowGameModal(true);
-    }
-  }, [game]);
-
-  const makeStockfishMove = useCallback(() => {
-    if (game.isGameOver()) return;
-
-    setIsPlayerTurn(false);
-    const stockfishLevel = getStockfishDifficulty(initialSettings.difficulty);
-
-    engine.evaluatePosition(game.fen(), stockfishLevel);
-    engine.onMessage(({ bestMove }) => {
-      if (bestMove) {
-        const from = bestMove.substring(0, 2) as Square;
-        const to = bestMove.substring(2, 4) as Square;
-        const move = game.move({
-          from,
-          to,
-          promotion: bestMove.substring(4, 5) as "q" | "r" | "b" | "n" | undefined,
-        });
-
-        if (move) {
-          setGame(new Chess(game.fen()));
-          setLastMove([from as Key, to as Key]);
-          setIsPlayerTurn(true);
-          setMoves(prev => [...prev, move.san]);
-        }
-      }
-    });
-  }, [engine, game, initialSettings.difficulty]);
-
-  function getMoveOptions(square: Square) {
-    const moves = game.moves({
-      square,
-      verbose: true
-    });
-    if (moves.length === 0) {
-      setOptionSquares({});
-      return false;
-    }
-
-    const newSquares: OptionSquares = {};
-    moves.forEach(move => {
-      newSquares[move.to] = {
-        background:
-          game.get(move.to) &&
-          game.get(move.to)?.color !== game.get(square)?.color
-            ? "radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)"
-            : "radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)",
-        borderRadius: "50%"
-      };
-    });
-    newSquares[square] = {
-      background: "rgba(255, 255, 0, 0.4)",
-      borderRadius: ""
-    };
-    setOptionSquares(newSquares);
-    return true;
-  }
-
-  function onSquareClick(from: Square, to: Square) {
-    if (!isPlayerTurn) return;
-
-    setRightClickedSquares({});
-
-    const gameCopy = new Chess(game.fen());
-    const move = gameCopy.move({ from, to, promotion: 'q' });
-
-    if (move) {
-      setGame(gameCopy);
-      setLastMove([from as Key, to as Key]);
-      setOptionSquares({});
-      setIsPlayerTurn(false);
-      setMoves(prev => [...prev, move.san]);
-      setTimeout(makeStockfishMove, 300);
-    } else {
-      getMoveOptions(from);
-    }
-  }
-
-  function onSquareRightClick(square: Square) {
-    const colour = "rgba(255, 0, 0, 0.5)";
-    setRightClickedSquares({
-      ...rightClickedSquares,
-      [square]:
-        rightClickedSquares[square] &&
-        rightClickedSquares[square]?.backgroundColor === colour
-          ? undefined
-          : { backgroundColor: colour }
-    });
-  }
+  const handleNewGame = () => {
+    setShowDifficultySelection(true);
+    setGameSettings(null);
+    setGameStarted(false);
+  };
 
   return (
-    <div className="relative flex gap-8">
-      <div>
-        <Button
-          variant="outline"
-          size="icon"
-          className="absolute -top-12 right-0"
-          onClick={onRestart}
-        >
-          <RotateCcw className="h-4 w-4" />
-        </Button>
-        <Chessboard
-          position={game.fen()}
-          onMoveAction={onSquareClick}
-          onSquareRightClick={onSquareRightClick}
-          playerColor={playerColor}
-          orientation={playerColor}
-          isPlayerTurn={isPlayerTurn}
-          check={game.isCheck()}
-          lastMove={lastMove}
-          customSquareStyles={{
-            ...optionSquares,
-            ...rightClickedSquares
-          }}
-        />
-      </div>
-      <div className="flex-1">
-        <MoveHistory moves={moves} />
-      </div>
-      {showGameModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-4 rounded-lg">
-            <h2 className="text-xl font-bold mb-2 text-gray-900">{gameResult}</h2>
-            <div className="flex gap-2">
-              <Button
-                variant="default"
-                onClick={() => {
-                  setGame(new Chess());
-                  setShowGameModal(false);
-                  setGameResult(null);
-                  setIsPlayerTurn(playerColor === "white");
-                  setLastMove(undefined);
-                  setOptionSquares({});
-                  setRightClickedSquares({});
-                  setMoves([]);
-                  if (playerColor === "black") {
-                    setTimeout(makeStockfishMove, 300);
-                  }
-                }}
-              >
-                New Game
-              </Button>
-              <Button
-                variant="outline"
-                onClick={onRestart}
-              >
-                Change Settings
-              </Button>
-            </div>
+    <div className="flex min-h-screen flex-col gap-4 bg-gray-800 px-4 py-2 text-white sm:flex-row sm:gap-8 sm:px-6">
+      <div className="flex flex-col items-center justify-center gap-2">
+        <h1 className="mb-4 text-2xl font-bold">Chess vs Stockfish</h1>
+        {gameSettings ? (
+          <ChessboardBot
+            initialSettings={gameSettings}
+            difficulty={selectedDifficulty}
+            onRestart={handleNewGame}
+          />
+        ) : (
+          <div className="flex h-[400px] w-[400px] items-center justify-center rounded-lg bg-gray-700">
+            <p className="text-gray-400">
+              Select game settings to start playing
+            </p>
           </div>
+        )}
+        {!gameSettings && gameStarted && (
+          <Button onClick={handleNewGame} className="mt-4">
+            New Game
+          </Button>
+        )}
+      </div>
+      <div className="w-full sm:w-1/3">
+        <div className="rounded-lg bg-gray-700 p-4">
+          <h2 className="mb-2 text-xl font-bold">Chat</h2>
+          <div className="mb-4 h-48 overflow-y-auto">
+            {messages.map((msg, index) => (
+              <div key={index} className="mb-2">
+                <span className="font-bold">{msg.username}: </span>
+                <span>{msg.content}</span>
+              </div>
+            ))}
+          </div>
+          <form
+            onSubmit={e => {
+              e.preventDefault();
+              const input = e.currentTarget.elements.namedItem(
+                "message"
+              ) as HTMLInputElement;
+              handleSendMessage(input.value);
+              input.value = "";
+            }}>
+            <input
+              type="text"
+              name="message"
+              className="w-full rounded bg-gray-600 px-3 py-2 text-white"
+              placeholder="Type a message..."
+            />
+          </form>
         </div>
-      )}
+      </div>
+      <DifficultySelection
+        open={showDifficultySelection}
+        onOpenChangeAction={setShowDifficultySelection}
+        onSelectAction={handleDifficultySelect}
+        allowClose={gameStarted}
+      />
+      <GameSettings
+        open={showSettings}
+        onOpenChangeAction={setShowSettings}
+        onStartAction={handleGameStart}
+        allowClose={gameStarted}
+      />
     </div>
   );
-};
-
-export default ChessboardBot;
-
+}

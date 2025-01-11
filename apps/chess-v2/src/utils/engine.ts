@@ -18,12 +18,14 @@ export class Engine {
     if (this.stockfish) {
       this.stockfish.addEventListener("message", (e: MessageEvent<string>) => {
         const bestMove = e.data?.match(/bestmove\s+(\S+)/)?.[1];
+        console.log(`[evaluating-best move]: ${bestMove}`)
         callback({ bestMove: bestMove ?? "" });
       });
     }
   }
 
   evaluatePosition(fen: string, depth: number) {
+    console.log(`[evaluating-position]: \nfen:${fen} \ndepth:${depth}`)
     if (this.stockfish) {
       this.stockfish.postMessage(`position fen ${fen}`);
       this.stockfish.postMessage(`go depth ${depth}`);
