@@ -82,7 +82,7 @@ export default function Chessboard({
       turnColor: chessColorHelper(game.turn()),
       movable: {
         free: false,
-        color: "both", // Allow both colors to move
+        color: isPlayerTurn ? chessColorHelper(playerColor) : "both", // Allow both colors to move
         dests: getLegalMoves(game),
         events: {
           after: (orig, dest) =>

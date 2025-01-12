@@ -31,8 +31,8 @@ export const stockfishDifficulty = {
   expert: 12
 } as const;
 
-export const getStockfishDifficulty = (
-  target: keyof typeof stockfishDifficulty
+export const getStockfishDifficulty = <const T extends keyof typeof stockfishDifficulty>(
+  target: T
 ) => {
   return stockfishDifficulty[target];
 };

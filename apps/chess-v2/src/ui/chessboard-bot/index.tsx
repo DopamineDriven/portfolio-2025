@@ -76,14 +76,15 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart }) => {
     makeStockfishMove,
     resetGame,
     isPlayerTurn,
-    getMoveOptions
+    getMoveOptions,
+    moves: _moves
   } = useGame();
 
   const [showGameModal, setShowGameModal] = useState(false);
   const [rightClickedSquares, setRightClickedSquares] =
     useState<RightClickedSquares>({});
   const [optionSquares, setOptionSquares] = useState<
-    Record<string, CSSProperties>
+    Record<string, React.CSSProperties>
   >({});
 
   useEffect(() => {

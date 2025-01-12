@@ -18,9 +18,9 @@ export default function MoveHistory() {
                     <td className="w-10 px-2 py-1 text-gray-400">
                       {Math.floor(index / 2) + 1}.
                     </td>
-                    <td className="px-2 py-1 font-mono">{move.san}</td>
+                    <td className="px-2 py-1 font-mono">{move}</td>
                     <td className="px-2 py-1 font-mono">
-                      {moves[index + 1]?.san ?? ""}
+                      {moves[index + 1] ?? ""}
                     </td>
                   </tr>
                 );
