@@ -4,10 +4,10 @@ import type { Square } from "chess.js";
 import type { Api } from "chessground/api";
 import type { Config } from "chessground/config";
 import type { Dests, Key } from "chessground/types";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import { Chessground } from "chessground";
-import type { ChessColor } from "@/utils/chess-types";
+import { useGame } from "@/contexts/game-context";
 import "./base.css";
 import "./brown.css";
 import "./cburnett.css";
@@ -15,77 +15,76 @@ import "./cburnett.css";
 export type ChessInstance = InstanceType<typeof Chess>;
 
 interface ChessboardProps {
-  position: string;
-  onMoveAction: (from: Key, to: Key) => void;
   onSquareRightClickAction: (square: Square) => void;
-  playerColor: ChessColor;
-  orientation: "white" | "black";
-  isPlayerTurn: boolean;
-  check: boolean;
-  lastMove?: [Key, Key];
   customSquareStyles?: Record<string, React.CSSProperties>;
 }
 
+type Dests = Map<Key, Key[]>;
+
 export default function Chessboard({
-  position,
-  onMoveAction,
   onSquareRightClickAction,
-  playerColor,
-  orientation,
-  isPlayerTurn,
-  check,
-  lastMove,
   customSquareStyles
 }: ChessboardProps) {
+  const {
+    game,
+    playerColor,
+    isPlayerTurn,
+    lastMove,
+    makeMove,
+    getMoveOptions
+  } = useGame();
+
+  const [_optionSquares, setOptionSquares] = useState<
+    Record<string, React.CSSProperties>
+  >({});
   const apiRef = useRef<Api | null>(null);
-  const chessRef = useRef<ChessInstance>(new Chess(position));
 
-  // Calculate legal moves for the current position
-  const getLegalMoves = useCallback(
-    (chess: ChessInstance): Dests => {
-      const dests = new Map<Key, Key[]>();
-      chess.moves({ verbose: true }).forEach(move => {
-        const moves = dests.get(move.from as Key) ?? [];
-          moves.push(move.to as Key);
-          dests.set(move.from as Key, moves);
-      });
-      return dests;
+  const _handleMove = useCallback(
+    (from: Square, to: Square) => {
+      makeMove({ from, to });
+      setOptionSquares({});
     },
-    []
+    [makeMove]
   );
 
-  const handleMove = useCallback(
-    (orig: Key, dest: Key) => {
-      const chess = chessRef.current;
-      const move = chess.move({ from: orig, to: dest, promotion: undefined });
-      if (move) {
-        onMoveAction(orig, dest);
-      }
+  const handleSquareClick = useCallback(
+    (square: Square) => {
+      if (!isPlayerTurn) return;
+      const options = getMoveOptions(square);
+      setOptionSquares(options);
     },
-    [onMoveAction]
+    [isPlayerTurn, getMoveOptions]
   );
+
+  const getLegalMoves = useCallback((chess: ChessInstance): Dests => {
+    const dests = new Map<Key, Key[]>();
+    chess.moves({ verbose: true }).forEach(move => {
+      const moves = dests.get(move.from as Key) ?? [];
+      moves.push(move.to as Key);
+      dests.set(move.from as Key, moves);
+    });
+    return dests;
+  }, []);
+
+  const chessColorHelper = useCallback((val: "b" | "w" | "white" | "black") => {
+    return val === "b" ? "black" : val === "w" ? "white" : val;
+  }, []);
 
   useEffect(() => {
-    const chess = new Chess(position);
-    chessRef.current = chess;
-    const chessColorHelper = (val: "b" | "w" | "white" | "black") =>
-      val === "b" ? "black" : val === "w" ? "white" : val;
-
     const config: Config = {
-      fen: position,
-      orientation: orientation,
+      fen: game.fen(),
+      orientation: chessColorHelper(playerColor),
       coordinates: true,
       coordinatesOnSquares: false,
       autoCastle: true,
-      turnColor: chessColorHelper(chess.turn()),
+      turnColor: chessColorHelper(game.turn()),
       movable: {
         free: false,
-        color: isPlayerTurn ? chessColorHelper(playerColor) : "both",
-        dests: getLegalMoves(chess),
-        showDests: true,
-        rookCastle: true,
+        color: "both", // Allow both colors to move
+        dests: getLegalMoves(game),
         events: {
-          after: handleMove
+          after: (orig, dest) =>
+            makeMove({ from: orig as Square, to: dest as Square })
         }
       },
       draggable: {
@@ -97,7 +96,7 @@ export default function Chessboard({
         check: true
       },
       premovable: {
-        enabled: false // Disable premoves to prevent move queuing
+        enabled: false
       },
       predroppable: {
         enabled: false
@@ -105,7 +104,10 @@ export default function Chessboard({
       selectable: {
         enabled: true
       },
-      check: check,
+      events: {
+        select: handleSquareClick
+      },
+      check: game.isCheck(),
       lastMove: lastMove
     };
 
@@ -145,16 +147,16 @@ export default function Chessboard({
       }
     };
   }, [
-    position,
-    orientation,
+    game,
     playerColor,
     isPlayerTurn,
-    check,
     lastMove,
     getLegalMoves,
-    handleMove,
+    makeMove,
+    handleSquareClick,
     customSquareStyles,
-    onSquareRightClickAction
+    onSquareRightClickAction,
+    chessColorHelper
   ]);
 
   return (

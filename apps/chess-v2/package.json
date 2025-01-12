@@ -40,6 +40,7 @@
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
     "@portfolio/tsconfig": "workspace:*",
+    "@types/chess.js": "^0.13.7",
     "@types/gtag.js": "^0.0.20",
     "@types/lodash": "^4.17.14",
     "@types/node": "^22.10.5",

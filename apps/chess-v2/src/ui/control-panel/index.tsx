@@ -1,10 +1,9 @@
-import { Chess } from "chess.js";
+"use client";
 
-interface ControlPanelProps {
-  game: InstanceType<typeof Chess>;
-}
+import { useGame } from "@/contexts/game-context";
 
-export default function ControlPanel({ game }: ControlPanelProps) {
+export default function ControlPanel() {
+  const { game } = useGame();
   return (
     <div className="min-w-[200px] rounded-lg bg-blue-600 p-4 text-white shadow-md">
       <h2 className="mb-4 text-xl font-bold">Game Info</h2>
