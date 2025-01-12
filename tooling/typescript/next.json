@@ -8,13 +8,14 @@
     "incremental": true,
     "sourceMap": true,
     "useDefineForClassFields": true,
-    "disableSourceOfProjectReferenceRedirect": false,
+    "disableSourceOfProjectReferenceRedirect": true,
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "declarationMap": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "moduleResolution": "bundler",
     "importHelpers": false,
-    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost","WebWorker"]
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost", "WebWorker"]
   }
 }

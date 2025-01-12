@@ -1,12 +1,12 @@
 "use client";
 
-import type { ComponentProps, FC } from "react";
+import type { ComponentPropsWithRef, FC } from "react";
 import Image from "next/image";
 import { motion } from "motion/react";
 import { shimmer } from "@/lib/shimmer";
 import { cn } from "@/lib/utils";
 
-const ImageScaffolder: FC<ComponentProps<typeof Image>> = ({
+const ImageScaffolder: FC<ComponentPropsWithRef<typeof Image>> = ({
   src,
   alt,
   width = 176,

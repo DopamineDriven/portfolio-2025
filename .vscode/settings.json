@@ -21,7 +21,7 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.suggest.showStatusBar": true,
   "eslint.enable": true,
-  "eslint.useFlatConfig": true,
+  "eslint.useFlatConfig": false,
   "eslint.rules.customizations": [
     {
       "rule": "*",

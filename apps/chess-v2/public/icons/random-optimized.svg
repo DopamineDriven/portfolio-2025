@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+  <g clip-path="url(#a)">
+    <mask id="b" width="24" height="24" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:luminance">
+      <path fill="#fff" d="M24 0H0v24h24V0Z" />
+    </mask>
+    <g mask="url(#b)">
+      <mask id="c" width="12" height="24" x="12" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha">
+        <path fill="#312E2B" d="M24 0H12v24h12V0Z" />
+      </mask>
+      <g mask="url(#c)">
+        <path fill="#312E2B"
+          d="M21.6 0H2.4A2.4 2.4 0 0 0 0 2.4v19.2A2.4 2.4 0 0 0 2.4 24h19.2a2.4 2.4 0 0 0 2.4-2.4V2.4A2.4 2.4 0 0 0 21.6 0Z" />
+        <path stroke="#fff" stroke-opacity=".1" stroke-width="2"
+          d="M21.6.5H2.4A1.9 1.9 0 0 0 .5 2.4v19.2c0 1.05.85 1.9 1.9 1.9h19.2a1.9 1.9 0 0 0 1.9-1.9V2.4A1.9 1.9 0 0 0 21.6.5Z" />
+      </g>
+      <mask id="d" width="12" height="24" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha">
+        <path fill="#312E2B" d="M12 0H0v24h12V0Z" />
+      </mask>
+      <g mask="url(#d)">
+        <path fill="#E7E6E5"
+          d="M21.6 0H2.4A2.4 2.4 0 0 0 0 2.4v19.2A2.4 2.4 0 0 0 2.4 24h19.2a2.4 2.4 0 0 0 2.4-2.4V2.4A2.4 2.4 0 0 0 21.6 0Z" />
+        <path stroke="#000" stroke-opacity=".1" stroke-width="2"
+          d="M21.6.5H2.4A1.9 1.9 0 0 0 .5 2.4v19.2c0 1.05.85 1.9 1.9 1.9h19.2a1.9 1.9 0 0 0 1.9-1.9V2.4A1.9 1.9 0 0 0 21.6.5Z" />
+      </g>
+      <path fill="#E7E6E5" d="M15 6H3v3.9h12V6Z" />
+      <path fill="#312E2B" stroke="#E7E6E5" stroke-width="2"
+        d="m6.37 5.548-.296.346.317.328 2.365 2.44.3.31.35-.251c.71-.51 1.214-.782 1.609-.93a2.66 2.66 0 0 1 .992-.174c.616 0 1.1.413 1.1 1.023 0 .119-.063.29-.266.532-.2.237-.485.484-.823.752-.122.096-.254.198-.39.302-.22.169-.447.344-.647.51-.328.27-.656.573-.876.903-.238.336-.41.648-.516 1.003-.106.355-.14.722-.14 1.154v1.72h4.659v-1.187c0-.323.066-.517.212-.673l.002-.002c.28-.303.581-.59.897-.89l.185-.176c.376-.36.766-.743 1.113-1.167.706-.86 1.247-1.902 1.247-3.344 0-2.94-2.583-5.077-5.85-5.077C9.31 3 7.352 4.403 6.37 5.548Z" />
+      <path fill="#312E2B" stroke="#E7E6E5" stroke-width="2"
+        d="M14.5 18.25a2.75 2.75 0 1 0-5.5 0 2.75 2.75 0 0 0 5.5 0Z" />
+    </g>
+  </g>
+  <defs>
+    <clipPath id="a">
+      <path fill="#fff" d="M0 0h24v24H0z" />
+    </clipPath>
+  </defs>
+</svg>
