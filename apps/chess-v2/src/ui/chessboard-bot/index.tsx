@@ -1,13 +1,13 @@
 "use client";
 
 import type { Square } from "chess.js";
-import type { CSSProperties } from "react";
-import { useEffect, useState } from "react";
+import type { CSSProperties, FC } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { RotateCcw } from "lucide-react";
+import { useGame } from "@/contexts/game-context";
 import { Button } from "@/ui/atoms/button";
 import Chessboard from "@/ui/chessboard";
 import MoveHistory from "@/ui/move-history";
-import { useGame } from "@/contexts/game-context";
 
 // class Engine {
 //   private stockfish: Worker | null;
@@ -60,30 +60,31 @@ interface ChessboardBotProps {
   onRestart: () => void;
 }
 
-export interface OptionSquares {
-  [key: string]: {
-    background: string;
-    borderRadius: string;
-  };
-}
-
 export interface RightClickedSquares {
-  [key: string]: {
-    backgroundColor: string;
-  } | undefined;
+  [key: string]:
+    | {
+        backgroundColor: string;
+      }
+    | undefined;
 }
 
-const ChessboardBot: React.FC<ChessboardBotProps> = ({ onRestart }) => {
+const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart }) => {
   const {
-    gameOver,isPlayerTurn,
+    game: _game,
+    gameOver,
     gameResult,
     makeStockfishMove,
-    resetGame
+    resetGame,
+    isPlayerTurn,
+    getMoveOptions
   } = useGame();
 
   const [showGameModal, setShowGameModal] = useState(false);
-  const [optionSquares, _setOptionSquares] = useState<OptionSquares>({});
-  const [rightClickedSquares, setRightClickedSquares] = useState<RightClickedSquares>({});
+  const [rightClickedSquares, setRightClickedSquares] =
+    useState<RightClickedSquares>({});
+  const [optionSquares, setOptionSquares] = useState<
+    Record<string, CSSProperties>
+  >({});
 
   useEffect(() => {
     if (gameOver) {
@@ -95,36 +96,16 @@ const ChessboardBot: React.FC<ChessboardBotProps> = ({ onRestart }) => {
     if (!isPlayerTurn && !gameOver) {
       setTimeout(makeStockfishMove, 300);
     }
-  }, [gameOver, makeStockfishMove, isPlayerTurn]);
+  }, [isPlayerTurn, gameOver, makeStockfishMove]);
 
-  // function getMoveOptions(square: Square) {
-  //   const moves = game.moves({
-  //     square,
-  //     verbose: true
-  //   });
-  //   if (moves.length === 0) {
-  //     setOptionSquares({});
-  //     return false;
-  //   }
-
-  //   const newSquares: OptionSquares = {};
-  //   moves.forEach(move => {
-  //     newSquares[move.to] = {
-  //       background:
-  //         game.get(move.to) &&
-  //         game.get(move.to)?.color !== game.get(square)?.color
-  //           ? "radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)"
-  //           : "radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)",
-  //       borderRadius: "50%"
-  //     };
-  //   });
-  //   newSquares[square] = {
-  //     background: "rgba(255, 255, 0, 0.4)",
-  //     borderRadius: ""
-  //   };
-  //   setOptionSquares(newSquares);
-  //   return true;
-  // }
+  const _handleSquareClick = useCallback(
+    (square: Square) => {
+      setRightClickedSquares({});
+      const options = getMoveOptions(square);
+      setOptionSquares(options);
+    },
+    [getMoveOptions]
+  );
 
   function onSquareRightClick(square: Square) {
     const colour = "rgba(255, 0, 0, 0.5)";
@@ -145,39 +126,38 @@ const ChessboardBot: React.FC<ChessboardBotProps> = ({ onRestart }) => {
           variant="outline"
           size="icon"
           className="absolute -top-12 right-0"
-          onClick={onRestart}
-        >
+          onClick={onRestart}>
           <RotateCcw className="h-4 w-4" />
         </Button>
         <Chessboard
           onSquareRightClickAction={onSquareRightClick}
-          customSquareStyles={{
-            ...optionSquares,
-            ...rightClickedSquares
-          } as Record<string, CSSProperties>}
+          customSquareStyles={
+            {
+              ...optionSquares,
+              ...rightClickedSquares
+            } as Record<string, CSSProperties>
+          }
         />
       </div>
       <div className="flex-1">
         <MoveHistory />
       </div>
       {showGameModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-4 rounded-lg">
-            <h2 className="text-xl font-bold mb-2 text-gray-900">{gameResult}</h2>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="rounded-lg bg-white p-4">
+            <h2 className="mb-2 text-xl font-bold text-gray-900">
+              {gameResult}
+            </h2>
             <div className="flex gap-2">
               <Button
                 variant="default"
                 onClick={() => {
                   resetGame();
                   setShowGameModal(false);
-                }}
-              >
+                }}>
                 New Game
               </Button>
-              <Button
-                variant="outline"
-                onClick={onRestart}
-              >
+              <Button variant="outline" onClick={onRestart}>
                 Change Settings
               </Button>
             </div>

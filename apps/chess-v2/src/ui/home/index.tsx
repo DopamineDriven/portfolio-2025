@@ -19,7 +19,7 @@ export default function Home() {
   const [difficulty, setDifficulty] =
     useState<StockfishDifficulty>("intermediate");
   const [playerColor, setPlayerColor] = useState<ChessColor>("white");
-  const [mode, setMode] = useState<StockfishMode>("challenge");
+  const [mode, setMode] = useState<StockfishMode>("friendly");
 
   const handleSendMessage = (message: string) => {
     if (message.trim() !== "") {

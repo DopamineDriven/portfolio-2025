@@ -19,8 +19,6 @@ interface ChessboardProps {
   customSquareStyles?: Record<string, React.CSSProperties>;
 }
 
-type Dests = Map<Key, Key[]>;
-
 export default function Chessboard({
   onSquareRightClickAction,
   customSquareStyles
@@ -66,11 +64,15 @@ export default function Chessboard({
     return dests;
   }, []);
 
-  const chessColorHelper = useCallback((val: "b" | "w" | "white" | "black") => {
-    return val === "b" ? "black" : val === "w" ? "white" : val;
-  }, []);
+  const chessColorHelper = useCallback(
+    (val: "b" | "w" | "white" | "black"): "white" | "black" => {
+      return val === "b" || val === "black" ? "black" : "white";
+    },
+    []
+  );
 
   useEffect(() => {
+    console.log("Board orientation:", chessColorHelper(playerColor));
     const config: Config = {
       fen: game.fen(),
       orientation: chessColorHelper(playerColor),
@@ -105,7 +107,7 @@ export default function Chessboard({
         enabled: true
       },
       events: {
-        select: handleSquareClick
+        select: handleSquareClick as (key: Key) => void
       },
       check: game.isCheck(),
       lastMove: lastMove

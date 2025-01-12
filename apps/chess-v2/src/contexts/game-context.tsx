@@ -1,5 +1,8 @@
 "use client";
 
+import type { Move, Square } from "chess.js";
+import type { ShortMove } from "chess.js/index";
+import type { Key } from "chessground/types";
 import React, {
   createContext,
   useCallback,
@@ -7,20 +10,11 @@ import React, {
   useMemo,
   useReducer
 } from "react";
-import { Chess, Move, Square } from "chess.js";
-import { Key } from "chessground/types";
-import {
-  getStockfishDifficulty,
-  StockfishDifficulty,
-  StockfishMode
-} from "@/types/chess";
-import { ChessColor, toChessJSColor } from "@/utils/chess-types";
-
-export interface ShortMove {
-  from: string; // The square the piece is moving from (e.g., "e2")
-  to: string; // The square the piece is moving to (e.g., "e4")
-  promotion?: string; // The piece to promote to (if applicable) (e.g., "q")
-}
+import { Chess } from "chess.js";
+import type { StockfishDifficulty, StockfishMode } from "@/types/chess";
+import type { ChessColor } from "@/utils/chess-types";
+import { getStockfishDifficulty } from "@/types/chess";
+import { toChessJSColor } from "@/utils/chess-types";
 
 class Engine {
   private stockfish: Worker | null;
@@ -97,9 +91,7 @@ interface GameContextType extends GameState {
   setPlayerColor: (color: ChessColor) => void;
   setDifficulty: (difficulty: StockfishDifficulty) => void;
   setMode: (mode: StockfishMode) => void;
-  getMoveOptions: (square: Square) => {
-    [square: string]: { background: string; borderRadius: string };
-  };
+  getMoveOptions: (square: Square) => { [square: string]: { background: string; borderRadius: string } };
   engine: Engine;
 }
 
@@ -195,9 +187,12 @@ export function GameProvider({
     mode: initialMode
   });
 
-  const makeMove = useCallback((move: ShortMove): void => {
-    dispatch({ type: "MAKE_MOVE", move });
-  }, []);
+  const makeMove = useCallback(
+    (move: ShortMove): void => {
+      dispatch({ type: "MAKE_MOVE", move });
+    },
+    []
+  );
 
   const makeStockfishMove = useCallback(() => {
     if (state.gameOver) return;
@@ -206,10 +201,9 @@ export function GameProvider({
       if (bestMove) {
         const from = bestMove.substring(0, 2) as Square;
         const to = bestMove.substring(2, 4) as Square;
-        const promotion =
-          bestMove.length > 4
-            ? (bestMove.substring(4, 5) as "n" | "b" | "r" | "q")
-            : undefined;
+        const promotion = bestMove.length > 4
+          ? bestMove.substring(4, 5) as "n" | "b" | "r" | "q"
+          : undefined;
 
         makeMove({ from, to, promotion });
       }
@@ -237,37 +231,32 @@ export function GameProvider({
     dispatch({ type: "SET_MODE", mode });
   }, []);
 
-  const getMoveOptions = useCallback(
-    (square: Square) => {
-      const moves = state.game.moves({
-        square,
-        verbose: true
-      });
-      if (moves.length === 0) {
-        return {};
-      }
+  const getMoveOptions = useCallback((square: Square) => {
+    const moves = state.game.moves({
+      square,
+      verbose: true,
+    });
+    if (moves.length === 0) {
+      return {};
+    }
 
-      const newSquares: {
-        [square: string]: { background: string; borderRadius: string };
-      } = {};
-      moves.forEach(move => {
-        newSquares[move.to] = {
-          background:
-            state.game.get(move.to) &&
-            state.game.get(move.to)!.color !== state.game.get(square)!.color
-              ? "radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)"
-              : "radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)",
-          borderRadius: "50%"
-        };
-      });
-      newSquares[square] = {
-        background: "rgba(255, 255, 0, 0.4)",
-        borderRadius: ""
+    const newSquares: { [square: string]: { background: string; borderRadius: string } } = {};
+    moves.forEach((move) => {
+      newSquares[move.to] = {
+        background:
+          state.game.get(move.to) &&
+          state.game.get(move.to)!.color !== state.game.get(square)!.color
+            ? "radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)"
+            : "radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)",
+        borderRadius: "50%",
       };
-      return newSquares;
-    },
-    [state.game]
-  );
+    });
+    newSquares[square] = {
+      background: "rgba(255, 255, 0, 0.4)",
+      borderRadius: "",
+    };
+    return newSquares;
+  }, [state.game]);
 
   const value = {
     ...state,
@@ -291,3 +280,4 @@ export function useGame() {
   }
   return context;
 }
+

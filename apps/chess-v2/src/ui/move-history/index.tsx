@@ -1,3 +1,5 @@
+"use client";
+
 import { useGame } from "@/contexts/game-context";
 
 export default function MoveHistory() {
