@@ -4,11 +4,11 @@
   "compilerOptions": {
     "alwaysStrict": true,
     "module": "ESNext",
-    "target": "es5",
+    "target": "ESNext",
     "incremental": true,
     "sourceMap": true,
     "useDefineForClassFields": true,
-    "disableSourceOfProjectReferenceRedirect": false,
+    "disableSourceOfProjectReferenceRedirect": true,
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "declarationMap": true,
