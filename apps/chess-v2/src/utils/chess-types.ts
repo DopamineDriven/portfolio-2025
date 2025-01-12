@@ -1,6 +1,9 @@
-import type { Color as ChessJSColor } from "chess.js";
+import type { Color as ChessJSColor, PieceSymbol } from "chess.js";
+import type { Square } from "chess.js/index";
+import type {Move} from "chess.js";
 import type { Color as ChessgroundColor } from "chessground/types";
-import type { Square, PieceSymbol, Move } from "chess.js";
+// import { FLAGS } from "chess.js/index";
+
 export type ChessColor = ChessJSColor | ChessgroundColor;
 
 export function toChessJSColor(color: ChessColor) {
@@ -13,10 +16,16 @@ export function toChessgroundColor(color: ChessColor) {
   return color === "w" ? "white" : "black";
 }
 
-type InferResult<V> = V extends `${infer U}` ? U extends "w" | "b" | "white" | "black" ? true : false : false;
+type InferResult<V> = V extends `${infer U}`
+  ? U extends "w" | "b" | "white" | "black"
+    ? true
+    : false
+  : false;
 
-export function isValidChessColor<const T extends string>(color: T): InferResult<T> {
-  return /(\b(w|b|white|black)\b)/gm.test(color) as InferResult<T>
+export function isValidChessColor<const T extends string>(
+  color: T
+): InferResult<T> {
+  return /(\b(w|b|white|black)\b)/gm.test(color) as InferResult<T>;
 }
 export interface HistoryVerboseEntity {
   before: string; // FEN Notation
@@ -25,20 +34,37 @@ export interface HistoryVerboseEntity {
   piece: PieceSymbol;
   from: Square;
   to: Square;
+  /**
+   * Single character flags are derived from the following object
+   *
+   * ```ts
+   * declare const FLAGS: {
+      NORMAL: "n";
+      CAPTURE: "c";
+      BIG_PAWN: "b";
+      EP_CAPTURE: "e";
+      PROMOTION: "p";
+      KSIDE_CASTLE: "k";
+      QSIDE_CASTLE: "q";
+    };
+    ```
+    *
+    */
+  flags: string;
   san: string;
   lan: `${Square}${Square}`;
   captured?: PieceSymbol;
   promotion?: PieceSymbol;
 }
 
-function HistoryVerboseHelper(moves: Move[]) {
+function _HistoryVerboseHelper(moves: Move[]) {
   // the last index in the array contains the most recent move made
   // each move made with history verbose returns conditionally defined captured and promotion fields
   const l = moves.length;
 
-  const getLastIndex = moves.at(l-1);
+  const getLastIndex = moves.at(l - 1);
   if (getLastIndex) {
-    
+    getLastIndex.before;
   }
 }
 

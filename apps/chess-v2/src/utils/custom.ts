@@ -1,4 +1,6 @@
+import type { Move, PieceSymbol, Square } from "chess.js";
 import { Unenumerate } from "@/types/helpers";
+// import {read as fenRead } from "chessground/fen"
 
 export const colors = ["white", "black"] as const;
 export const roles = [
@@ -9,13 +11,12 @@ export const roles = [
   "queen",
   "king"
 ] as const;
+//  "b" | "a" | "c" | "d" | "e" | "f" | "g" | "h"
 export const files = ["a", "b", "c", "d", "e", "f", "g", "h"] as const;
 export const ranks = ["8", "7", "6", "5", "4", "3", "2", "1"] as const;
 export const invRanks = [...ranks].sort(
   (a, b) => a.localeCompare(b) - b.localeCompare(a)
 );
-
-
 
 export function ArrReducer<const V extends readonly `${string | number}`[]>(
   props: V
@@ -49,8 +50,9 @@ export const allKeys = (
   [...files.map(c => ranks.map(r => `${c}${r}` as const))] as const
 ).reduce(p => p);
 
+const allKeysPlusA0 = ([...allKeys]as const).reduce(p => p);
 
-
+const allKeysPlusA0ToArr = Array.of(allKeysPlusA0)
 
 // export type ComputeRange<
 //   N extends number,
@@ -60,9 +62,9 @@ export const allKeys = (
 //   : ComputeRange<N, [...Result, Result["length"]]>;
 
 export const pos2key = (pos: readonly [number, number]) =>
-  allKeys[8 * pos[0] + pos[1]]!;
+  allKeysPlusA0ToArr[8 * pos[0] + pos[1]]!;
 
-export type Key = Unenumerate<typeof allKeys>;
+export type Key = Unenumerate<typeof allKeysPlusA0ToArr>;
 
 export const initialFen =
   "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR" as const;
@@ -200,6 +202,8 @@ export function validateFen(
   return errors;
 }
 
+export const pos2Key = (pos: [number, number]) => allKeysPlusA0ToArr[8 * pos[0] + pos[1]]
+
 const rolesFen: { [letter: string]: Role } = {
   p: "pawn",
   r: "rook",
@@ -220,9 +224,49 @@ const letters = {
 
 export type FEN = string;
 
+
+/*
+export function read(fen: cg.FEN): cg.Pieces {
+  if (fen === 'start') fen = initial;
+  const pieces: cg.Pieces = new Map();
+  let row = 7,
+    col = 0;
+  for (const c of fen) {
+    switch (c) {
+      case ' ':
+      case '[':
+        return pieces;
+      case '/':
+        --row;
+        if (row < 0) return pieces;
+        col = 0;
+        break;
+      case '~': {
+        const piece = pieces.get(pos2key([col - 1, row]));
+        if (piece) piece.promoted = true;
+        break;
+      }
+      default: {
+        const nb = c.charCodeAt(0);
+        if (nb < 57) col += nb - 48;
+        else {
+          const role = c.toLowerCase();
+          pieces.set(pos2key([col, row]), {
+            role: roles[role],
+            color: c === role ? 'black' : 'white',
+          });
+          ++col;
+        }
+      }
+    }
+  }
+  return pieces;
+}
+*/
+
 export function read(fen: FEN): Pieces {
   if (fen === "start") fen = initialFen;
-  const pieces: Pieces = new Map();
+  const pieces: Pieces = new Map<Key, Piece>();
   let row = 7,
     col = 0;
   for (const c of fen) {
@@ -276,8 +320,66 @@ export function write(pieces: Pieces): FEN {
     .replace(/1{2,}/g, s => s.length.toString());
 }
 
-console.log(read("r1k4r/p2nb1p1/2b4p/1p1n1p2/2PP4/3Q1NB1/1P3PPP/R5K1 b - - 0 19"));
+console.log(
+  read("rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1")
+);
 
+// const stockfishPath = new URL("../../public/stockfish.js", import.meta.url);
+// console.log(stockfishPath);
 
-const stockfishPath = new URL("../../public/stockfish.js", import.meta.url);
-console.log(stockfishPath);
+export interface HistoryVerboseEntity {
+  before: string; // FEN Notation
+  after: string; // FEN Notation
+  color: "w" | "b";
+  piece: PieceSymbol;
+  from: Square;
+  to: Square;
+  /**
+   * Single character flags are derived from the following object
+   *
+   * ```ts
+   * declare const FLAGS: {
+      NORMAL: "n";
+      CAPTURE: "c";
+      BIG_PAWN: "b";
+      EP_CAPTURE: "e";
+      PROMOTION: "p";
+      KSIDE_CASTLE: "k";
+      QSIDE_CASTLE: "q";
+    };
+    ```
+    *
+    */
+  flags: string;
+  san: string;
+  lan: `${Square}${Square}`;
+  captured?: PieceSymbol;
+  promotion?: PieceSymbol;
+}
+
+function _HistoryVerboseHelper(moves: Move[]) {
+  // the last index in the array contains the most recent move made
+  // each move made with history verbose returns conditionally defined captured and promotion fields
+  const l = moves.length;
+
+  const getLastIndex = moves.at(l - 1);
+  if (getLastIndex) {
+    getLastIndex.before;
+  }
+}
+
+/**
+ * [
+  {
+    "color": "w",
+    "piece": "p",
+    "from": "d2",
+    "to": "d4",
+    "san": "d4",
+    "flags": "b",
+    "lan": "d2d4",
+    "before": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    "after": "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1"
+  }
+]
+ */
