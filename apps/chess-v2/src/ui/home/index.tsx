@@ -9,7 +9,7 @@ import ChessboardBot from "@/ui/chessboard-bot";
 import DifficultySelection from "@/ui/difficulty-selection";
 import GameSettings from "@/ui/game-settings";
 
-export default function Home() {
+export default function Home({ country = "US" }: { country?: string }) {
   const [messages, setMessages] = useState<
     { username: string; content: string }[]
   >([]);
@@ -69,7 +69,7 @@ export default function Home() {
         <div className="flex flex-col items-center justify-center gap-2">
           <h1 className="mb-4 text-2xl font-bold">Chess vs Stockfish</h1>
           {gameStarted ? (
-            <ChessboardBot onRestart={handleNewGame} />
+            <ChessboardBot country={country} onRestart={handleNewGame} />
           ) : (
             <div className="flex h-[400px] w-[400px] items-center justify-center rounded-lg bg-gray-700">
               <p className="text-gray-400">

@@ -12,6 +12,5 @@ export default async function ChessBot2025({
   params
 }: InferGSPRT<typeof generateStaticParams>) {
   const { country } = await params;
-  console.log(country);
-  return <Home />;
+  return <Home country={country} />;
 }
