@@ -512,9 +512,6 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
-      country-flag-icons:
-        specifier: ^1.5.14
-        version: 1.5.14
       lucide-react:
         specifier: ^0.471.0
         version: 0.471.0(react@19.0.0)
