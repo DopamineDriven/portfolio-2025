@@ -90,10 +90,10 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
   }
 
   return (
-    <div className="relative flex gap-8">
-      <div>
-        <div className="relative mb-4 ml-2 flex w-full flex-row items-center justify-between gap-0">
-          <div className="my-auto flex flex-row gap-x-2">
+    <div className="relative flex w-full flex-col items-center">
+      <div className="w-full max-w-[480px]">
+        <div className="relative mb-4 flex w-full flex-row items-center justify-between gap-0">
+          <div className="flex flex-row gap-x-2">
             <Avatar className="h-11 w-11">
               <AvatarImage
                 src="https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess-v2/public/chess-default-8.png"
@@ -102,7 +102,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
               <AvatarFallback>P</AvatarFallback>
             </Avatar>
             <div className="relative flex max-w-xs flex-col justify-around text-left">
-              <div className="my-auto flex w-full flex-row justify-between gap-x-1">
+              <div className="flex w-full flex-row justify-between gap-x-1">
                 <h4 className="text-pretty font-sans text-[1rem] leading-normal tracking-tight">
                   Stockfish
                 </h4>
@@ -111,7 +111,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
                   width={30}
                   height={20}
                   src={`https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess-v2/public/flags/no.svg`}
-                  className="row-span-1 my-auto aspect-[3/2] h-4 w-6 object-cover"
+                  className="row-span-1 aspect-[3/2] h-4 w-6 object-cover"
                 />
               </div>
               <span className="-translate-y-1 text-pretty font-sans text-[1rem] leading-normal tracking-tight">
@@ -130,7 +130,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
         <Button
           variant="outline"
           size="icon"
-          className="absolute -top-12 right-0"
+          className="absolute right-0 top-0"
           onClick={onRestart}>
           <RotateCcw className="h-6 w-6 stroke-black" />
         </Button>
@@ -143,8 +143,8 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
             } as Record<string, CSSProperties>
           }
         />
-        <div className="relative ml-2 mt-4 flex w-full flex-row items-center justify-between gap-0">
-          <div className="my-auto flex flex-row gap-x-2">
+        <div className="relative mt-4 flex w-full flex-row justify-between gap-0">
+          <div className="flex flex-row gap-x-2">
             <Avatar className="h-11 w-11">
               <AvatarImage
                 src="https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess-v2/public/chess-default-4.png"
@@ -153,7 +153,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
               <AvatarFallback>P</AvatarFallback>
             </Avatar>
             <div className="relative flex max-w-xs flex-col justify-around text-left">
-              <div className="my-auto flex w-full flex-row justify-between gap-x-1">
+              <div className="flex w-full flex-row justify-between gap-x-1">
                 <h4 className="text-pretty font-sans text-[1rem] leading-normal tracking-tight">
                   {"Username"}
                 </h4>
@@ -162,7 +162,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
                   width={30}
                   height={20}
                   src={`https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess-v2/public/flags/${countryToFile}.svg`}
-                  className="row-span-1 my-auto aspect-[3/2] h-4 w-6 object-cover"
+                  className="row-span-1 aspect-[3/2] h-4 w-6 object-cover"
                 />
               </div>
               <span className="-translate-y-1 text-pretty font-sans text-[1rem] leading-normal tracking-tight">
@@ -172,9 +172,8 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
           </div>
         </div>
       </div>
-      <div className="flex-1">
-        <MoveHistory />
-      </div>
+      <MoveHistory />
+
       {showGameModal && (
         <div className="motion-preset-confetti fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 motion-duration-[5000ms]">
           <div className="rounded-lg bg-white p-6">

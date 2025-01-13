@@ -65,13 +65,13 @@ export default function Home({ country = "US" }: { country?: string }) {
       initialColor={playerColor}
       initialDifficulty={difficulty}
       initialMode={mode}>
-      <div className="flex min-h-screen flex-col gap-4 bg-gray-800 px-4 py-2 text-white sm:flex-row sm:gap-8 sm:px-6">
-        <div className="flex flex-col items-center justify-center gap-2">
+      <div className="motion-preset-confetti flex min-h-screen flex-col gap-4 bg-gray-800 px-4 py-2 text-white motion-duration-[5000ms] sm:flex-row sm:gap-8 sm:px-6">
+        <div className="flex w-full flex-col items-center justify-center gap-2 sm:w-auto">
           <h1 className="mb-4 text-2xl font-bold">Chess vs Stockfish</h1>
           {gameStarted ? (
             <ChessboardBot country={country} onRestart={handleNewGame} />
           ) : (
-            <div className="flex h-[400px] w-[400px] items-center justify-center rounded-lg bg-gray-700">
+            <div className="flex h-[80vw] w-[80vw] items-center justify-center rounded-lg bg-gray-700 sm:h-[400px] sm:w-[400px]">
               <p className="text-gray-400">
                 Select game settings to start playing
               </p>
@@ -83,7 +83,7 @@ export default function Home({ country = "US" }: { country?: string }) {
             </Button>
           )}
         </div>
-        <div className="w-full sm:w-1/3">
+        <div className="hidden w-full sm:block sm:w-1/3">
           <div className="rounded-lg bg-gray-700 p-4">
             <h2 className="mb-2 text-xl font-bold">Chat</h2>
             <div className="mb-4 h-48 overflow-y-auto">
