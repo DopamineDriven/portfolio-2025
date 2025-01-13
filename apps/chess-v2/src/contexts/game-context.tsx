@@ -34,9 +34,7 @@ class Engine {
     if (this.stockfish) {
       this.stockfish.onmessage = (e: MessageEvent<string>) => {
         const d = e.data;
-        console.log(`[stockfish-data]: ${d}`);
         const bestMove = d?.match(/bestmove\s+(\S+)/)?.[1];
-        console.log(`[evaluating-best move]: ${bestMove}`);
         callback({ bestMove: bestMove ?? "" });
       };
     }
@@ -51,12 +49,15 @@ class Engine {
   }
 
   public evaluatePosition(fen: string, depth: number) {
-    console.log(`[evaluating-position]: \nfen:${fen} \ndepth:${depth}`);
     if (this.stockfish) {
       this.stockfish.postMessage(`position fen ${fen}`);
       this.stockfish.postMessage(`go depth ${depth}`);
     }
   }
+  public newGame() {
+    this.sendMessage("ucinewgame");
+  }
+
   public stop() {
     this.sendMessage("stop");
   }
@@ -186,12 +187,11 @@ export function GameProvider({
     if (state.gameOver || state.isPlayerTurn === true) return;
 
     const getDefaultPonderTime = (difficulty: number) => {
-      return Math.min(Math.max(difficulty * 0.25, 1), 10) * 1000;
+      return Math.min(Math.max(difficulty * 0.25, 1), 10) * 200;
     };
 
     engine.onMessage(({ bestMove }) => {
       if (bestMove) {
-        console.log(`bestMove: ${bestMove}`);
         const from = bestMove.substring(0, 2) as Square;
         const to = bestMove.substring(2, 4) as Square;
         const promotion =
@@ -234,7 +234,7 @@ export function GameProvider({
       gameOver: false,
       gameResult: null
     }));
-    engine.sendMessage("ucinewgame");
+    engine.newGame();
   }, [engine]);
 
   const setPlayerColor = useCallback(
@@ -245,7 +245,7 @@ export function GameProvider({
         isPlayerTurn: toChessJSColor(color) === "w"
       }));
       resetGame();
-      engine.sendMessage("ucinewgame");
+      engine.newGame();
     },
     [resetGame, engine]
   );
@@ -256,7 +256,7 @@ export function GameProvider({
       engine.sendMessage(
         `setoption name Skill Level value ${getStockfishDifficulty(difficulty)}`
       );
-      engine.sendMessage("ucinewgame");
+      engine.newGame();
     },
     [engine]
   );

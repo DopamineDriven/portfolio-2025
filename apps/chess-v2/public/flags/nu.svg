@@ -1,0 +1,32 @@
+<svg id="flag-icons-nu" viewBox="0 0 640 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g clip-path="url(#clip0_16_2)">
+    <path d="M640 0H0V480H640V0Z" fill="#012169" />
+    <path d="M0 0L320 240ZM320 0L0 240Z" fill="black" />
+    <path d="M0 0L320 240M320 0L0 240" stroke="white" stroke-width="30" />
+    <mask id="mask0_16_2" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="374" height="320">
+      <path d="M0 0V120H373.333V240H320L0 0ZM0 240V320H160V0H320L0 240Z" fill="white" />
+    </mask>
+    <g mask="url(#mask0_16_2)">
+      <path d="M0 0L320 240ZM320 0L0 240Z" fill="black" />
+      <path d="M0 0L320 240M320 0L0 240" stroke="#C8102E" stroke-width="20" />
+    </g>
+    <path d="M160 0V320ZM0 120H373.333Z" fill="black" />
+    <path d="M160 0V320M0 120H373.333" stroke="white" stroke-width="50" />
+    <path d="M160 0V320ZM0 120H373.333Z" fill="black" />
+    <path d="M160 0V320M0 120H373.333" stroke="#C8102E" stroke-width="30" />
+    <path d="M320 0H640V480H0V240H320V0Z" fill="#FEDD00" />
+    <path
+      d="M160 160.831C175.034 160.831 187.221 142.55 187.221 120C187.221 97.4492 175.034 79.1685 160 79.1685C144.966 79.1685 132.779 97.4492 132.779 120C132.779 142.55 144.966 160.831 160 160.831Z"
+      fill="#012169" />
+    <path d="M160 79.1685L176 153.033L134.111 107.382H185.888L144 153.033" fill="#FEDD00" />
+    <path d="M66.6671 98.3198L76.0717 141.736L51.4502 114.903H81.884L57.2625 141.736" fill="#FEDD00" />
+    <path d="M253.334 98.3198L262.739 141.736L238.117 114.903H268.551L243.93 141.736" fill="#FEDD00" />
+    <path d="M160 178.32L169.405 221.736L144.783 194.903H175.217L150.596 221.736" fill="#FEDD00" />
+    <path d="M160 18.3198L169.405 61.7362L144.783 34.9034H175.217L150.596 61.7362" fill="#FEDD00" />
+  </g>
+  <defs>
+    <clipPath id="clip0_16_2">
+      <rect width="640" height="480" fill="white" />
+    </clipPath>
+  </defs>
+</svg>

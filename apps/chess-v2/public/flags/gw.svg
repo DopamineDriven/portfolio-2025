@@ -1,0 +1,22 @@
+<svg id="flag-icons-gw" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+  <g clip-path="url(#clip0_10_11813)">
+    <path d="M0 0H220V480H0V0Z" fill="#CE1126" />
+    <path d="M220 0H640V240H220V0Z" fill="#FCD116" />
+    <path d="M220 240H640V480H220V240Z" fill="#009E49" />
+    <path d="M110 160L85.2786 236.085L123.321 248.445" fill="black" />
+    <path d="M110 160L134.721 236.085L96.6791 248.445" fill="black" />
+    <path d="M186.084 215.278H106.084V255.278" fill="black" />
+    <path d="M186.084 215.278L121.363 262.301L97.8517 229.94" fill="black" />
+    <path d="M157.023 304.722L132.302 228.637L94.2593 240.998" fill="black" />
+    <path d="M157.023 304.722L92.3016 257.699L115.813 225.338" fill="black" />
+    <path d="M62.9771 304.721L127.698 257.698L104.187 225.338" fill="black" />
+    <path d="M62.9771 304.721L87.6984 228.637L125.741 240.997" fill="black" />
+    <path d="M33.9155 215.279L98.6369 262.302L122.148 229.941" fill="black" />
+    <path d="M33.9155 215.279H113.916V255.279" fill="black" />
+  </g>
+  <defs>
+    <clipPath id="clip0_10_11813">
+      <rect width="640" height="480" fill="white" />
+    </clipPath>
+  </defs>
+</svg>
