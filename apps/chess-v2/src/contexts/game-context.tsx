@@ -22,7 +22,7 @@ class Engine {
   constructor() {
     this.stockfish =
       typeof Worker !== "undefined" ? new Worker("/stockfish.js") : null;
-    this.onMessage = this.onMessage.bind(this);
+    // this.onMessage = this.onMessage.bind(this);
 
     if (this.stockfish) {
       this.sendMessage("uci");
@@ -30,38 +30,42 @@ class Engine {
     }
   }
 
-  onMessage(callback: (data: { bestMove: string }) => void) {
+  public onMessage(callback: (data: { bestMove: string }) => void) {
     if (this.stockfish) {
-      this.stockfish.addEventListener(
-        "message",
-        (e: MessageEvent<string>) => {
-          const d = e.data;
-          console.log(`[stockfish-data]: ${d}`);
-          const bestMove = d?.match(/bestmove\s+(\S+)/)?.[1];
-          console.log(`[evaluating-best move]: ${bestMove}`);
-          callback({ bestMove: bestMove ?? "" });
-        }
-      );
+      this.stockfish.onmessage = (e: MessageEvent<string>) => {
+        const d = e.data;
+        console.log(`[stockfish-data]: ${d}`);
+        const bestMove = d?.match(/bestmove\s+(\S+)/)?.[1];
+        console.log(`[evaluating-best move]: ${bestMove}`);
+        callback({ bestMove: bestMove ?? "" });
+      };
     }
   }
 
-  evaluatePosition(fen: string, depth: number) {
+  // "go infinite"
+  public evaluatePositionInfinite(fen: string) {
+    // "position fen <fen>" gives Stockfish context on the current board configuration/position
+    this.sendMessage(`position fen ${fen}`);
+    // let Stockfish search for best move endlessly until "stop" command is sent
+    this.sendMessage("go infinite");
+  }
+
+  public evaluatePosition(fen: string, depth: number) {
     console.log(`[evaluating-position]: \nfen:${fen} \ndepth:${depth}`);
     if (this.stockfish) {
       this.stockfish.postMessage(`position fen ${fen}`);
       this.stockfish.postMessage(`go depth ${depth}`);
     }
   }
-
-  stop() {
+  public stop() {
     this.sendMessage("stop");
   }
 
-  quit() {
+  public quit() {
     this.sendMessage("quit");
   }
 
-  private sendMessage(message: string) {
+  public sendMessage(message: string) {
     if (this.stockfish) {
       this.stockfish.postMessage(message);
     }
@@ -76,6 +80,8 @@ interface GameState {
   gameResult: string | null;
   difficulty: StockfishDifficulty;
   mode: StockfishMode;
+  moveCounter: number;
+  isPondering: boolean;
 }
 
 interface GameContextType extends GameState {
@@ -114,7 +120,9 @@ export function GameProvider({
     gameOver: false,
     gameResult: null,
     difficulty: initialDifficulty,
-    mode: initialMode
+    mode: initialMode,
+    moveCounter: 0,
+    isPondering: false
   });
 
   const chessColorHelper = useCallback(
@@ -131,13 +139,24 @@ export function GameProvider({
       if (moveResult) {
         setGame(newGame);
         setState(prevState => {
-          console.log(`newMoves:`, [...prevState.moves, moveResult.san]);
-          const newMoves = [...prevState.moves, moveResult.san];
+          // Get the current move number
+          const _moveNumber = Math.floor(prevState.moveCounter / 2) + 1;
+
+          // Create a new moves array without duplicates
+          const existingMoves = [...prevState.moves];
+          const previousMove = existingMoves[prevState.moveCounter - 1];
+
+          // Only add the move if it's different from the last move or it's the first move
+          if (previousMove !== moveResult.san || existingMoves.length === 0) {
+            existingMoves[prevState.moveCounter] = moveResult.san;
+          }
+
           return {
             ...prevState,
             isPlayerTurn: chessColorHelper(newGame.turn()) === initialColor,
             lastMove: [moveResult.from as Key, moveResult.to as Key],
-            moves: newMoves,
+            moves: existingMoves,
+            moveCounter: prevState.moveCounter + 1,
             gameOver: newGame.isGameOver(),
             gameResult: getGameResult(newGame, prevState.playerColor)
           };
@@ -166,6 +185,10 @@ export function GameProvider({
   const makeStockfishMove = useCallback(() => {
     if (state.gameOver || state.isPlayerTurn === true) return;
 
+    const getDefaultPonderTime = (difficulty: number) => {
+      return Math.min(Math.max(difficulty * 0.25, 1), 10) * 1000;
+    };
+
     engine.onMessage(({ bestMove }) => {
       if (bestMove) {
         console.log(`bestMove: ${bestMove}`);
@@ -179,12 +202,17 @@ export function GameProvider({
         makeMove({ from, to, promotion });
       }
     });
+    // Update isPondering to true
+    setState(prev => ({ ...prev, isPondering: true }));
+    engine.evaluatePositionInfinite(game.fen());
 
-    engine.evaluatePosition(
-      game.fen(),
-      getStockfishDifficulty(state.difficulty)
+    setTimeout(
+      () => {
+        engine.stop();
+        setState(prev => ({ ...prev, isPondering: false }));
+      },
+      getDefaultPonderTime(getStockfishDifficulty(state.difficulty))
     );
-
   }, [
     engine,
     game,
@@ -202,10 +230,12 @@ export function GameProvider({
       isPlayerTurn: toChessJSColor(prevState.playerColor) === "w",
       lastMove: undefined,
       moves: [],
+      moveCounter: 0,
       gameOver: false,
       gameResult: null
     }));
-  }, []);
+    engine.sendMessage("ucinewgame");
+  }, [engine]);
 
   const setPlayerColor = useCallback(
     (color: ChessColor) => {
@@ -215,13 +245,21 @@ export function GameProvider({
         isPlayerTurn: toChessJSColor(color) === "w"
       }));
       resetGame();
+      engine.sendMessage("ucinewgame");
     },
-    [resetGame]
+    [resetGame, engine]
   );
 
-  const setDifficulty = useCallback((difficulty: StockfishDifficulty) => {
-    setState(prevState => ({ ...prevState, difficulty }));
-  }, []);
+  const setDifficulty = useCallback(
+    (difficulty: StockfishDifficulty) => {
+      setState(prevState => ({ ...prevState, difficulty }));
+      engine.sendMessage(
+        `setoption name Skill Level value ${getStockfishDifficulty(difficulty)}`
+      );
+      engine.sendMessage("ucinewgame");
+    },
+    [engine]
+  );
 
   const setMode = useCallback((mode: StockfishMode) => {
     setState(prevState => ({ ...prevState, mode }));

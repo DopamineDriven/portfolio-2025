@@ -2,70 +2,15 @@
 
 import type { Square } from "chess.js";
 import type { CSSProperties, FC } from "react";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { RotateCcw } from "lucide-react";
 import { useGame } from "@/contexts/game-context";
 import { Button } from "@/ui/atoms/button";
 import Chessboard from "@/ui/chessboard";
 import MoveHistory from "@/ui/move-history";
 
-// class Engine {
-//   private stockfish: Worker | null;
-
-//   constructor() {
-//     this.stockfish =
-//       typeof Worker !== "undefined" ? new Worker("/stockfish.js") : null;
-//     this.onMessage = this.onMessage.bind(this);
-
-//     if (this.stockfish) {
-//       this.sendMessage("uci");
-//       this.sendMessage("isready");
-//     }
-//   }
-
-//   onMessage(callback: (data: { bestMove: string }) => void) {
-//     if (this.stockfish) {
-//       this.stockfish.addEventListener("message", (e: MessageEvent<string>) => {
-//         const bestMove = e.data?.match(/bestmove\s+(\S+)/)?.[1];
-//         console.log(`[evaluating-best move]: ${bestMove}`);
-//         callback({ bestMove: bestMove ?? "" });
-//       });
-//     }
-//   }
-
-//   evaluatePosition(fen: string, depth: number) {
-//     console.log(`[evaluating-position]: \nfen:${fen} \ndepth:${depth}`);
-//     if (this.stockfish) {
-//       this.stockfish.postMessage(`position fen ${fen}`);
-//       this.stockfish.postMessage(`go depth ${depth}`);
-//     }
-//   }
-
-//   stop() {
-//     this.sendMessage("stop");
-//   }
-
-//   quit() {
-//     this.sendMessage("quit");
-//   }
-
-//   private sendMessage(message: string) {
-//     if (this.stockfish) {
-//       this.stockfish.postMessage(message);
-//     }
-//   }
-// }
-
 interface ChessboardBotProps {
   onRestart: () => void;
-}
-
-export interface RightClickedSquares {
-  [key: string]:
-    | {
-        backgroundColor: string;
-      }
-    | undefined;
 }
 
 const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart }) => {
@@ -74,6 +19,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart }) => {
     gameOver,
     gameResult,
     makeStockfishMove,
+    isPondering,
     resetGame,
     isPlayerTurn,
     getMoveOptions,
@@ -81,8 +27,13 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart }) => {
   } = useGame();
 
   const [showGameModal, setShowGameModal] = useState(false);
-  const [rightClickedSquares, setRightClickedSquares] =
-    useState<RightClickedSquares>({});
+  const [rightClickedSquares, setRightClickedSquares] = useState<{
+    [key: string]:
+      | {
+          backgroundColor: string;
+        }
+      | undefined;
+  }>({});
   const [optionSquares, setOptionSquares] = useState<
     Record<string, React.CSSProperties>
   >({});
@@ -109,26 +60,33 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart }) => {
   );
 
   function onSquareRightClick(square: Square) {
-    const colour = "rgba(255, 0, 0, 0.5)";
+    const color = "rgba(255, 0, 0, 0.5)";
     setRightClickedSquares({
       ...rightClickedSquares,
       [square]:
         rightClickedSquares[square] &&
-        rightClickedSquares[square]?.backgroundColor === colour
+        rightClickedSquares[square]?.backgroundColor === color
           ? undefined
-          : { backgroundColor: colour }
+          : { backgroundColor: color }
     });
   }
 
   return (
     <div className="relative flex gap-8">
       <div>
+        {isPondering && (
+          <div className="absolute -top-2 right-0 inline-flex items-center justify-center">
+            <h3 className="font-sans text-xl font-bold text-gray-900">
+              Thinking...
+            </h3>
+          </div>
+        )}
         <Button
           variant="outline"
           size="icon"
           className="absolute -top-12 right-0"
           onClick={onRestart}>
-          <RotateCcw className="h-4 w-4" />
+          <RotateCcw className="h-6 w-6 stroke-black" />
         </Button>
         <Chessboard
           onSquareRightClickAction={onSquareRightClick}
