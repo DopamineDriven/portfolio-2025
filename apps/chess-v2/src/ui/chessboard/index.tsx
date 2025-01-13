@@ -23,7 +23,6 @@ export default function Chessboard({
   onSquareRightClickAction,
   customSquareStyles
 }: ChessboardProps) {
-
   const {
     game,
     playerColor,
@@ -36,12 +35,9 @@ export default function Chessboard({
   const [_optionSquares, setOptionSquares] = useState<
     Record<string, React.CSSProperties>
   >({});
-
   const apiRef = useRef<Api | null>(null);
-
   const boardRef = useRef<HTMLDivElement>(null);
-
-  const handleMove = useCallback(
+  const _handleMove = useCallback(
     (from: Square, to: Square) => {
       makeMove({ from, to });
       setOptionSquares({});
@@ -107,7 +103,8 @@ export default function Chessboard({
         color: isPlayerTurn ? chessColorHelper(playerColor) : "both", // Allow both colors to move
         dests: getLegalMoves(game),
         events: {
-          after: handleMove
+          after: (orig, dest) =>
+            makeMove({ from: orig as Square, to: dest as Square })
         }
       },
       draggable: {
@@ -173,7 +170,6 @@ export default function Chessboard({
     playerColor,
     isPlayerTurn,
     lastMove,
-    handleMove,
     getLegalMoves,
     makeMove,
     handleSquareClick,
