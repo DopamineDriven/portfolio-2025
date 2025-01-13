@@ -20,6 +20,7 @@ export default function Home({ country = "US" }: { country?: string }) {
     useState<StockfishDifficulty>("intermediate");
   const [playerColor, setPlayerColor] = useState<ChessColor>("white");
   const [mode, setMode] = useState<StockfishMode>("friendly");
+  const [soundEnabled, setSoundEnabled] = useState(true);
 
   const handleSendMessage = (message: string) => {
     if (message.trim() !== "") {
@@ -40,7 +41,11 @@ export default function Home({ country = "US" }: { country?: string }) {
   );
 
   const handleGameStart = useCallback(
-    (settings: { playerColor: ChessColor | "random"; mode: StockfishMode }) => {
+    (settings: {
+      playerColor: ChessColor | "random";
+      mode: StockfishMode;
+      soundEnabled: boolean;
+    }) => {
       setPlayerColor(
         settings.playerColor === "random"
           ? Math.random() < 0.5
@@ -49,6 +54,7 @@ export default function Home({ country = "US" }: { country?: string }) {
           : settings.playerColor
       );
       setMode(settings.mode);
+      setSoundEnabled(settings.soundEnabled);
       setShowSettings(false);
       setGameStarted(true);
     },
@@ -64,6 +70,7 @@ export default function Home({ country = "US" }: { country?: string }) {
     <GameProvider
       initialColor={playerColor}
       initialDifficulty={difficulty}
+      soundEnabled={soundEnabled}
       initialMode={mode}>
       <div className="motion-preset-confetti flex min-h-screen flex-col gap-4 bg-gray-800 px-4 py-2 text-white motion-duration-[5000ms] sm:flex-row sm:gap-8 sm:px-6">
         <div className="flex w-full flex-col items-center justify-center gap-2 sm:w-auto">

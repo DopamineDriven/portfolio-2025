@@ -261,5 +261,3 @@ export const flags = ([
 
 
 export const flagsArr = Array.of<typeof flags>(flags);
-
-export const dynamic = "force-static";
