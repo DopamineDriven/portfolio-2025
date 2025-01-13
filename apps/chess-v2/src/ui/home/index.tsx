@@ -72,9 +72,8 @@ export default function Home({ country = "US" }: { country?: string }) {
       initialDifficulty={difficulty}
       soundEnabled={soundEnabled}
       initialMode={mode}>
-      <div className="motion-preset-confetti flex min-h-screen flex-col gap-4 bg-gray-800 px-4 py-2 text-white motion-duration-[5000ms] sm:flex-row sm:gap-8 sm:px-6">
+      <div className={"flex min-h-screen flex-col gap-4 bg-gray-800 px-4 py-2 text-white sm:flex-row sm:gap-8 sm:px-6"}>
         <div className="flex w-full flex-col items-center justify-center gap-2 sm:w-auto">
-          <h1 className="mb-4 text-2xl font-bold">Chess vs Stockfish</h1>
           {gameStarted ? (
             <ChessboardBot country={country} onRestart={handleNewGame} />
           ) : (
