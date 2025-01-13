@@ -203,10 +203,7 @@ export function GameProvider({
     [game, chessColorHelper, initialColor, state.isPlayerTurn, playSoundEffect]
   );
 
-  const getGameResult = (
-    game: Chess,
-    playerColor: ChessColor
-  ) => {
+  const getGameResult = (game: Chess, playerColor: ChessColor) => {
     if (game.isCheckmate()) {
       if (game.turn() === toChessJSColor(playerColor)) {
         return "Stockfish wins!" as const;
