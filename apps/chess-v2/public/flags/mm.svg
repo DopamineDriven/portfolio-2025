@@ -1,0 +1,17 @@
+<svg id="flag-icons-mm" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+  <g clip-path="url(#clip0_10_13388)">
+  <path d="M0 -0.0999756H640V160H0V-0.0999756Z" fill="#FECB00"/>
+  <path d="M0 320H640V480H0V320Z" fill="#EA2839"/>
+  <path d="M0 160H640V320H0V160Z" fill="#34B233"/>
+  <path d="M216.032 399.099L262.76 214.413L377.239 297.587L216.032 399.099Z" fill="white"/>
+  <path d="M151.777 201.341L341.864 188.711L298.136 323.289L151.777 201.341Z" fill="white"/>
+  <path d="M320 79.12L390.752 256H249.248L320 79.12Z" fill="white"/>
+  <path d="M488.223 201.341L341.864 323.289L298.137 188.711L488.223 201.341Z" fill="white"/>
+  <path d="M423.967 399.099L262.76 297.587L377.24 214.413L423.967 399.099Z" fill="white"/>
+  </g>
+  <defs>
+  <clipPath id="clip0_10_13388">
+  <rect width="640" height="480" fill="white"/>
+  </clipPath>
+  </defs>
+  </svg>

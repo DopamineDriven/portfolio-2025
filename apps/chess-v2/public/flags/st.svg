@@ -1,0 +1,32 @@
+<svg id="flag-icons-st" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+  <g clip-path="url(#clip0_10_16401)">
+  <path d="M0 0H640V480H0V0Z" fill="#12AD2B"/>
+  <path d="M0 137.1H640V343H0V137.1Z" fill="#FFCE00"/>
+  <path d="M0 0V480L240 240" fill="#D21034"/>
+  <path d="M351.601 171.428L330.411 236.644L363.019 247.239" fill="black"/>
+  <path d="M351.601 171.428L372.79 236.644L340.183 247.239" fill="black"/>
+  <path d="M416.815 218.81H348.243V253.096" fill="black"/>
+  <path d="M416.815 218.81L361.34 259.116L341.187 231.378" fill="black"/>
+  <path d="M391.906 295.476L370.716 230.26L338.108 240.855" fill="black"/>
+  <path d="M391.906 295.476L336.43 255.17L356.583 227.432" fill="black"/>
+  <path d="M311.295 295.476L366.771 255.17L346.618 227.432" fill="black"/>
+  <path d="M311.295 295.476L332.485 230.26L365.093 240.855" fill="black"/>
+  <path d="M286.384 218.81L341.86 259.116L362.013 231.378" fill="black"/>
+  <path d="M286.384 218.81H354.956V253.096" fill="black"/>
+  <path d="M528.4 171.428L507.21 236.644L539.818 247.239" fill="black"/>
+  <path d="M528.4 171.428L549.59 236.644L516.982 247.239" fill="black"/>
+  <path d="M593.615 218.81H525.043V253.096" fill="black"/>
+  <path d="M593.615 218.81L538.139 259.116L517.987 231.378" fill="black"/>
+  <path d="M568.706 295.476L547.516 230.26L514.908 240.855" fill="black"/>
+  <path d="M568.706 295.476L513.23 255.17L533.383 227.432" fill="black"/>
+  <path d="M488.095 295.476L543.571 255.17L523.418 227.432" fill="black"/>
+  <path d="M488.095 295.476L509.285 230.26L541.893 240.855" fill="black"/>
+  <path d="M463.184 218.81L518.66 259.116L538.812 231.378" fill="black"/>
+  <path d="M463.184 218.81H531.756V253.096" fill="black"/>
+  </g>
+  <defs>
+  <clipPath id="clip0_10_16401">
+  <rect width="640" height="480" fill="white"/>
+  </clipPath>
+  </defs>
+  </svg>

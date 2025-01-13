@@ -1,0 +1,23 @@
+<svg id="flag-icons-cw" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+  <g clip-path="url(#clip0_10_2938)">
+    <mask id="mask0_10_2938" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="642"
+      height="482">
+      <path d="M0 0H641.738V481.28H0V0Z" fill="white" />
+    </mask>
+    <g mask="url(#mask0_10_2938)">
+      <path d="M0 0H721.92V481.28H0V0Z" fill="#002B7F" />
+      <path d="M0 300.8H721.92V360.96H0V300.8Z" fill="#F9E814" />
+      <path
+        d="M80.2194 40.1099L88.2414 68.1867H120.329L92.2524 80.2197L100.274 108.297L80.2194 96.2636L56.1535 112.308L64.1755 84.2306L44.1206 68.1867H72.1975L80.2194 40.1099Z"
+        fill="white" />
+      <path
+        d="M160.458 106.972L171.155 144.412H213.944L176.504 160.458L187.201 197.898L160.458 181.852L128.367 203.247L139.064 165.807L112.321 144.412H149.761L160.458 106.972Z"
+        fill="white" />
+    </g>
+  </g>
+  <defs>
+    <clipPath id="clip0_10_2938">
+      <rect width="640" height="480" fill="white" />
+    </clipPath>
+  </defs>
+</svg>

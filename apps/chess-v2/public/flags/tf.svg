@@ -1,0 +1,19 @@
+<svg id="flag-icons-tf" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+  <g clip-path="url(#clip0_10_17377)">
+  <path d="M0 0H640V480H0V0Z" fill="#002395"/>
+  <path d="M0 0H292.8V196.8H0V0Z" fill="white"/>
+  <path d="M0 0H96V192H0V0Z" fill="#002395"/>
+  <path d="M192 0H288V192H192V0Z" fill="#ED2939"/>
+  <path d="M426 219.6L441.4 244.2H485.4V330L452.4 278.4L408 349.2H429.6L452.4 308.4L499.2 392.4L546 308.4L568.8 349.2H590.4L546 278.4L513 330V282.6H532.8L547.5 259.2H513V244.2H557L572.4 219.6H426ZM477.6 324.6H429.6V341.4H477.6V324.6ZM568.8 324.6H520.8V341.4H568.8V324.6Z" fill="white"/>
+  <path d="M499.2 409.2L513.96 454.8L475.2 426.6H523.2L484.44 454.8L499.2 409.2Z" fill="white"/>
+  <path d="M445.2 368.4L459.96 414L421.2 385.8H469.2L430.44 414L445.2 368.4Z" fill="white"/>
+  <path d="M553.2 368.4L567.96 414L529.2 385.8H577.2L538.44 414L553.2 368.4Z" fill="white"/>
+  <path d="M399.6 247.2L414.36 292.8L375.6 264.6H423.6L384.84 292.8L399.6 247.2Z" fill="white"/>
+  <path d="M598.8 247.2L613.56 292.8L574.8 264.6H622.8L584.04 292.8L598.8 247.2Z" fill="white"/>
+  </g>
+  <defs>
+  <clipPath id="clip0_10_17377">
+  <rect width="640" height="480" fill="white"/>
+  </clipPath>
+  </defs>
+  </svg>
