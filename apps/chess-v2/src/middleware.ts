@@ -12,8 +12,8 @@ export default function middleware(req: NextRequest) {
 
   let country = req.headers.get("X-Vercel-IP-Country");
   if (country ===null) country = "US";
-  // Rewrite / to app/[country]/page.tsx
   req.nextUrl.pathname = `/${country}`
+  // Rewrite to app/[country]/page.tsx
   return NextResponse.rewrite(req.nextUrl);
 }
 
