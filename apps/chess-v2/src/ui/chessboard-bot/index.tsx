@@ -2,7 +2,7 @@
 
 import type { Square } from "chess.js";
 import type { CSSProperties, FC } from "react";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { RotateCcw } from "lucide-react";
 import { useGame } from "@/contexts/game-context";
 import { Button } from "@/ui/atoms/button";
@@ -19,6 +19,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart }) => {
     gameOver,
     gameResult,
     makeStockfishMove,
+    isPondering,
     resetGame,
     isPlayerTurn,
     getMoveOptions,
@@ -59,20 +60,27 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart }) => {
   );
 
   function onSquareRightClick(square: Square) {
-    const colour = "rgba(255, 0, 0, 0.5)";
+    const color = "rgba(255, 0, 0, 0.5)";
     setRightClickedSquares({
       ...rightClickedSquares,
       [square]:
         rightClickedSquares[square] &&
-        rightClickedSquares[square]?.backgroundColor === colour
+        rightClickedSquares[square]?.backgroundColor === color
           ? undefined
-          : { backgroundColor: colour }
+          : { backgroundColor: color }
     });
   }
 
   return (
     <div className="relative flex gap-8">
       <div>
+        {isPondering && (
+          <div className="absolute -top-2 right-0 inline-flex items-center justify-center">
+            <h3 className="font-sans text-xl font-bold text-gray-900">
+              Thinking...
+            </h3>
+          </div>
+        )}
         <Button
           variant="outline"
           size="icon"
