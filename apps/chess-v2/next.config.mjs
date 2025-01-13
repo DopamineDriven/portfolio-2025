@@ -1,8 +1,5 @@
-
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: { ignoreDuringBuilds: false },
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   typescript: { ignoreBuildErrors: false, tsconfigPath: "./tsconfig.json" },
   images: {
@@ -19,10 +16,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "**.vercel-storage.com"
       },
+      { hostname: "raw.githubusercontent.com", port: "", protocol: "https" },
       { hostname: "api.dicebear.com", protocol: "https" },
       { hostname: "images.unsplash.com", protocol: "https" },
       { hostname: "tailwindui.com", protocol: "https" },
-      { hostname: "chess-challenge-2025.vercel.app", protocol: "https" }
+      { hostname: "chess-bot-2025.vercel.app", protocol: "https" }
     ]
   }
 };
