@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useGame } from "@/contexts/game-context";
+import { Button } from "@/ui/atoms/button";
 
 export default function MoveHistory() {
   const { moves } = useGame();
