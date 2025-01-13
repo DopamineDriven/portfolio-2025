@@ -19,6 +19,7 @@ interface GameSettingsProps {
   onStartAction: (settings: {
     playerColor: ChessColor | "random";
     mode: StockfishMode;
+    soundEnabled:boolean;
   }) => void;
   open: boolean;
   onOpenChangeAction: (open: boolean) => void;
