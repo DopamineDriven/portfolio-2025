@@ -11,8 +11,10 @@ import React, {
   useState
 } from "react";
 import { Chess } from "chess.js";
+import type { SoundKeys } from "@/lib/sound";
 import type { StockfishDifficulty, StockfishMode } from "@/types/chess";
 import type { ChessColor } from "@/utils/chess-types";
+import { playSound } from "@/lib/sound";
 import { getStockfishDifficulty } from "@/types/chess";
 import { toChessJSColor } from "@/utils/chess-types";
 
@@ -97,21 +99,27 @@ interface GameContextType extends GameState {
     [square: string]: { background: string; borderRadius: string };
   };
   engine: Engine;
+  playSoundEffect: (effect: SoundKeys) => void;
+  isSoundEnabled: boolean;
+  setIsSoundEnabled: (enabled: boolean) => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
-
-export function GameProvider({
-  children,
-  initialColor,
-  initialDifficulty,
-  initialMode
-}: {
+type GameProviderProps = {
   children: React.ReactNode;
   initialColor: ChessColor;
   initialDifficulty: StockfishDifficulty;
   initialMode: StockfishMode;
-}) {
+  soundEnabled: boolean;
+};
+
+export function GameProvider({
+  children,
+  initialColor,
+  soundEnabled,
+  initialDifficulty,
+  initialMode
+}: GameProviderProps) {
   const engine = useMemo(() => new Engine(), []);
   const [game, setGame] = useState(() => new Chess());
   const [state, setState] = useState<GameState>({
@@ -126,6 +134,8 @@ export function GameProvider({
     isPondering: false
   });
 
+  const [isSoundEnabled, setIsSoundEnabled] = useState(soundEnabled);
+
   const chessColorHelper = useCallback(
     (val: "b" | "w" | "white" | "black"): "white" | "black" => {
       return val === "b" || val === "black" ? "black" : "white";
@@ -133,11 +143,38 @@ export function GameProvider({
     []
   );
 
+  const playSoundEffect = useCallback(
+    (effect: SoundKeys) => {
+      if (isSoundEnabled) {
+        playSound(effect);
+      }
+    },
+    [isSoundEnabled]
+  );
+
   const makeMove = useCallback(
     (move: ShortMove): void => {
       const newGame = new Chess(game.fen());
       const moveResult = newGame.move(move);
       if (moveResult) {
+        
+        // Determine the type of sound to play
+        if (newGame.isGameOver()) {
+          playSoundEffect("game-end");
+        } else if (newGame.isCheck()) {
+          playSoundEffect("move-check");
+        } else if (moveResult.captured) {
+          playSoundEffect("capture");
+        } else if (
+          moveResult.flags.includes("k") ||
+          moveResult.flags.includes("q")
+        ) {
+          playSoundEffect("castle");
+        } else if (moveResult.promotion) {
+          playSoundEffect("promote");
+        } else {
+          playSoundEffect(state.isPlayerTurn ? "move-self" : "move-opponent");
+        }
         setGame(newGame);
         setState(prevState => {
           // Get the current move number
@@ -164,7 +201,7 @@ export function GameProvider({
         });
       }
     },
-    [game, chessColorHelper, initialColor]
+    [game, chessColorHelper, initialColor, state.isPlayerTurn, playSoundEffect]
   );
 
   const getGameResult = (
@@ -235,7 +272,8 @@ export function GameProvider({
       gameResult: null
     }));
     engine.newGame();
-  }, [engine]);
+    playSoundEffect("game-start");
+  }, [engine, playSoundEffect]);
 
   const setPlayerColor = useCallback(
     (color: ChessColor) => {
@@ -245,9 +283,8 @@ export function GameProvider({
         isPlayerTurn: toChessJSColor(color) === "w"
       }));
       resetGame();
-      engine.newGame();
     },
-    [resetGame, engine]
+    [resetGame]
   );
 
   const setDifficulty = useCallback(
@@ -305,6 +342,9 @@ export function GameProvider({
     resetGame,
     setPlayerColor,
     setDifficulty,
+    isSoundEnabled,
+    playSoundEffect,
+    setIsSoundEnabled,
     setMode,
     getMoveOptions,
     engine

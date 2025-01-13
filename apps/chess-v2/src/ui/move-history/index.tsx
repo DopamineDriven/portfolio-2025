@@ -1,14 +1,25 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useGame } from "@/contexts/game-context";
 
 export default function MoveHistory() {
   const { moves } = useGame();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop =
+        scrollContainerRef.current.scrollHeight;
+    }
+  }, [moves]);
 
   return (
     <div className="mt-4 rounded-lg bg-gray-700 p-4">
       <h2 className="mb-2 text-xl font-bold text-white">Move History</h2>
-      <div className="h-48 overflow-y-auto">
+      <div
+        ref={scrollContainerRef}
+        className="h-48 overflow-y-auto scroll-smooth sm:h-60 md:h-72 lg:h-80 xl:h-96">
         <table className="w-full text-white">
           <tbody>
             {moves.reduce((rows: React.ReactNode[], move, index) => {

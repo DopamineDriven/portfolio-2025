@@ -4,7 +4,7 @@ import type { Square } from "chess.js";
 import type { CSSProperties, FC } from "react";
 import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import { RotateCcw } from "lucide-react";
+import { History, RotateCcw } from "lucide-react";
 import type { CountryCodes } from "@/utils/flags";
 import { useGame } from "@/contexts/game-context";
 import { Avatar, AvatarFallback, AvatarImage } from "@/ui/atoms/avatar";
@@ -32,7 +32,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
   } = useGame();
 
   const countryToFile = countryCodeToFileName(country as CountryCodes) || "US";
-
+  const [isReviewMode, setIsReviewMode] = useState(false);
   const [showGameModal, setShowGameModal] = useState(false);
   const [rightClickedSquares, setRightClickedSquares] = useState<{
     [key: string]:
@@ -46,16 +46,27 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
   >({});
 
   useEffect(() => {
-    if (gameOver) {
+    if (gameOver && !isReviewMode) {
       setShowGameModal(true);
     }
-  }, [gameOver]);
+  }, [gameOver, isReviewMode]);
 
   useEffect(() => {
     if (!isPlayerTurn && !gameOver) {
       setTimeout(makeStockfishMove, 300);
     }
   }, [isPlayerTurn, gameOver, makeStockfishMove]);
+
+  const handleReviewMode = () => {
+    setIsReviewMode(true);
+    setShowGameModal(false);
+  };
+
+  const handleNewGame = () => {
+    setIsReviewMode(false);
+    resetGame();
+    setShowGameModal(false);
+  };
 
   const _handleSquareClick = useCallback(
     (square: Square) => {
@@ -133,7 +144,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
           }
         />
         <div className="relative ml-2 mt-4 flex w-full flex-row items-center justify-between gap-0">
-          <div className="flex flex-row gap-x-2 my-auto">
+          <div className="my-auto flex flex-row gap-x-2">
             <Avatar className="h-11 w-11">
               <AvatarImage
                 src="https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess-v2/public/chess-default-4.png"
@@ -165,25 +176,40 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
         <MoveHistory />
       </div>
       {showGameModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="rounded-lg bg-white p-4">
-            <h2 className="mb-2 text-xl font-bold text-gray-900">
+        <div className="motion-preset-confetti fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 motion-duration-[5000ms]">
+          <div className="rounded-lg bg-white p-6">
+            <h2 className="mb-4 text-2xl font-bold text-gray-900">
               {gameResult}
             </h2>
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-3">
               <Button
                 variant="default"
-                onClick={() => {
-                  resetGame();
-                  setShowGameModal(false);
-                }}>
+                onClick={handleNewGame}
+                className="w-full text-black">
                 New Game
               </Button>
-              <Button variant="outline" onClick={onRestart}>
+              <Button
+                variant="outline"
+                onClick={handleReviewMode}
+                className="w-full stroke-black text-black">
+                <History className="mr-2 h-4 w-4" />
+                Review Game
+              </Button>
+              <Button
+                variant="outline"
+                onClick={onRestart}
+                className="w-full text-black">
                 Change Settings
               </Button>
             </div>
           </div>
+        </div>
+      )}
+      {isReviewMode && gameOver && (
+        <div className="fixed bottom-4 right-4 z-50 rounded-lg bg-white p-4 shadow-lg">
+          <Button variant="default" onClick={handleNewGame}>
+            Start New Game
+          </Button>
         </div>
       )}
     </div>

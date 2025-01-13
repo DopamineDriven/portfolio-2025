@@ -31,7 +31,13 @@ export default function GameSettings({
   onOpenChangeAction,
   allowClose
 }: GameSettingsProps) {
-  const { playerColor, mode, setPlayerColor } = useGame();
+  const {
+    playerColor,
+    mode,
+    setPlayerColor,
+    isSoundEnabled,
+    setIsSoundEnabled
+  } = useGame();
   const [selectedColor, setSelectedColor] = useState<ChessColor | "random">(
     playerColor
   );
@@ -52,7 +58,8 @@ export default function GameSettings({
             ? "white"
             : "black"
           : selectedColor,
-      mode: selectedMode
+      mode: selectedMode,
+      soundEnabled: isSoundEnabled
     });
   };
 
@@ -174,6 +181,20 @@ export default function GameSettings({
                   <Crown className="h-6 w-6 fill-current text-yellow-400" />
                 </div>
               </div>
+            </button>
+          </div>
+          <div className="mb-4 flex items-center justify-between">
+            <span>Sound Effects</span>
+            <button
+              onClick={() => setIsSoundEnabled(!isSoundEnabled)}
+              className={`h-6 w-12 rounded-full ${
+                isSoundEnabled ? "bg-green-600" : "bg-gray-400"
+              } transition-colors duration-200 ease-in-out focus:outline-none`}>
+              <span
+                className={`ml-1 mt-1 block h-4 w-4 rounded-full bg-white transition-transform duration-200 ease-in-out ${
+                  isSoundEnabled ? "translate-x-6 transform" : ""
+                }`}
+              />
             </button>
           </div>
           <Button
