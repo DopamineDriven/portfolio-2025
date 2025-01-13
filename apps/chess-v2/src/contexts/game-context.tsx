@@ -157,7 +157,6 @@ export function GameProvider({
       const newGame = new Chess(game.fen());
       const moveResult = newGame.move(move);
       if (moveResult) {
-        
         // Determine the type of sound to play
         if (newGame.isGameOver()) {
           playSoundEffect("game-end");
@@ -204,18 +203,17 @@ export function GameProvider({
     [game, chessColorHelper, initialColor, state.isPlayerTurn, playSoundEffect]
   );
 
-  const getGameResult = (
-    game: Chess,
-    playerColor: ChessColor
-  ): string | null => {
+  const getGameResult = (game: Chess, playerColor: ChessColor) => {
     if (game.isCheckmate()) {
-      return game.turn() === toChessJSColor(playerColor)
-        ? "Stockfish wins!"
-        : "You win!";
+      if (game.turn() === toChessJSColor(playerColor)) {
+        return "Stockfish wins!" as const;
+      } else return "You win!" as const;
     } else if (game.isDraw()) {
-      return "It's a draw!";
+      return "It's a draw!" as const;
+    } else if (game.isStalemate()) {
+      return "Stalemate!" as const;
     } else if (game.isGameOver()) {
-      return "Game over!";
+      return "Game over!" as const;
     }
     return null;
   };
