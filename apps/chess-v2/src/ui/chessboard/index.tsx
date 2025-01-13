@@ -23,6 +23,7 @@ export default function Chessboard({
   onSquareRightClickAction,
   customSquareStyles
 }: ChessboardProps) {
+
   const {
     game,
     playerColor,
@@ -35,9 +36,12 @@ export default function Chessboard({
   const [_optionSquares, setOptionSquares] = useState<
     Record<string, React.CSSProperties>
   >({});
+
   const apiRef = useRef<Api | null>(null);
 
-  const _handleMove = useCallback(
+  const boardRef = useRef<HTMLDivElement>(null);
+
+  const handleMove = useCallback(
     (from: Square, to: Square) => {
       makeMove({ from, to });
       setOptionSquares({});
@@ -72,6 +76,24 @@ export default function Chessboard({
   );
 
   useEffect(() => {
+    const updateBoardSize = () => {
+      if (boardRef.current) {
+        const vw = Math.max(
+          document.documentElement.clientWidth || 0,
+          window.innerWidth || 0
+        );
+        const size = vw < 640 ? vw : Math.min(vw * 0.4, 480); // 40vw up to a max of 480px
+        boardRef.current.style.width = `${size}px`;
+        boardRef.current.style.height = `${size}px`;
+      }
+    };
+
+    updateBoardSize();
+    window.addEventListener("resize", updateBoardSize);
+    return () => window.removeEventListener("resize", updateBoardSize);
+  }, []);
+
+  useEffect(() => {
     console.log("Board orientation:", chessColorHelper(playerColor));
     const config: Config = {
       fen: game.fen(),
@@ -85,8 +107,7 @@ export default function Chessboard({
         color: isPlayerTurn ? chessColorHelper(playerColor) : "both", // Allow both colors to move
         dests: getLegalMoves(game),
         events: {
-          after: (orig, dest) =>
-            makeMove({ from: orig as Square, to: dest as Square })
+          after: handleMove
         }
       },
       draggable: {
@@ -113,17 +134,16 @@ export default function Chessboard({
       lastMove: lastMove
     };
 
-    const el = document.getElementById("chessground");
-    if (el) {
+    if (boardRef.current) {
       if (apiRef.current) {
         apiRef.current.destroy();
       }
-      apiRef.current = Chessground(el, config);
+      apiRef.current = Chessground(boardRef.current, config);
 
       // Apply custom styles
       if (customSquareStyles) {
         Object.entries(customSquareStyles).forEach(([square, style]) => {
-          const squareEl = el.querySelector(
+          const squareEl = boardRef.current!.querySelector(
             `[data-key="${square}"]`
           )! as HTMLElement;
           if (squareEl) {
@@ -133,7 +153,7 @@ export default function Chessboard({
       }
 
       // Add right-click event listener
-      el.addEventListener("contextmenu", e => {
+      boardRef.current.addEventListener("contextmenu", e => {
         e.preventDefault();
         const square = (e.target as HTMLElement).closest(".square");
         if (square) {
@@ -153,6 +173,7 @@ export default function Chessboard({
     playerColor,
     isPlayerTurn,
     lastMove,
+    handleMove,
     getLegalMoves,
     makeMove,
     handleSquareClick,
@@ -163,8 +184,8 @@ export default function Chessboard({
 
   return (
     <div
-      id="chessground"
-      className="h-[40vw] w-[40vw] overflow-hidden rounded-lg"
+      ref={boardRef}
+      className="aspect-square w-full overflow-hidden rounded-lg sm:w-[40vw] sm:max-w-[480px]"
       style={{
         boxShadow: "rgba(0, 0, 0, 0.5) 0px 4px 12px"
       }}
