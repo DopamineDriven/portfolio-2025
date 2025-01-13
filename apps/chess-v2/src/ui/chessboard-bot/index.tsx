@@ -9,63 +9,8 @@ import { Button } from "@/ui/atoms/button";
 import Chessboard from "@/ui/chessboard";
 import MoveHistory from "@/ui/move-history";
 
-// class Engine {
-//   private stockfish: Worker | null;
-
-//   constructor() {
-//     this.stockfish =
-//       typeof Worker !== "undefined" ? new Worker("/stockfish.js") : null;
-//     this.onMessage = this.onMessage.bind(this);
-
-//     if (this.stockfish) {
-//       this.sendMessage("uci");
-//       this.sendMessage("isready");
-//     }
-//   }
-
-//   onMessage(callback: (data: { bestMove: string }) => void) {
-//     if (this.stockfish) {
-//       this.stockfish.addEventListener("message", (e: MessageEvent<string>) => {
-//         const bestMove = e.data?.match(/bestmove\s+(\S+)/)?.[1];
-//         console.log(`[evaluating-best move]: ${bestMove}`);
-//         callback({ bestMove: bestMove ?? "" });
-//       });
-//     }
-//   }
-
-//   evaluatePosition(fen: string, depth: number) {
-//     console.log(`[evaluating-position]: \nfen:${fen} \ndepth:${depth}`);
-//     if (this.stockfish) {
-//       this.stockfish.postMessage(`position fen ${fen}`);
-//       this.stockfish.postMessage(`go depth ${depth}`);
-//     }
-//   }
-
-//   stop() {
-//     this.sendMessage("stop");
-//   }
-
-//   quit() {
-//     this.sendMessage("quit");
-//   }
-
-//   private sendMessage(message: string) {
-//     if (this.stockfish) {
-//       this.stockfish.postMessage(message);
-//     }
-//   }
-// }
-
 interface ChessboardBotProps {
   onRestart: () => void;
-}
-
-export interface RightClickedSquares {
-  [key: string]:
-    | {
-        backgroundColor: string;
-      }
-    | undefined;
 }
 
 const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart }) => {
@@ -81,8 +26,13 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart }) => {
   } = useGame();
 
   const [showGameModal, setShowGameModal] = useState(false);
-  const [rightClickedSquares, setRightClickedSquares] =
-    useState<RightClickedSquares>({});
+  const [rightClickedSquares, setRightClickedSquares] = useState<{
+    [key: string]:
+      | {
+          backgroundColor: string;
+        }
+      | undefined;
+  }>({});
   const [optionSquares, setOptionSquares] = useState<
     Record<string, React.CSSProperties>
   >({});
@@ -128,7 +78,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart }) => {
           size="icon"
           className="absolute -top-12 right-0"
           onClick={onRestart}>
-          <RotateCcw className="h-4 w-4" />
+          <RotateCcw className="h-6 w-6 stroke-black" />
         </Button>
         <Chessboard
           onSquareRightClickAction={onSquareRightClick}
