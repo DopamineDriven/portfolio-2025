@@ -14,6 +14,7 @@
     "watch:stockfish": "node public/scripts/stockfish.js -s ASSERTIONS=1 --watch"
   },
   "dependencies": {
+    "@d0paminedriven/chess-icons": "^0.3.0",
     "@radix-ui/react-avatar": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.4",
     "@radix-ui/react-label": "^2.1.1",

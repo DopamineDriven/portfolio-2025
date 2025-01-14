@@ -43,9 +43,10 @@ class Engine {
   }
 
   // "go infinite"
-  public evaluatePositionInfinite(fen: string) {
+  public evaluatePositionInfinite(fen: string, difficulty: number) {
     // "position fen <fen>" gives Stockfish context on the current board configuration/position
     this.sendMessage(`position fen ${fen}`);
+    this.sendMessage(`go depth ${difficulty}`);
     // let Stockfish search for best move endlessly until "stop" command is sent
     this.sendMessage("go infinite");
   }
@@ -85,6 +86,7 @@ interface GameState {
   mode: StockfishMode;
   moveCounter: number;
   isPondering: boolean;
+  promotionSquare: { from: Square; to: Square } | null;
 }
 
 interface GameContextType extends GameState {
@@ -102,6 +104,7 @@ interface GameContextType extends GameState {
   playSoundEffect: (effect: SoundKeys) => void;
   isSoundEnabled: boolean;
   setIsSoundEnabled: (enabled: boolean) => void;
+  handlePromotion: (from: Square, to: Square) => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -131,7 +134,8 @@ export function GameProvider({
     difficulty: initialDifficulty,
     mode: initialMode,
     moveCounter: 0,
-    isPondering: false
+    isPondering: false,
+    promotionSquare: null
   });
 
   const [isSoundEnabled, setIsSoundEnabled] = useState(soundEnabled);
@@ -151,7 +155,12 @@ export function GameProvider({
     },
     [isSoundEnabled]
   );
-
+  const handlePromotion = useCallback((from: Square, to: Square) => {
+    setState(prev => ({
+      ...prev,
+      promotionSquare: { from, to }
+    }));
+  }, []);
   const makeMove = useCallback(
     (move: ShortMove): void => {
       const newGame = new Chess(game.fen());
@@ -169,7 +178,7 @@ export function GameProvider({
           moveResult.flags.includes("q")
         ) {
           playSoundEffect("castle");
-        } else if (moveResult.promotion) {
+        } else if (moveResult.flags.includes("p")) {
           playSoundEffect("promote");
         } else {
           playSoundEffect(state.isPlayerTurn ? "move-self" : "move-opponent");
@@ -239,7 +248,10 @@ export function GameProvider({
     });
     // Update isPondering to true
     setState(prev => ({ ...prev, isPondering: true }));
-    engine.evaluatePositionInfinite(game.fen());
+    engine.evaluatePositionInfinite(
+      game.fen(),
+      getStockfishDifficulty(state.difficulty)
+    );
 
     setTimeout(
       () => {
@@ -345,7 +357,8 @@ export function GameProvider({
     setIsSoundEnabled,
     setMode,
     getMoveOptions,
-    engine
+    engine,
+    handlePromotion
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
