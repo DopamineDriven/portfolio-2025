@@ -46,6 +46,7 @@ export default function Chessboard({
   const handleMove = useCallback(
     (from: Key, to: Key) => {
       const piece = game.get(from as Square);
+
       const isPromotion =
         piece?.type === "p" &&
         ((piece.color === "w" && to[1] === "8") ||
@@ -138,7 +139,7 @@ export default function Chessboard({
         color: isPlayerTurn ? chessColorHelper(playerColor) : "both", // Allow both colors to move
         dests: getLegalMoves(game),
         events: {
-          after: (orig, dest) => handleMove(orig, dest)
+          after: handleMove
         }
       },
       draggable: {

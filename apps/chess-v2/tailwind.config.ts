@@ -54,7 +54,7 @@ export default {
       fontFamily: {
         sans: ["Inter", "sans-serif"]
       },
-      scrollBehavior: ['smooth'],
+      scrollBehavior: ["smooth"]
     }
   },
   plugins: [motionPlugin]

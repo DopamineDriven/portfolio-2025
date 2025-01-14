@@ -43,10 +43,9 @@ class Engine {
   }
 
   // "go infinite"
-  public evaluatePositionInfinite(fen: string, difficulty: number) {
+  public evaluatePositionInfinite(fen: string) {
     // "position fen <fen>" gives Stockfish context on the current board configuration/position
     this.sendMessage(`position fen ${fen}`);
-    this.sendMessage(`go depth ${difficulty}`);
     // let Stockfish search for best move endlessly until "stop" command is sent
     this.sendMessage("go infinite");
   }
@@ -231,11 +230,12 @@ export function GameProvider({
     if (state.gameOver || state.isPlayerTurn === true) return;
 
     const getDefaultPonderTime = (difficulty: number) => {
-      return Math.min(Math.max(difficulty * 0.25, 1), 10) * 200;
+      return Math.min(Math.max(difficulty * 0.25, 1), 10) * 500;
     };
 
     engine.onMessage(({ bestMove }) => {
       if (bestMove) {
+        console.log(bestMove);
         const from = bestMove.substring(0, 2) as Square;
         const to = bestMove.substring(2, 4) as Square;
         const promotion =
@@ -248,10 +248,7 @@ export function GameProvider({
     });
     // Update isPondering to true
     setState(prev => ({ ...prev, isPondering: true }));
-    engine.evaluatePositionInfinite(
-      game.fen(),
-      getStockfishDifficulty(state.difficulty)
-    );
+    engine.evaluatePositionInfinite(game.fen());
 
     setTimeout(
       () => {
