@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useGame } from "@/contexts/game-context";
+import { cn } from "@/lib/utils";
 import { Button } from "@/ui/atoms/button";
 
 export default function MoveHistory() {
@@ -18,7 +19,10 @@ export default function MoveHistory() {
 
   return (
     <div
-      className={`fixed right-0 top-0 h-full bg-gray-700 transition-all duration-300 ease-in-out ${isExpanded ? "w-64" : "w-12"} z-40`}>
+      className={cn(
+        isExpanded ? "w-64" : "w-12",
+        `fixed right-0 top-0 z-40 h-full bg-gray-700 transition-all duration-300 ease-in-out`
+      )}>
       <Button
         variant="ghost"
         size="icon"
