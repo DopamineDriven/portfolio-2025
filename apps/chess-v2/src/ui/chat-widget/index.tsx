@@ -27,7 +27,7 @@ export default function ChatWidget({
   };
 
   return (
-    <div className="fixed bottom-4 left-4 z-50 hidden sm:block">
+    <div className="fixed bottom-1.5 left-4 z-50 hidden sm:block">
       {isOpen ? (
         <div className="flex h-96 w-80 flex-col rounded-lg bg-gray-700">
           <div className="flex items-center justify-between border-b border-gray-600 p-4">

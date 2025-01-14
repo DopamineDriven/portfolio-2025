@@ -13,6 +13,7 @@ import Chessboard from "@/ui/chessboard";
 import MoveHistory from "@/ui/move-history";
 import MoveHistoryBar from "@/ui/move-history-bar";
 import { countryCodeToFileName } from "@/utils/flags";
+import ChatWidget from "../chat-widget";
 
 interface ChessboardBotProps {
   onRestart: () => void;
@@ -46,16 +47,27 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
     Record<string, React.CSSProperties>
   >({});
   const [isMobile, setIsMobile] = useState(false);
+  const [messages, setMessages] = useState<
+    { username: string; content: string }[]
+  >([]);
 
+  const handleSendMessage = (message: string) => {
+    if (message.trim() !== "") {
+      setMessages(prevMessages => [
+        ...prevMessages,
+        { username: "User", content: message }
+      ]);
+    }
+  };
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 640);
     };
 
     checkMobile();
-    window.addEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
 
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   useEffect(() => {
@@ -79,6 +91,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
     setIsReviewMode(false);
     resetGame();
     setShowGameModal(false);
+    onRestart();
   };
 
   const _handleSquareClick = useCallback(
@@ -105,7 +118,13 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
   return (
     <div className="relative flex w-full flex-col items-center">
       <div className="w-full max-w-[480px]">
-        {isMobile ?<div className="absolute top-0 left-0 w-full sm:hidden"><MoveHistoryBar /></div> : <MoveHistory />}
+        {isMobile ? (
+          <div className="mb-1 w-full sm:hidden">
+            <MoveHistoryBar />
+          </div>
+        ) : (
+          <MoveHistory />
+        )}
         <div className="relative mb-4 flex w-full flex-row items-center justify-between gap-0">
           <div className="flex flex-row gap-x-2">
             <Avatar className="h-11 w-11">
@@ -141,13 +160,6 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
             </h3>
           </div>
         )}
-        <Button
-          variant="outline"
-          size="icon"
-          className="absolute right-0 top-0"
-          onClick={onRestart}>
-          <RotateCcw className="h-6 w-6 stroke-black" />
-        </Button>
         <Chessboard
           onSquareRightClickAction={onSquareRightClick}
           customSquareStyles={
@@ -186,7 +198,19 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
           </div>
         </div>
       </div>
-
+      <div className="fixed bottom-1.5 right-4 z-50 hidden sm:block">
+        <Button
+          variant="default"
+          size="icon"
+          className="h-12 w-12 rounded-full"
+          onClick={() => {
+            resetGame();
+            onRestart();
+          }}>
+          <RotateCcw className="h-6 w-6" />
+        </Button>
+      </div>
+      <ChatWidget messages={messages} onSendMessageAction={handleSendMessage} />
       {showGameModal && (
         <div className="motion-preset-confetti fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 motion-duration-[5000ms]">
           <div className="rounded-lg bg-white p-6">

@@ -5,15 +5,11 @@ import type { StockfishDifficulty, StockfishMode } from "@/types/chess";
 import type { ChessColor } from "@/utils/chess-types";
 import { GameProvider } from "@/contexts/game-context";
 import { Button } from "@/ui/atoms/button";
-import ChatWidget from "@/ui/chat-widget";
 import ChessboardBot from "@/ui/chessboard-bot";
 import DifficultySelection from "@/ui/difficulty-selection";
 import GameSettings from "@/ui/game-settings";
 
 export default function Home({ country = "US" }: { country?: string }) {
-  const [messages, setMessages] = useState<
-    { username: string; content: string }[]
-  >([]);
   const [showDifficultySelection, setShowDifficultySelection] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
@@ -22,15 +18,6 @@ export default function Home({ country = "US" }: { country?: string }) {
   const [playerColor, setPlayerColor] = useState<ChessColor>("white");
   const [mode, setMode] = useState<StockfishMode>("friendly");
   const [soundEnabled, setSoundEnabled] = useState(true);
-
-  const handleSendMessage = (message: string) => {
-    if (message.trim() !== "") {
-      setMessages(prevMessages => [
-        ...prevMessages,
-        { username: "User", content: message }
-      ]);
-    }
-  };
 
   const handleDifficultySelect = useCallback(
     (newDifficulty: StockfishDifficulty) => {
@@ -65,6 +52,8 @@ export default function Home({ country = "US" }: { country?: string }) {
   const handleNewGame = useCallback(() => {
     setShowDifficultySelection(true);
     setGameStarted(false);
+    setPlayerColor("white");
+    setMode("challenge");
   }, []);
 
   return (
@@ -93,10 +82,6 @@ export default function Home({ country = "US" }: { country?: string }) {
             </Button>
           )}
         </div>
-        <ChatWidget
-          messages={messages}
-          onSendMessageAction={handleSendMessage}
-        />
         <DifficultySelection
           open={showDifficultySelection}
           onOpenChangeAction={setShowDifficultySelection}
