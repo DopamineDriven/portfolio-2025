@@ -27,7 +27,7 @@ export default function MoveHistoryBar() {
   return (
     <div className="relative h-12 w-full overflow-hidden bg-black/90 sm:hidden">
       <div className="embla flex h-full items-center" ref={emblaRef}>
-        <div className="embla__container flex h-full items-center gap-0.5 px-4">
+        <div className="embla__container flex h-full items-center gap-1.5 px-1">
           {moves.length === 0 ? (
             <div className="embla__slide flex h-full shrink-0 items-center">
               <span className="text-sm text-gray-400">No moves yet</span>
@@ -38,15 +38,13 @@ export default function MoveHistoryBar() {
                 rows.push(
                   <div
                     key={Math.floor(index / 2)}
-                    className="embla__slide flex h-full shrink-0 items-center gap-0.5">
-                    <span className="min-w-[2rem] text-sm text-gray-400">
+                    className="embla__slide ml-0.5 flex h-full shrink-0 items-center space-x-1.5 first:ml-0">
+                    <span className="text-sm text-gray-400">
                       {Math.floor(index / 2) + 1}.
                     </span>
-                    <span className="min-w-[3rem] font-mono text-white">
-                      {move}
-                    </span>
+                    <span className="font-mono text-white">{move}</span>
                     {moves[index + 1] && (
-                      <span className="min-w-[3rem] font-mono text-white">
+                      <span className="font-mono text-white">
                         {moves[index + 1]}
                       </span>
                     )}

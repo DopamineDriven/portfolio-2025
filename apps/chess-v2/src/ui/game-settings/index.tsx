@@ -19,7 +19,7 @@ interface GameSettingsProps {
   onStartAction: (settings: {
     playerColor: ChessColor | "random";
     mode: StockfishMode;
-    soundEnabled:boolean;
+    soundEnabled: boolean;
   }) => void;
   open: boolean;
   onOpenChangeAction: (open: boolean) => void;
@@ -35,6 +35,7 @@ export default function GameSettings({
   const {
     playerColor,
     mode,
+    resetGame,
     setPlayerColor,
     isSoundEnabled,
     setIsSoundEnabled
@@ -52,6 +53,7 @@ export default function GameSettings({
   };
 
   const handleStart = () => {
+    resetGame();
     onStartAction({
       playerColor:
         selectedColor === "random"

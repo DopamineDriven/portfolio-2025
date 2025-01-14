@@ -1,8 +1,8 @@
-import { FC } from "react";
+import { FC, SVGProps } from "react";
 import type { TsxExclude } from "@/types/helpers";
 
 export const BlackBishop: FC<
-  TsxExclude<"svg", "fill" | "viewBox" | "xmlns">
+  Omit<SVGProps<SVGSVGElement>, "fill" | "viewBox" | "xmlns">
 > = ({ ...svg }) => (
   <svg
     viewBox="0 0 35 36"
