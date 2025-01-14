@@ -116,8 +116,8 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
   }
 
   return (
-    <div className="relative flex w-full flex-col items-center">
-      <div className="w-full max-w-[480px]">
+    <div className="relative flex min-h-screen w-full flex-col items-center py-4">
+      <div className="flex w-full flex-col items-center gap-4">
         {isMobile ? (
           <div className="mb-1 w-full sm:hidden">
             <MoveHistoryBar />
@@ -125,7 +125,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
         ) : (
           <MoveHistory />
         )}
-        <div className="relative mb-4 flex w-full flex-row items-center justify-between gap-0">
+        <div className="flex w-full flex-row items-center justify-between px-4">
           <div className="flex flex-row gap-x-2">
             <Avatar className="h-11 w-11">
               <AvatarImage
@@ -155,7 +155,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
         </div>
         {isPondering && (
           <div className="absolute -top-2 right-0 inline-flex items-center justify-center">
-            <h3 className="font-sans text-xl font-bold text-gray-900">
+            <h3 className="font-sans text-xl font-bold text-gray-100">
               Thinking...
             </h3>
           </div>
@@ -169,7 +169,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
             } as Record<string, CSSProperties>
           }
         />
-        <div className="relative mt-4 flex w-full flex-row justify-between gap-0">
+        <div className="flex w-full flex-row items-center justify-between px-4">
           <div className="flex flex-row gap-x-2">
             <Avatar className="h-11 w-11">
               <AvatarImage
@@ -242,7 +242,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
         </div>
       )}
       {isReviewMode && gameOver && (
-        <div className="fixed bottom-4 right-4 z-50 rounded-lg bg-white p-4 shadow-lg">
+        <div className="fixed bottom-4 right-1/2 z-50 rounded-lg bg-white p-4 shadow-lg">
           <Button variant="default" onClick={handleNewGame}>
             Start New Game
           </Button>

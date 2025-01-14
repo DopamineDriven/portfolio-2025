@@ -11,6 +11,7 @@ import { useGame } from "@/contexts/game-context";
 import "./base.css";
 import "./brown.css";
 import "./cburnett.css";
+import PromotionModal from "@/ui/promotion-modal";
 
 export type ChessInstance = InstanceType<typeof Chess>;
 
@@ -29,7 +30,9 @@ export default function Chessboard({
     isPlayerTurn,
     lastMove,
     makeMove,
-    getMoveOptions
+    getMoveOptions,
+    promotionSquare,
+    handlePromotion
   } = useGame();
 
   const [_optionSquares, setOptionSquares] = useState<
@@ -38,12 +41,24 @@ export default function Chessboard({
   const apiRef = useRef<Api | null>(null);
   const boardRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const _handleMove = useCallback(
-    (from: Square, to: Square) => {
-      makeMove({ from, to });
+  const [promotionModalOpen, setPromotionModalOpen] = useState(false);
+
+  const handleMove = useCallback(
+    (from: Key, to: Key) => {
+      const piece = game.get(from as Square);
+      const isPromotion =
+        piece?.type === "p" &&
+        ((piece.color === "w" && to[1] === "8") ||
+          (piece.color === "b" && to[1] === "1"));
+      if (isPromotion) {
+        handlePromotion(from as Square, to as Square);
+        setPromotionModalOpen(true);
+      } else {
+        makeMove({ from: from as Square, to: to as Square });
+      }
       setOptionSquares({});
     },
-    [makeMove]
+    [makeMove, game, handlePromotion]
   );
 
   const handleSquareClick = useCallback(
@@ -123,8 +138,7 @@ export default function Chessboard({
         color: isPlayerTurn ? chessColorHelper(playerColor) : "both", // Allow both colors to move
         dests: getLegalMoves(game),
         events: {
-          after: (orig, dest) =>
-            makeMove({ from: orig as Square, to: dest as Square })
+          after: (orig, dest) => handleMove(orig, dest)
         }
       },
       draggable: {
@@ -191,12 +205,44 @@ export default function Chessboard({
     isPlayerTurn,
     lastMove,
     getLegalMoves,
+    handleMove,
     makeMove,
     handleSquareClick,
     customSquareStyles,
     onSquareRightClickAction,
     chessColorHelper
   ]);
+
+  useEffect(() => {
+    if (apiRef.current) {
+      apiRef.current.set({
+        fen: game.fen(),
+        turnColor: chessColorHelper(game.turn()),
+        movable: {
+          color: isPlayerTurn ? chessColorHelper(playerColor) : "both",
+          dests: getLegalMoves(game)
+        },
+        check: game.isCheck()
+      });
+    }
+  }, [game, isPlayerTurn, playerColor, chessColorHelper, getLegalMoves]);
+
+  useEffect(() => {
+    if (promotionSquare) {
+      setPromotionModalOpen(true);
+    }
+  }, [promotionSquare]);
+
+  const onPromotion = (piece: "q" | "r" | "b" | "n") => {
+    if (promotionSquare) {
+      makeMove({
+        from: promotionSquare.from,
+        to: promotionSquare.to,
+        promotion: piece
+      });
+    }
+    setPromotionModalOpen(false);
+  };
 
   return (
     <div ref={containerRef} className="flex w-full items-center justify-center">
@@ -206,6 +252,12 @@ export default function Chessboard({
         style={{
           boxShadow: "rgba(0, 0, 0, 0.5) 0px 4px 12px"
         }}
+      />
+      <PromotionModal
+        isOpen={promotionModalOpen}
+        onCloseAction={() => setPromotionModalOpen(false)}
+        onPromotionAction={onPromotion}
+        color={chessColorHelper(playerColor)}
       />
     </div>
   );

@@ -55,3 +55,22 @@
 }
 
 
+/* Remove the standalone rgb variables since they're not part of the design system */
+
+.embla {
+  overflow: hidden;
+}
+
+.embla__container {
+  backface-visibility: hidden;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.embla__slide {
+  min-width: 0;
+  position: relative;
+}

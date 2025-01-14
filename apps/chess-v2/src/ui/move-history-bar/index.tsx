@@ -9,7 +9,7 @@ export default function MoveHistoryBar() {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     containScroll: "keepSnaps",
     dragFree: true,
-    align: "start"
+    align: "end"
   });
 
   const scrollToEnd = useCallback(() => {
@@ -33,7 +33,13 @@ export default function MoveHistoryBar() {
               <span className="text-sm text-gray-400">No moves yet</span>
             </div>
           ) : (
-            moves.reduce((rows: React.ReactNode[], move, index) => {
+            moves.filter((t) => t!=null).reduce((rows: React.ReactNode[], move, index) => {
+              const toLog = JSON.stringify({
+                index: index,
+                move: move,
+                moves: moves
+              }, null, 2)
+              console.log(toLog)
               if (index % 2 === 0) {
                 rows.push(
                   <div
