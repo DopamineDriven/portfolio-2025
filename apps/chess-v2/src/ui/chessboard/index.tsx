@@ -78,7 +78,7 @@ export default function Chessboard({
           document.documentElement.clientWidth || 0,
           window.innerWidth || 0
         );
-        const size = vw < 640 ? vw : Math.min(vw * 0.4, 480); // 40vw up to a max of 480px
+        const size = vw < 640 ? vw : Math.min(vw * 0.5, 1280); // 50vw up to a max of 1280px
         boardRef.current.style.width = `${size}px`;
         boardRef.current.style.height = `${size}px`;
       }
@@ -181,7 +181,7 @@ export default function Chessboard({
   return (
     <div
       ref={boardRef}
-      className="aspect-square w-full overflow-hidden rounded-lg sm:w-[40vw] sm:max-w-[480px]"
+      className="aspect-square w-full overflow-hidden rounded-lg sm:w-[50vw] sm:max-w-[1280px]"
       style={{
         boxShadow: "rgba(0, 0, 0, 0.5) 0px 4px 12px"
       }}

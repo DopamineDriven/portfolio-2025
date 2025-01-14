@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/ui/atoms/avatar";
 import { Button } from "@/ui/atoms/button";
 import Chessboard from "@/ui/chessboard";
 import MoveHistory from "@/ui/move-history";
+import MoveHistoryBar from "@/ui/move-history-bar";
 import { countryCodeToFileName } from "@/utils/flags";
 
 interface ChessboardBotProps {
@@ -44,6 +45,18 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
   const [optionSquares, setOptionSquares] = useState<
     Record<string, React.CSSProperties>
   >({});
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     if (gameOver && !isReviewMode) {
@@ -92,6 +105,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
   return (
     <div className="relative flex w-full flex-col items-center">
       <div className="w-full max-w-[480px]">
+        {isMobile ?<div className="absolute top-0 left-0 w-full sm:hidden"><MoveHistoryBar /></div> : <MoveHistory />}
         <div className="relative mb-4 flex w-full flex-row items-center justify-between gap-0">
           <div className="flex flex-row gap-x-2">
             <Avatar className="h-11 w-11">
@@ -172,7 +186,6 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
           </div>
         </div>
       </div>
-      <MoveHistory />
 
       {showGameModal && (
         <div className="motion-preset-confetti fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 motion-duration-[5000ms]">

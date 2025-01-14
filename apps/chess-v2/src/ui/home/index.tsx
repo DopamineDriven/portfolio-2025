@@ -5,6 +5,7 @@ import type { StockfishDifficulty, StockfishMode } from "@/types/chess";
 import type { ChessColor } from "@/utils/chess-types";
 import { GameProvider } from "@/contexts/game-context";
 import { Button } from "@/ui/atoms/button";
+import ChatWidget from "@/ui/chat-widget";
 import ChessboardBot from "@/ui/chessboard-bot";
 import DifficultySelection from "@/ui/difficulty-selection";
 import GameSettings from "@/ui/game-settings";
@@ -72,7 +73,10 @@ export default function Home({ country = "US" }: { country?: string }) {
       initialDifficulty={difficulty}
       soundEnabled={soundEnabled}
       initialMode={mode}>
-      <div className={"flex min-h-screen flex-col gap-4 bg-gray-800 px-4 py-2 text-white sm:flex-row sm:gap-8 sm:px-6"}>
+      <div
+        className={
+          "flex min-h-screen flex-col gap-4 bg-gray-800 px-0 py-2 text-white sm:items-center sm:justify-center"
+        }>
         <div className="flex w-full flex-col items-center justify-center gap-2 sm:w-auto">
           {gameStarted ? (
             <ChessboardBot country={country} onRestart={handleNewGame} />
@@ -89,35 +93,10 @@ export default function Home({ country = "US" }: { country?: string }) {
             </Button>
           )}
         </div>
-        <div className="hidden w-full sm:block sm:w-1/3">
-          <div className="rounded-lg bg-gray-700 p-4">
-            <h2 className="mb-2 text-xl font-bold">Chat</h2>
-            <div className="mb-4 h-48 overflow-y-auto">
-              {messages.map((msg, index) => (
-                <div key={index} className="mb-2">
-                  <span className="font-bold">{msg.username}: </span>
-                  <span>{msg.content}</span>
-                </div>
-              ))}
-            </div>
-            <form
-              onSubmit={e => {
-                e.preventDefault();
-                const input = e.currentTarget.elements.namedItem(
-                  "message"
-                ) as HTMLInputElement;
-                handleSendMessage(input.value);
-                input.value = "";
-              }}>
-              <input
-                type="text"
-                name="message"
-                className="w-full rounded bg-gray-600 px-3 py-2 text-white"
-                placeholder="Type a message..."
-              />
-            </form>
-          </div>
-        </div>
+        <ChatWidget
+          messages={messages}
+          onSendMessageAction={handleSendMessage}
+        />
         <DifficultySelection
           open={showDifficultySelection}
           onOpenChangeAction={setShowDifficultySelection}
