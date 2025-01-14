@@ -4,17 +4,19 @@ import { defineConfig } from "tsup";
 
 const tsupConfig = (options: Options) =>
   ({
-    entry: ["src/**/*.ts", "src/**/*.tsx", "!public/**/*"],
+    entry: [
+      "src/index.ts",
+      "src/icons/*.tsx",
+      "src/types/index.ts",
+      "!public/**/*"
+    ],
     target: ["esnext"],
     external: ["react"],
     dts: true,
     watch: process.env.NODE_ENV === "development",
     keepNames: true,
     format: ["cjs", "esm"],
-    shims: true,
-    bundle: true,
     sourcemap: true,
-    cjsInterop: true,
     tsconfig: relative(process.cwd(), "tsconfig.json"),
     clean: true,
     outDir: "dist",

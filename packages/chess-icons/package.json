@@ -1,6 +1,6 @@
 {
   "name": "@portfolio/chess-icons",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "a minimal react-package shipping chess icon svgs",
   "files": [
     "dist/**/*.{js,mjs,cjs,d.mts,d.ts,d.cts,css,svg}"
@@ -17,7 +17,24 @@
       ]
     }
   },
-  "source": "src/index.tsx",
+  "publishConfig": {
+    "access": "public",
+    "typesVersions": {
+      "*": {
+        "*": [
+          "dist/*.d.ts",
+          "dist/*/index.d.ts"
+        ],
+        "icons": [
+          "dist/icons/init.d.ts"
+        ],
+        "types": [
+          "dist/types/index.d.ts"
+        ]
+      }
+    }
+  },
+  "source": "src/index.ts",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -33,7 +50,7 @@
     "prebuild": "rm -rf dist",
     "build": "tsup",
     "postbuild": "cp -r public dist/vectors",
-    "clean": "git -xdf dist node_modules",
+    "clean": "git clean -xdf dist node_modules",
     "types": "tsc --emitDeclarationOnly"
   },
   "peerDependencies": {

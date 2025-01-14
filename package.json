@@ -16,7 +16,7 @@
     "prepare": "husky",
     "typecheck": "turbo typecheck",
     "clean:test": "git clean -xdf -e **/*{node_modules,.next,dist} && pnpm latest:pnpm",
-    "clean:house": "cd tooling/eslint && git clean -xdf node_modules .turbo && cd ../prettier && git clean -xdf node_modules .turbo && cd ../typescript && git clean -xdf .turbo node_modules && cd ../jest-presets && git clean -xdf node_modules .turbo && cd ../../apps/web && git clean -xdf .next node_modules  && cd ../chess && git clean -xdf .next node_modules && cd ../chess-v2 && git clean -xdf .next node_modules && cd ../.. && git clean -xdf node_modules pnpm-lock.yaml && pnpm install",
+    "clean:house": "cd tooling/eslint && git clean -xdf node_modules .turbo && cd ../prettier && git clean -xdf node_modules .turbo && cd ../typescript && git clean -xdf .turbo node_modules && cd ../jest-presets && git clean -xdf node_modules .turbo && cd ../../apps/web && git clean -xdf .next node_modules  && cd ../chess && git clean -xdf .next node_modules && cd ../chess-v2 && git clean -xdf .next node_modules && cd ../../packages/chess-icons && git clean -xdf dist node_modules && cd ../.. && git clean -xdf node_modules pnpm-lock.yaml && pnpm install",
     "generate:base64": "openssl rand -base64 64",
     "generate:hex": "openssl rand -hex 64",
     "npm:registry": "npm set registry https://registry.npmjs.org",

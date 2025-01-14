@@ -195,6 +195,9 @@ importers:
 
   apps/chess-v2:
     dependencies:
+      '@d0paminedriven/chess-icons':
+        specifier: ^0.3.0
+        version: 0.3.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-avatar':
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@19.0.3(@types/react@19.0.6))(@types/react@19.0.6)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -950,6 +953,12 @@ packages:
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
+
+  '@d0paminedriven/chess-icons@0.3.0':
+    resolution: {integrity: sha512-pwuFX/XoA0ut2ooDyVZN9qDCa229ep1ePp84TtSClCpE/SUBJCq/rtoDP7hPRFN5FsAemFnrddC/gcWQP1dtOA==}
+    peerDependencies:
+      react: '>=19'
+      react-dom: '>=19'
 
   '@d0paminedriven/turbogen@0.6.0':
     resolution: {integrity: sha512-TV9Sev0aE8pFohhxRbbN8vaxzJyDeI1YzS4jFeigVB8qf/WOA2jNKqZsb/xAmKWxVTzdLmZab3B+NrlI4itItw==}
@@ -6898,6 +6907,12 @@ snapshots:
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
+
+  '@d0paminedriven/chess-icons@0.3.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@swc/helpers': 0.5.15
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
 
   '@d0paminedriven/turbogen@0.6.0(@types/node@22.10.6)':
     dependencies:
