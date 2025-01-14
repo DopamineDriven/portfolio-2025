@@ -1,0 +1,13 @@
+export type { RemoveFields, Unenumerate, SVGProperties } from "@/types/index";
+export { default as BlackBishop } from "@/icons/black-bishop";
+export { default as BlackKing } from "@/icons/black-king";
+export { default as BlackKnight } from "@/icons/black-knight";
+export { default as BlackPawn } from "@/icons/black-pawn";
+export { default as BlackQueen } from "@/icons/black-queen";
+export { default as BlackRook } from "@/icons/black-rook";
+export { default as WhiteBishop } from "@/icons/white-bishop";
+export { default as WhiteKing } from "@/icons/white-king";
+export { default as WhiteKnight } from "@/icons/white-knight";
+export { default as WhitePawn } from "@/icons/white-pawn";
+export { default as WhiteQueen } from "@/icons/white-queen";
+export { default as WhiteRook } from "@/icons/white-rook";

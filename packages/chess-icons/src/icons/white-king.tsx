@@ -1,0 +1,69 @@
+import type { FC } from "react";
+import type { SVGProperties } from "@/types";
+
+const WhiteKing: FC<SVGProperties> = ({ ...svg }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...svg}>
+    <path
+      d="M12.291 5.23757V1.64062"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M10.6934 2.92188H13.8878"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12.291 13.7821C12.291 13.7821 15.166 8.99045 14.2076 7.07378C14.2076 7.07378 13.5687 5.47656 12.291 5.47656C11.0132 5.47656 10.3743 7.07378 10.3743 7.07378C9.41596 8.99045 12.291 13.7821 12.291 13.7821Z"
+      fill="white"
+      stroke="black"
+      strokeWidth="1.5"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M5.26317 21.4451C8.77706 23.6812 15.1659 23.6812 18.6798 21.4451V16.9729C18.6798 16.9729 24.4298 14.0979 22.5132 10.2645C19.9576 6.11177 13.8882 8.02843 12.2909 12.8201C10.0548 8.02843 3.98539 6.11177 2.06873 10.2645C0.152061 14.0979 5.26317 16.6534 5.26317 16.6534V21.4451Z"
+      fill="white"
+    />
+    <path
+      d="M12.2909 12.8201C13.8882 8.02843 19.9576 6.11177 22.5132 10.2645C24.4298 14.0979 18.6798 16.9729 18.6798 16.9729V21.4451C15.1659 23.6812 8.77706 23.6812 5.26317 21.4451V16.6534C5.26317 16.6534 0.152061 14.0979 2.06873 10.2645C3.98539 6.11177 10.0548 8.02843 12.2909 12.8201ZM12.2909 12.8201V15.0562"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M5.2627 16.9766C8.77658 15.0599 15.1655 15.0599 18.6794 16.9766"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M5.2627 19.2109C8.77658 17.2943 15.1655 17.2943 18.6794 19.2109"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M5.2627 21.4453C8.77658 19.5286 15.1655 19.5286 18.6794 21.4453"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+WhiteKing.displayName = "WhiteKing";
+
+export default WhiteKing;
