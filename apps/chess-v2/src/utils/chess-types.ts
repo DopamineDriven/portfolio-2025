@@ -1,10 +1,9 @@
-import type { Color as ChessJSColor, PieceSymbol } from "chess.js";
+import type { Move, PieceSymbol } from "chess.js";
 import type { Square } from "chess.js/index";
-import type {Move} from "chess.js";
-import type { Color as ChessgroundColor } from "chessground/types";
+
 // import { FLAGS } from "chess.js/index";
 
-export type ChessColor = ChessJSColor | ChessgroundColor;
+export type ChessColor = "w" | "b" | "white" | "black";
 
 export function toChessJSColor(color: ChessColor) {
   if (color === "w" || color === "b") return color;

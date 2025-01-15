@@ -30,7 +30,6 @@ export default function DifficultySelection({
   const handleSelect = (selectedDifficulty: StockfishDifficulty) => {
     setDifficulty(selectedDifficulty);
   };
-
   return (
     <Dialog
       open={open}
@@ -49,19 +48,23 @@ export default function DifficultySelection({
         <div className="space-y-6">
           <div className="space-y-4">
             <button
-              onClick={() => handleSelect("beginner")}
+              onClick={() => handleSelect("expert")}
               className={cn(
                 "w-full rounded-lg p-4 text-left transition",
-                difficulty === "beginner"
+                difficulty === "expert"
                   ? "bg-green-600"
                   : "bg-gray-800 hover:bg-gray-700"
               )}>
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-xl font-bold">Beginner</h3>
-                  <p className="text-gray-300">Perfect for learning chess</p>
+                  <h3 className="text-xl font-bold">Expert</h3>
+                  <p className="text-gray-300">Challenge yourself</p>
                 </div>
-                <Brain className="h-6 w-6 text-yellow-400" />
+                <div className="flex gap-0.5">
+                  <Brain className="h-6 w-6 text-yellow-400" />
+                  <Brain className="h-6 w-6 text-yellow-400" />
+                  <Brain className="h-6 w-6 text-yellow-400" />
+                </div>
               </div>
             </button>
 
@@ -84,25 +87,20 @@ export default function DifficultySelection({
                 </div>
               </div>
             </button>
-
             <button
-              onClick={() => handleSelect("expert")}
+              onClick={() => handleSelect("beginner")}
               className={cn(
                 "w-full rounded-lg p-4 text-left transition",
-                difficulty === "expert"
+                difficulty === "beginner"
                   ? "bg-green-600"
                   : "bg-gray-800 hover:bg-gray-700"
               )}>
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-xl font-bold">Expert</h3>
-                  <p className="text-gray-300">Challenge yourself</p>
+                  <h3 className="text-xl font-bold">Beginner</h3>
+                  <p className="text-gray-300">Perfect for learning chess</p>
                 </div>
-                <div className="flex gap-0.5">
-                  <Brain className="h-6 w-6 text-yellow-400" />
-                  <Brain className="h-6 w-6 text-yellow-400" />
-                  <Brain className="h-6 w-6 text-yellow-400" />
-                </div>
+                <Brain className="h-6 w-6 text-yellow-400" />
               </div>
             </button>
           </div>

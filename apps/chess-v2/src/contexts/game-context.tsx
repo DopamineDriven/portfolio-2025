@@ -1,6 +1,6 @@
 "use client";
 
-import type { Square } from "chess.js";
+import type { Move, Square } from "chess.js";
 import type { ShortMove } from "chess.js/index";
 import type { Key } from "chessground/types";
 import React, {
@@ -8,14 +8,17 @@ import React, {
   useCallback,
   useContext,
   useMemo,
+  useRef,
   useState
 } from "react";
 import { Chess } from "chess.js";
 import type { SoundKeys } from "@/lib/sound";
 import type { StockfishDifficulty, StockfishMode } from "@/types/chess";
+import type { CapturedPieces, MaterialCount } from "@/types/values";
 import type { ChessColor } from "@/utils/chess-types";
 import { playSound } from "@/lib/sound";
 import { getStockfishDifficulty } from "@/types/chess";
+import { PIECE_VALUES } from "@/types/values";
 import { toChessJSColor } from "@/utils/chess-types";
 
 class Engine {
@@ -48,6 +51,11 @@ class Engine {
     this.sendMessage(`position fen ${fen}`);
     // let Stockfish search for best move endlessly until "stop" command is sent
     this.sendMessage("go infinite");
+  }
+
+  public skillLevel(difficulty: number) {
+    // set difficulty 0-20
+    this.sendMessage(`setoption name Skill Level value ${difficulty}`);
   }
 
   public evaluatePosition(fen: string, depth: number) {
@@ -86,6 +94,13 @@ interface GameState {
   moveCounter: number;
   isPondering: boolean;
   promotionSquare: { from: Square; to: Square } | null;
+  capturedPieces: CapturedPieces;
+  materialScore: {
+    white: number;
+    black: number;
+  };
+  currentMoveIndex: number;
+  moveHistory: Move[];
 }
 
 interface GameContextType extends GameState {
@@ -104,9 +119,19 @@ interface GameContextType extends GameState {
   isSoundEnabled: boolean;
   setIsSoundEnabled: (enabled: boolean) => void;
   handlePromotion: (from: Square, to: Square) => void;
+  goToMove: (index: number) => void;
+  canGoForward: boolean;
+  canGoBackward: boolean;
+  goForward: () => void;
+  goBackward: () => void;
+  undo: () => void;
+  redo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
+
 type GameProviderProps = {
   children: React.ReactNode;
   initialColor: ChessColor;
@@ -134,10 +159,22 @@ export function GameProvider({
     mode: initialMode,
     moveCounter: 0,
     isPondering: false,
-    promotionSquare: null
+    promotionSquare: null,
+    capturedPieces: {
+      white: {},
+      black: {}
+    },
+    materialScore: {
+      white: 0,
+      black: 0
+    },
+    currentMoveIndex: -1,
+    moveHistory: []
   });
 
   const [isSoundEnabled, setIsSoundEnabled] = useState(soundEnabled);
+
+  const lastProcessedMoveRef = useRef<string | null>(null);
 
   const chessColorHelper = useCallback(
     (val: "b" | "w" | "white" | "black"): "white" | "black" => {
@@ -154,14 +191,62 @@ export function GameProvider({
     },
     [isSoundEnabled]
   );
+
   const handlePromotion = useCallback((from: Square, to: Square) => {
     setState(prev => ({
       ...prev,
       promotionSquare: { from, to }
     }));
   }, []);
+
+  const calculateMaterialScore = useCallback(
+    (capturedPieces: CapturedPieces) => {
+      const getScore = (pieces: MaterialCount) => {
+        const score = Object.entries(pieces).reduce((total, [piece, count]) => {
+          const pieceType = piece.toLowerCase() as keyof typeof PIECE_VALUES;
+          console.log(
+            "[getScore] piece:",
+            piece,
+            "count:",
+            count,
+            "value:",
+            PIECE_VALUES[pieceType]
+          );
+          return total + PIECE_VALUES[pieceType] * count;
+        }, 0);
+        console.log("[getScore] total score:", score);
+        return score;
+      };
+
+      // Calculate raw scores
+      console.log("[calculateMaterialScore] captured pieces:", capturedPieces);
+      const whiteScore = getScore(capturedPieces.black); // pieces white has captured
+      const blackScore = getScore(capturedPieces.white); // pieces black has captured
+
+      console.log(
+        "[calculateMaterialScore] whiteScore:",
+        whiteScore,
+        "blackScore:",
+        blackScore
+      );
+      return {
+        white: whiteScore,
+        black: blackScore
+      };
+    },
+    []
+  );
+
   const makeMove = useCallback(
     (move: ShortMove): void => {
+      const moveString = move.promotion
+        ? `${move.from}${move.to}${move.promotion}`
+        : `${move.from}${move.to}`;
+      if (moveString === lastProcessedMoveRef.current) {
+        console.log("[makeMove] Skipping duplicate move:", moveString);
+        return;
+      }
+      lastProcessedMoveRef.current = moveString;
       const newGame = new Chess(game.fen());
       const moveResult = newGame.move(move);
       if (moveResult) {
@@ -184,6 +269,25 @@ export function GameProvider({
         }
         setGame(newGame);
         setState(prevState => {
+          const newCapturedPieces = { ...prevState.capturedPieces };
+          const newMaterialScore = { ...prevState.materialScore };
+
+          if (moveResult.captured) {
+            const capturer = moveResult.color === "w" ? "white" : "black";
+            const targetSide = capturer === "white" ? "black" : "white";
+            const capturedPiece = moveResult.captured;
+
+            newCapturedPieces[targetSide] = {
+              ...newCapturedPieces[targetSide],
+              [capturedPiece]:
+              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+                (newCapturedPieces[targetSide][capturedPiece] || 0) + 1
+            };
+
+            const calculatedScore = calculateMaterialScore(newCapturedPieces);
+            newMaterialScore.white = calculatedScore.white;
+            newMaterialScore.black = calculatedScore.black;
+          }
           // Get the current move number
           const _moveNumber = Math.floor(prevState.moveCounter / 2) + 1;
 
@@ -196,6 +300,8 @@ export function GameProvider({
             existingMoves[prevState.moveCounter] = moveResult.san;
           }
 
+          const newMoveHistory = [...prevState.moveHistory, moveResult];
+
           return {
             ...prevState,
             isPlayerTurn: chessColorHelper(newGame.turn()) === initialColor,
@@ -203,12 +309,23 @@ export function GameProvider({
             moves: existingMoves,
             moveCounter: prevState.moveCounter + 1,
             gameOver: newGame.isGameOver(),
-            gameResult: getGameResult(newGame, prevState.playerColor)
+            gameResult: getGameResult(newGame, prevState.playerColor),
+            capturedPieces: newCapturedPieces,
+            materialScore: newMaterialScore,
+            moveHistory: newMoveHistory,
+            currentMoveIndex: newMoveHistory.length - 1
           };
         });
       }
     },
-    [game, chessColorHelper, initialColor, state.isPlayerTurn, playSoundEffect]
+    [
+      game,
+      chessColorHelper,
+      initialColor,
+      state.isPlayerTurn,
+      playSoundEffect,
+      calculateMaterialScore
+    ]
   );
 
   const getGameResult = (game: Chess, playerColor: ChessColor) => {
@@ -218,7 +335,11 @@ export function GameProvider({
       } else return "You win!" as const;
     } else if (game.isDraw()) {
       return "It's a draw!" as const;
-    } else if (game.isStalemate()) {
+    } else if (
+      game.isStalemate() ||
+      game.isThreefoldRepetition() ||
+      game.isInsufficientMaterial()
+    ) {
       return "Stalemate!" as const;
     } else if (game.isGameOver()) {
       return "Game over!" as const;
@@ -228,11 +349,15 @@ export function GameProvider({
 
   const makeStockfishMove = useCallback(() => {
     if (state.gameOver || state.isPlayerTurn === true) return;
+    const difficulty = getStockfishDifficulty(state.difficulty);
 
     const getDefaultPonderTime = (difficulty: number) => {
-      return Math.min(Math.max(difficulty * 0.25, 1), 10) * 500;
+      return Math.min(Math.max(difficulty * 0.25, 1), 10) * 250;
     };
+    // (1) send the desired skill level
+    engine.skillLevel(difficulty);
 
+    // (2) Listen for best move
     engine.onMessage(({ bestMove }) => {
       if (bestMove) {
         console.log(bestMove);
@@ -246,17 +371,18 @@ export function GameProvider({
         makeMove({ from, to, promotion });
       }
     });
-    // Update isPondering to true
+
+    // (3) set isPondering to true
     setState(prev => ({ ...prev, isPondering: true }));
+
+    // (4) "go infinite"
     engine.evaluatePositionInfinite(game.fen());
 
-    setTimeout(
-      () => {
-        engine.stop();
-        setState(prev => ({ ...prev, isPondering: false }));
-      },
-      getDefaultPonderTime(getStockfishDifficulty(state.difficulty))
-    );
+    // (5) Stop Stockfish analysis for best move once "ponder time" elapses
+    setTimeout(() => {
+      engine.stop();
+      setState(prev => ({ ...prev, isPondering: false }));
+    }, getDefaultPonderTime(difficulty));
   }, [
     engine,
     game,
@@ -276,7 +402,12 @@ export function GameProvider({
       moves: [],
       moveCounter: 0,
       gameOver: false,
-      gameResult: null
+      gameResult: null,
+      promotionSquare: null,
+      capturedPieces: { white: {}, black: {} },
+      materialScore: { white: 0, black: 0 },
+      currentMoveIndex: -1,
+      moveHistory: []
     }));
     engine.newGame();
     playSoundEffect("game-start");
@@ -297,16 +428,14 @@ export function GameProvider({
   const setDifficulty = useCallback(
     (difficulty: StockfishDifficulty) => {
       setState(prevState => ({ ...prevState, difficulty }));
-      engine.sendMessage(
-        `setoption name Skill Level value ${getStockfishDifficulty(difficulty)}`
-      );
+      engine.skillLevel(getStockfishDifficulty(difficulty));
       engine.newGame();
     },
     [engine]
   );
 
-  const setMode = useCallback((mode: StockfishMode) => {
-    setState(prevState => ({ ...prevState, mode }));
+  const setMode = useCallback((newMode: StockfishMode) => {
+    setState(prevState => ({ ...prevState, newMode }));
   }, []);
 
   const getMoveOptions = useCallback(
@@ -341,6 +470,56 @@ export function GameProvider({
     [game]
   );
 
+  const goToMove = useCallback(
+    (index: number) => {
+      if (index >= -1 && index < state.moveHistory.length) {
+        const newGame = new Chess();
+        for (let i = 0; i <= index; i++) {
+          newGame.move(state.moveHistory[i]!);
+        }
+        setGame(newGame);
+        setState(prevState => ({
+          ...prevState,
+          currentMoveIndex: index,
+          isPlayerTurn: newGame.turn() === toChessJSColor(prevState.playerColor)
+        }));
+      }
+    },
+    [state.moveHistory, setGame]
+  );
+
+  const goForward = useCallback(() => {
+    if (state.currentMoveIndex < state.moveHistory.length - 1) {
+      goToMove(state.currentMoveIndex + 1);
+    }
+  }, [state.currentMoveIndex, state.moveHistory.length, goToMove]);
+
+  const goBackward = useCallback(() => {
+    if (state.currentMoveIndex > -1) {
+      goToMove(state.currentMoveIndex - 1);
+    }
+  }, [state.currentMoveIndex, goToMove]);
+
+  const canGoForward = state.currentMoveIndex < state.moveHistory.length - 1;
+
+  const canGoBackward = state.currentMoveIndex > -1;
+
+  const undo = useCallback(() => {
+    if (state.currentMoveIndex > -1) {
+      goToMove(state.currentMoveIndex - 1);
+    }
+  }, [state.currentMoveIndex, goToMove]);
+
+  const redo = useCallback(() => {
+    if (state.currentMoveIndex < state.moveHistory.length - 1) {
+      goToMove(state.currentMoveIndex + 1);
+    }
+  }, [state.currentMoveIndex, state.moveHistory.length, goToMove]);
+
+  const canUndo = state.currentMoveIndex > -1;
+
+  const canRedo = state.currentMoveIndex < state.moveHistory.length - 1;
+
   const value = {
     ...state,
     game,
@@ -355,7 +534,16 @@ export function GameProvider({
     setMode,
     getMoveOptions,
     engine,
-    handlePromotion
+    handlePromotion,
+    goToMove,
+    canGoForward,
+    canGoBackward,
+    goForward,
+    goBackward,
+    undo,
+    canUndo,
+    redo,
+    canRedo
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

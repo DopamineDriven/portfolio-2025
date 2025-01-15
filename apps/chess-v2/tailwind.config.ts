@@ -1,5 +1,4 @@
 import type { Config } from "tailwindcss";
-import * as motionPlugin from "tailwindcss-motion";
 
 export default {
   content: ["src/**/*.{js,ts,jsx,tsx}"],
@@ -57,5 +56,5 @@ export default {
       scrollBehavior: ["smooth"]
     }
   },
-  plugins: [motionPlugin]
+  plugins: [require("tailwindcss-motion")]
 } satisfies Config;

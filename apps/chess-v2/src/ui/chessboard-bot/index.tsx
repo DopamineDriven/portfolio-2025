@@ -4,16 +4,25 @@ import type { Square } from "chess.js";
 import type { CSSProperties, FC } from "react";
 import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import { History, RotateCcw } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  History,
+  Redo,
+  RotateCcw,
+  Undo
+} from "lucide-react";
 import type { CountryCodes } from "@/utils/flags";
 import { useGame } from "@/contexts/game-context";
+import { toChessGroundColorHelper } from "@/lib/color-helper";
 import { Avatar, AvatarFallback, AvatarImage } from "@/ui/atoms/avatar";
 import { Button } from "@/ui/atoms/button";
+import CapturedPieces from "@/ui/captured-pieces";
+import ChatWidget from "@/ui/chat-widget";
 import Chessboard from "@/ui/chessboard";
 import MoveHistory from "@/ui/move-history";
 import MoveHistoryBar from "@/ui/move-history-bar";
 import { countryCodeToFileName } from "@/utils/flags";
-import ChatWidget from "../chat-widget";
 
 interface ChessboardBotProps {
   onRestart: () => void;
@@ -22,7 +31,6 @@ interface ChessboardBotProps {
 
 const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
   const {
-    game: _game,
     gameOver,
     gameResult,
     makeStockfishMove,
@@ -30,7 +38,21 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
     resetGame,
     isPlayerTurn,
     getMoveOptions,
-    moves: _moves
+    capturedPieces,
+    materialScore,
+    mode,
+    playerColor,
+    moveHistory,
+    currentMoveIndex,
+    goToMove,
+    canGoForward,
+    canGoBackward,
+    goForward,
+    goBackward,
+    undo,
+    redo,
+    canUndo,
+    canRedo
   } = useGame();
 
   const countryToFile = countryCodeToFileName(country as CountryCodes) || "US";
@@ -115,6 +137,12 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
     });
   }
 
+  const handleMoveNavigation = (index: number) => {
+    goToMove(index);
+    setOptionSquares({});
+    setRightClickedSquares({});
+  };
+
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center py-4">
       <div className="flex w-full flex-col items-center gap-4">
@@ -125,7 +153,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
         ) : (
           <MoveHistory />
         )}
-        <div className="flex w-full flex-row items-center justify-between px-4">
+        <div className="relative flex w-full flex-row justify-between px-4">
           <div className="flex flex-row gap-x-2">
             <Avatar className="h-11 w-11">
               <AvatarImage
@@ -147,8 +175,31 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
                   className="row-span-1 aspect-[3/2] h-4 w-6 object-cover"
                 />
               </div>
-              <span className="-translate-y-1 text-pretty font-sans text-[1rem] leading-normal tracking-tight">
-                placeholder
+              <span className="text-pretty pt-1 font-sans text-[1rem] leading-normal tracking-tight">
+                <CapturedPieces
+                  color={
+                    toChessGroundColorHelper(playerColor) === "black"
+                      ? "white"
+                      : "black"
+                  }
+                  capturedPieces={
+                    capturedPieces[
+                      toChessGroundColorHelper(playerColor) === "white"
+                        ? "white"
+                        : "black"
+                    ]
+                  }
+                  score={
+                    toChessGroundColorHelper(playerColor) === "white"
+                      ? materialScore.black - materialScore.white
+                      : materialScore.white - materialScore.black
+                  }
+                  showScore={
+                    toChessGroundColorHelper(playerColor) === "white"
+                      ? materialScore.black > materialScore.white
+                      : materialScore.white > materialScore.black
+                  }
+                />
               </span>
             </div>
           </div>
@@ -169,7 +220,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
             } as Record<string, CSSProperties>
           }
         />
-        <div className="flex w-full flex-row items-center justify-between px-4">
+        <div className="relative flex w-full flex-row justify-between px-4">
           <div className="flex flex-row gap-x-2">
             <Avatar className="h-11 w-11">
               <AvatarImage
@@ -191,10 +242,104 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
                   className="row-span-1 aspect-[3/2] h-4 w-6 object-cover"
                 />
               </div>
-              <span className="-translate-y-1 text-pretty font-sans text-[1rem] leading-normal tracking-tight">
-                placeholder
+              <span className="text-pretty pt-1 font-sans text-[1rem] leading-normal tracking-tight">
+                <CapturedPieces
+                  color={
+                    toChessGroundColorHelper(playerColor) === "black"
+                      ? "black"
+                      : "white"
+                  }
+                  capturedPieces={
+                    capturedPieces[
+                      toChessGroundColorHelper(playerColor) === "white"
+                        ? "black"
+                        : "white"
+                    ]
+                  }
+                  score={
+                    toChessGroundColorHelper(playerColor) === "white"
+                      ? materialScore.white - materialScore.black
+                      : materialScore.black - materialScore.white
+                  }
+                  showScore={
+                    toChessGroundColorHelper(playerColor) === "white"
+                      ? materialScore.white > materialScore.black
+                      : materialScore.black > materialScore.white
+                  }
+                />
               </span>
             </div>
+          </div>
+          <div className="flex w-full flex-row justify-end space-x-2 text-right">
+            {mode === "challenge" ? (
+              <>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={goBackward}
+                  disabled={!canGoBackward}>
+                  <ChevronLeft className="h-6 w-6 stroke-primary" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className=""
+                  onClick={goForward}
+                  disabled={!canGoForward}>
+                  <ChevronRight className="h-6 w-6 stroke-primary" />
+                </Button>
+                <Button
+                  disabled={
+                    gameOver && currentMoveIndex === moveHistory.length - 1
+                  }
+                  variant="default"
+                  onClick={() => handleMoveNavigation(moveHistory.length - 1)}>
+                  Current Position
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={undo}
+                  disabled={!canUndo || gameOver}
+                  aria-label="Undo move">
+                  <Undo className="h-6 w-6 stroke-primary" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={goBackward}
+                  disabled={!canGoBackward}>
+                  <ChevronLeft className="h-6 w-6 stroke-primary" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className=""
+                  onClick={goForward}
+                  disabled={!canGoForward}>
+                  <ChevronRight className="h-6 w-6 stroke-primary" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={redo}
+                  disabled={!canRedo || gameOver}
+                  aria-label="Redo move">
+                  <Redo className="h-6 w-6 stroke-primary" />
+                </Button>
+                <Button
+                  disabled={
+                    gameOver && currentMoveIndex === moveHistory.length - 1
+                  }
+                  variant="default"
+                  onClick={() => handleMoveNavigation(moveHistory.length - 1)}>
+                  Current Position
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>
