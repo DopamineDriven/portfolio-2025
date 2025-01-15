@@ -38,6 +38,7 @@ export default function GameSettings({
     resetGame,
     setPlayerColor,
     isSoundEnabled,
+    setMode,
     setIsSoundEnabled
   } = useGame();
   const [selectedColor, setSelectedColor] = useState<ChessColor | "random">(
@@ -54,6 +55,7 @@ export default function GameSettings({
 
   const handleStart = () => {
     resetGame();
+    setMode(selectedMode);
     onStartAction({
       playerColor:
         selectedColor === "random"

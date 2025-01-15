@@ -12,4 +12,4 @@ export type SVGProperties = RemoveFields<
   React.SVGProps<SVGSVGElement>,
   "viewBox" | "fill" | "xmlns"
 > &
-  React.Ref<SVGSVGElement>;
+ { ref?: React.Ref<SVGSVGElement>;}

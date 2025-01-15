@@ -28,7 +28,7 @@ const PromotionPiece: React.FC<PromotionPieceProps> = ({
 
   return (
     <Button onClick={onClick} variant="outline" className="h-20 w-20 p-2">
-      <IconComponent current={null} className="h-full w-full" />
+      <IconComponent className="h-full w-full" />
     </Button>
   );
 };
