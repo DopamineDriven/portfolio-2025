@@ -474,18 +474,35 @@ export function GameProvider({
     (index: number) => {
       if (index >= -1 && index < state.moveHistory.length) {
         const newGame = new Chess();
+        const newCapturedPieces: CapturedPieces = { white: {}, black: {} };
         for (let i = 0; i <= index; i++) {
-          newGame.move(state.moveHistory[i]!);
+          const move = state.moveHistory[i];
+          if (move) {
+            newGame.move(move);
+            if (move.captured) {
+              const capturer = move.color === "w" ? "white" : "black";
+              const targetSide = capturer === "white" ? "black" : "white";
+              newCapturedPieces[targetSide] = {
+                ...newCapturedPieces[targetSide],
+                [move.captured]:
+                  (newCapturedPieces[targetSide][move.captured] ?? 0) + 1
+              };
+            }
+          }
         }
+        const newMaterialScore = calculateMaterialScore(newCapturedPieces);
         setGame(newGame);
         setState(prevState => ({
           ...prevState,
           currentMoveIndex: index,
-          isPlayerTurn: newGame.turn() === toChessJSColor(prevState.playerColor)
+          isPlayerTurn:
+            newGame.turn() === toChessJSColor(prevState.playerColor),
+          capturedPieces: newCapturedPieces,
+          materialScore: newMaterialScore
         }));
       }
     },
-    [state.moveHistory, setGame]
+    [state.moveHistory, setGame, calculateMaterialScore]
   );
 
   const goForward = useCallback(() => {
@@ -543,7 +560,8 @@ export function GameProvider({
     undo,
     canUndo,
     redo,
-    canRedo
+    canRedo,
+    mode: state.mode
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
