@@ -1,7 +1,7 @@
 "use client";
 
 import type { Move, Square } from "chess.js";
-import type { ShortMove } from "chess.js/index";
+import type { Comment as PgnComment, ShortMove } from "chess.js/index";
 import type { Key } from "chessground/types";
 import React, {
   createContext,
@@ -46,10 +46,13 @@ class Engine {
   }
 
   // "go infinite"
-  public evaluatePositionInfinite(fen: string) {
+  public evaluatePositionInfinite(fen: string, difficulty: number) {
+    // set difficulty 0-20
+    this.sendMessage(`setoption name Skill Level value ${difficulty}`);
     // "position fen <fen>" gives Stockfish context on the current board configuration/position
     this.sendMessage(`position fen ${fen}`);
     // let Stockfish search for best move endlessly until "stop" command is sent
+
     this.sendMessage("go infinite");
   }
 
@@ -101,6 +104,7 @@ interface GameState {
   };
   currentMoveIndex: number;
   moveHistory: Move[];
+  comments: PgnComment[];
 }
 
 interface GameContextType extends GameState {
@@ -128,6 +132,8 @@ interface GameContextType extends GameState {
   redo: () => void;
   canUndo: boolean;
   canRedo: boolean;
+  getComment: () => string | undefined;
+  getComments: () => PgnComment[];
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -169,7 +175,8 @@ export function GameProvider({
       black: 0
     },
     currentMoveIndex: -1,
-    moveHistory: []
+    moveHistory: [],
+    comments: []
   });
 
   const [isSoundEnabled, setIsSoundEnabled] = useState(soundEnabled);
@@ -289,7 +296,7 @@ export function GameProvider({
             newMaterialScore.black = calculatedScore.black;
           }
           // Get the current move number
-          const _moveNumber = Math.floor(prevState.moveCounter / 2) + 1;
+          // const _moveNumber = Math.floor(prevState.moveCounter / 2) + 1;
 
           // Create a new moves array without duplicates
           const existingMoves = [...prevState.moves];
@@ -301,7 +308,7 @@ export function GameProvider({
           }
 
           const newMoveHistory = [...prevState.moveHistory, moveResult];
-
+          const newComments = game.getComments();
           return {
             ...prevState,
             isPlayerTurn: chessColorHelper(newGame.turn()) === initialColor,
@@ -313,7 +320,8 @@ export function GameProvider({
             capturedPieces: newCapturedPieces,
             materialScore: newMaterialScore,
             moveHistory: newMoveHistory,
-            currentMoveIndex: newMoveHistory.length - 1
+            currentMoveIndex: newMoveHistory.length - 1,
+            comments: newComments
           };
         });
       }
@@ -355,7 +363,7 @@ export function GameProvider({
       return Math.min(Math.max(difficulty * 0.25, 1), 10) * 250;
     };
     // (1) send the desired skill level
-    engine.skillLevel(difficulty);
+    // engine.skillLevel(difficulty);
 
     // (2) Listen for best move
     engine.onMessage(({ bestMove }) => {
@@ -376,7 +384,7 @@ export function GameProvider({
     setState(prev => ({ ...prev, isPondering: true }));
 
     // (4) "go infinite"
-    engine.evaluatePositionInfinite(game.fen());
+    engine.evaluatePositionInfinite(game.fen(), difficulty);
 
     // (5) Stop Stockfish analysis for best move once "ponder time" elapses
     setTimeout(() => {
@@ -407,7 +415,8 @@ export function GameProvider({
       capturedPieces: { white: {}, black: {} },
       materialScore: { white: 0, black: 0 },
       currentMoveIndex: -1,
-      moveHistory: []
+      moveHistory: [],
+      comments: []
     }));
     engine.newGame();
     playSoundEffect("game-start");
@@ -491,6 +500,7 @@ export function GameProvider({
           }
         }
         const newMaterialScore = calculateMaterialScore(newCapturedPieces);
+        const newComments = newGame.getComments();
         setGame(newGame);
         setState(prevState => ({
           ...prevState,
@@ -498,7 +508,8 @@ export function GameProvider({
           isPlayerTurn:
             newGame.turn() === toChessJSColor(prevState.playerColor),
           capturedPieces: newCapturedPieces,
-          materialScore: newMaterialScore
+          materialScore: newMaterialScore,
+          comments: newComments
         }));
       }
     },
@@ -537,6 +548,13 @@ export function GameProvider({
 
   const canRedo = state.currentMoveIndex < state.moveHistory.length - 1;
 
+  const getComment = useCallback(() => {
+    return game.getComment();
+  }, [game]);
+
+  const getComments = useCallback(() => {
+    return game.getComments();
+  }, [game]);
   const value = {
     ...state,
     game,
@@ -561,7 +579,9 @@ export function GameProvider({
     canUndo,
     redo,
     canRedo,
-    mode: state.mode
+    mode: state.mode,
+    getComment,
+    getComments
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
