@@ -44,7 +44,6 @@ export default function GameSettings({
   const [selectedColor, setSelectedColor] = useState<ChessColor | "random">(
     playerColor
   );
-  const [selectedMode, setSelectedMode] = useState<StockfishMode>(mode);
 
   const handleColorSelect = (color: ChessColor | "random") => {
     setSelectedColor(color);
@@ -55,7 +54,6 @@ export default function GameSettings({
 
   const handleStart = () => {
     resetGame();
-    setMode(selectedMode);
     onStartAction({
       playerColor:
         selectedColor === "random"
@@ -63,7 +61,7 @@ export default function GameSettings({
             ? "white"
             : "black"
           : selectedColor,
-      mode: selectedMode,
+      mode,
       soundEnabled: isSoundEnabled
     });
   };
@@ -129,10 +127,10 @@ export default function GameSettings({
 
           <div className="space-y-4">
             <button
-              onClick={() => setSelectedMode("challenge")}
+              onClick={() => setMode("challenge")}
               className={cn(
                 `w-full rounded-lg p-4 text-left transition`,
-                selectedMode === "challenge"
+                mode === "challenge"
                   ? "bg-green-600"
                   : "bg-gray-800 hover:bg-gray-700"
               )}>
@@ -150,10 +148,10 @@ export default function GameSettings({
             </button>
 
             <button
-              onClick={() => setSelectedMode("friendly")}
+              onClick={() => setMode("friendly")}
               className={cn(
                 `w-full rounded-lg p-4 text-left transition`,
-                selectedMode === "friendly"
+                mode === "friendly"
                   ? "bg-green-600"
                   : "bg-gray-800 hover:bg-gray-700"
               )}>
@@ -170,10 +168,10 @@ export default function GameSettings({
             </button>
 
             <button
-              onClick={() => setSelectedMode("assisted")}
+              onClick={() => setMode("assisted")}
               className={cn(
                 `w-full rounded-lg p-4 text-left transition`,
-                selectedMode === "assisted"
+                mode === "assisted"
                   ? "bg-green-600"
                   : "bg-gray-800 hover:bg-gray-700"
               )}>
