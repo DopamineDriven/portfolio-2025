@@ -289,6 +289,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
                   <ChevronRight className="h-6 w-6 stroke-primary" />
                 </Button>
                 <Button
+                  className="hidden sm:block"
                   disabled={
                     gameOver && currentMoveIndex === moveHistory.length - 1
                   }
@@ -331,6 +332,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
                   <Redo className="h-6 w-6 stroke-primary" />
                 </Button>
                 <Button
+                  className="hidden sm:block"
                   disabled={
                     gameOver && currentMoveIndex === moveHistory.length - 1
                   }
