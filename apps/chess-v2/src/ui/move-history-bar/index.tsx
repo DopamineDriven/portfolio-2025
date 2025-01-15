@@ -1,55 +1,12 @@
 "use client";
 
 import type { Move } from "chess.js";
-import React, { useEffect, useRef } from "react";
+import { useCallback, useEffect } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { FixedSizeList as List } from "react-window";
 import { useGame } from "@/contexts/game-context";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/atoms/button";
-
-const ITEM_SIZE = 40; // Height of each move item in pixels
-
-interface MoveItemProps {
-  index: number;
-  style: React.CSSProperties;
-  data: {
-    moveHistory: Move[];
-    currentMoveIndex: number;
-    goToMove: (index: number) => void;
-  };
-}
-
-const MoveItem: React.FC<MoveItemProps> = ({ index, style, data }) => {
-  const { moveHistory, currentMoveIndex, goToMove } = data;
-  const moveIndex = index * 2;
-  const whiteMove = moveHistory[moveIndex];
-  const blackMove = moveHistory[moveIndex + 1];
-
-  return (
-    <div style={style} className="flex items-center space-x-1.5 px-2">
-      <span className="text-sm text-gray-400">{index + 1}.</span>
-      <button
-        className={cn(
-          "font-mono text-white",
-          moveIndex === currentMoveIndex ? "font-semibold underline" : ""
-        )}
-        onClick={() => goToMove(moveIndex)}>
-        {whiteMove?.san}
-      </button>
-      {blackMove && (
-        <button
-          className={cn(
-            "font-mono text-white",
-            moveIndex + 1 === currentMoveIndex ? "font-semibold underline" : ""
-          )}
-          onClick={() => goToMove(moveIndex + 1)}>
-          {blackMove.san}
-        </button>
-      )}
-    </div>
-  );
-};
 
 export default function MoveHistoryBar() {
   const {
@@ -61,18 +18,76 @@ export default function MoveHistoryBar() {
     goForward,
     goBackward
   } = useGame();
-  const listRef = useRef<List>(null);
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: "center",
+    containScroll: "trimSnaps",
+    dragFree: true
+  });
 
+  const scrollToIndex = useCallback(
+    (index: number) => {
+      if (emblaApi) {
+        emblaApi.scrollTo(Math.floor(index / 2));
+      }
+    },
+    [emblaApi]
+  );
+
+  // Scroll to current move when it changes
   useEffect(() => {
-    if (listRef.current) {
-      listRef.current.scrollToItem(Math.floor(currentMoveIndex / 2), "smart");
+    if (currentMoveIndex >= 0) {
+      scrollToIndex(currentMoveIndex);
     }
-  }, [currentMoveIndex]);
+  }, [currentMoveIndex, scrollToIndex]);
 
-  const itemData = {
-    moveHistory,
-    currentMoveIndex,
-    goToMove
+  const moves = moveHistory?.reduce(
+    (acc, move, index) => {
+      if (index % 2 === 0) {
+        acc.push({ whiteMove: move, blackMove: moveHistory[index + 1] });
+      }
+      return acc;
+    },
+    [] as { whiteMove: Move; blackMove?: Move }[]
+  );
+
+  const MoveItem = ({
+    index,
+    whiteMove,
+    blackMove
+  }: {
+    index: number;
+    whiteMove: Move;
+    blackMove?: Move;
+  }) => {
+    const moveIndex = index * 2;
+
+    return (
+      <div className="embla__slide flex h-full min-w-[100px] flex-[0_0_auto] items-center justify-center px-3">
+        <div className="mr-0.5 text-xs text-gray-400">{index + 1}.</div>
+        <div className="flex items-center gap-0.5">
+          <button
+            className={cn(
+              "font-mono text-sm text-white",
+              moveIndex === currentMoveIndex ? "font-semibold underline" : ""
+            )}
+            onClick={() => goToMove(moveIndex)}>
+            {whiteMove.san}
+          </button>
+          {blackMove && (
+            <button
+              className={cn(
+                "font-mono text-sm text-white",
+                moveIndex + 1 === currentMoveIndex
+                  ? "font-semibold underline"
+                  : ""
+              )}
+              onClick={() => goToMove(moveIndex + 1)}>
+              {blackMove.san}
+            </button>
+          )}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -82,33 +97,29 @@ export default function MoveHistoryBar() {
         size="icon"
         onClick={goBackward}
         disabled={!canGoBackward}
-        className="h-full px-2 text-white">
+        className="absolute left-0 z-10 h-full px-2 text-white">
         <ChevronLeft className="h-4 w-4" />
       </Button>
-      <div className="h-full flex-1 overflow-hidden">
-        {moveHistory.length === 0 ? (
-          <div className="flex h-full items-center px-4">
-            <span className="text-sm text-gray-400">No moves yet</span>
-          </div>
-        ) : (
-          <List
-            ref={listRef}
-            height={48} // Height of the bar
-            itemCount={Math.ceil(moveHistory.length / 2)}
-            itemSize={ITEM_SIZE}
-            width={window.innerWidth - 96} // Subtracting space for buttons
-            itemData={itemData}
-            layout="horizontal">
-            {MoveItem}
-          </List>
-        )}
+
+      <div className="mx-10 flex-1 overflow-hidden" ref={emblaRef}>
+        <div className="flex touch-pan-y">
+          {moves.map((move, index) => (
+            <MoveItem
+              key={index}
+              index={index}
+              whiteMove={move.whiteMove}
+              blackMove={move.blackMove}
+            />
+          ))}
+        </div>
       </div>
+
       <Button
         variant="ghost"
         size="icon"
         onClick={goForward}
         disabled={!canGoForward}
-        className="h-full px-2 text-white">
+        className="absolute right-0 z-10 h-full px-2 text-white">
         <ChevronRight className="h-4 w-4" />
       </Button>
     </div>
