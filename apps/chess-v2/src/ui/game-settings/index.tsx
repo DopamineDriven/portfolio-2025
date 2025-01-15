@@ -44,6 +44,7 @@ export default function GameSettings({
   const [selectedColor, setSelectedColor] = useState<ChessColor | "random">(
     playerColor
   );
+  const [selectedMode, setSelectedMode] = useState<StockfishMode>(mode);
 
   const handleColorSelect = (color: ChessColor | "random") => {
     setSelectedColor(color);
@@ -54,6 +55,7 @@ export default function GameSettings({
 
   const handleStart = () => {
     resetGame();
+    setMode(selectedMode);
     onStartAction({
       playerColor:
         selectedColor === "random"
@@ -127,10 +129,10 @@ export default function GameSettings({
 
           <div className="space-y-4">
             <button
-              onClick={() => setMode("challenge")}
+              onClick={() => setSelectedMode("challenge")}
               className={cn(
                 `w-full rounded-lg p-4 text-left transition`,
-                mode === "challenge"
+                selectedMode === "challenge"
                   ? "bg-green-600"
                   : "bg-gray-800 hover:bg-gray-700"
               )}>
@@ -148,10 +150,10 @@ export default function GameSettings({
             </button>
 
             <button
-              onClick={() => setMode("friendly")}
+              onClick={() => setSelectedMode("friendly")}
               className={cn(
                 `w-full rounded-lg p-4 text-left transition`,
-                mode === "friendly"
+                selectedMode === "friendly"
                   ? "bg-green-600"
                   : "bg-gray-800 hover:bg-gray-700"
               )}>
@@ -168,10 +170,10 @@ export default function GameSettings({
             </button>
 
             <button
-              onClick={() => setMode("assisted")}
+              onClick={() => setSelectedMode("assisted")}
               className={cn(
                 `w-full rounded-lg p-4 text-left transition`,
-                mode === "assisted"
+                selectedMode === "assisted"
                   ? "bg-green-600"
                   : "bg-gray-800 hover:bg-gray-700"
               )}>
