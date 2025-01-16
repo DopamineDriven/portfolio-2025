@@ -1,0 +1,21 @@
+{
+  "extends": "@portfolio/tsconfig/node-pkg.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+    "baseUrl": "./"
+  },
+  "include": [
+    "**/*.ts",
+    "src/**/*.tsx",
+    "**/*.mjs",
+    "**/*.preset.ts",
+    "postcss.config.mjs",
+    "index.d.ts",
+    "tsup.config.ts",
+    "../../reset.d.ts"
+  ],
+  "exclude": ["dist"]
+}
