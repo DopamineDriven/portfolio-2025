@@ -7,15 +7,18 @@ import React, {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState
 } from "react";
 import { Chess } from "chess.js";
+import type { ChessApiMessage } from "@/hooks/use-chess-api";
 import type { SoundKeys } from "@/lib/sound";
 import type { StockfishDifficulty, StockfishMode } from "@/types/chess";
 import type { CapturedPieces, MaterialCount } from "@/types/values";
 import type { ChessColor } from "@/utils/chess-types";
+import { useChessApi } from "@/hooks/use-chess-api";
 import { playSound } from "@/lib/sound";
 import { getStockfishDifficulty } from "@/types/chess";
 import { PIECE_VALUES } from "@/types/values";
@@ -134,6 +137,8 @@ interface GameContextType extends GameState {
   canRedo: boolean;
   getComment: () => string | undefined;
   getComments: () => PgnComment[];
+  chessApiEvaluation: ChessApiMessage | null;
+  requestChessApiEvaluation: () => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -179,7 +184,12 @@ export function GameProvider({
     comments: []
   });
 
+  const [selectedMode, setSelectedMode] = useState(initialMode);
+
   const [isSoundEnabled, setIsSoundEnabled] = useState(soundEnabled);
+
+  const [selectedDifficulty, setSelectedDifficulty] =
+    useState(initialDifficulty);
 
   const lastProcessedMoveRef = useRef<string | null>(null);
 
@@ -189,6 +199,20 @@ export function GameProvider({
     },
     []
   );
+
+  const { sendPosition, lastMessage } = useChessApi();
+  const [chessApiEvaluation, setChessApiEvaluation] =
+    useState<ChessApiMessage | null>(null);
+
+  useEffect(() => {
+    if (lastMessage && lastMessage.type === "bestmove") {
+      setChessApiEvaluation(lastMessage);
+    }
+  }, [lastMessage]);
+
+  const requestChessApiEvaluation = useCallback(() => {
+    sendPosition(game.fen());
+  }, [game, sendPosition]);
 
   const playSoundEffect = useCallback(
     (effect: SoundKeys) => {
@@ -437,17 +461,31 @@ export function GameProvider({
   );
 
   const setDifficulty = useCallback(
-    (difficulty: StockfishDifficulty) => {
-      setState(prevState => ({ ...prevState, difficulty }));
-      engine.skillLevel(getStockfishDifficulty(difficulty));
-      engine.newGame();
+    (newDifficulty: StockfishDifficulty) => {
+      console.log(
+        `setDifficulty useCallback`,
+        newDifficulty,
+        `initialDifficulty`,
+        initialDifficulty
+      );
+      if (newDifficulty !== initialDifficulty) {
+        setSelectedDifficulty(newDifficulty);
+      }
+      setState(prevState => ({ ...prevState, newDifficulty }));
+      engine.skillLevel(getStockfishDifficulty(newDifficulty));
     },
-    [engine]
+    [engine, initialDifficulty]
   );
 
-  const setMode = useCallback((newMode: StockfishMode) => {
-    setState(prevState => ({ ...prevState, newMode }));
-  }, []);
+  const setMode = useCallback(
+    (newMode: StockfishMode) => {
+      if (newMode !== initialMode) {
+        setSelectedMode(newMode);
+      }
+      setState(prevState => ({ ...prevState, newMode }));
+    },
+    [initialMode]
+  );
 
   const getMoveOptions = useCallback(
     (square: Square) => {
@@ -584,9 +622,12 @@ export function GameProvider({
     canUndo,
     redo,
     canRedo,
-    mode: state.mode,
+    mode: selectedMode,
+    difficulty: selectedDifficulty,
     getComment,
-    getComments
+    getComments,
+    chessApiEvaluation,
+    requestChessApiEvaluation
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

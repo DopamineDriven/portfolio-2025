@@ -14,7 +14,7 @@ export default function Home({ country = "US" }: { country?: string }) {
   const [showSettings, setShowSettings] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
   const [difficulty, setDifficulty] =
-    useState<StockfishDifficulty>("intermediate");
+    useState<StockfishDifficulty>("beginner");
   const [playerColor, setPlayerColor] = useState<ChessColor>("white");
   const [mode, setMode] = useState<StockfishMode>("friendly");
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -53,7 +53,6 @@ export default function Home({ country = "US" }: { country?: string }) {
     setShowDifficultySelection(true);
     setGameStarted(false);
     setPlayerColor("white");
-    setMode("challenge");
   }, []);
 
   return (

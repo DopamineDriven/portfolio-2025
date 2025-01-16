@@ -20,7 +20,9 @@ const nextConfig = {
       { hostname: "api.dicebear.com", protocol: "https" },
       { hostname: "images.unsplash.com", protocol: "https" },
       { hostname: "tailwindui.com", protocol: "https" },
-      { hostname: "chess-bot-2025.vercel.app", protocol: "https" }
+      { hostname: "www.nextchessbot.com", protocol: "https" },
+      { hostname: "nextchessbot.com", protocol: "https" },
+      { hostname: "dev.nextchessbot.com", protocol: "https" }
     ]
   }
 };

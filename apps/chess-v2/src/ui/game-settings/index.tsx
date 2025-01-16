@@ -53,9 +53,16 @@ export default function GameSettings({
     }
   };
 
+  const hanleModeSelect = (modeSel: StockfishMode) => {
+    setSelectedMode(modeSel);
+    if (modeSel !== "friendly") {
+      setMode(modeSel);
+    }
+  };
+
   const handleStart = () => {
+    console.log(`handlegameStart`, `${selectedMode}`, `${mode}`);
     resetGame();
-    setMode(selectedMode);
     onStartAction({
       playerColor:
         selectedColor === "random"
@@ -63,7 +70,7 @@ export default function GameSettings({
             ? "white"
             : "black"
           : selectedColor,
-      mode,
+      mode: selectedMode,
       soundEnabled: isSoundEnabled
     });
   };
@@ -129,7 +136,7 @@ export default function GameSettings({
 
           <div className="space-y-4">
             <button
-              onClick={() => setSelectedMode("challenge")}
+              onClick={() => hanleModeSelect("challenge")}
               className={cn(
                 `w-full rounded-lg p-4 text-left transition`,
                 selectedMode === "challenge"
@@ -150,7 +157,7 @@ export default function GameSettings({
             </button>
 
             <button
-              onClick={() => setSelectedMode("friendly")}
+              onClick={() => hanleModeSelect("friendly")}
               className={cn(
                 `w-full rounded-lg p-4 text-left transition`,
                 selectedMode === "friendly"
@@ -170,7 +177,7 @@ export default function GameSettings({
             </button>
 
             <button
-              onClick={() => setSelectedMode("assisted")}
+              onClick={() => hanleModeSelect("assisted")}
               className={cn(
                 `w-full rounded-lg p-4 text-left transition`,
                 selectedMode === "assisted"
