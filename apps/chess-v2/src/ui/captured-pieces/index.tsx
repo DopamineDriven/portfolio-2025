@@ -37,14 +37,10 @@ export default function CapturedPieces({
     return (
       <div
         key={`${piece}-${index}`}
-        className={cn(
-          "absolute h-5 w-5",
-          index === 0 ? "relative" : `left-0`
-          // Add subtle outline for black pawns
-        )}
+        className={cn("absolute h-5 w-5", index === 0 ? "relative" : `left-0`)}
         style={{
           transform: index > 0 ? `translateX(${index * 6}px)` : undefined,
-          zIndex: total - index // Higher indices should appear behind
+          zIndex: total - index
         }}>
         <IconComponent
           className={cn(
@@ -71,7 +67,12 @@ export default function CapturedPieces({
     .map(([piece, count]) => {
       const pieceType = piece as keyof typeof PIECE_VALUES;
       return (
-        <div key={piece} className="relative flex h-5 items-center">
+        <div
+          key={piece}
+          className={cn(
+            "relative flex h-5 items-center",
+            count > 1 && pieceType === "p" ? `w-[${count * 7}px]` : ""
+          )}>
           {Array.from({ length: count }, (_, i) =>
             getPieceIcon(pieceType, i, count)
           )}
