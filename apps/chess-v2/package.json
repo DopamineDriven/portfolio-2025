@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "next dev -p 3010",
     "build": "next build",
+    "postbuild": "tsx src/services/postbuild.ts",
     "format": "prettier --write \"**/*.{ts,tsx,cts,mts,js,jsx,mjs,cjs,json,yaml,yml,css,html,md,mdx,graphql,gql}\" --ignore-unknown --cache",
     "start": "next start",
     "lint": "eslint",
@@ -35,8 +36,9 @@
     "react-dom": "^19.0.0",
     "react-window": "^1.8.11",
     "tailwind-merge": "^2.6.0"
-    },
+  },
   "devDependencies": {
+    "@d0paminedriven/fs": "^0.1.0",
     "@edge-runtime/cookies": "^6.0.0",
     "@edge-runtime/types": "^4.0.0",
     "@portfolio/eslint-config": "workspace:*",
@@ -45,7 +47,7 @@
     "@types/chess.js": "^0.13.7",
     "@types/gtag.js": "^0.0.20",
     "@types/lodash": "^4.17.14",
-    "@types/node": "^22.10.6",
+    "@types/node": "^22.10.7",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
     "@types/react-window": "^1.8.8",

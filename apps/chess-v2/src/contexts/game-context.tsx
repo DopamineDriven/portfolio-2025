@@ -167,8 +167,8 @@ export function GameProvider({
     isPondering: false,
     promotionSquare: null,
     capturedPieces: {
-      white: {},
-      black: {}
+      white: { b: 0, k: 0, n: 0, p: 0, q: 0, r: 0 },
+      black: { b: 0, k: 0, n: 0, p: 0, q: 0, r: 0 }
     },
     materialScore: {
       white: 0,
@@ -287,7 +287,6 @@ export function GameProvider({
             newCapturedPieces[targetSide] = {
               ...newCapturedPieces[targetSide],
               [capturedPiece]:
-              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
                 (newCapturedPieces[targetSide][capturedPiece] || 0) + 1
             };
 
@@ -412,7 +411,10 @@ export function GameProvider({
       gameOver: false,
       gameResult: null,
       promotionSquare: null,
-      capturedPieces: { white: {}, black: {} },
+      capturedPieces: {
+        white: { b: 0, k: 0, n: 0, p: 0, q: 0, r: 0 },
+        black: { b: 0, k: 0, n: 0, p: 0, q: 0, r: 0 }
+      },
       materialScore: { white: 0, black: 0 },
       currentMoveIndex: -1,
       moveHistory: [],
@@ -483,7 +485,10 @@ export function GameProvider({
     (index: number) => {
       if (index >= -1 && index < state.moveHistory.length) {
         const newGame = new Chess();
-        const newCapturedPieces: CapturedPieces = { white: {}, black: {} };
+        const newCapturedPieces: CapturedPieces = {
+          white: { b: 0, k: 0, n: 0, p: 0, q: 0, r: 0 },
+          black: { b: 0, k: 0, n: 0, p: 0, q: 0, r: 0 }
+        };
         for (let i = 0; i <= index; i++) {
           const move = state.moveHistory[i];
           if (move) {

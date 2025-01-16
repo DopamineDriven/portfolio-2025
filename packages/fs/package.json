@@ -1,0 +1,84 @@
+{
+  "name": "@portfolio/fs",
+  "version": "0.1.0",
+  "description": "convenient fs helpers",
+  "publishConfig": {
+    "access": "public",
+    "typesVersions": {
+      "*": {
+        "*": [
+          "dist/*.d.ts",
+          "dist/*/index.d.ts"
+        ],
+        "fs": [
+          "dist/fs/index.d.ts"
+        ],
+        "types": [
+          "dist/types/index.d.ts"
+        ]
+      }
+    }
+  },
+  "license": "MIT",
+  "source": "src/index.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "dist/*.d.ts",
+        "dist/*/index.d.ts"
+      ],
+      "fs": [
+        "dist/fs/index.d.ts"
+      ],
+      "types": [
+        "dist/types/index.d.ts"
+      ]
+    }
+  },
+  "type": "module",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": true,
+  "files": [
+    "dist/**/*.{js,cjs,d.ts,d.cts,css}"
+  ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js",
+    "./fs": "./dist/fs/index.js",
+    "./types": "./dist/types/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "pnpm build",
+    "lint": "eslint",
+    "clean": "git clean -xdf .turbo dist node_modules",
+    "fix": "npm pkg fix"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@microsoft/api-extractor": "^7.49.1",
+    "@swc/core": "^1.10.7",
+    "@swc/wasm": "^1.10.7",
+    "@portfolio/eslint-config": "workspace:*",
+    "@portfolio/prettier-config": "workspace:*",
+    "@portfolio/tsconfig": "workspace:*",
+    "@types/node": "^22.10.7",
+    "chokidar": "^4.0.3",
+    "dotenv": "^16.4.7",
+    "dotenv-cli": "^8.0.0",
+    "dotenv-expand": "^12.0.1",
+    "eslint": "latest",
+    "jiti": "^2.4.2",
+    "prettier": "latest",
+    "terser": "^5.37.0",
+    "tslib": "latest",
+    "tsup": "latest",
+    "tsx": "latest",
+    "typescript": "latest",
+    "typescript-eslint": "latest"
+  },
+  "prettier": "@portfolio/prettier-config"
+}
