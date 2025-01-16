@@ -25,5 +25,5 @@
     ".next/types/**/*.ts",
     "../../reset.d.ts"
   ],
-  "exclude": ["node_modules", "public/scripts/stockfish-16.1.js"]
+  "exclude": ["node_modules", "public/scripts/stockfish.js"]
 }
