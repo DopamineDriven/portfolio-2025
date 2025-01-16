@@ -5,6 +5,9 @@ import type { CSSProperties, FC } from "react";
 import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import {
+  ChevronDown as _ChevronDown,
+  ChevronUp as _ChevronUp,
+  Lightbulb as _Lightbulb,
   ChevronLeft,
   ChevronRight,
   History,
@@ -48,11 +51,15 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
     canGoForward,
     canGoBackward,
     goForward,
+    game,
     goBackward,
     undo,
     redo,
     canUndo,
-    canRedo
+    canRedo,
+    getComment,
+    chessApiEvaluation,
+    requestChessApiEvaluation
   } = useGame();
 
   const countryToFile = countryCodeToFileName(country as CountryCodes) || "US";
@@ -72,6 +79,14 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
   const [messages, setMessages] = useState<
     { username: string; content: string }[]
   >([]);
+  const [_currentComment, setCurrentComment] = useState<string | undefined>(
+    undefined
+  );
+  const [_showHint, setShowHint] = useState(false);
+  const [_showEvaluation, _setShowEvaluation] = useState(false);
+  const [hintSquares, setHintSquares] = useState<
+    Record<string, React.CSSProperties>
+  >({});
 
   const handleSendMessage = (message: string) => {
     if (message.trim() !== "") {
@@ -137,12 +152,46 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
     });
   }
 
+  useEffect(() => {
+    if (isReviewMode) {
+      setCurrentComment(getComment());
+    }
+  }, [isReviewMode, currentMoveIndex, getComment]);
+
   const handleMoveNavigation = (index: number) => {
     goToMove(index);
     setOptionSquares({});
     setRightClickedSquares({});
+    if (isReviewMode) {
+      setCurrentComment(getComment());
+    }
   };
+  useEffect(() => {
+    if (!gameOver) {
+      requestChessApiEvaluation();
+    }
+  }, [game, gameOver, requestChessApiEvaluation]);
 
+  const _handleShowHint = useCallback(() => {
+    if (chessApiEvaluation?.from && chessApiEvaluation?.to) {
+      setHintSquares({
+        [chessApiEvaluation.from]: {
+          background: "rgba(130, 77, 255, 0.4)",
+          borderRadius: "50%"
+        },
+        [chessApiEvaluation.to]: {
+          background: "rgba(130, 77, 255, 0.4)",
+          borderRadius: "50%"
+        }
+      });
+      setShowHint(true);
+    }
+  }, [chessApiEvaluation]);
+
+  const _handleHideHint = useCallback(() => {
+    setHintSquares({});
+    setShowHint(false);
+  }, []);
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center py-4">
       <div className="flex w-full flex-col items-center gap-4">
@@ -211,12 +260,77 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
             </h3>
           </div>
         )}
+        {/* <div className="relative w-full">
+          <Chessboard
+            onSquareRightClickAction={onSquareRightClick}
+            customSquareStyles={
+              {
+                ...optionSquares,
+                ...rightClickedSquares,
+                ...hintSquares
+              } as Record<string, CSSProperties>
+            }
+          />
+          <div className="absolute bottom-4 right-4 flex gap-2">
+            {mode !== "challenge" && (
+              <Button
+                variant="secondary"
+                size="icon"
+                className="bg-gray-800 text-white hover:bg-gray-700"
+                onClick={showHint ? handleHideHint : handleShowHint}
+                aria-label={
+                  showHint ? "Hide move suggestion" : "Show move suggestion"
+                }>
+                <Lightbulb
+                  className={`h-5 w-5 ${showHint ? "text-yellow-400" : "text-gray-400"}`}
+                />
+              </Button>
+            )}
+            <Button
+              variant="secondary"
+              size="icon"
+              className="bg-gray-800 text-white hover:bg-gray-700"
+              onClick={() => setShowEvaluation(!showEvaluation)}
+              aria-label={
+                showEvaluation ? "Hide evaluation" : "Show evaluation"
+              }>
+              {showEvaluation ? (
+                <ChevronDown className="h-5 w-5" />
+              ) : (
+                <ChevronUp className="h-5 w-5" />
+              )}
+            </Button>
+          </div>
+        </div>
+
+        <div
+          className={`overflow-hidden transition-all duration-300 ease-in-out ${
+            showEvaluation ? "h-32" : "h-0"
+          }`}>
+          <div className="rounded-lg bg-gray-800 p-4 text-white">
+            <h3 className="mb-2 text-lg font-semibold">Position Evaluation:</h3>
+            {chessApiEvaluation ? (
+              <>
+                <p>{chessApiEvaluation.text}</p>
+                {chessApiEvaluation.continuationArr && (
+                  <div className="mt-2">
+                    <h4 className="font-semibold">Suggested continuation:</h4>
+                    <p>{chessApiEvaluation.continuationArr.join(", ")}</p>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p>Waiting for evaluation...</p>
+            )}
+          </div>
+        </div> */}
         <Chessboard
           onSquareRightClickAction={onSquareRightClick}
           customSquareStyles={
             {
               ...optionSquares,
-              ...rightClickedSquares
+              ...rightClickedSquares,
+              ...hintSquares
             } as Record<string, CSSProperties>
           }
         />
@@ -345,6 +459,22 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
           </div>
         </div>
       </div>
+      <div className="mt-4 h-32 overflow-y-auto rounded-lg bg-gray-800 p-4 text-white">
+        <h3 className="mb-2 text-lg font-semibold">Position Evaluation:</h3>
+        {chessApiEvaluation ? (
+          <>
+            <p>{chessApiEvaluation.text}</p>
+            {chessApiEvaluation.continuationArr && (
+              <div className="mt-2">
+                <h4 className="font-semibold">Suggested continuation:</h4>
+                <p>{chessApiEvaluation.continuationArr.join(", ")}</p>
+              </div>
+            )}
+          </>
+        ) : (
+          <p>Waiting for evaluation...</p>
+        )}
+      </div>
       <div className="fixed bottom-1.5 right-4 z-50 hidden sm:block">
         <Button
           variant="default"
@@ -354,7 +484,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
             resetGame();
             onRestart();
           }}>
-          <RotateCcw className="h-6 w-6" />
+          <RotateCcw className="h-6 w-6 stroke-primary" />
         </Button>
       </div>
       <ChatWidget messages={messages} onSendMessageAction={handleSendMessage} />

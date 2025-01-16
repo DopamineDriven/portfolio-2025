@@ -26,7 +26,7 @@ export interface UserGameSettings {
 // export type MyKey = "a0" | `${typeof files}${typeof ranks}`;
 
 export const stockfishDifficulty = {
-  beginner: 3,
+  beginner: 1,
   intermediate: 6,
   expert: 12
 } as const;
