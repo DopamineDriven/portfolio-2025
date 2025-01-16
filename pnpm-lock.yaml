@@ -259,6 +259,9 @@ importers:
         specifier: ^2.6.0
         version: 2.6.0
     devDependencies:
+      '@d0paminedriven/fs':
+        specifier: ^0.1.0
+        version: 0.1.0
       '@edge-runtime/cookies':
         specifier: ^6.0.0
         version: 6.0.0
@@ -1026,6 +1029,9 @@ packages:
     peerDependencies:
       react: '>=19'
       react-dom: '>=19'
+
+  '@d0paminedriven/fs@0.1.0':
+    resolution: {integrity: sha512-nH0IVD9+9kc4RrktcfMvjblSfZe2r2xqn+xZsern78zWuS0dB1szafgopqxX63Yg/S9E8YF32qIT84oXVHy3jg==}
 
   '@d0paminedriven/turbogen@0.6.0':
     resolution: {integrity: sha512-TV9Sev0aE8pFohhxRbbN8vaxzJyDeI1YzS4jFeigVB8qf/WOA2jNKqZsb/xAmKWxVTzdLmZab3B+NrlI4itItw==}
@@ -6996,6 +7002,10 @@ snapshots:
       '@swc/helpers': 0.5.15
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
+
+  '@d0paminedriven/fs@0.1.0':
+    dependencies:
+      dotenv: 16.4.7
 
   '@d0paminedriven/turbogen@0.6.0(@types/node@22.10.7)':
     dependencies:

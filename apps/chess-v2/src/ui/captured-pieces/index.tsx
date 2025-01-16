@@ -2,10 +2,10 @@
 
 import * as ChessIcons from "@d0paminedriven/chess-icons";
 import type { MaterialCount } from "@/types/values";
-import { cn } from "@/lib/utils";
-import { PIECE_VALUES } from "@/types/values";
 import type { ChessColor } from "@/utils/chess-types";
 import { toChessGroundColorHelper } from "@/lib/color-helper";
+import { cn } from "@/lib/utils";
+import { handlePieceIcons, PIECE_VALUES } from "@/types/values";
 
 interface CapturedPiecesProps {
   capturedPieces: MaterialCount;
@@ -22,60 +22,66 @@ export default function CapturedPieces({
   className = "",
   color
 }: CapturedPiecesProps) {
-  // Convert the captured pieces object into an array of pieces to display
-  const piecesToShow = Object.entries(capturedPieces).flatMap(
-    ([piece, count]: [string, number]) => {
-      return Array.from({ length: count }, () => piece);
-    }
-  );
-  console.log("[CapturedPieces] piecesToShow:", piecesToShow);
-
-  const handlePieceIcons = (target: keyof typeof PIECE_VALUES) => {
-    switch (target) {
-      case "b": {
-        return "Bishop";
-      }
-      case "k": {
-        return "King";
-      }
-      case "n": {
-        return "Knight";
-      }
-      case "p": {
-        return "Pawn";
-      }
-      case "q": {
-        return "Queen";
-      }
-      default: {
-        return "Rook";
-      }
-    }
-  };
-
   // Get the appropriate icon component for each piece
-  const getPieceIcon = (piece: keyof typeof PIECE_VALUES) => {
-    const colorToShow = toChessGroundColorHelper(color) === "white" ? "Black" : "White";
-    const pieceType = piece;
+  const getPieceIcon = (
+    piece: keyof typeof PIECE_VALUES,
+    index: number,
+    total: number
+  ) => {
+    const colorToShow =
+      toChessGroundColorHelper(color) === "white" ? "Black" : "White";
     const iconName =
-      `${colorToShow}${handlePieceIcons(pieceType as keyof typeof PIECE_VALUES)}` as const as keyof typeof ChessIcons;
+      `${colorToShow}${handlePieceIcons(piece)}` as const as keyof typeof ChessIcons;
     const IconComponent = ChessIcons[iconName];
-    return <IconComponent className="h-5 w-5" />;
+
+    return (
+      <div
+        key={`${piece}-${index}`}
+        className={cn(
+          "absolute h-5 w-5",
+          index === 0 ? "relative" : `left-0`
+          // Add subtle outline for black pawns
+        )}
+        style={{
+          transform: index > 0 ? `translateX(${index * 6}px)` : undefined,
+          zIndex: total - index // Higher indices should appear behind
+        }}>
+        <IconComponent
+          className={cn(
+            "h-5 w-5",
+            colorToShow === "Black" && piece === "p"
+              ? "[&_path]:stroke-gray-400/100 [&_path]:[stroke-width:0.5px]"
+              : ""
+          )}
+        />
+      </div>
+    );
   };
+
+  // Create arrays of icons for each piece type
+  const pieceGroups = Object.entries(capturedPieces)
+    .filter(([_, count]) => count > 0) // Only show pieces that have been captured
+    .sort(([pieceA], [pieceB]) => {
+      // Sort by piece value (lowest to highest)
+      return (
+        PIECE_VALUES[pieceA as keyof typeof PIECE_VALUES] -
+        PIECE_VALUES[pieceB as keyof typeof PIECE_VALUES]
+      );
+    })
+    .map(([piece, count]) => {
+      const pieceType = piece as keyof typeof PIECE_VALUES;
+      return (
+        <div key={piece} className="relative flex h-5 items-center">
+          {Array.from({ length: count }, (_, i) =>
+            getPieceIcon(pieceType, i, count)
+          )}
+        </div>
+      );
+    });
 
   return (
-    <div className={cn(className, `flex items-center gap-0.5`)}>
-      <div className="flex items-center gap-0.5">
-        {piecesToShow.map((piece, index) => {
-          const pieceValue = piece as keyof typeof PIECE_VALUES;
-          const Icon = getPieceIcon(pieceValue);
-          return (
-            <div key={`${pieceValue}-${index}`} className="h-5 w-5">
-              {Icon}
-            </div>
-          );
-        })}
-      </div>
+    <div className={cn("flex items-center gap-2", className)}>
+      <div className="flex items-center gap-2">{pieceGroups}</div>
       {showScore && score > 0 && (
         <span className="text-sm font-medium text-white">&nbsp;+{score}</span>
       )}

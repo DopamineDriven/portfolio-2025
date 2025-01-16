@@ -9,11 +9,32 @@ export const PIECE_VALUES = {
 
 export type PieceType = keyof typeof PIECE_VALUES;
 
-export type MaterialCount = {
-  [key: string]: number;
-};
+export type MaterialCount = Record<keyof typeof PIECE_VALUES, number>;
 
 export type CapturedPieces = {
   white: MaterialCount;
   black: MaterialCount;
+};
+
+export const handlePieceIcons = (target: keyof typeof PIECE_VALUES) => {
+  switch (target) {
+    case "b": {
+      return "Bishop";
+    }
+    case "k": {
+      return "King";
+    }
+    case "n": {
+      return "Knight";
+    }
+    case "p": {
+      return "Pawn";
+    }
+    case "q": {
+      return "Queen";
+    }
+    default: {
+      return "Rook";
+    }
+  }
 };
