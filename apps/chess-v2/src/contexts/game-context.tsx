@@ -131,6 +131,7 @@ interface GameState {
   currentMoveIndex: number;
   moveHistory: Move[];
   comments: PgnComment[];
+  isNavigatingHistory: boolean;
 }
 
 interface GameContextType extends GameState {
@@ -163,6 +164,8 @@ interface GameContextType extends GameState {
   chessApiEvaluation: ChessApiMessage | null;
   requestChessApiEvaluation: () => void;
   isConnected: boolean;
+  setIsNavigatingHistory: (isNavigating: boolean) => void;
+  setIsNavigatingHistoryExplicitly: (value: boolean) => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -205,8 +208,11 @@ export function GameProvider({
     },
     currentMoveIndex: -1,
     moveHistory: [],
-    comments: []
+    comments: [],
+    isNavigatingHistory: false
   });
+
+  const [isNavigatingHistory, setIsNavigatingHistory] = useState(false);
 
   const [selectedMode, setSelectedMode] = useState(initialMode);
 
@@ -303,9 +309,21 @@ export function GameProvider({
       }
       lastProcessedMoveRef.current = moveString;
       const newGame = new Chess(game.fen());
-      const moveResult = newGame.move(move);
+      let moveResult: Move;
+      try {
+        moveResult = newGame.move(move);
+      } catch (error) {
+        console.error(
+          "Invalid move:",
+          typeof error === "string" ? error : JSON.stringify(error, null, 2)
+        );
+        return;
+      }
       if (moveResult) {
-        // Determine the type of sound to play
+        console.log(
+          `[[origin:game-context.tsx]]\n[before]: ${moveResult.before} \n [after]: ${moveResult.after}`
+        );
+        // Determine type of sound to play
         if (newGame.isGameOver()) {
           playSoundEffect("game-end");
         } else if (newGame.isCheck()) {
@@ -366,7 +384,8 @@ export function GameProvider({
             materialScore: newMaterialScore,
             moveHistory: newMoveHistory,
             currentMoveIndex: newMoveHistory.length - 1,
-            comments: newComments
+            comments: newComments,
+            isNavigatingHistory: false
           };
         });
       }
@@ -473,7 +492,8 @@ export function GameProvider({
       materialScore: { white: 0, black: 0 },
       currentMoveIndex: -1,
       moveHistory: [],
-      comments: []
+      comments: [],
+      isNavigatingHistory: false
     }));
     engine.newGame();
     playSoundEffect("game-start");
@@ -553,7 +573,12 @@ export function GameProvider({
   const goToMove = useCallback(
     (index: number) => {
       if (index >= -1 && index < state.moveHistory.length) {
+        console.log(
+          `[[game-context.tsx]] Setting isNavigatingHistory: ${index !== state.moveHistory.length - 1}`
+        );
+        setIsNavigatingHistory(index !== state.moveHistory.length - 1);
         const newGame = new Chess();
+
         const newCapturedPieces = {
           white: { b: 0, k: 0, n: 0, p: 0, q: 0, r: 0 },
           black: { b: 0, k: 0, n: 0, p: 0, q: 0, r: 0 }
@@ -583,8 +608,12 @@ export function GameProvider({
             newGame.turn() === toChessJSColor(prevState.playerColor),
           capturedPieces: newCapturedPieces,
           materialScore: newMaterialScore,
-          comments: newComments
+          comments: newComments,
+          isNavigatingHistory: index !== state.moveHistory.length - 1
         }));
+        console.log(
+          `[[game-context.tsx]] After setState, isNavigatingHistory: ${index !== state.moveHistory.length - 1}`
+        );
       }
     },
     [state.moveHistory, setGame, calculateMaterialScore]
@@ -629,6 +658,18 @@ export function GameProvider({
   const getComments = useCallback(() => {
     return game.getComments();
   }, [game]);
+
+  const setIsNavigatingHistoryExplicitly = useCallback((value: boolean) => {
+    console.log(
+      `[[game-context.tsx]] Explicitly setting isNavigatingHistory to ${value}`
+    );
+    setIsNavigatingHistory(value);
+    setState(prevState => ({
+      ...prevState,
+      isNavigatingHistory: value
+    }));
+  }, []);
+
   const value = {
     ...state,
     game,
@@ -659,7 +700,10 @@ export function GameProvider({
     getComments,
     chessApiEvaluation,
     requestChessApiEvaluation,
-    isConnected
+    isConnected,
+    isNavigatingHistory,
+    setIsNavigatingHistory,
+    setIsNavigatingHistoryExplicitly
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
