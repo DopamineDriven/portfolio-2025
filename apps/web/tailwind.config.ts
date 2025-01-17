@@ -81,6 +81,15 @@ export default {
       },
       backdropBlur: {
         sm: "4px"
+      },
+      maxWidth: {
+        "10xl": "173.75rem",
+        "9xl": "121rem",
+        "8xl": "96rem"
+      },
+      width: {
+        "9xl": "120rem",
+        "8xl": "96rem"
       }
     }
   },

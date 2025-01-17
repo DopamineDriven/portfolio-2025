@@ -8,22 +8,25 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import { Chessground } from "chessground";
 import { useGame } from "@/contexts/game-context";
+import PromotionModal from "@/ui/promotion-modal";
 import "./base.css";
 import "./brown.css";
 import "./cburnett.css";
-// import { AnimatePresence, motion } from "motion/react";
-import PromotionModal from "@/ui/promotion-modal";
 
 export type ChessInstance = InstanceType<typeof Chess>;
 
 interface ChessboardProps {
   onSquareRightClickAction: (square: Square) => void;
   customSquareStyles?: Record<string, React.CSSProperties>;
+  customHighlights?: Map<Key, string>;
+  clearHighlightsAction: () => void;
 }
 
 export default function Chessboard({
   onSquareRightClickAction,
-  customSquareStyles
+  customSquareStyles,
+  clearHighlightsAction,
+  customHighlights
 }: ChessboardProps) {
   const {
     game,
@@ -33,9 +36,7 @@ export default function Chessboard({
     makeMove,
     getMoveOptions,
     promotionSquare,
-    handlePromotion,
-    // moveHistory,
-    // currentMoveIndex
+    handlePromotion
   } = useGame();
 
   const [_optionSquares, setOptionSquares] = useState<
@@ -45,10 +46,6 @@ export default function Chessboard({
   const boardRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [promotionModalOpen, setPromotionModalOpen] = useState(false);
-  // const [animatingPiece, setAnimatingPiece] = useState<{
-  //   from: Square;
-  //   to: Square;
-  // } | null>(null);
 
   const handleMove = useCallback(
     (from: Key, to: Key) => {
@@ -65,8 +62,9 @@ export default function Chessboard({
         makeMove({ from: from as Square, to: to as Square });
       }
       setOptionSquares({});
+      clearHighlightsAction();
     },
-    [makeMove, game, handlePromotion]
+    [makeMove, game, handlePromotion, clearHighlightsAction]
   );
 
   const handleSquareClick = useCallback(
@@ -133,7 +131,6 @@ export default function Chessboard({
   }, [updateBoardSize]);
 
   useEffect(() => {
-    console.log("Board orientation:", chessColorHelper(playerColor));
     const config: Config = {
       fen: game.fen(),
       orientation: chessColorHelper(playerColor),
@@ -155,7 +152,8 @@ export default function Chessboard({
       },
       highlight: {
         lastMove: true,
-        check: true
+        check: true,
+        custom: customHighlights ?? new Map<Key, string>()
       },
       premovable: {
         enabled: false
@@ -167,6 +165,9 @@ export default function Chessboard({
         enabled: true
       },
       events: {
+        move: (orig, dest) => {
+          handleMove(orig as Square, dest as Square);
+        },
         select: handleSquareClick as (key: Key) => void
       },
       check: game.isCheck(),
@@ -218,7 +219,8 @@ export default function Chessboard({
     handleSquareClick,
     customSquareStyles,
     onSquareRightClickAction,
-    chessColorHelper
+    chessColorHelper,
+    customHighlights
   ]);
 
   useEffect(() => {
@@ -230,28 +232,28 @@ export default function Chessboard({
           color: isPlayerTurn ? chessColorHelper(playerColor) : "both",
           dests: getLegalMoves(game)
         },
-        check: game.isCheck()
+        check: game.isCheck(),
+        highlight: {
+          lastMove: true,
+          check: true,
+          custom: customHighlights ?? new Map<Key, string>()
+        }
       });
     }
-  }, [game, isPlayerTurn, playerColor, chessColorHelper, getLegalMoves]);
+  }, [
+    game,
+    isPlayerTurn,
+    playerColor,
+    chessColorHelper,
+    getLegalMoves,
+    customHighlights
+  ]);
 
   useEffect(() => {
     if (promotionSquare) {
       setPromotionModalOpen(true);
     }
   }, [promotionSquare]);
-
-  // useEffect(() => {
-  //   if (moveHistory.length > 0 && currentMoveIndex >= 0) {
-  //     const currentMove = moveHistory[currentMoveIndex];
-  //     if (currentMove) {
-  //       setAnimatingPiece({
-  //         from: currentMove.from as Square,
-  //         to: currentMove.to as Square
-  //       });
-  //     }
-  //   }
-  // }, [currentMoveIndex, moveHistory]);
 
   const onPromotion = (piece: "q" | "r" | "b" | "n") => {
     if (promotionSquare) {
@@ -268,29 +270,11 @@ export default function Chessboard({
     <div ref={containerRef} className="flex w-full items-center justify-center">
       <div
         ref={boardRef}
-        className="relative overflow-hidden rounded-lg"
+        className="overflow-hidden rounded-lg"
         style={{
           boxShadow: "rgba(0, 0, 0, 0.5) 0px 4px 12px"
-        }}>
-        {/* <AnimatePresence>
-          {animatingPiece && (
-            <motion.div
-              key={`${animatingPiece.from}-${animatingPiece.to}`}
-              initial={{ x: 0, y: 0 }}
-              animate={{ x: 100, y: 100 }} // Adjust these values based on your board size
-              transition={{ duration: 0.3 }}
-              onAnimationComplete={() => setAnimatingPiece(null)}
-              className="absolute z-10"
-              style={{
-                width: "12.5%",
-                height: "12.5%",
-                backgroundImage: `url(path/to/piece/image)`, // You'll need to set this dynamically
-                backgroundSize: "contain"
-              }}
-            />
-          )}
-        </AnimatePresence> */}
-      </div>
+        }}
+      />
       <PromotionModal
         isOpen={promotionModalOpen}
         onCloseAction={() => setPromotionModalOpen(false)}

@@ -162,6 +162,7 @@ interface GameContextType extends GameState {
   getComments: () => PgnComment[];
   chessApiEvaluation: ChessApiMessage | null;
   requestChessApiEvaluation: () => void;
+  isConnected: boolean;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -223,7 +224,7 @@ export function GameProvider({
     []
   );
 
-  const { sendPosition, lastMessage } = useChessApi();
+  const { sendPosition, lastMessage, isConnected } = useChessApi();
   const [chessApiEvaluation, setChessApiEvaluation] =
     useState<ChessApiMessage | null>(null);
 
@@ -659,7 +660,8 @@ export function GameProvider({
     getComment,
     getComments,
     chessApiEvaluation,
-    requestChessApiEvaluation
+    requestChessApiEvaluation,
+    isConnected
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
