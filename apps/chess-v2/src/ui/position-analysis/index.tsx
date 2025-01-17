@@ -14,17 +14,16 @@ interface PositionAnalysisProps {
 const PositionAnalysis: React.FC<PositionAnalysisProps> = ({ evaluation, isConnected, isLoading, isMobile }) => {
   return (
     <div className={cn(
-      "space-y-2",
-      isMobile && "max-h-[15dvh] sm:max-h-[20dvh] overflow-y-scroll pb-safe"
+      "space-y-1 sm:space-y-2",
+      isMobile && "max-h-[10dvh] sm:max-h-[20dvh] overflow-y-scroll pb-safe"
     )}>
-      <h3 className="text-base font-sans sm:text-lg font-medium">Position Analysis:</h3>
       {isLoading ? (
-        <p>Analyzing position...</p>
+        <p className="text-sm">Analyzing position...</p>
       ) : evaluation ? (
         <>
-          <p>{evaluation.text}</p>
+          <p className="text-pretty">{evaluation.text}</p>
           {!isMobile && evaluation.continuationArr && (
-            <div className="mt-2">
+            <div className="mt-1 sm:mt-2">
               <h4 className="font-semibold">Suggested continuation:</h4>
               <p>{evaluation.continuationArr.join(', ')}</p>
             </div>
