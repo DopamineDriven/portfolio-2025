@@ -523,18 +523,19 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
         </div>
       )}
       {isMobile && showAnalysis && (
-        <div
-          className={cn(
-            "fixed left-0 right-0 z-50 bg-gray-800 p-4 text-white transition-all duration-300 ease-in-out sm:mt-2",
-            isMobile ? "bottom-0" : "bottom-0"
-          )}>
-          <PositionAnalysis
-            evaluation={chessApiEvaluation}
-            isConnected={isConnected}
-            isLoading={isAnalysisLoading}
-          />
-        </div>
-      )}
+          <div
+            className={cn(
+              "fixed left-0 right-0 z-20 bg-gray-800/95 p-2 text-white transition-all duration-300 ease-in-out",
+              "bottom-0 max-h-[15dvh] overflow-y-auto"
+            )}>
+            <PositionAnalysis
+              evaluation={chessApiEvaluation}
+              isConnected={isConnected}
+              isLoading={isAnalysisLoading}
+              isMobile={isMobile}
+            />
+          </div>
+        )}
     </div>
   );
 };
