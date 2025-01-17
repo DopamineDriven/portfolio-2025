@@ -1,4 +1,6 @@
 import type { Move } from "chess.js";
+import type { LucideProps } from "lucide-react";
+import type { ForwardRefExoticComponent, RefAttributes } from "react";
 import React, { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, History, Info } from "lucide-react";
 import { FixedSizeList as List } from "react-window";
@@ -12,7 +14,9 @@ const MOVE_HISTORY_WIDTH = 256; // Width of the move history panel in pixels
 interface Tab {
   id: "moves" | "analysis";
   name: string;
-  icon: React.ElementType;
+  icon: ForwardRefExoticComponent<
+    Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
+  >;
 }
 
 const tabs: Tab[] = [
@@ -36,7 +40,8 @@ const MoveItem: React.FC<MoveItemProps> = ({ index, style, data }) => {
   const moveIndex = index * 2;
   const whiteMove = moveHistory[moveIndex];
   const blackMove = moveHistory[moveIndex + 1];
-
+  const wAfter = whiteMove?.after ?? "";
+  const bAfter = blackMove?.after ?? "";
   return (
     <div style={style} className="flex items-center hover:bg-gray-600">
       <div className="w-10 px-2 py-1 text-gray-400">{index + 1}.</div>
@@ -47,10 +52,8 @@ const MoveItem: React.FC<MoveItemProps> = ({ index, style, data }) => {
         )}
         onClick={() => goToMove(moveIndex)}>
         {whiteMove?.san ?? ""}
-        {comments[whiteMove?.after] && (
-          <span className="ml-1 text-xs text-gray-400">
-            {comments[whiteMove.after]}
-          </span>
+        {comments[wAfter] && (
+          <span className="ml-1 text-xs text-gray-400">{comments[wAfter]}</span>
         )}
       </div>
       <div
@@ -60,10 +63,8 @@ const MoveItem: React.FC<MoveItemProps> = ({ index, style, data }) => {
         )}
         onClick={() => goToMove(moveIndex + 1)}>
         {blackMove?.san ?? ""}
-        {comments[blackMove?.after] && (
-          <span className="ml-1 text-xs text-gray-400">
-            {comments[blackMove.after]}
-          </span>
+        {comments[bAfter] && (
+          <span className="ml-1 text-xs text-gray-400">{comments[bAfter]}</span>
         )}
       </div>
     </div>

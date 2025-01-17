@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, type ForwardRefExoticComponent, type RefAttributes } from "react";
-import { MessageCircle, X, type LucideProps } from "lucide-react";
+import { useState } from "react";
+import { MessageCircle, X } from "lucide-react";
 import { Button } from "@/ui/atoms/button";
 
 
-type IconProps = ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>
 interface ChatWidgetProps {
   messages: { username: string; content: string }[];
   onSendMessageAction: (message: string) => void;

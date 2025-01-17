@@ -1,16 +1,15 @@
 "use client";
 
 import type { Square } from "chess.js";
+import type { Key } from "chessground/types";
 import type { CSSProperties, FC } from "react";
 import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import {
-  ChevronDown as _ChevronDown,
-  ChevronUp as _ChevronUp,
-  Lightbulb as _Lightbulb,
   ChevronLeft,
   ChevronRight,
   History,
+  Lightbulb,
   Redo,
   RotateCcw,
   Undo
@@ -18,6 +17,7 @@ import {
 import type { CountryCodes } from "@/utils/flags";
 import { useGame } from "@/contexts/game-context";
 import { toChessGroundColorHelper } from "@/lib/color-helper";
+import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/ui/atoms/avatar";
 import { Button } from "@/ui/atoms/button";
 import CapturedPieces from "@/ui/captured-pieces";
@@ -63,8 +63,11 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
   } = useGame();
 
   const countryToFile = countryCodeToFileName(country as CountryCodes) || "US";
+
   const [isReviewMode, setIsReviewMode] = useState(false);
+
   const [showGameModal, setShowGameModal] = useState(false);
+
   const [rightClickedSquares, setRightClickedSquares] = useState<{
     [key: string]:
       | {
@@ -72,21 +75,33 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
         }
       | undefined;
   }>({});
+
   const [optionSquares, setOptionSquares] = useState<
     Record<string, React.CSSProperties>
   >({});
+
   const [isMobile, setIsMobile] = useState(false);
+
   const [messages, setMessages] = useState<
     { username: string; content: string }[]
   >([]);
-  const [_currentComment, setCurrentComment] = useState<string | undefined>(
+
+  const [currentComment, setCurrentComment] = useState<string | undefined>(
     undefined
   );
-  const [_showHint, setShowHint] = useState(false);
-  const [_showEvaluation, _setShowEvaluation] = useState(false);
-  const [hintSquares, setHintSquares] = useState<
-    Record<string, React.CSSProperties>
-  >({});
+
+  const [showHint, setShowHint] = useState(false);
+
+  // const [showEvaluation, setShowEvaluation] = useState(false);
+
+  const [hintSquares, setHintSquares] = useState<Map<Key, string>>(
+    new Map<Key, string>()
+  );
+
+  const clearHighlights = useCallback(() => {
+    setHintSquares(new Map<Key, string>());
+    setShowHint(false);
+  }, []);
 
   const handleSendMessage = (message: string) => {
     if (message.trim() !== "") {
@@ -115,9 +130,12 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
 
   useEffect(() => {
     if (!isPlayerTurn && !gameOver) {
-      setTimeout(makeStockfishMove, 300);
+      setTimeout(() => {
+        makeStockfishMove();
+        clearHighlights();
+      }, 300);
     }
-  }, [isPlayerTurn, gameOver, makeStockfishMove]);
+  }, [isPlayerTurn, gameOver, makeStockfishMove, clearHighlights]);
 
   const handleReviewMode = () => {
     setIsReviewMode(true);
@@ -154,7 +172,8 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
 
   useEffect(() => {
     if (isReviewMode) {
-      setCurrentComment(getComment());
+      const comment = getComment();
+      setCurrentComment(comment);
     }
   }, [isReviewMode, currentMoveIndex, getComment]);
 
@@ -162,320 +181,271 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
     goToMove(index);
     setOptionSquares({});
     setRightClickedSquares({});
+    clearHighlights();
     if (isReviewMode) {
       setCurrentComment(getComment());
     }
   };
+
   useEffect(() => {
     if (!gameOver) {
       requestChessApiEvaluation();
     }
   }, [game, gameOver, requestChessApiEvaluation]);
 
-  const _handleShowHint = useCallback(() => {
+  const handleShowHint = useCallback(() => {
     if (chessApiEvaluation?.from && chessApiEvaluation?.to) {
-      setHintSquares({
-        [chessApiEvaluation.from]: {
-          background: "rgba(130, 77, 255, 0.4)",
-          borderRadius: "50%"
-        },
-        [chessApiEvaluation.to]: {
-          background: "rgba(130, 77, 255, 0.4)",
-          borderRadius: "50%"
-        }
-      });
+      const newHintSquares = new Map<Key, string>();
+      newHintSquares.set(chessApiEvaluation.from as Key, "hint-from");
+      newHintSquares.set(chessApiEvaluation.to as Key, "hint-to");
+      setHintSquares(newHintSquares);
       setShowHint(true);
     }
   }, [chessApiEvaluation]);
 
-  const _handleHideHint = useCallback(() => {
-    setHintSquares({});
+  const handleHideHint = useCallback(() => {
+    setHintSquares(new Map<Key, string>());
     setShowHint(false);
   }, []);
+
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-center py-4">
-      <div className="flex w-full flex-col items-center gap-4">
-        {isMobile ? (
-          <div className="mb-1 w-full sm:hidden">
-            <MoveHistoryBar />
-          </div>
-        ) : (
-          <MoveHistory />
-        )}
-        <div className="relative flex w-full flex-row justify-between px-4">
-          <div className="flex flex-row gap-x-2">
-            <Avatar className="h-11 w-11">
-              <AvatarImage
-                src="https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess-v2/public/chess-default-8.png"
-                alt="Player"
-              />
-              <AvatarFallback>P</AvatarFallback>
-            </Avatar>
-            <div className="relative flex max-w-xs flex-col justify-around text-left">
-              <div className="flex w-full flex-row justify-between gap-x-1">
-                <h4 className="text-pretty font-sans text-[1rem] leading-normal tracking-tight">
-                  Stockfish
-                </h4>
-                <Image
-                  alt={`/flags/no.svg`}
-                  width={30}
-                  height={20}
-                  src={`https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess-v2/public/flags/no.svg`}
-                  className="row-span-1 aspect-[3/2] h-4 w-6 object-cover"
+    <div className="max-w-10xl mx-auto w-full sm:px-2 lg:px-4">
+      <div className="flex w-full flex-col lg:flex-row">
+        <div className="mx-auto w-full">
+          {isMobile ? (
+            <div className="w-full sm:hidden">
+              <MoveHistoryBar />
+            </div>
+          ) : (
+            <MoveHistory />
+          )}
+          <div className="my-2 flex w-full flex-row items-center justify-between sm:my-4 sm:px-2">
+            <div className="flex flex-row gap-x-2">
+              <Avatar className="h-9 w-9">
+                <AvatarImage
+                  src="https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess-v2/public/chess-default-8.png"
+                  alt="Player"
                 />
-              </div>
-              <span className="text-pretty pt-1 font-sans text-[1rem] leading-normal tracking-tight">
-                <CapturedPieces
-                  color={
-                    toChessGroundColorHelper(playerColor) === "black"
-                      ? "white"
-                      : "black"
-                  }
-                  capturedPieces={
-                    capturedPieces[
-                      toChessGroundColorHelper(playerColor) === "white"
+                <AvatarFallback>P</AvatarFallback>
+              </Avatar>
+              <div className="relative flex max-w-xs flex-col justify-around text-left lg:max-w-md">
+                <div className="flex w-full flex-row justify-between gap-x-1">
+                  <h4 className="my-0 text-pretty font-sans text-[1rem] leading-normal tracking-tight">
+                    Stockfish ({playerColor === "white" ? "Black" : "White"})
+                  </h4>
+                  <Image
+                    alt={`/flags/no`}
+                    width={30}
+                    height={20}
+                    src={`https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess-v2/public/flags/no.svg`}
+                    className="row-span-1 my-0 aspect-[3/2] h-4 w-6 object-cover"
+                  />
+                </div>
+                <span className="text-pretty font-sans text-[1rem] leading-normal tracking-tight">
+                  <CapturedPieces
+                    color={
+                      toChessGroundColorHelper(playerColor) === "black"
                         ? "white"
                         : "black"
-                    ]
-                  }
-                  score={
-                    toChessGroundColorHelper(playerColor) === "white"
-                      ? materialScore.black - materialScore.white
-                      : materialScore.white - materialScore.black
-                  }
-                  showScore={
-                    toChessGroundColorHelper(playerColor) === "white"
-                      ? materialScore.black > materialScore.white
-                      : materialScore.white > materialScore.black
-                  }
-                />
-              </span>
+                    }
+                    capturedPieces={
+                      capturedPieces[
+                        toChessGroundColorHelper(playerColor) === "white"
+                          ? "white"
+                          : "black"
+                      ]
+                    }
+                    score={
+                      toChessGroundColorHelper(playerColor) === "white"
+                        ? materialScore.black - materialScore.white
+                        : materialScore.white - materialScore.black
+                    }
+                    showScore={
+                      toChessGroundColorHelper(playerColor) === "white"
+                        ? materialScore.black > materialScore.white
+                        : materialScore.white > materialScore.black
+                    }
+                  />
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-        {isPondering && (
-          <div className="absolute -top-2 right-0 inline-flex items-center justify-center">
-            <h3 className="font-sans text-xl font-bold text-gray-100">
-              Thinking...
-            </h3>
-          </div>
-        )}
-        {/* <div className="relative w-full">
-          <Chessboard
-            onSquareRightClickAction={onSquareRightClick}
-            customSquareStyles={
-              {
-                ...optionSquares,
-                ...rightClickedSquares,
-                ...hintSquares
-              } as Record<string, CSSProperties>
-            }
-          />
-          <div className="absolute bottom-4 right-4 flex gap-2">
-            {mode !== "challenge" && (
-              <Button
-                variant="secondary"
-                size="icon"
-                className="bg-gray-800 text-white hover:bg-gray-700"
-                onClick={showHint ? handleHideHint : handleShowHint}
-                aria-label={
-                  showHint ? "Hide move suggestion" : "Show move suggestion"
-                }>
-                <Lightbulb
-                  className={`h-5 w-5 ${showHint ? "text-yellow-400" : "text-gray-400"}`}
-                />
-              </Button>
-            )}
-            <Button
-              variant="secondary"
-              size="icon"
-              className="bg-gray-800 text-white hover:bg-gray-700"
-              onClick={() => setShowEvaluation(!showEvaluation)}
-              aria-label={
-                showEvaluation ? "Hide evaluation" : "Show evaluation"
-              }>
-              {showEvaluation ? (
-                <ChevronDown className="h-5 w-5" />
-              ) : (
-                <ChevronUp className="h-5 w-5" />
+          {isPondering && (
+            <div className="absolute -top-2 right-0 inline-flex items-center justify-center">
+              <h3 className="font-sans text-xl font-bold text-gray-100">
+                Thinking...
+              </h3>
+            </div>
+          )}
+          <div className="relative w-full">
+            <Chessboard
+              onSquareRightClickAction={onSquareRightClick}
+              customSquareStyles={
+                {
+                  ...optionSquares,
+                  ...rightClickedSquares
+                } as Record<string, CSSProperties>
+              }
+              customHighlights={showHint ? hintSquares : new Map()}
+              clearHighlightsAction={clearHighlights}
+            />
+            <div className="absolute -bottom-10 right-4 flex flex-row gap-1 sm:-right-16 sm:bottom-4 sm:flex-col sm:gap-2">
+              {mode !== "challenge" && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={showHint ? handleHideHint : handleShowHint}
+                    aria-label={
+                      showHint ? "Hide move suggestion" : "Show move suggestion"
+                    }>
+                    <Lightbulb
+                      className={cn(
+                        showHint ? "stroke-yellow-500" : "stroke-primary",
+                        `h-5 w-5`
+                      )}
+                    />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={undo}
+                    disabled={!canUndo || gameOver}
+                    aria-label="Undo move">
+                    <Undo className="h-5 w-5 stroke-primary" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={redo}
+                    disabled={!canRedo || gameOver}
+                    aria-label="Redo move">
+                    <Redo className="h-5 w-5 stroke-primary" />
+                  </Button>
+                </>
               )}
-            </Button>
+            </div>
           </div>
-        </div>
 
-        <div
-          className={`overflow-hidden transition-all duration-300 ease-in-out ${
-            showEvaluation ? "h-32" : "h-0"
-          }`}>
-          <div className="rounded-lg bg-gray-800 p-4 text-white">
-            <h3 className="mb-2 text-lg font-semibold">Position Evaluation:</h3>
-            {chessApiEvaluation ? (
-              <>
-                <p>{chessApiEvaluation.text}</p>
-                {chessApiEvaluation.continuationArr && (
-                  <div className="mt-2">
-                    <h4 className="font-semibold">Suggested continuation:</h4>
-                    <p>{chessApiEvaluation.continuationArr.join(", ")}</p>
-                  </div>
-                )}
-              </>
-            ) : (
-              <p>Waiting for evaluation...</p>
-            )}
-          </div>
-        </div> */}
-        <Chessboard
-          onSquareRightClickAction={onSquareRightClick}
-          customSquareStyles={
-            {
-              ...optionSquares,
-              ...rightClickedSquares,
-              ...hintSquares
-            } as Record<string, CSSProperties>
-          }
-        />
-        <div className="relative flex w-full flex-row justify-between px-4">
-          <div className="flex flex-row gap-x-2">
-            <Avatar className="h-11 w-11">
-              <AvatarImage
-                src="https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess-v2/public/chess-default-4.png"
-                alt="Player"
-              />
-              <AvatarFallback>P</AvatarFallback>
-            </Avatar>
-            <div className="relative flex max-w-xs flex-col justify-around text-left">
-              <div className="flex w-full flex-row justify-between gap-x-1">
-                <h4 className="text-pretty font-sans text-[1rem] leading-normal tracking-tight">
-                  {"Username"}
-                </h4>
-                <Image
-                  alt={`/flags/${countryToFile}.svg`}
-                  width={30}
-                  height={20}
-                  src={`https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess-v2/public/flags/${countryToFile}.svg`}
-                  className="row-span-1 aspect-[3/2] h-4 w-6 object-cover"
+          <div className="mt-2 flex w-full flex-row items-center justify-between sm:mt-4 sm:px-2">
+            <div className="flex flex-row gap-x-2">
+              <Avatar className="h-9 w-9">
+                <AvatarImage
+                  src="https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess-v2/public/chess-default-4.png"
+                  alt="Player"
                 />
-              </div>
-              <span className="text-pretty pt-1 font-sans text-[1rem] leading-normal tracking-tight">
-                <CapturedPieces
-                  color={
-                    toChessGroundColorHelper(playerColor) === "black"
-                      ? "black"
-                      : "white"
-                  }
-                  capturedPieces={
-                    capturedPieces[
-                      toChessGroundColorHelper(playerColor) === "white"
+                <AvatarFallback>P</AvatarFallback>
+              </Avatar>
+              <div className="relative flex max-w-xs flex-col justify-around text-left">
+                <div className="flex w-full flex-row justify-between gap-x-1">
+                  <h4 className="my-0 text-pretty font-sans text-[1rem] leading-normal tracking-tight">
+                    Username
+                  </h4>
+                  <Image
+                    alt={`/flags/${countryToFile}`}
+                    width={30}
+                    height={20}
+                    src={`https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess-v2/public/flags/${countryToFile}.svg`}
+                    className="row-span-1 my-0 aspect-[3/2] h-4 w-6 object-cover"
+                  />
+                </div>
+                <span className="text-pretty font-sans text-[1rem] leading-normal tracking-tight">
+                  <CapturedPieces
+                    color={
+                      toChessGroundColorHelper(playerColor) === "black"
                         ? "black"
                         : "white"
-                    ]
-                  }
-                  score={
-                    toChessGroundColorHelper(playerColor) === "white"
-                      ? materialScore.white - materialScore.black
-                      : materialScore.black - materialScore.white
-                  }
-                  showScore={
-                    toChessGroundColorHelper(playerColor) === "white"
-                      ? materialScore.white > materialScore.black
-                      : materialScore.black > materialScore.white
-                  }
-                />
-              </span>
+                    }
+                    capturedPieces={
+                      capturedPieces[
+                        toChessGroundColorHelper(playerColor) === "white"
+                          ? "black"
+                          : "white"
+                      ]
+                    }
+                    score={
+                      toChessGroundColorHelper(playerColor) === "white"
+                        ? materialScore.white - materialScore.black
+                        : materialScore.black - materialScore.white
+                    }
+                    showScore={
+                      toChessGroundColorHelper(playerColor) === "white"
+                        ? materialScore.white > materialScore.black
+                        : materialScore.black > materialScore.white
+                    }
+                  />
+                </span>
+              </div>
             </div>
-          </div>
-          <div className="flex w-full flex-row justify-end space-x-2 text-right">
-            {mode === "challenge" ? (
-              <>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={goBackward}
-                  disabled={!canGoBackward}>
-                  <ChevronLeft className="h-6 w-6 stroke-primary" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className=""
-                  onClick={goForward}
-                  disabled={!canGoForward}>
-                  <ChevronRight className="h-6 w-6 stroke-primary" />
-                </Button>
-                <Button
-                  className="hidden sm:block"
-                  disabled={
-                    gameOver && currentMoveIndex === moveHistory.length - 1
-                  }
-                  variant="default"
-                  onClick={() => handleMoveNavigation(moveHistory.length - 1)}>
-                  Current Position
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={undo}
-                  disabled={!canUndo || gameOver}
-                  aria-label="Undo move">
-                  <Undo className="h-6 w-6 stroke-primary" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={goBackward}
-                  disabled={!canGoBackward}>
-                  <ChevronLeft className="h-6 w-6 stroke-primary" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className=""
-                  onClick={goForward}
-                  disabled={!canGoForward}>
-                  <ChevronRight className="h-6 w-6 stroke-primary" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={redo}
-                  disabled={!canRedo || gameOver}
-                  aria-label="Redo move">
-                  <Redo className="h-6 w-6 stroke-primary" />
-                </Button>
-                <Button
-                  className="hidden sm:block"
-                  disabled={
-                    gameOver && currentMoveIndex === moveHistory.length - 1
-                  }
-                  variant="default"
-                  onClick={() => handleMoveNavigation(moveHistory.length - 1)}>
-                  Current Position
-                </Button>
-              </>
-            )}
+            <div className="mt-4 flex w-full flex-row justify-end space-x-2 text-right">
+              {mode === "challenge" ? (
+                <>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={goBackward}
+                    disabled={!canGoBackward}>
+                    <ChevronLeft className="h-6 w-6 stroke-primary" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className=""
+                    onClick={goForward}
+                    disabled={!canGoForward}>
+                    <ChevronRight className="h-6 w-6 stroke-primary" />
+                  </Button>
+                  <Button
+                    className="hidden sm:block"
+                    disabled={
+                      gameOver && currentMoveIndex === moveHistory.length - 1
+                    }
+                    variant="default"
+                    onClick={() =>
+                      handleMoveNavigation(moveHistory.length - 1)
+                    }>
+                    Current Position
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={goBackward}
+                    disabled={!canGoBackward}>
+                    <ChevronLeft className="h-6 w-6 stroke-primary" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className=""
+                    onClick={goForward}
+                    disabled={!canGoForward}>
+                    <ChevronRight className="h-6 w-6 stroke-primary" />
+                  </Button>
+                  <Button
+                    className="hidden sm:block"
+                    disabled={
+                      gameOver && currentMoveIndex === moveHistory.length - 1
+                    }
+                    variant="default"
+                    onClick={() =>
+                      handleMoveNavigation(moveHistory.length - 1)
+                    }>
+                    Current Position
+                  </Button>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
-      <div className="mt-4 h-32 overflow-y-auto rounded-lg bg-gray-800 p-4 text-white">
-        <h3 className="mb-2 text-lg font-semibold">Position Evaluation:</h3>
-        {chessApiEvaluation ? (
-          <>
-            <p>{chessApiEvaluation.text}</p>
-            {chessApiEvaluation.continuationArr && (
-              <div className="mt-2">
-                <h4 className="font-semibold">Suggested continuation:</h4>
-                <p>{chessApiEvaluation.continuationArr.join(", ")}</p>
-              </div>
-            )}
-          </>
-        ) : (
-          <p>Waiting for evaluation...</p>
-        )}
-      </div>
-      <div className="fixed bottom-1.5 right-4 z-50 hidden sm:block">
+      <div className="fixed bottom-1.5 right-12 z-50 hidden sm:flex sm:flex-row sm:gap-2">
+        <ChatWidget
+          messages={messages}
+          onSendMessageAction={handleSendMessage}
+        />
         <Button
           variant="default"
           size="icon"
@@ -484,10 +454,9 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
             resetGame();
             onRestart();
           }}>
-          <RotateCcw className="h-6 w-6 stroke-primary" />
+          <RotateCcw className="h-6 w-6" />
         </Button>
       </div>
-      <ChatWidget messages={messages} onSendMessageAction={handleSendMessage} />
       {showGameModal && (
         <div className="motion-preset-confetti fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 motion-duration-[5000ms]">
           <div className="rounded-lg bg-white p-6">
@@ -498,20 +467,17 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
               <Button
                 variant="default"
                 onClick={handleNewGame}
-                className="w-full text-black">
+                className="w-full">
                 New Game
               </Button>
               <Button
                 variant="outline"
                 onClick={handleReviewMode}
-                className="w-full stroke-black text-black">
+                className="w-full">
                 <History className="mr-2 h-4 w-4" />
                 Review Game
               </Button>
-              <Button
-                variant="outline"
-                onClick={onRestart}
-                className="w-full text-black">
+              <Button variant="outline" onClick={onRestart} className="w-full">
                 Change Settings
               </Button>
             </div>
@@ -519,10 +485,20 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
         </div>
       )}
       {isReviewMode && gameOver && (
-        <div className="fixed bottom-4 right-1/2 z-50 rounded-lg bg-white p-4 shadow-lg">
+        <div className="fixed bottom-4 right-4 z-50 rounded-lg bg-white p-4 shadow-lg">
           <Button variant="default" onClick={handleNewGame}>
             Start New Game
           </Button>
+        </div>
+      )}
+      {isReviewMode && (
+        <div className="mt-4 rounded-lg bg-gray-800 p-4 text-white">
+          <h3 className="mb-2 text-lg font-semibold">Position Comment:</h3>
+          {currentComment ? (
+            <p>{currentComment}</p>
+          ) : (
+            <p>No comment for this position.</p>
+          )}
         </div>
       )}
     </div>

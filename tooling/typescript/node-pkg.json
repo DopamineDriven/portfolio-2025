@@ -9,7 +9,6 @@
     "incremental": true,
     "sourceMap": true,
     "useDefineForClassFields": true,
-    "disableSourceOfProjectReferenceRedirect": false,
     "allowSyntheticDefaultImports": true,
     "allowImportingTsExtensions": true,
     "declaration": true,

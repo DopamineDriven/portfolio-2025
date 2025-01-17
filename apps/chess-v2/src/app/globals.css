@@ -51,6 +51,7 @@
 
 @layer utilities {
   .scrollbar-hide {
+    @apply inset-y-0 -translate-y-1 text-base;
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
@@ -62,6 +63,45 @@
 /* Chess specific styles */
 .cg-wrap {
   background-color: #b58863;
+}
+
+/* Hint highlight styles */
+.cg-wrap square.hint-from {
+  background-color: rgba(130, 77, 255, 0.4) !important;
+}
+
+.cg-wrap square.hint-to {
+  background-color: rgba(130, 77, 255, 0.4) !important;
+}
+
+/* Coordinate styles */
+.cg-wrap coords {
+  position: absolute;
+  display: flex;
+  pointer-events: none;
+  opacity: 0.8;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.625rem !important;
+  font-weight: 600 !important;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.cg-wrap coords.ranks {
+  right: 0.0625% !important;
+  top: -4% !important;
+  flex-flow: column-reverse;
+  height: 100%;
+  width: 0.75rem;
+}
+
+.cg-wrap coords.files {
+  bottom: -0.25% !important;
+  left: 5% !important;
+  flex-flow: row;
+  width: calc(100% - 1.5rem);
+  height: 1rem !important;
+  text-transform: uppercase !important;
+  text-align: center;
 }
 
 /* Remove the standalone rgb variables since they're not part of the design system */

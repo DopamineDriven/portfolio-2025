@@ -13,8 +13,7 @@ export default function Home({ country = "US" }: { country?: string }) {
   const [showDifficultySelection, setShowDifficultySelection] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
-  const [difficulty, setDifficulty] =
-    useState<StockfishDifficulty>("beginner");
+  const [difficulty, setDifficulty] = useState<StockfishDifficulty>("beginner");
   const [playerColor, setPlayerColor] = useState<ChessColor>("white");
   const [mode, setMode] = useState<StockfishMode>("friendly");
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -63,7 +62,7 @@ export default function Home({ country = "US" }: { country?: string }) {
       initialMode={mode}>
       <div
         className={
-          "flex min-h-screen flex-col gap-4 bg-gray-800 px-0 py-2 text-white sm:items-center sm:justify-center"
+          "flex min-h-screen flex-col gap-4 bg-gray-800 px-0 text-white sm:flex-row sm:gap-8 sm:px-6"
         }>
         <div className="flex w-full flex-col items-center justify-center gap-2 sm:w-auto">
           {gameStarted ? (

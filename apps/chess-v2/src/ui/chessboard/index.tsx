@@ -12,6 +12,7 @@ import PromotionModal from "@/ui/promotion-modal";
 import "./base.css";
 import "./brown.css";
 import "./cburnett.css";
+import { cn } from "@/lib/utils";
 
 export type ChessInstance = InstanceType<typeof Chess>;
 
@@ -93,42 +94,42 @@ export default function Chessboard({
     []
   );
 
-  const updateBoardSize = useCallback(() => {
-    if (boardRef.current && containerRef.current) {
-      const vw = Math.max(
-        document.documentElement.clientWidth || 0,
-        window.innerWidth || 0
-      );
-      const vh = Math.max(
-        document.documentElement.clientHeight || 0,
-        window.innerHeight || 0
-      );
+  // const updateBoardSize = useCallback(() => {
+  //   if (boardRef.current && containerRef.current) {
+  //     const vw = Math.max(
+  //       document.documentElement.clientWidth || 0,
+  //       window.innerWidth || 0
+  //     );
+  //     const vh = Math.max(
+  //       document.documentElement.clientHeight || 0,
+  //       window.innerHeight || 0
+  //     );
 
-      if (vw >= 640) {
-        // sm breakpoint
-        // Calculate available height considering the avatar sections (11rem total) and padding
-        const availableHeight = vh - 11 * 16 - 32; // 11rem converted to px and 2rem padding
-        // Calculate available width considering the side panel
-        const availableWidth = vw * 0.8; // 80% of viewport width
+  //     if (vw >= 640) {
+  //       // sm breakpoint
+  //       // Calculate available height considering the avatar sections (11rem total) and padding
+  //       const availableHeight = vh - 11 * 16 - 32; // 11rem converted to px and 2rem padding
+  //       // Calculate available width considering the side panel
+  //       const availableWidth = vw * 0.8; // 80% of viewport width
 
-        // Use the smaller of the two dimensions to ensure square aspect ratio
-        const size = Math.min(availableHeight, availableWidth);
+  //       // Use the smaller of the two dimensions to ensure square aspect ratio
+  //       const size = Math.min(availableHeight, availableWidth);
 
-        boardRef.current.style.width = `${size}px`;
-        boardRef.current.style.height = `${size}px`;
-      } else {
-        // Mobile layout - full width
-        boardRef.current.style.width = `${vw}px`;
-        boardRef.current.style.height = `${vw}px`;
-      }
-    }
-  }, []);
+  //       boardRef.current.style.width = `${size}px`;
+  //       boardRef.current.style.height = `${size}px`;
+  //     } else {
+  //       // Mobile layout - full width
+  //       boardRef.current.style.width = `${vw}px`;
+  //       boardRef.current.style.height = `${vw}px`;
+  //     }
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    updateBoardSize();
-    window.addEventListener("resize", updateBoardSize);
-    return () => window.removeEventListener("resize", updateBoardSize);
-  }, [updateBoardSize]);
+  // useEffect(() => {
+  //   updateBoardSize();
+  //   window.addEventListener("resize", updateBoardSize);
+  //   return () => window.removeEventListener("resize", updateBoardSize);
+  // }, [updateBoardSize]);
 
   useEffect(() => {
     const config: Config = {
@@ -267,10 +268,21 @@ export default function Chessboard({
   };
 
   return (
-    <div ref={containerRef} className="flex w-full items-center justify-center">
+    <div
+      ref={containerRef}
+      className={cn(
+        "flex w-full items-center justify-center",
+        "max-h-[82.5dvh] sm:min-h-[400px]",
+        "grow"
+      )}>
       <div
         ref={boardRef}
-        className="overflow-hidden rounded-lg"
+        className={cn(
+          "!size-[min(82.5dvh,95vw)]",
+          "!aspect-square",
+          "overflow-hidden rounded-lg",
+          "object-cover"
+        )}
         style={{
           boxShadow: "rgba(0, 0, 0, 0.5) 0px 4px 12px"
         }}
