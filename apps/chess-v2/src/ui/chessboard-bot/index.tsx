@@ -188,14 +188,13 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
     if (isReviewMode) {
       setCurrentComment(getComment());
     }
-    setIsAnalysisLoading(true);
+
     requestChessApiEvaluation();
     setIsNavigatingHistoryExplicitly(index !== moveHistory.length - 1);
   };
 
   useEffect(() => {
     if (!gameOver) {
-      setIsAnalysisLoading(true);
       requestChessApiEvaluation();
     }
   }, [game, gameOver, requestChessApiEvaluation]);
