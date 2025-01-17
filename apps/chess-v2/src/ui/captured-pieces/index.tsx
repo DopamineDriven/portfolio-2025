@@ -73,12 +73,13 @@ export default function CapturedPieces({
     })
     .map(([piece, count]) => {
       const pieceType = piece as keyof typeof PIECE_VALUES;
-      const maxWidth = pieceType === "p" ? 118 : count * 4 + 20; // 104px for pawns, dynamic for others
+      // const maxWidth = pieceType === "p" ? 118 : count * 4 + 20; // 104px for pawns, dynamic for others
       return (
         <div
           key={piece}
-          className={cn("relative flex h-5 grow items-center")}
-          style={{ width: `${maxWidth}px` }}>
+          className={cn("relative flex w-auto h-5 grow items-center")}
+          // style={{ width: `${maxWidth}px` }}>
+          >
           {Array.from({ length: count }, (_, i) =>
             getPieceIcon(pieceType, i, count)
           )}
@@ -87,8 +88,8 @@ export default function CapturedPieces({
     });
 
   return (
-    <div className={cn("flex flex-wrap items-center gap-2", className)}>
-      <div className="flex flex-wrap items-center gap-2">{pieceGroups}</div>
+    <div className={cn("flex flex-nowrap items-center gap-1", className)}>
+      <div className="flex flex-nowrap items-center gap-1">{pieceGroups}</div>
       {showScore && score > 0 && (
         <span className="text-sm font-medium text-white">&nbsp;+{score}</span>
       )}
