@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface ChessApiMessage {
   /**
@@ -86,11 +86,107 @@ export interface ChessApiMessage {
 }
 
 export function useChessApi() {
-  const [ws, setWs] = useState<WebSocket | null>(null);
+  //const [ws, setWs] = useState<WebSocket | null>(null); // removed in favor of ref
   const [lastMessage, setLastMessage] = useState<ChessApiMessage | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const messageQueue = useRef<string[]>([]);
+  const reconnectAttempts = useRef(0);
+  const maxReconnectAttempts = 5;
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const wsRef = useRef<WebSocket | null>(null);
+
+  const connect = useCallback(() => {
+    try {
+      if (wsRef.current?.readyState === WebSocket.OPEN) {
+        return; // Already connected
+      }
+
+      const socket = new WebSocket("wss://chess-api.com/v1");
+      wsRef.current = socket; //Replaced setWs(socket) as per update 2
+
+      socket.onopen = () => {
+        setIsConnected(true);
+        reconnectAttempts.current = 0;
+        //setWs(socket); //Removed as per update 2
+
+        // Process any queued messages
+        while (messageQueue.current.length > 0) {
+          const message = messageQueue.current.shift();
+          if (message && socket.readyState === WebSocket.OPEN) {
+            socket.send(message);
+          }
+        }
+      };
+
+      socket.onmessage = (event: MessageEvent<string>) => {
+        const message = JSON.parse(event.data) as ChessApiMessage;
+        if (message.type === "bestmove" && message.san) {
+          const move = parseSanMove(message.san);
+          if (move) {
+            message.from = move.from;
+            message.to = move.to;
+          }
+        }
+        setLastMessage(message);
+      };
+
+      socket.onerror = error => {
+        console.error("WebSocket error:", error);
+        setIsConnected(false);
+      };
+
+      socket.onclose = () => {
+        setIsConnected(false);
+        wsRef.current = null;
+
+        // Attempt to reconnect if we haven't exceeded max attempts
+        if (reconnectAttempts.current < maxReconnectAttempts) {
+          reconnectAttempts.current += 1;
+          const delay = 1000 * Math.pow(2, reconnectAttempts.current);
+          reconnectTimeoutRef.current = setTimeout(connect, delay);
+        }
+      };
+    } catch (error) {
+      console.error("Failed to create WebSocket:", error);
+      setIsConnected(false);
+      wsRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    connect();
+
+    return () => {
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
+      }
+      if (wsRef.current) {
+        wsRef.current.close();
+        wsRef.current = null;
+      }
+    };
+  }, [connect]);
+
+  const sendPosition = useCallback(
+    (fen: string, variants = 1, depth = 12) => {
+      const message = JSON.stringify({ fen, variants, depth });
+
+      if (wsRef.current?.readyState === WebSocket.OPEN) {
+        wsRef.current.send(message);
+      } else {
+        // Queue the message if not connected
+        messageQueue.current.push(message);
+        // If we're not already trying to connect, attempt to connect
+        if (!wsRef.current) {
+          connect();
+        }
+      }
+    },
+    [connect]
+  );
+
   // Helper function to parse SAN notation into from/to squares
   const parseSanMove = (san: string) => {
-    // This is a simplified parser - you might need a more robust one
     const moveRegex = /([NBRQK])?([a-h][1-8])([x-])?([a-h][1-8])/;
     const match = san.match(moveRegex);
     if (match) {
@@ -102,51 +198,105 @@ export function useChessApi() {
     return null;
   };
 
-  useEffect(() => {
-    const socket = new WebSocket("wss://chess-api.com/v1");
-
-    socket.onopen = () => {
-      console.log("WebSocket connection established");
-    };
-
-    socket.onmessage = (event: MessageEvent<string>) => {
-      const message = JSON.parse(event.data) as ChessApiMessage;
-      if (message.type === "bestmove" && message.san) {
-        const move = parseSanMove(message.san);
-        if (move) {
-          message.from = move.from;
-          message.to = move.to;
-        }
-      }
-      setLastMessage(message);
-      console.log("Received message:", message);
-    };
-
-    socket.onerror = error => {
-      console.error("WebSocket error:", error);
-    };
-
-    socket.onclose = () => {
-      console.log("WebSocket connection closed");
-    };
-
-    setWs(socket);
-
-    return () => {
-      socket.close();
-    };
-  }, []);
-
-  const sendPosition = useCallback(
-    (fen: string, variants = 1, depth = 12) => {
-      if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ fen, variants, depth }));
-      } else {
-        console.error("WebSocket is not connected");
-      }
-    },
-    [ws]
-  );
-
-  return { sendPosition, lastMessage };
+  return { sendPosition, lastMessage, isConnected }; //Removed ws as per update 3
 }
+
+
+// export function useChessApi() {
+//   const [ws, setWs] = useState<WebSocket | null>(null);
+//   const [lastMessage, setLastMessage] = useState<ChessApiMessage | null>(null);
+//   const [isConnected, setIsConnected] = useState(false);
+//   const messageQueue = useRef<string[]>([]);
+//   const reconnectAttempts = useRef(0);
+//   const maxReconnectAttempts = 5;
+
+//   const connect = useCallback(() => {
+//     try {
+//       const socket = new WebSocket('wss://chess-api.com/v1');
+
+//       socket.onopen = () => {
+//         console.log('WebSocket connection established');
+//         setIsConnected(true);
+//         reconnectAttempts.current = 0;
+
+//         // Process any queued messages
+//         while (messageQueue.current.length > 0) {
+//           const message = messageQueue.current.shift();
+//           if (message) socket.send(message);
+//         }
+//       };
+
+//       socket.onmessage = (event: MessageEvent<string>) => {
+//         const message = JSON.parse(event.data) as ChessApiMessage;
+//         if (message.type === 'bestmove' && message.san) {
+//           const move = parseSanMove(message.san);
+//           if (move) {
+//             message.from = move.from;
+//             message.to = move.to;
+//           }
+//         }
+//         setLastMessage(message);
+//       };
+
+//       socket.onerror = (error) => {
+//         console.error('WebSocket error:', error);
+//         setIsConnected(false);
+//       };
+
+//       socket.onclose = () => {
+//         console.log('WebSocket connection closed');
+//         setIsConnected(false);
+
+//         // Attempt to reconnect if we haven't exceeded max attempts
+//         if (reconnectAttempts.current < maxReconnectAttempts) {
+//           reconnectAttempts.current += 1;
+//           setTimeout(connect, 1000 * Math.pow(2, reconnectAttempts.current)); // Exponential backoff
+//         }
+//       };
+
+//       setWs(socket);
+//     } catch (error) {
+//       console.error('Failed to create WebSocket:', error);
+//       setIsConnected(false);
+//     }
+//   }, []);
+
+//   useEffect(() => {
+//     connect();
+//     return () => {
+//       if (ws) {
+//         ws.close();
+//       }
+//     };
+//   }, [connect, ws]);
+
+//   const sendPosition = useCallback((fen: string, variants = 1, depth = 12) => {
+//     const message = JSON.stringify({ fen, variants, depth });
+
+//     if (ws && isConnected) {
+//       ws.send(message);
+//     } else {
+//       // Queue the message if not connected
+//       messageQueue.current.push(message);
+//       // If we're not already trying to connect, attempt to connect
+//       if (!ws) {
+//         connect();
+//       }
+//     }
+//   }, [ws, isConnected, connect]);
+
+//   // Helper function to parse SAN notation into from/to squares
+//   const parseSanMove = (san: string) => {
+//     const moveRegex = /([NBRQK])?([a-h][1-8])([x-])?([a-h][1-8])/;
+//     const match = san.match(moveRegex);
+//     if (match) {
+//       return {
+//         from: match[2],
+//         to: match[4],
+//       };
+//     }
+//     return null;
+//   };
+
+//   return { sendPosition, lastMessage, isConnected };
+// }

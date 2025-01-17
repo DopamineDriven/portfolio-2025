@@ -9,7 +9,6 @@
     "incremental": true,
     "sourceMap": true,
     "useDefineForClassFields": true,
-    "disableSourceOfProjectReferenceRedirect": false,
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "declarationMap": true,

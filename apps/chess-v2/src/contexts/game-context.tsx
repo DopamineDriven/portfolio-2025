@@ -162,6 +162,7 @@ interface GameContextType extends GameState {
   getComments: () => PgnComment[];
   chessApiEvaluation: ChessApiMessage | null;
   requestChessApiEvaluation: () => void;
+  isConnected: boolean;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -223,7 +224,7 @@ export function GameProvider({
     []
   );
 
-  const { sendPosition, lastMessage } = useChessApi();
+  const { sendPosition, lastMessage, isConnected } = useChessApi();
   const [chessApiEvaluation, setChessApiEvaluation] =
     useState<ChessApiMessage | null>(null);
 
@@ -341,8 +342,6 @@ export function GameProvider({
             newMaterialScore.white = calculatedScore.white;
             newMaterialScore.black = calculatedScore.black;
           }
-          // Get the current move number
-          // const _moveNumber = Math.floor(prevState.moveCounter / 2) + 1;
 
           // Create a new moves array without duplicates
           const existingMoves = [...prevState.moves];
@@ -555,10 +554,10 @@ export function GameProvider({
     (index: number) => {
       if (index >= -1 && index < state.moveHistory.length) {
         const newGame = new Chess();
-        const newCapturedPieces: CapturedPieces = {
+        const newCapturedPieces = {
           white: { b: 0, k: 0, n: 0, p: 0, q: 0, r: 0 },
           black: { b: 0, k: 0, n: 0, p: 0, q: 0, r: 0 }
-        };
+        } satisfies CapturedPieces;
         for (let i = 0; i <= index; i++) {
           const move = state.moveHistory[i];
           if (move) {
@@ -659,7 +658,8 @@ export function GameProvider({
     getComment,
     getComments,
     chessApiEvaluation,
-    requestChessApiEvaluation
+    requestChessApiEvaluation,
+    isConnected
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
