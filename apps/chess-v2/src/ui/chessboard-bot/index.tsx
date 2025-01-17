@@ -6,7 +6,7 @@ import type { CSSProperties, FC } from "react";
 import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import {
-  ChevronLeft,BrainCog,
+  ChevronLeft,
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
