@@ -6,13 +6,15 @@ import type { CSSProperties, FC } from "react";
 import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import {
-  ChevronLeft,
+  ChevronLeft,BrainCog,
   ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
   History,
+  Info,
   Lightbulb,
-  Redo,
   RotateCcw,
-  Undo
+  Brain
 } from "lucide-react";
 import type { CountryCodes } from "@/utils/flags";
 import { useGame } from "@/contexts/game-context";
@@ -26,6 +28,7 @@ import Chessboard from "@/ui/chessboard";
 import MoveHistory from "@/ui/move-history";
 import MoveHistoryBar from "@/ui/move-history-bar";
 import { countryCodeToFileName } from "@/utils/flags";
+import PositionAnalysis from "../position-analysis";
 
 interface ChessboardBotProps {
   onRestart: () => void;
@@ -43,23 +46,20 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
     getMoveOptions,
     capturedPieces,
     materialScore,
-    mode,
     playerColor,
     moveHistory,
     currentMoveIndex,
     goToMove,
     canGoForward,
+    isConnected,
     canGoBackward,
     goForward,
     game,
     goBackward,
-    undo,
-    redo,
-    canUndo,
-    canRedo,
     getComment,
     chessApiEvaluation,
-    requestChessApiEvaluation
+    requestChessApiEvaluation,
+    setIsNavigatingHistoryExplicitly
   } = useGame();
 
   const countryToFile = countryCodeToFileName(country as CountryCodes) || "US";
@@ -91,8 +91,11 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
   );
 
   const [showHint, setShowHint] = useState(false);
+  const [showAnalysis, setShowAnalysis] = useState(true); // Update: showAnalysis is true by default
 
-  // const [showEvaluation, setShowEvaluation] = useState(false);
+  // const [autoSuggest, setAutoSuggest] = useState(false);
+
+  const [isAnalysisLoading, setIsAnalysisLoading] = useState(false);
 
   const [hintSquares, setHintSquares] = useState<Map<Key, string>>(
     new Map<Key, string>()
@@ -185,10 +188,14 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
     if (isReviewMode) {
       setCurrentComment(getComment());
     }
+    setIsAnalysisLoading(true);
+    requestChessApiEvaluation();
+    setIsNavigatingHistoryExplicitly(index !== moveHistory.length - 1);
   };
 
   useEffect(() => {
     if (!gameOver) {
+      setIsAnalysisLoading(true);
       requestChessApiEvaluation();
     }
   }, [game, gameOver, requestChessApiEvaluation]);
@@ -203,10 +210,38 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
     }
   }, [chessApiEvaluation]);
 
+  useEffect(() => {
+    if (chessApiEvaluation) {
+      setIsAnalysisLoading(false);
+    }
+  }, [chessApiEvaluation]);
+
   const handleHideHint = useCallback(() => {
     setHintSquares(new Map<Key, string>());
     setShowHint(false);
   }, []);
+
+  const handleReturnToStart = () => {
+    handleMoveNavigation(-1);
+    setIsNavigatingHistoryExplicitly(true);
+  };
+
+  const handleReturnToCurrent = () => {
+    handleMoveNavigation(moveHistory.length - 1);
+    setIsNavigatingHistoryExplicitly(false);
+  };
+
+  const handleGoForward = () => {
+    goForward();
+    setIsNavigatingHistoryExplicitly(
+      currentMoveIndex + 1 !== moveHistory.length - 1
+    );
+  };
+
+  const handleGoBackward = () => {
+    goBackward();
+    setIsNavigatingHistoryExplicitly(true);
+  };
 
   return (
     <div className="max-w-10xl mx-auto w-full sm:px-2 lg:px-4">
@@ -219,7 +254,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
           ) : (
             <MoveHistory />
           )}
-          <div className="my-2 flex w-full flex-row items-center justify-between sm:my-4 sm:px-2">
+          <div className="my-2 flex w-full flex-row items-center justify-between px-2 sm:my-4">
             <div className="flex flex-row gap-x-2">
               <Avatar className="h-9 w-9">
                 <AvatarImage
@@ -270,10 +305,10 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
               </div>
             </div>
           </div>
-          {isPondering && (
-            <div className="absolute -top-2 right-0 inline-flex items-center justify-center">
+          {!isMobile && isPondering && (
+            <div className="absolute left-12 top-4 inline-flex items-center justify-center ">
               <h3 className="font-sans text-xl font-bold text-gray-100">
-                Thinking...
+                <Brain className="stroke-gray-100 motion-preset-spin motion-loop-infinite" />
               </h3>
             </div>
           )}
@@ -289,45 +324,41 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
               customHighlights={showHint ? hintSquares : new Map()}
               clearHighlightsAction={clearHighlights}
             />
-            <div className="absolute -bottom-10 right-4 flex flex-row gap-1 sm:-right-16 sm:bottom-4 sm:flex-col sm:gap-2">
-              {mode !== "challenge" && (
-                <>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={showHint ? handleHideHint : handleShowHint}
-                    aria-label={
-                      showHint ? "Hide move suggestion" : "Show move suggestion"
-                    }>
-                    <Lightbulb
-                      className={cn(
-                        showHint ? "stroke-yellow-500" : "stroke-primary",
-                        `h-5 w-5`
-                      )}
-                    />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={undo}
-                    disabled={!canUndo || gameOver}
-                    aria-label="Undo move">
-                    <Undo className="h-5 w-5 stroke-primary" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={redo}
-                    disabled={!canRedo || gameOver}
-                    aria-label="Redo move">
-                    <Redo className="h-5 w-5 stroke-primary" />
-                  </Button>
-                </>
-              )}
+            <div className="absolute -bottom-[6.5rem] right-14 flex flex-row gap-2 sm:hidden">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={showHint ? handleHideHint : handleShowHint}
+                aria-label={
+                  showHint ? "Hide move suggestion" : "Show move suggestion"
+                }>
+                <Lightbulb
+                  className={cn(
+                    showHint ? "stroke-purple-700" : "stroke-primary",
+                    `h-6 w-6`
+                  )}
+                />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setShowAnalysis(!showAnalysis)}
+                aria-label={
+                  showAnalysis
+                    ? "Hide position analysis"
+                    : "Show position analysis"
+                }>
+                <Info
+                  className={cn(
+                    showAnalysis ? "stroke-purple-700" : "stroke-primary",
+                    `h-6 w-6`
+                  )}
+                />
+              </Button>
             </div>
           </div>
 
-          <div className="mt-2 flex w-full flex-row items-center justify-between sm:mt-4 sm:px-2">
+          <div className="mt-2 flex w-full flex-row items-center justify-between px-2 sm:mt-4">
             <div className="flex flex-row gap-x-2">
               <Avatar className="h-9 w-9">
                 <AvatarImage
@@ -377,75 +408,63 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
                 </span>
               </div>
             </div>
-            <div className="mt-4 flex w-full flex-row justify-end space-x-2 text-right">
-              {mode === "challenge" ? (
-                <>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={goBackward}
-                    disabled={!canGoBackward}>
-                    <ChevronLeft className="h-6 w-6 stroke-primary" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className=""
-                    onClick={goForward}
-                    disabled={!canGoForward}>
-                    <ChevronRight className="h-6 w-6 stroke-primary" />
-                  </Button>
-                  <Button
-                    className="hidden sm:block"
-                    disabled={
-                      gameOver && currentMoveIndex === moveHistory.length - 1
-                    }
-                    variant="default"
-                    onClick={() =>
-                      handleMoveNavigation(moveHistory.length - 1)
-                    }>
-                    Current Position
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={goBackward}
-                    disabled={!canGoBackward}>
-                    <ChevronLeft className="h-6 w-6 stroke-primary" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className=""
-                    onClick={goForward}
-                    disabled={!canGoForward}>
-                    <ChevronRight className="h-6 w-6 stroke-primary" />
-                  </Button>
-                  <Button
-                    className="hidden sm:block"
-                    disabled={
-                      gameOver && currentMoveIndex === moveHistory.length - 1
-                    }
-                    variant="default"
-                    onClick={() =>
-                      handleMoveNavigation(moveHistory.length - 1)
-                    }>
-                    Current Position
-                  </Button>
-                </>
+            <div className="flex w-full flex-row justify-end space-x-2 text-right">
+              <Button
+                size="icon"
+                disabled={!canGoBackward}
+                variant="outline"
+                onClick={handleReturnToStart}>
+                <ChevronsLeft className="h-6 w-6 stroke-primary" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleGoBackward}
+                disabled={!canGoBackward}>
+                <ChevronLeft className="h-6 w-6 stroke-primary" />
+              </Button>
+              {!isMobile && (
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={showHint ? handleHideHint : handleShowHint}
+                  aria-label={
+                    showHint ? "Hide move suggestion" : "Show move suggestion"
+                  }>
+                  <Lightbulb
+                    className={cn(
+                      showHint ? "stroke-purple-700" : "stroke-primary",
+                      `h-6 w-6`
+                    )}
+                  />
+                </Button>
               )}
+              <Button
+                variant="outline"
+                size="icon"
+                className=""
+                onClick={handleGoForward}
+                disabled={!canGoForward}>
+                <ChevronRight className="h-6 w-6 stroke-primary" />
+              </Button>
+              <Button
+                size="icon"
+                disabled={currentMoveIndex === moveHistory.length - 1}
+                variant="outline"
+                onClick={handleReturnToCurrent}>
+                <ChevronsRight className="h-6 w-6 stroke-primary" />
+              </Button>
             </div>
           </div>
         </div>
       </div>
-      <div className="fixed bottom-1.5 right-12 z-50 hidden sm:flex sm:flex-row sm:gap-2">
+      <div className="fixed bottom-20 right-6 z-50 hidden sm:block">
         <ChatWidget
           messages={messages}
           onSendMessageAction={handleSendMessage}
         />
+      </div>
+      <div className="fixed bottom-6 right-6 z-50 hidden sm:block">
         <Button
           variant="default"
           size="icon"
@@ -474,10 +493,13 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
                 variant="outline"
                 onClick={handleReviewMode}
                 className="w-full">
-                <History className="mr-2 h-4 w-4" />
+                <History className="mr-2 h-4 w-4 text-primary" />
                 Review Game
               </Button>
-              <Button variant="outline" onClick={onRestart} className="w-full">
+              <Button
+                variant="outline"
+                onClick={onRestart}
+                className="w-full text-primary">
                 Change Settings
               </Button>
             </div>
@@ -499,6 +521,19 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
           ) : (
             <p>No comment for this position.</p>
           )}
+        </div>
+      )}
+      {isMobile && showAnalysis && (
+        <div
+          className={cn(
+            "fixed left-0 right-0 z-50 bg-gray-800 p-4 text-white transition-all duration-300 ease-in-out sm:mt-2",
+            isMobile ? "bottom-0" : "bottom-0"
+          )}>
+          <PositionAnalysis
+            evaluation={chessApiEvaluation}
+            isConnected={isConnected}
+            isLoading={isAnalysisLoading}
+          />
         </div>
       )}
     </div>

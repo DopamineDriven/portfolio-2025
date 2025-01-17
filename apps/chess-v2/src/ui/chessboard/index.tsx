@@ -37,7 +37,8 @@ export default function Chessboard({
     makeMove,
     getMoveOptions,
     promotionSquare,
-    handlePromotion
+    handlePromotion,
+    isNavigatingHistory
   } = useGame();
 
   const [_optionSquares, setOptionSquares] = useState<
@@ -50,6 +51,10 @@ export default function Chessboard({
 
   const handleMove = useCallback(
     (from: Key, to: Key) => {
+      if (isNavigatingHistory) {
+        console.log('[Chessboard] Cannot make moves while navigating history');
+        return;
+      }
       const piece = game.get(from as Square);
 
       const isPromotion =
@@ -65,7 +70,7 @@ export default function Chessboard({
       setOptionSquares({});
       clearHighlightsAction();
     },
-    [makeMove, game, handlePromotion, clearHighlightsAction]
+    [makeMove, game, handlePromotion, clearHighlightsAction, isNavigatingHistory]
   );
 
   const handleSquareClick = useCallback(
@@ -94,44 +99,8 @@ export default function Chessboard({
     []
   );
 
-  // const updateBoardSize = useCallback(() => {
-  //   if (boardRef.current && containerRef.current) {
-  //     const vw = Math.max(
-  //       document.documentElement.clientWidth || 0,
-  //       window.innerWidth || 0
-  //     );
-  //     const vh = Math.max(
-  //       document.documentElement.clientHeight || 0,
-  //       window.innerHeight || 0
-  //     );
-
-  //     if (vw >= 640) {
-  //       // sm breakpoint
-  //       // Calculate available height considering the avatar sections (11rem total) and padding
-  //       const availableHeight = vh - 11 * 16 - 32; // 11rem converted to px and 2rem padding
-  //       // Calculate available width considering the side panel
-  //       const availableWidth = vw * 0.8; // 80% of viewport width
-
-  //       // Use the smaller of the two dimensions to ensure square aspect ratio
-  //       const size = Math.min(availableHeight, availableWidth);
-
-  //       boardRef.current.style.width = `${size}px`;
-  //       boardRef.current.style.height = `${size}px`;
-  //     } else {
-  //       // Mobile layout - full width
-  //       boardRef.current.style.width = `${vw}px`;
-  //       boardRef.current.style.height = `${vw}px`;
-  //     }
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   updateBoardSize();
-  //   window.addEventListener("resize", updateBoardSize);
-  //   return () => window.removeEventListener("resize", updateBoardSize);
-  // }, [updateBoardSize]);
-
   useEffect(() => {
+    console.log(`[Chessboard] Updating config, isNavigatingHistory: ${isNavigatingHistory}`);
     const config: Config = {
       fen: game.fen(),
       orientation: chessColorHelper(playerColor),
@@ -141,7 +110,7 @@ export default function Chessboard({
       turnColor: chessColorHelper(game.turn()),
       movable: {
         free: false,
-        color: isPlayerTurn ? chessColorHelper(playerColor) : "both", // Allow both colors to move
+        color: isPlayerTurn && !isNavigatingHistory ? chessColorHelper(playerColor) : "both",
         dests: getLegalMoves(game),
         events: {
           after: handleMove
@@ -172,7 +141,8 @@ export default function Chessboard({
         select: handleSquareClick as (key: Key) => void
       },
       check: game.isCheck(),
-      lastMove: lastMove
+      lastMove: lastMove,
+      viewOnly: isNavigatingHistory
     };
 
     if (boardRef.current) {
@@ -221,7 +191,8 @@ export default function Chessboard({
     customSquareStyles,
     onSquareRightClickAction,
     chessColorHelper,
-    customHighlights
+    customHighlights,
+    isNavigatingHistory
   ]);
 
   useEffect(() => {
@@ -272,13 +243,13 @@ export default function Chessboard({
       ref={containerRef}
       className={cn(
         "flex w-full items-center justify-center",
-        "max-h-[82.5dvh] sm:min-h-[400px]",
+        "max-h-[80dvh] md:min-h-[400px]",
         "grow"
       )}>
       <div
         ref={boardRef}
         className={cn(
-          "!size-[min(82.5dvh,95vw)]",
+          "!size-[min(80dvh,100vw)] sm:!size-[min(80dvh,95vw)]",
           "!aspect-square",
           "overflow-hidden rounded-lg",
           "object-cover"
