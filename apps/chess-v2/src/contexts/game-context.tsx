@@ -49,14 +49,37 @@ class Engine {
   }
 
   // "go infinite"
-  public evaluatePositionInfinite(fen: string, difficulty: number) {
-    // set difficulty 0-20
-    this.sendMessage(`setoption name Skill Level value ${difficulty}`);
+  public evaluatePositionInfinite(
+    fen: string,
+    difficulty: number,
+    elo: number
+  ) {
     // "position fen <fen>" gives Stockfish context on the current board configuration/position
     this.sendMessage(`position fen ${fen}`);
+    this.sendMessage(`setoption name UCI_LimitStrength value true`);
+    this.sendMessage(`setoption name UCI_Elo value ${elo}`);
+    // set difficulty 0-20
+    this.sendMessage(`setoption name Skill Level value ${difficulty}`);
     // let Stockfish search for best move endlessly until "stop" command is sent
 
     this.sendMessage("go infinite");
+  }
+
+  // "go movetime"
+  public evaluatePositionMovetime(
+    fen: string,
+    elo: number,
+    difficulty: number,
+    movetime: number
+  ) {
+    // "position fen <fen>" gives Stockfish context on the current board configuration/position
+    this.sendMessage(`position fen ${fen}`);
+    this.sendMessage(`setoption name UCI_LimitStrength value true`);
+    this.sendMessage(`setoption name UCI_Elo value ${elo}`);
+    // set difficulty 0-20
+    this.sendMessage(`setoption name Skill Level value ${difficulty}`);
+
+    this.sendMessage(`go movetime ${movetime}`);
   }
 
   public skillLevel(difficulty: number) {
@@ -382,6 +405,15 @@ export function GameProvider({
     if (state.gameOver || state.isPlayerTurn === true) return;
     const difficulty = getStockfishDifficulty(state.difficulty);
 
+    const roundedEloValue = (difficulty: number) => {
+      const toModulo = (difficulty * 107.5) % 50;
+      if (toModulo !== 0) {
+        return difficulty * 107.5 + (50 - toModulo);
+      } else return difficulty * 107.5;
+    };
+
+    const elo = roundedEloValue(difficulty);
+
     const getDefaultPonderTime = (difficulty: number) => {
       return Math.min(Math.max(difficulty * 0.25, 1), 10) * 250;
     };
@@ -407,7 +439,7 @@ export function GameProvider({
     setState(prev => ({ ...prev, isPondering: true }));
 
     // (4) "go infinite"
-    engine.evaluatePositionInfinite(game.fen(), difficulty);
+    engine.evaluatePositionInfinite(game.fen(), difficulty, elo);
 
     // (5) Stop Stockfish analysis for best move once "ponder time" elapses
     setTimeout(() => {

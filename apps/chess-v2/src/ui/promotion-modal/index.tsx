@@ -4,7 +4,7 @@ import React from "react";
 import * as ChessIcons from "@d0paminedriven/chess-icons";
 import type { ChessColor } from "@/utils/chess-types";
 import { Button } from "@/ui/atoms/button";
-import { Dialog, DialogContent } from "@/ui/atoms/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/ui/atoms/dialog";
 
 interface PromotionPieceProps {
   color: ChessColor;
@@ -54,6 +54,7 @@ export const PromotionModal: React.FC<PromotionModalProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={onCloseAction} >
       <DialogContent className="sm:max-w-md">
+        <DialogTitle className="sr-only">Choose promotion piece</DialogTitle>
         <div className="flex justify-center space-x-4">
           <PromotionPiece
             color={color}

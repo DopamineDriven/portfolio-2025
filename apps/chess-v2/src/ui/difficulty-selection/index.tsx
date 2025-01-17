@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useCallback } from "react";
 import { Brain } from "lucide-react";
 import type { StockfishDifficulty } from "@/types/chess";
 import { useGame } from "@/contexts/game-context";
@@ -32,16 +31,6 @@ export default function DifficultySelection({
     setDifficulty(selectedDifficulty);
   };
 
-  const diffCallback = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-
-      e.preventDefault();
-      setDifficulty(difficulty);
-      onSelectAction(difficulty);
-      console.log("difficulty-selection.tsx ", difficulty);
-    },
-    [difficulty, setDifficulty, onSelectAction]
-  );
   return (
     <Dialog
       open={open}
@@ -118,7 +107,10 @@ export default function DifficultySelection({
           </div>
 
           <Button
-            onClick={diffCallback}
+            onClick={() => {
+              setDifficulty(difficulty);
+              onSelectAction(difficulty);
+            }}
             disabled={!difficulty}
             className={cn(
               "h-14 w-full text-xl font-bold",
