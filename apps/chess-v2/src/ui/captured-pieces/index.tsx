@@ -1,12 +1,12 @@
 "use client";
 
 import * as ChessIcons from "@d0paminedriven/chess-icons";
-import type { CapturedPieces, MaterialCount } from "@/types/values";
+import type { MaterialCount } from "@/types/values";
 import { cn } from "@/lib/utils";
 import { handlePieceIcons, PIECE_VALUES } from "@/types/values";
 import { ChessColor } from "@/utils/chess-types";
 
-interface CapturedPiecesProps {
+interface CapturedPiecesEntity {
   capturedPieces: MaterialCount;
   score: number;
   showScore?: boolean;
@@ -20,7 +20,7 @@ export default function CapturedPieces({
   showScore = false,
   className = "",
   color
-}: CapturedPiecesProps) {
+}: CapturedPiecesEntity) {
   const toChessGroundColorHelper = (val: "b" | "w" | "white" | "black") => {
     return val === "b" || val === "black" ? "black" : "white";
   };

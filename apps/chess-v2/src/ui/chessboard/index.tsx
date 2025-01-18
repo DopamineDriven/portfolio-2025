@@ -110,8 +110,9 @@ export default function Chessboard({
       turnColor: chessColorHelper(game.turn()),
       movable: {
         free: false,
-        color: isPlayerTurn && !isNavigatingHistory ? chessColorHelper(playerColor) : "both",
+        color: isPlayerTurn ? chessColorHelper(playerColor) : "both",
         dests: getLegalMoves(game),
+        showDests: true,
         events: {
           after: handleMove
         }
@@ -141,7 +142,7 @@ export default function Chessboard({
         select: handleSquareClick as (key: Key) => void
       },
       check: game.isCheck(),
-      lastMove: lastMove,
+      lastMove: lastMove as Key[],
       viewOnly: isNavigatingHistory
     };
 

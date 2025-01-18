@@ -2,24 +2,32 @@
 
 import { useEffect, useState } from "react";
 
-export function useMediaQuery(query: string): boolean {
+/**
+   accepts media query string as an arg (eg, "(max-width: 768px)")
+
+  `useState` tracks set (dispatched) media query matches
+
+  `useEffect` listens for changes to media query match state
+
+*/
+
+export function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(false);
 
   useEffect(() => {
     const media = window.matchMedia(query);
 
-    // Set the initial value
     setMatches(media.matches);
 
-    // Define our event listener
+    // event listener
     const listener = (event: MediaQueryListEvent) => {
       setMatches(event.matches);
     };
 
-    // Add the listener to begin watching for changes
+    // add listener on component mount to detect changes
     media.addEventListener("change", listener);
 
-    // Remove the listener when the component unmounts
+    // remove event listener on component unmount (cleanup)
     return () => {
       media.removeEventListener("change", listener);
     };
@@ -27,8 +35,3 @@ export function useMediaQuery(query: string): boolean {
 
   return matches;
 }
-/*
-It takes a media query string as an argument (e.g., "(max-width: 768px)").
-It uses the `useState` hook to keep track of whether the media query matches.
-It uses the `useEffect` hook to add a listener for changes to the media query match state.
-It returns a boolean indicating whether the media query currently matches.*/

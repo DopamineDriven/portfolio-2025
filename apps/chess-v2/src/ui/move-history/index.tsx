@@ -14,6 +14,7 @@ import { FixedSizeList as List } from "react-window";
 import { useGame } from "@/contexts/game-context";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/atoms/button";
+import { useChessWebSocketContext } from "@/contexts/chess-websocket-context";
 
 const ITEM_SIZE = 36; // Height of each move item in pixels
 const MOVE_HISTORY_WIDTH = 256; // Width of the move history panel in pixels
@@ -79,7 +80,7 @@ const MoveItem: FC<MoveItemProps> = ({ index, style, data }) => {
 };
 
 const AnalysisPanel: FC = () => {
-  const { chessApiEvaluation, isConnected } = useGame();
+  const { chessApiEvaluation, isConnected } = useChessWebSocketContext();
 
   return (
     <div className="h-full p-4 text-white">
