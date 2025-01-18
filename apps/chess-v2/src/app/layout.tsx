@@ -1,10 +1,21 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ChessWebSocketProvider } from "@/contexts/chess-websocket-context";
 import { GameProvider } from "@/contexts/game-context";
 
 const inter = Inter({ subsets: ["latin"] });
+
+export const viewport = {
+  colorScheme: "normal",
+  userScalable: true,
+  themeColor: "#1f2937",
+  viewportFit: "auto",
+  initialScale: 1,
+  width: "device-width"
+} satisfies Viewport;
+
+
 
 export const metadata = {
   title: "Chess vs Stockfish",
