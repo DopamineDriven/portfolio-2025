@@ -112,6 +112,7 @@ export default function Chessboard({
         free: false,
         color: isPlayerTurn && !isNavigatingHistory ? chessColorHelper(playerColor) : "both",
         dests: getLegalMoves(game),
+        showDests: true,
         events: {
           after: handleMove
         }

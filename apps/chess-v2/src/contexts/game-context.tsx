@@ -166,6 +166,7 @@ interface GameContextType extends GameState {
   isConnected: boolean;
   setIsNavigatingHistory: (isNavigating: boolean) => void;
   setIsNavigatingHistoryExplicitly: (value: boolean) => void;
+  handleHistoryMove: (index: number) => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
