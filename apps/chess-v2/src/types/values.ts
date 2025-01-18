@@ -11,7 +11,7 @@ export type PieceType = keyof typeof PIECE_VALUES;
 
 export type MaterialCount = Record<keyof typeof PIECE_VALUES, number>;
 
-export type CapturedPieces = {
+export type CapturedPiecesProps = {
   white: MaterialCount;
   black: MaterialCount;
 };

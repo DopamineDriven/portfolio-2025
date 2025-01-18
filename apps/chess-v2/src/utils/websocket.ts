@@ -43,11 +43,11 @@ export class ChessWebSocketClient {
   private messageQueue = Array.of<string>();
 
   // Listeners to broadcast the latest message to
-  private listeners= Array.of<Listener>();
+  private listeners = Array.of<Listener>();
 
   constructor(url: string) {
     this.url = url;
-    isConnected = false;
+    this.isConnected;
   }
 
   public connect() {
@@ -65,7 +65,10 @@ export class ChessWebSocketClient {
       this.reconnectAttempts = 0;
 
       // Process any queued messages
-      while (this.messageQueue.length > 0 && this.socket?.readyState === WebSocket.OPEN) {
+      while (
+        this.messageQueue.length > 0 &&
+        this.socket?.readyState === WebSocket.OPEN
+      ) {
         const msg = this.messageQueue.shift();
         if (msg) {
           this.socket.send(msg);
@@ -86,10 +89,10 @@ export class ChessWebSocketClient {
       }
 
       // Broadcast to listeners
-      this.listeners.forEach((listener) => listener(data));
+      this.listeners.forEach(listener => listener(data));
     };
 
-    this.socket.onerror = (error) => {
+    this.socket.onerror = error => {
       console.error("WebSocket error:", error);
       this.isConnected = false;
     };
@@ -138,7 +141,7 @@ export class ChessWebSocketClient {
    * Remove a previously registered listener.
    */
   public removeMessageListener(listener: Listener) {
-    this.listeners = this.listeners.filter((l) => l !== listener);
+    this.listeners = this.listeners.filter(l => l !== listener);
   }
 
   /**
@@ -163,7 +166,7 @@ export class ChessWebSocketClient {
     if (match) {
       return {
         from: match[2],
-        to: match[4],
+        to: match[4]
       };
     }
     return null;

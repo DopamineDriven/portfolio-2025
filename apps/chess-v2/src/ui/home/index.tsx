@@ -3,20 +3,24 @@
 import { useCallback, useState } from "react";
 import type { StockfishDifficulty, StockfishMode } from "@/types/chess";
 import type { ChessColor } from "@/utils/chess-types";
-import { GameProvider } from "@/contexts/game-context";
+import { useGame } from "@/contexts/game-context";
 import { Button } from "@/ui/atoms/button";
 import ChessboardBot from "@/ui/chessboard-bot";
 import DifficultySelection from "@/ui/difficulty-selection";
 import GameSettings from "@/ui/game-settings";
 
 export default function Home({ country = "US" }: { country?: string }) {
+  const {
+    setDifficulty,
+    setPlayerColor,
+    setMode,
+    setIsSoundEnabled,
+    playerColor
+  } = useGame();
+
   const [showDifficultySelection, setShowDifficultySelection] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
-  const [difficulty, setDifficulty] = useState<StockfishDifficulty>("beginner");
-  const [playerColor, setPlayerColor] = useState<ChessColor>("white");
-  const [mode, setMode] = useState<StockfishMode>("friendly");
-  const [soundEnabled, setSoundEnabled] = useState(true);
 
   const handleDifficultySelect = useCallback(
     (newDifficulty: StockfishDifficulty) => {
@@ -24,7 +28,7 @@ export default function Home({ country = "US" }: { country?: string }) {
       setShowDifficultySelection(false);
       setShowSettings(true);
     },
-    []
+    [setDifficulty]
   );
 
   const handleGameStart = useCallback(
@@ -41,58 +45,50 @@ export default function Home({ country = "US" }: { country?: string }) {
           : settings.playerColor
       );
       setMode(settings.mode);
-      setSoundEnabled(settings.soundEnabled);
+      setIsSoundEnabled(settings.soundEnabled);
       setShowSettings(false);
       setGameStarted(true);
     },
-    []
+    [setIsSoundEnabled, setPlayerColor, setMode]
   );
 
   const handleNewGame = useCallback(() => {
     setShowDifficultySelection(true);
     setGameStarted(false);
-    setPlayerColor("white");
-  }, []);
+    setPlayerColor(playerColor);
+  }, [playerColor, setPlayerColor]);
 
   return (
-    <GameProvider
-      initialColor={playerColor}
-      initialDifficulty={difficulty}
-      soundEnabled={soundEnabled}
-      initialMode={mode}>
-      <div
-        className={
-          "flex min-h-screen flex-col gap-4 bg-gray-800 px-0 text-white sm:flex-row sm:gap-8 sm:px-6"
-        }>
-        <div className="flex w-full flex-col items-center justify-center gap-2 sm:w-auto">
-          {gameStarted ? (
-            <ChessboardBot country={country} onRestart={handleNewGame} />
-          ) : (
-            <div className="flex h-[80vw] w-[80vw] items-center justify-center rounded-lg bg-gray-700 sm:h-[400px] sm:w-[400px]">
-              <p className="text-gray-400">
-                Select game settings to start playing
-              </p>
-            </div>
-          )}
-          {!gameStarted && (
-            <Button onClick={handleNewGame} className="mt-4">
-              New Game
-            </Button>
-          )}
-        </div>
-        <DifficultySelection
-          open={showDifficultySelection}
-          onOpenChangeAction={setShowDifficultySelection}
-          onSelectAction={handleDifficultySelect}
-          allowClose={gameStarted}
-        />
-        <GameSettings
-          open={showSettings}
-          onOpenChangeAction={setShowSettings}
-          onStartAction={handleGameStart}
-          allowClose={gameStarted}
-        />
+    <div
+      className={
+        "flex min-h-screen flex-col gap-4 bg-gray-800 px-0 text-white sm:flex-row sm:gap-8 sm:px-6"
+      }>
+      <div className="flex w-full flex-col items-center justify-center gap-2 sm:w-auto">
+        {gameStarted ? (
+          <ChessboardBot country={country} onRestart={handleNewGame} />
+        ) : (
+          <div className="flex h-[80vw] w-[80vw] items-center justify-center rounded-lg bg-gray-700 sm:h-[400px] sm:w-[400px]">
+            <p className="text-gray-400">Game Settings</p>
+          </div>
+        )}
+        {!gameStarted && (
+          <Button onClick={handleNewGame} className="mt-4">
+            New Game
+          </Button>
+        )}
       </div>
-    </GameProvider>
+      <DifficultySelection
+        open={showDifficultySelection}
+        onOpenChangeAction={setShowDifficultySelection}
+        onSelectAction={handleDifficultySelect}
+        allowClose={gameStarted}
+      />
+      <GameSettings
+        open={showSettings}
+        onOpenChangeAction={setShowSettings}
+        onStartAction={handleGameStart}
+        allowClose={gameStarted}
+      />
+    </div>
   );
 }
