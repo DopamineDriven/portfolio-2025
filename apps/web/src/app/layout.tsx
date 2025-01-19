@@ -47,7 +47,7 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <body className={inter.className}>
-        <ThemeProvider >
+        <ThemeProvider>
           <LoadingAnimation />
           <div className="flex min-h-[100dvh] flex-col">
             <Navbar />

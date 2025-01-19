@@ -14,7 +14,6 @@ export const WhitePawn: FC<TsxExclude<"svg", "fill" | "viewBox" | "xmlns">> = ({
       fill="white"
       stroke="black"
       strokeWidth="1.5"
-
       strokeLinecap="round"
     />
   </svg>

@@ -1,10 +1,10 @@
-// useChessWebSocket.ts
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ChessApiMessage, ChessWebSocketClient } from "@/utils/websocket";
 import { Chess } from "chess.js";
+import { ChessApiMessage, ChessWebSocketClient } from "@/utils/websocket";
 
+// todo add a parser using \[([-+]?\d+(\.\d+)?)\] to parse [number] | [number.number];
 export function useChessWebSocket() {
   const [lastMessage, setLastMessage] = useState<ChessApiMessage | null>(null);
   const [isConnected, setIsConnected] = useState(false);
@@ -17,14 +17,15 @@ export function useChessWebSocket() {
     chessClientRef.current = new ChessWebSocketClient("wss://chess-api.com/v1");
   }
 
- const [chessApiEvaluation, setChessApiEvaluation] =
-useState<ChessApiMessage | null>(null);
+  const [chessApiEvaluation, setChessApiEvaluation] =
+    useState<ChessApiMessage | null>(null);
 
-    useEffect(() => {
-      if (lastMessage && lastMessage.type === "bestmove") {
-        setChessApiEvaluation(lastMessage);
-      }
-    }, [lastMessage]);
+  useEffect(() => {
+    if (lastMessage && lastMessage.type === "bestmove") {
+      console.log(lastMessage);
+      setChessApiEvaluation(lastMessage);
+    }
+  }, [lastMessage]);
 
   useEffect(() => {
     const client = chessClientRef.current!;
@@ -57,9 +58,12 @@ useState<ChessApiMessage | null>(null);
     chessClientRef.current?.sendPosition(fen, variants, depth);
   }, []);
 
-  const requestChessApiEvaluation = useCallback((game: InstanceType<typeof Chess>) => {
-    sendPosition(game.fen());
-  }, [sendPosition]);
+  const requestChessApiEvaluation = useCallback(
+    (game: InstanceType<typeof Chess>) => {
+      sendPosition(game.fen());
+    },
+    [sendPosition]
+  );
 
   return {
     lastMessage,

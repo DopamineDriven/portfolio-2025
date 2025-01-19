@@ -7,17 +7,14 @@ import { Chess } from "chess.js";
 import { Key } from "chessground/types";
 import type { SoundKeys } from "@/lib/sound";
 import type { StockfishDifficulty, StockfishMode } from "@/types/chess";
+import type { CapturedPiecesProps, MaterialCount } from "@/types/values";
 import type { ChessColor } from "@/utils/chess-types";
-// adapt this to your actual imports
 import { playSound } from "@/lib/sound";
 import { getStockfishDifficulty } from "@/types/chess";
-import {
-  CapturedPiecesProps,
-  MaterialCount,
-  PIECE_VALUES
-} from "@/types/values";
+import { PIECE_VALUES } from "@/types/values";
 import { toChessJSColor } from "@/utils/chess-types";
 
+// stockfish engine Web Worker
 class Engine {
   private stockfish: Worker | null;
 
@@ -141,10 +138,10 @@ export function useGameState({
   initialMode: StockfishMode;
   soundEnabled: boolean;
 }) {
-  // 1) Set up engine once
+  // stockfish engine memoization
   const engine = useMemo(() => new Engine(), []);
 
-  // 2) Chess instance & core state
+  // chess instance & core state
   const [game, setGame] = useState(() => new Chess());
   const [state, setState] = useState<GameState>({
     isPlayerTurn: toChessJSColor(initialColor) === "w",
@@ -182,17 +179,14 @@ export function useGameState({
   const [selectedDifficulty, setSelectedDifficulty] =
     useState(initialDifficulty);
 
-  // WebSocket for external Chess API
-
+  /**
+   * converts chess.js Color type (`b`|`w`) to chessground Color type (`black`|`white`)
+   */
   const chessColorHelper = useCallback((val: "b" | "w" | "white" | "black") => {
     return val === "b" || val === "black" ? "black" : "white";
   }, []);
 
-  // React to incoming bestmove from external WebSocket
-
-  // Evaluate on request
-
-  // sound effect callback
+  // sound effect cb
   const playSoundEffect = useCallback(
     (effect: SoundKeys) => {
       if (isSoundEnabled) {
@@ -229,8 +223,8 @@ export function useGameState({
     return null;
   };
 
-  // 7) Calculate material score
 
+  // calculate material score
   const calculateMaterialScore = useCallback(
     (capturedPieces: CapturedPiecesProps) => {
       const getScore = (pieces: MaterialCount) => {
@@ -250,8 +244,6 @@ export function useGameState({
         return score;
       };
 
-      // Calculate raw scores
-      console.log("[calculateMaterialScore] captured pieces:", capturedPieces);
       const whiteScore = getScore(capturedPieces.black); // pieces white has captured
       const blackScore = getScore(capturedPieces.white); // pieces black has captured
 
@@ -294,7 +286,7 @@ export function useGameState({
         console.log(
           `[[origin:game-context.tsx]]\n[before]: ${moveResult.before} \n [after]: ${moveResult.after}`
         );
-        // Determine type of sound to play
+        // audio handling
         if (newGame.isGameOver()) {
           playSoundEffect("game-end");
         } else if (newGame.isCheck()) {
@@ -332,11 +324,11 @@ export function useGameState({
             newMaterialScore.black = calculatedScore.black;
           }
 
-          // Create a new moves array without duplicates
+          // deduplicated new moves array
           const existingMoves = [...prevState.moves];
           const previousMove = existingMoves[prevState.moveCounter - 1];
 
-          // Only add the move if it's different from the last move or it's the first move
+          // only add to arr if different from previous move or if first move
           if (previousMove !== moveResult.san || existingMoves.length === 0) {
             existingMoves[prevState.moveCounter] = moveResult.san;
           }
@@ -371,7 +363,7 @@ export function useGameState({
     ]
   );
 
-  // 9) Make stockfish move
+  // make stockfish move
   const makeStockfishMove = useCallback(() => {
     if (state.gameOver || state.isPlayerTurn === true || isNavigatingHistory)
       return;
@@ -428,7 +420,7 @@ export function useGameState({
     isNavigatingHistory
   ]);
 
-  // 10) Reset game
+  // reset game
   const resetGame = useCallback(() => {
     const newGame = new Chess();
     setGame(newGame);
@@ -528,7 +520,6 @@ export function useGameState({
     [game]
   );
 
-  // Navigation methods: goToMove, goForward, goBackward, undo, redo, etc.
   const goToMove = useCallback(
     (index: number) => {
       if (index >= -1 && index < state.moveHistory.length) {
@@ -641,7 +632,6 @@ export function useGameState({
     }));
   }, []);
 
-  // 13) Return everything as “value”
   return {
     // Game state
     ...state,
@@ -673,6 +663,5 @@ export function useGameState({
     isNavigatingHistory,
     setIsNavigatingHistoryExplicitly,
     playSoundEffect
-    // Chess API
   };
 }

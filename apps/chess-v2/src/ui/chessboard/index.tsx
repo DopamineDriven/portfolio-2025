@@ -52,7 +52,7 @@ export default function Chessboard({
   const handleMove = useCallback(
     (from: Key, to: Key) => {
       if (isNavigatingHistory) {
-        console.log('[Chessboard] Cannot make moves while navigating history');
+        console.log("[Chessboard] Cannot make moves while navigating history");
         return;
       }
       const piece = game.get(from as Square);
@@ -70,7 +70,13 @@ export default function Chessboard({
       setOptionSquares({});
       clearHighlightsAction();
     },
-    [makeMove, game, handlePromotion, clearHighlightsAction, isNavigatingHistory]
+    [
+      makeMove,
+      game,
+      handlePromotion,
+      clearHighlightsAction,
+      isNavigatingHistory
+    ]
   );
 
   const handleSquareClick = useCallback(
@@ -100,7 +106,9 @@ export default function Chessboard({
   );
 
   useEffect(() => {
-    console.log(`[Chessboard] Updating config, isNavigatingHistory: ${isNavigatingHistory}`);
+    console.log(
+      `[Chessboard] Updating config, isNavigatingHistory: ${isNavigatingHistory}`
+    );
     const config: Config = {
       fen: game.fen(),
       orientation: chessColorHelper(playerColor),

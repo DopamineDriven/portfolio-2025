@@ -71,5 +71,3 @@ export const WhiteBishop: FC<
     />
   </svg>
 );
-
- 

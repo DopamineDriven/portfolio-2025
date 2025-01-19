@@ -52,7 +52,7 @@ export const PromotionModal: React.FC<PromotionModalProps> = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onCloseAction} >
+    <Dialog open={isOpen} onOpenChange={onCloseAction}>
       <DialogContent className="sm:max-w-md">
         <DialogTitle className="sr-only">Choose promotion piece</DialogTitle>
         <div className="flex justify-center space-x-4">

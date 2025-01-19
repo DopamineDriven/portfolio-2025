@@ -257,4 +257,4 @@ export const countryArr = [
   "ZA.svg",
   "ZM.svg",
   "ZW.svg"
-] as const
+] as const;

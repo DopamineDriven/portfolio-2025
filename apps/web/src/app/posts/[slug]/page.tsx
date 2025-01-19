@@ -1,10 +1,10 @@
 import { promises as fs } from "fs";
 import path from "path";
 import type { Options as RehypeOptions } from "rehype-pretty-code";
+import { transformerMetaWordHighlight } from "@shikijs/transformers";
 import rehypePrettyCode from "rehype-pretty-code";
 import type { InferGSPRT } from "@/types/next";
 import { MdxRenderer } from "@/components/MDXHandler";
-import { transformerMetaWordHighlight } from "@shikijs/transformers";
 
 const options = {
   grid: true,

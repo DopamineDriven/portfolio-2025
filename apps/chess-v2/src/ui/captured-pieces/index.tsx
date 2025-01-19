@@ -77,9 +77,9 @@ export default function CapturedPieces({
       return (
         <div
           key={piece}
-          className={cn("relative flex w-auto h-5 grow items-center")}
+          className={cn("relative flex h-5 w-auto grow items-center")}
           // style={{ width: `${maxWidth}px` }}>
-          >
+        >
           {Array.from({ length: count }, (_, i) =>
             getPieceIcon(pieceType, i, count)
           )}
@@ -96,7 +96,6 @@ export default function CapturedPieces({
     </div>
   );
 }
-
 
 // "use client";
 

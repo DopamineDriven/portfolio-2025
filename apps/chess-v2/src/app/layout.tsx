@@ -15,8 +15,6 @@ export const viewport = {
   width: "device-width"
 } satisfies Viewport;
 
-
-
 export const metadata = {
   title: "Chess vs Stockfish",
   description: "Play chess against the Stockfish engine"

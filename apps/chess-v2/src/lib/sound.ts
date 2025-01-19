@@ -13,9 +13,7 @@ export const soundObj = {
 
 export type SoundKeys = keyof typeof soundObj;
 
-export const playSound = <const T extends SoundKeys>(
-  soundName: T
-) => {
+export const playSound = <const T extends SoundKeys>(soundName: T) => {
   const audio = new Audio(soundObj[soundName]);
   audio.play().catch(error => console.error("Error playing sound:", error));
 };

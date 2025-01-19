@@ -6,3 +6,4 @@ generated
 *.md
 pnpm-lock.yaml
 .tsup
+stockfish.js

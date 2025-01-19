@@ -67,10 +67,10 @@ export function getPieceComponentJsxElement({
   );
 }
 
-export function getCapturedPieceJsxElement(  type: InferColorOrType<keyof typeof components, "type">,
-  color: InferColorOrType<keyof typeof components, "color">) {
+export function getCapturedPieceJsxElement(
+  type: InferColorOrType<keyof typeof components, "type">,
+  color: InferColorOrType<keyof typeof components, "color">
+) {
   const TargetedComponent = getComponentTargeted(`${color}-${type}`);
-  return (
-    <TargetedComponent className="w-full h-full" />
-  );
+  return <TargetedComponent className="h-full w-full" />;
 }

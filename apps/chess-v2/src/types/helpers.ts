@@ -196,11 +196,10 @@ export type InferTsxTargetedFlexi<T> =
     ? readonly [U, E] | [U, E]
     : T;
 
-
-    export type InferTsxReact19<T> =
-    T extends React.DetailedHTMLProps<infer U, infer E>
-      ? readonly [U, E] | [U, E]
-      : T;
+export type InferTsxReact19<T> =
+  T extends React.DetailedHTMLProps<infer U, infer E>
+    ? readonly [U, E] | [U, E]
+    : T;
 
 export type Selector<
   T,
@@ -219,11 +218,9 @@ export type Selector<
         : [A, B]
     : T;
 
-export type TsxTargetedReact19<
-  T extends keyof React.JSX.IntrinsicElements
-> = {
+export type TsxTargetedReact19<T extends keyof React.JSX.IntrinsicElements> = {
   [P in T]: Selector<
-  InferTsxReact19<React.JSX.IntrinsicElements[P]>,
+    InferTsxReact19<React.JSX.IntrinsicElements[P]>,
     "attribute"
   > & {
     ref?: React.Ref<

@@ -406,7 +406,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
               <Button
                 variant="outline"
                 onClick={handleReviewMode}
-                className="w-full">
+                className="w-full text-primary">
                 <History className="mr-2 h-4 w-4 text-primary" />
                 Review Game
               </Button>
