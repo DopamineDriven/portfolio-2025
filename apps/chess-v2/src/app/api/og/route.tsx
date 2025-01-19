@@ -1,6 +1,8 @@
 import { ImageResponse } from "next/og";
+import { getSiteUrl } from "@/lib/site-url";
 
-// Use Edge runtime (enables `ImageResponse` with local fetch)
+const baseUrl = getSiteUrl(process.env.NODE_ENV);
+
 export const runtime = "edge";
 
 // Tell Next the final content type and size for the generated image
@@ -10,13 +12,14 @@ export const size = {
   height: 630
 };
 
-export default async function Image() {
+
+export async function GET() {
   const fontData = await fetch(
-    new URL("../../public/BasisGrotesquePro-Light.ttf", import.meta.url)
+    new URL("/BasisGrotesquePro-Light.ttf", baseUrl)
   ).then(res => res.arrayBuffer());
 
   const bgData = await fetch(
-    new URL("../../public/og.png", import.meta.url)
+    new URL("/og.png", baseUrl)
   ).then(res => res.arrayBuffer());
 
   // 3. Convert bgData into a Base64-encoded data URL for `<img />`
@@ -74,7 +77,6 @@ export default async function Image() {
     {
       width: 1200,
       height: 630,
-      // Register our local font with a name matching style.fontFamily
       fonts: [
         {
           name: "Basis Grotesque Pro",
