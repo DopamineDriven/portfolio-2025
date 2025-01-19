@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ChessWebSocketProvider } from "@/contexts/chess-websocket-context";
 import { GameProvider } from "@/contexts/game-context";
+import { getSiteUrl } from "@/lib/site-url";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,8 +17,87 @@ export const viewport = {
 } satisfies Viewport;
 
 export const metadata = {
-  title: "Chess vs Stockfish",
-  description: "Play chess against the Stockfish engine"
+  metadataBase: new URL(getSiteUrl(process.env.NODE_ENV)),
+  title: {
+    default: "Next Chess Bot",
+    template: "%s | Powered by Stockfish"
+  },
+  description: "Play chess against Stockfish engine.",
+  authors: [{ name: "Andrew Ross", url: "https://github.com/DopamineDriven" }],
+  creator: "Andrew Ross",
+  appleWebApp: {
+    startupImage: "/apple-icon.png",
+    statusBarStyle: "black-translucent",
+    title: "Next Chess Bot"
+  },
+  openGraph: {
+    title: "Next Chess Bot - Powered by Stockfish",
+    description: "Play chess against Stockfish engine",
+    url: getSiteUrl(process.env.NODE_ENV),
+    siteName: "Next Chess Bot",
+    locale: "en_US",
+    type: "website",
+    countryName: "US",
+    images: [
+      {
+        url: new URL(
+          "/opengraph-image",
+          getSiteUrl(process.env.NODE_ENV)
+        ).toString(),
+        width: 1200,
+        height: 630,
+        alt: "Next Chess Bot - Powered by Stockfish"
+      },
+      {
+        url: new URL(
+          "/meta/apple-touch-icon.png",
+          getSiteUrl(process.env.NODE_ENV)
+        ).toString(),
+        width: 180,
+        height: 180,
+        alt: "Next Chess Bot"
+      }
+    ],
+    emails: ["andrew@windycitydevs.io"]
+  },
+  icons: [
+    {
+      type: "image/png",
+      rel: "apple-touch-icon",
+      url: new URL(
+        "/meta/apple-touch-icon.png",
+        getSiteUrl(process.env.NODE_ENV)
+      ),
+      sizes: "180x180"
+    },
+    {
+      type: "image/svg+xml",
+      rel: "mask-icon",
+      url: new URL("/meta/favicon.svg", getSiteUrl(process.env.NODE_ENV))
+    },
+    {
+      type: "image/png",
+      rel: "icon",
+      url: new URL("/meta/favicon-96x96.png", getSiteUrl(process.env.NODE_ENV)),
+      sizes: "96x96"
+    }
+  ],
+  robots: {
+    googleBot: {
+      follow: true,
+      index: true,
+      indexifembedded: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1
+    },
+    follow: true,
+    index: true,
+    indexifembedded: true,
+    "max-video-preview": -1,
+    "max-image-preview": "large",
+    "max-snippet": -1
+  }
 } satisfies Metadata;
 
 export default function RootLayout({
