@@ -5,14 +5,6 @@ const baseUrl = getSiteUrl(process.env.NODE_ENV);
 
 export const runtime = "edge";
 
-// Tell Next the final content type and size for the generated image
-export const alt = "Next Chess Bot OG Image";
-export const size = {
-  width: 1200,
-  height: 630
-};
-
-
 export async function GET() {
   const fontData = await fetch(
     new URL("/BasisGrotesquePro-Light.ttf", baseUrl)
@@ -43,7 +35,7 @@ export async function GET() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={bgBase64}
-          alt="Background"
+          alt="Next Chess Bot OG Image"
           style={{
             position: "absolute",
             objectFit: "cover",
