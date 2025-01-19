@@ -10,16 +10,14 @@ export async function GET() {
     new URL("/BasisGrotesquePro-Light.ttf", baseUrl)
   ).then(res => res.arrayBuffer());
 
-  const bgData = await fetch(
-    new URL("/og.png", baseUrl)
-  ).then(res => res.arrayBuffer());
+  const bgData = await fetch(new URL("/og.png", baseUrl)).then(res =>
+    res.arrayBuffer()
+  );
 
-  // 3. Convert bgData into a Base64-encoded data URL for `<img />`
   const bgBase64 = `data:image/png;base64,${Buffer.from(bgData).toString(
     "base64"
   )}`;
 
-  // 4. Return the rendered <ImageResponse>
   return new ImageResponse(
     (
       <div
@@ -28,9 +26,10 @@ export async function GET() {
           height: "100%",
           position: "relative",
           display: "flex",
-          alignItems: "center",
+          alignItems: "flex-start",
           justifyContent: "center",
-          fontFamily: '"Basis Grotesque Pro", sans-serif'
+          fontFamily: '"Basis Grotesque Pro", sans-serif',
+          overflow: "hidden"
         }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -52,17 +51,43 @@ export async function GET() {
           }}
         />
         <div
-          className="tracking-tight"
           style={{
-            position: "relative",
-            color: "white",
-            fontSize: 56,
-            fontWeight: 500,
-            textAlign: "center",
-            padding: "0 50px",
-            letterSpacing: "-0.025em"
+            position: "absolute",
+            top: "50px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            padding: "30px 60px",
+            background: "rgba(255, 255, 255, 0.1)",
+            backdropFilter: "blur(10px)",
+            borderRadius: "20px",
+            boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+            border: "1px solid rgba(255, 255, 255, 0.2)"
           }}>
-          Next Chess Bot
+          <div
+            style={{
+              color: "white",
+              fontSize: "72px",
+              fontWeight: 500,
+              textAlign: "center",
+              letterSpacing: "-0.025em",
+              textShadow: "2px 2px 4px rgba(0,0,0,0.5)"
+            }}>
+            Next Chess Bot
+          </div>
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            bottom: "40px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            color: "white",
+            fontSize: "24px",
+            fontWeight: 300,
+            textAlign: "center",
+            opacity: 0.8
+          }}>
+          Elevate Your Game
         </div>
       </div>
     ),
