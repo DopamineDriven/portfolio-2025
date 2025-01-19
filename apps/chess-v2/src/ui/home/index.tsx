@@ -8,6 +8,7 @@ import { Button } from "@/ui/atoms/button";
 import ChessboardBot from "@/ui/chessboard-bot";
 import DifficultySelection from "@/ui/difficulty-selection";
 import GameSettings from "@/ui/game-settings";
+// import { AnalyzeAdvantage } from "../analyze-advantage";
 
 export default function Home({ country = "US" }: { country?: string }) {
   const {
@@ -57,15 +58,18 @@ export default function Home({ country = "US" }: { country?: string }) {
     setGameStarted(false);
     setPlayerColor(playerColor);
   }, [playerColor, setPlayerColor]);
+//         "flex min-h-screen flex-col gap-4 bg-gray-800 px-0 text-white sm:flex-row sm:gap-8 sm:px-6"
 
   return (
     <div
       className={
         "flex min-h-screen flex-col gap-4 bg-gray-800 px-0 text-white sm:flex-row sm:gap-8 sm:px-6"
       }>
-      <div className="flex w-full flex-col items-center justify-center gap-2 sm:w-auto">
+      <div className="flex w-full flex-col items-center justify-center gap-2 sm:w-full">
         {gameStarted ? (
-          <ChessboardBot country={country} onRestart={handleNewGame} />
+          <ChessboardBot country={country} onRestart={handleNewGame}>
+            {/* <AnalyzeAdvantage /> */}
+          </ChessboardBot>
         ) : (
           <div className="flex h-[80vw] w-[80vw] items-center justify-center rounded-lg bg-gray-700 sm:h-[400px] sm:w-[400px]">
             <p className="text-gray-400">Game Settings</p>

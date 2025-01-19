@@ -1,13 +1,15 @@
 "use client";
 
-import * as React from "react";
+import React from "react";
 import * as RechartsPrimitive from "recharts";
+import type {
+  NameType,
+  Payload,
+  ValueType
+} from "recharts/types/component/DefaultTooltipContent";
 import type { TsxExcludeReact19, TsxTargetedReact19 } from "@/types/react";
 import { cn } from "@/lib/utils";
-import {
-  ValueType,
-  NameType,
-} from 'recharts/types/component/DefaultTooltipContent';
+
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;
 
@@ -110,12 +112,21 @@ ${colorConfig
 
 interface ChartToolTipEntity
   extends TsxExcludeReact19<"div", "content">,
-    React.ComponentPropsWithoutRef<typeof RechartsPrimitive.Tooltip<ValueType, NameType>> {
+    React.ComponentPropsWithoutRef<
+      typeof RechartsPrimitive.Tooltip<ValueType, NameType>
+    > {
   hideLabel?: boolean;
   hideIndicator?: boolean;
   indicator?: "line" | "dot" | "dashed";
   nameKey?: string;
   labelKey?: string;
+}
+
+interface ChartLegendEntity
+  extends TsxTargetedReact19<"div">,
+    Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> {
+  hideIcon?: boolean;
+  nameKey?: string;
 }
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
@@ -211,7 +222,13 @@ const ChartTooltipContent: React.FC<ChartToolTipEntity> = ({
                 indicator === "dot" && "items-center"
               )}>
               {formatter && item?.value !== undefined && item.name ? (
-                formatter(item.value, item.name, item, index, item.payload)
+                formatter(
+                  item.value,
+                  item.name,
+                  item,
+                  index,
+                  item.payload as Payload<ValueType, NameType>[]
+                )
               ) : (
                 <>
                   {itemConfig?.icon ? (
@@ -246,7 +263,7 @@ const ChartTooltipContent: React.FC<ChartToolTipEntity> = ({
                     <div className="grid gap-1.5">
                       {nestLabel ? tooltipLabel : null}
                       <span className="text-muted-foreground">
-                        {itemConfig?.label || item.name}
+                        {itemConfig?.label ?? item.name}
                       </span>
                     </div>
                     {item.value && (
@@ -268,60 +285,55 @@ ChartTooltipContent.displayName = "ChartTooltip";
 
 const ChartLegend = RechartsPrimitive.Legend;
 
-const ChartLegendContent = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentProps<"div"> &
-    Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
-      hideIcon?: boolean;
-      nameKey?: string;
-    }
->(
-  (
-    { className, hideIcon = false, payload, verticalAlign = "bottom", nameKey },
-    ref
-  ) => {
-    const { config } = useChart();
+const ChartLegendContent: React.FC<ChartLegendEntity> = ({
+  className,
+  hideIcon = false,
+  payload,
+  verticalAlign = "bottom",
+  nameKey,
+  ref
+}) => {
+  const { config } = useChart();
 
-    if (!payload?.length) {
-      return null;
-    }
-
-    return (
-      <div
-        ref={ref}
-        className={cn(
-          "flex items-center justify-center gap-4",
-          verticalAlign === "top" ? "pb-3" : "pt-3",
-          className
-        )}>
-        {payload.map(item => {
-          const key = `${nameKey || item.dataKey || "value"}`;
-          const itemConfig = getPayloadConfigFromPayload(config, item, key);
-
-          return (
-            <div
-              key={item?.value}
-              className={cn(
-                "flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground"
-              )}>
-              {itemConfig?.icon && !hideIcon ? (
-                <itemConfig.icon />
-              ) : (
-                <div
-                  className="h-2 w-2 shrink-0 rounded-[2px]"
-                  style={{
-                    backgroundColor: item.color
-                  }}
-                />
-              )}
-              {itemConfig?.label}
-            </div>
-          );
-        })}
-      </div>
-    );
+  if (!payload?.length) {
+    return null;
   }
-);
+
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "flex items-center justify-center gap-4",
+        verticalAlign === "top" ? "pb-3" : "pt-3",
+        className
+      )}>
+      {payload.map((item, i) => {
+        const key = `${nameKey ?? item.dataKey as string | number ?? "value"}`;
+        const itemConfig = getPayloadConfigFromPayload(config, item, key);
+
+        return (
+          <div
+            key={item?.value as string | number ?? `chart-legend-${i}`}
+            className={cn(
+              "flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground"
+            )}>
+            {itemConfig?.icon && !hideIcon ? (
+              <itemConfig.icon />
+            ) : (
+              <div
+                className="h-2 w-2 shrink-0 rounded-[2px]"
+                style={{
+                  backgroundColor: item.color
+                }}
+              />
+            )}
+            {itemConfig?.label}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 ChartLegendContent.displayName = "ChartLegend";
 
 // Helper to extract item config from a payload.

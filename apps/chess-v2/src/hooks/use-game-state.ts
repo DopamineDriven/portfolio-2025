@@ -176,6 +176,8 @@ export function useGameState({
 
   const [selectedMode, setSelectedMode] = useState(initialMode);
 
+  const [selectedColor, setSelectedColor] = useState(initialColor);
+
   const [selectedDifficulty, setSelectedDifficulty] =
     useState(initialDifficulty);
 
@@ -337,7 +339,7 @@ export function useGameState({
           const newComments = game.getComments();
           return {
             ...prevState,
-            isPlayerTurn: chessColorHelper(newGame.turn()) === initialColor,
+            isPlayerTurn: chessColorHelper(newGame.turn()) === chessColorHelper(selectedColor),
             lastMove: [moveResult.from as Key, moveResult.to as Key],
             moves: existingMoves,
             moveCounter: prevState.moveCounter + 1,
@@ -355,8 +357,8 @@ export function useGameState({
     },
     [
       game,
+      selectedColor,
       chessColorHelper,
-      initialColor,
       state.isPlayerTurn,
       playSoundEffect,
       calculateMaterialScore
@@ -367,6 +369,8 @@ export function useGameState({
   const makeStockfishMove = useCallback(() => {
     if (state.gameOver || state.isPlayerTurn === true || isNavigatingHistory)
       return;
+
+    console.log(selectedColor);
     const difficulty = getStockfishDifficulty(state.difficulty);
 
     const roundedEloValue = (difficulty: number) => {
@@ -413,6 +417,7 @@ export function useGameState({
   }, [
     engine,
     game,
+    selectedColor,
     state.gameOver,
     state.difficulty,
     state.isPlayerTurn,
@@ -449,15 +454,18 @@ export function useGameState({
 
   // set player color
   const setPlayerColor = useCallback(
-    (color: ChessColor) => {
+    (newColor: ChessColor) => {
+      if (newColor !==initialColor) {
+        setSelectedColor(newColor)
+      }
       setState(prevState => ({
         ...prevState,
-        playerColor: color,
-        isPlayerTurn: toChessJSColor(color) === "w"
+        playerColor: newColor,
+        isPlayerTurn: toChessJSColor(newColor) === "w"
       }));
       resetGame();
     },
-    [resetGame]
+    [resetGame, initialColor]
   );
 
   // set selected difficulty
@@ -639,6 +647,7 @@ export function useGameState({
     isSoundEnabled,
     mode: selectedMode,
     difficulty: selectedDifficulty,
+    playerColor: selectedColor,
     // Methods
     setIsSoundEnabled,
     setPlayerColor,

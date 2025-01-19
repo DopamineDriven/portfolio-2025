@@ -4,7 +4,7 @@ import type { Square } from "chess.js";
 import type { Api } from "chessground/api";
 import type { Config } from "chessground/config";
 import type { Dests, Key } from "chessground/types";
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import { Chessground } from "chessground";
 import { useGame } from "@/contexts/game-context";
@@ -14,20 +14,21 @@ import "./brown.css";
 import "./cburnett.css";
 import { cn } from "@/lib/utils";
 
-export type ChessInstance = InstanceType<typeof Chess>;
 
 interface ChessboardProps {
   onSquareRightClickAction: (square: Square) => void;
   customSquareStyles?: Record<string, React.CSSProperties>;
   customHighlights?: Map<Key, string>;
   clearHighlightsAction: () => void;
+  children?: React.ReactNode;
 }
 
 export default function Chessboard({
   onSquareRightClickAction,
   customSquareStyles,
   clearHighlightsAction,
-  customHighlights
+  customHighlights,
+  children
 }: ChessboardProps) {
   const {
     game,
@@ -88,28 +89,25 @@ export default function Chessboard({
     [isPlayerTurn, getMoveOptions]
   );
 
-  const getLegalMoves = useCallback((chess: ChessInstance): Dests => {
+  const getLegalMoves = useCallback((chess: InstanceType<typeof Chess>) => {
     const dests = new Map<Key, Key[]>();
     chess.moves({ verbose: true }).forEach(move => {
-      const moves = dests.get(move.from as Key) ?? [];
+      const moves = dests.get(move.from as Key) ?? Array.of<Key>();
       moves.push(move.to as Key);
       dests.set(move.from as Key, moves);
     });
-    return dests;
+    return dests satisfies Dests;
   }, []);
 
-  const chessColorHelper = useCallback(
-    (val: "b" | "w" | "white" | "black"): "white" | "black" => {
-      return val === "b" || val === "black" ? "black" : "white";
-    },
-    []
-  );
+  const chessColorHelper = useCallback((val: "b" | "w" | "white" | "black") => {
+    return val === "b" || val === "black" ? "black" : "white";
+  }, []);
 
   useEffect(() => {
     console.log(
       `[Chessboard] Updating config, isNavigatingHistory: ${isNavigatingHistory}`
     );
-    const config: Config = {
+    const config = {
       fen: game.fen(),
       orientation: chessColorHelper(playerColor),
       coordinates: true,
@@ -152,7 +150,7 @@ export default function Chessboard({
       check: game.isCheck(),
       lastMove: lastMove as Key[],
       viewOnly: isNavigatingHistory
-    };
+    } satisfies Config;
 
     if (boardRef.current) {
       if (apiRef.current) {
@@ -255,12 +253,13 @@ export default function Chessboard({
         "max-h-[80dvh] md:min-h-[400px]",
         "grow"
       )}>
+      {children}
       <div
         ref={boardRef}
         className={cn(
-          "!size-[min(80dvh,100vw)] sm:!size-[min(80dvh,95vw)]",
+          "!size-[min(80dvh,100dvw)] sm:!size-[min(80dvh,95dvw)]",
           "!aspect-square",
-          "overflow-hidden rounded-lg",
+          "overflow-hidden",
           "object-cover"
         )}
         style={{

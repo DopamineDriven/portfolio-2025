@@ -2,7 +2,7 @@
 
 import type { Square } from "chess.js";
 import type { Key } from "chessground/types";
-import type { CSSProperties, FC } from "react";
+import type { CSSProperties, FC, PropsWithChildren } from "react";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Brain,
@@ -20,6 +20,7 @@ import { Button } from "@/ui/atoms/button";
 import ChatWidget from "@/ui/chat-widget";
 import Chessboard from "@/ui/chessboard";
 import ChessboardUser from "@/ui/chessboard-user";
+import { EvalBar } from "@/ui/eval-bar";
 import MoveHistory from "@/ui/move-history";
 import MoveHistoryBar from "@/ui/move-history-bar";
 import PositionAnalysis from "@/ui/position-analysis";
@@ -29,7 +30,11 @@ interface ChessboardBotProps {
   country: string;
 }
 
-const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
+const ChessboardBot: FC<PropsWithChildren<ChessboardBotProps>> = ({
+  onRestart,
+  country,
+  children
+}) => {
   const {
     gameOver,
     gameResult,
@@ -95,6 +100,15 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
   const [hintSquares, setHintSquares] = useState<Map<Key, string>>(
     new Map<Key, string>()
   );
+
+  const [evalScore, setEvalScore] = useState(50);
+
+  useEffect(() => {
+    if (chessApiEvaluation?.eval && evalScore !== chessApiEvaluation.eval) {
+      setEvalScore(chessApiEvaluation.eval);
+    }
+    console.log(evalScore);
+  }, [evalScore, chessApiEvaluation]);
 
   const clearHighlights = useCallback(() => {
     setHintSquares(new Map<Key, string>());
@@ -244,7 +258,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
     console.log(`[difficulty:mode]: ${difficulty}:${mode}`);
   }, [difficulty, mode]);
   return (
-    <div className="max-w-10xl mx-auto w-full sm:px-2 lg:px-4">
+    <div className="mx-auto h-auto !w-[min(90dvh,100dvw)] sm:!w-[min(90dvh,95dvw)] sm:px-2 lg:px-4">
       <div className="flex w-full flex-col lg:flex-row">
         <div className="mx-auto w-full">
           {isMobile ? (
@@ -269,6 +283,13 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
             </div>
           )}
           <div className="relative w-full">
+            {isMobile && (
+              <EvalBar
+                playerColor={playerColor}
+                evalScore={evalScore}
+                isMobile={isMobile}
+              />
+            )}
             <Chessboard
               onSquareRightClickAction={onSquareRightClick}
               customSquareStyles={
@@ -278,8 +299,15 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
                 } as Record<string, CSSProperties>
               }
               customHighlights={showHint ? hintSquares : new Map<Key, string>()}
-              clearHighlightsAction={clearHighlights}
-            />
+              clearHighlightsAction={clearHighlights}>
+              {!isMobile && (
+                <EvalBar
+                  playerColor={playerColor}
+                  evalScore={evalScore}
+                  isMobile={isMobile}
+                />
+              )}
+            </Chessboard>
             {/* <div className="absolute -bottom-[6.5rem] right-14 flex flex-row gap-2 sm:hidden">
               <Button
                 variant="outline"
@@ -370,6 +398,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
               </Button>
             </div>
           </ChessboardUser>
+          {children}
         </div>
       </div>
       <div className="fixed bottom-20 right-6 z-50 hidden sm:block">
