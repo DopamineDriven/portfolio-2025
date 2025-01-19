@@ -257,4 +257,4 @@ export const flagArr = [
   "za.svg",
   "zm.svg",
   "zw.svg"
-] as const
+] as const;

@@ -1,4 +1,3 @@
-
 export class Engine {
   private stockfish: Worker | null;
 

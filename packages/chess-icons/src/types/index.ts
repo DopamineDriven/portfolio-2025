@@ -11,5 +11,4 @@ export type RemoveFields<T, P extends keyof T = keyof T> = {
 export type SVGProperties = RemoveFields<
   React.SVGProps<SVGSVGElement>,
   "viewBox" | "fill" | "xmlns"
-> &
- { ref?: React.Ref<SVGSVGElement>;}
+> & { ref?: React.Ref<SVGSVGElement> };

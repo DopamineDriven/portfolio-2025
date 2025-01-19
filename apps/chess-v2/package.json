@@ -22,7 +22,7 @@
     "@radix-ui/react-label": "^2.1.1",
     "@radix-ui/react-menubar": "^1.1.4",
     "@radix-ui/react-radio-group": "^1.2.2",
-    "@radix-ui/react-scroll-area":"^1.2.2",
+    "@radix-ui/react-scroll-area": "^1.2.2",
     "@radix-ui/react-slider": "^1.2.2",
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-toast": "^1.2.4",
@@ -34,16 +34,18 @@
     "clsx": "^2.1.1",
     "embla-carousel": "^8.5.2",
     "embla-carousel-react": "^8.5.2",
-    "lucide-react": "^0.471.1",
-    "motion": "^11.18.0",
-    "next": "^15.1.4",
+    "lucide-react": "^0.473.0",
+    "motion": "^11.18.1",
+    "next": "^15.1.5",
     "next-themes": "^0.4.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-window": "^1.8.11",
+    "recharts": "^2.15.0",
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
+    "@csstools/postcss-oklab-function": "^4.0.7",
     "@d0paminedriven/fs": "^0.1.0",
     "@edge-runtime/cookies": "^6.0.0",
     "@edge-runtime/types": "^4.0.0",
@@ -74,5 +76,8 @@
     "tsx": "latest",
     "typescript": "latest",
     "urlpattern-polyfill": "^10.0.0"
+  },
+  "overrides": {
+    "react-is": "^19.0.0-rc-69d4b800-20241021"
   }
 }

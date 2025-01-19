@@ -97,7 +97,6 @@ export type ElementAttributePicker<
 > = React.RefAttributes<TsxTargetedExp<T, "element">> &
   Partial<TsxTargetedExp<T, "attribute">>;
 
-
 export type CsSTargeted<T extends keyof React.CSSProperties> = {
-  [P in T]: React.CSSProperties[P]
-}
+  [P in T]: React.CSSProperties[P];
+};

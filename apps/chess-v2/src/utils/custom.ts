@@ -1,5 +1,6 @@
 import type { Move, PieceSymbol, Square } from "chess.js";
 import { Unenumerate } from "@/types/helpers";
+
 // import {read as fenRead } from "chessground/fen"
 
 export const colors = ["white", "black"] as const;
@@ -50,9 +51,9 @@ export const allKeys = (
   [...files.map(c => ranks.map(r => `${c}${r}` as const))] as const
 ).reduce(p => p);
 
-const allKeysPlusA0 = ([...allKeys]as const).reduce(p => p);
+const allKeysPlusA0 = ([...allKeys] as const).reduce(p => p);
 
-const allKeysPlusA0ToArr = Array.of(allKeysPlusA0)
+const allKeysPlusA0ToArr = Array.of(allKeysPlusA0);
 
 // export type ComputeRange<
 //   N extends number,
@@ -202,7 +203,8 @@ export function validateFen(
   return errors;
 }
 
-export const pos2Key = (pos: [number, number]) => allKeysPlusA0ToArr[8 * pos[0] + pos[1]]
+export const pos2Key = (pos: [number, number]) =>
+  allKeysPlusA0ToArr[8 * pos[0] + pos[1]];
 
 const rolesFen: { [letter: string]: Role } = {
   p: "pawn",
@@ -223,7 +225,6 @@ const letters = {
 };
 
 export type FEN = string;
-
 
 /*
 export function read(fen: cg.FEN): cg.Pieces {
@@ -320,9 +321,7 @@ export function write(pieces: Pieces): FEN {
     .replace(/1{2,}/g, s => s.length.toString());
 }
 
-console.log(
-  read("rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1")
-);
+console.log(read("rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1"));
 
 // const stockfishPath = new URL("../../public/stockfish.js", import.meta.url);
 // console.log(stockfishPath);

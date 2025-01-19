@@ -60,4 +60,3 @@ export const WhiteKing: FC<TsxExclude<"svg", "fill" | "viewBox" | "xmlns">> = ({
     />
   </svg>
 );
-

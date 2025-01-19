@@ -11,10 +11,10 @@ import type {
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, History, Info } from "lucide-react";
 import { FixedSizeList as List } from "react-window";
+import { useChessWebSocketContext } from "@/contexts/chess-websocket-context";
 import { useGame } from "@/contexts/game-context";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/atoms/button";
-import { useChessWebSocketContext } from "@/contexts/chess-websocket-context";
 
 const ITEM_SIZE = 36; // Height of each move item in pixels
 const MOVE_HISTORY_WIDTH = 256; // Width of the move history panel in pixels

@@ -22,12 +22,11 @@ export default function Error({
         onClick={
           // Attempt to recover by trying to re-render the segment
           () => reset()
-        }>
-      </button>
+        }></button>
       <details className="[&_details[open]]:p-2 [&_details[open]_summary]:mb-2 [&_details[open]_summary]:border-b [&_details[open]_summary]:border-solid [&_details[open]_summary]:border-[#aaa]">
-          <summary className="-my-2 mx-0 p-2 font-sans">Details</summary>
-          <pre>{JSON.stringify(error, null, 2)}</pre>
-        </details>
+        <summary className="-my-2 mx-0 p-2 font-sans">Details</summary>
+        <pre>{JSON.stringify(error, null, 2)}</pre>
+      </details>
     </div>
   );
 }

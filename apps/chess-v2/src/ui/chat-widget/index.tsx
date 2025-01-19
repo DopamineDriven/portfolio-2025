@@ -4,7 +4,6 @@ import { useState } from "react";
 import { MessageCircle, X } from "lucide-react";
 import { Button } from "@/ui/atoms/button";
 
-
 interface ChatWidgetProps {
   messages: { username: string; content: string }[];
   onSendMessageAction: (message: string) => void;
@@ -28,7 +27,7 @@ export default function ChatWidget({
   };
 
   return (
-    <div className="sm:relative z-50 hidden sm:block">
+    <div className="z-50 hidden sm:relative sm:block">
       {isOpen ? (
         <div className="flex h-96 w-80 flex-col rounded-lg bg-gray-700">
           <div className="flex items-center justify-between border-b border-gray-600 p-4">

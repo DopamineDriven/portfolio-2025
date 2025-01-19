@@ -142,7 +142,7 @@ export function HomeContent({ posts }: { posts: Post[] }) {
                 className="theme-transition -mx-6 grid list-none grid-cols-2 gap-0.5 overflow-hidden bg-background/80 text-foreground sm:mx-0 sm:rounded-2xl md:grid-cols-3">
                 {proficiencies.map((proficiency, i) => (
                   <li
-                    className="theme-transition rounded-lg bg-primary p-8 text-center align-middle text-primary-foreground dark:bg-foreground/80 dark:text-background sm:p-10"
+                    className="theme-transition rounded-lg bg-primary p-8 text-center align-middle text-primary-foreground sm:p-10 dark:bg-foreground/80 dark:text-background"
                     key={`proficiency-${i++}`}>
                     {proficiency}
                   </li>
