@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import type { ChessColor } from "@/utils/chess-types";
 import { toChessGroundColorHelper } from "@/lib/color-helper";
 import { cn } from "@/lib/utils";
@@ -22,9 +23,11 @@ export function EvalBar({
 }) {
   const chessGroundColor = toChessGroundColorHelper(playerColor);
   const toPercent = scoreToPercent(evalScore);
+  const [open, setOpen] = useState(false);
+
   return (
-    <TooltipProvider>
-      <Tooltip>
+    <TooltipProvider delayDuration={0}>
+      <Tooltip open={open} onOpenChange={setOpen}>
         <div
           className={cn(
             "mb-1 !h-4 !w-[min(80dvh,100dvw)] sm:mb-0 sm:mr-1 sm:!h-[min(80dvh,95dvw)] sm:!w-10",
@@ -37,7 +40,15 @@ export function EvalBar({
           <TooltipContent side={isMobile ? "top" : "bottom"}>
             <p>{`${evalScore}`}</p>
           </TooltipContent>
-          <TooltipTrigger asChild>
+          <TooltipTrigger
+            asChild
+            onTouchStart={evt => {
+              evt.stopPropagation();
+              setOpen(true);
+            }}
+            onTouchEnd={() => {
+              setOpen(false);
+            }}>
             <div
               className={cn(
                 "relative h-4 w-full overflow-hidden bg-black sm:h-full sm:w-10"

@@ -29,7 +29,7 @@ const PositionAnalysis: React.FC<PositionAnalysisProps> = ({
         <>
           <p className="text-pretty">{evaluation.text}</p>
           {!isMobile && evaluation.continuationArr && (
-            <div className="mt-1 sm:mt-2">
+            <div className="mt-1 sm:mt-2 hidden">
               <h4 className="font-semibold">Suggested continuation:</h4>
               <p>{evaluation.continuationArr.join(", ")}</p>
             </div>
