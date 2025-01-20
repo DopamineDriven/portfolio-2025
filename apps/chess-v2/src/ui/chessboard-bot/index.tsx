@@ -2,7 +2,7 @@
 
 import type { Square } from "chess.js";
 import type { Key } from "chessground/types";
-import type { CSSProperties, FC, PropsWithChildren } from "react";
+import type { CSSProperties, FC } from "react";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Brain,
@@ -16,6 +16,7 @@ import {
 import { useChessWebSocketContext } from "@/contexts/chess-websocket-context";
 import { useGame } from "@/contexts/game-context";
 import { cn } from "@/lib/utils";
+import { AnalyzeAdvantage } from "@/ui/analyze-advantage/temp";
 import { Button } from "@/ui/atoms/button";
 import ChatWidget from "@/ui/chat-widget";
 import Chessboard from "@/ui/chessboard";
@@ -30,11 +31,7 @@ interface ChessboardBotProps {
   country: string;
 }
 
-const ChessboardBot: FC<PropsWithChildren<ChessboardBotProps>> = ({
-  onRestart,
-  country,
-  children
-}) => {
+const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
   const {
     gameOver,
     gameResult,
@@ -86,7 +83,7 @@ const ChessboardBot: FC<PropsWithChildren<ChessboardBotProps>> = ({
     { username: string; content: string }[]
   >([]);
 
-  const [currentComment, setCurrentComment] = useState<string | undefined>(
+  const [_currentComment, setCurrentComment] = useState<string | undefined>(
     undefined
   );
 
@@ -398,9 +395,13 @@ const ChessboardBot: FC<PropsWithChildren<ChessboardBotProps>> = ({
               </Button>
             </div>
           </ChessboardUser>
-          {children}
         </div>
       </div>
+      {isReviewMode === true && (
+        <div className={cn(isReviewMode ? "flex" : "hidden")}>
+          <AnalyzeAdvantage />
+        </div>
+      )}
       <div className="fixed bottom-20 right-6 z-50 hidden sm:block">
         <ChatWidget
           messages={messages}
@@ -456,14 +457,18 @@ const ChessboardBot: FC<PropsWithChildren<ChessboardBotProps>> = ({
           </Button>
         </div>
       )}
-      {isReviewMode && (
-        <div className="mt-4 rounded-lg bg-gray-800 p-4 text-white">
-          <h3 className="mb-2 text-lg font-semibold">Position Comment:</h3>
-          {currentComment ? (
-            <p>{currentComment}</p>
-          ) : (
-            <p>No comment for this position.</p>
-          )}
+      {isReviewMode && !isMobile && (
+        <div
+          className={cn(
+            "z-20 flex flex-row bg-gray-800/95 p-2 text-white transition-all duration-300 ease-in-out",
+            "max-h-[12.5dvh] overflow-y-auto sm:!w-[min(90dvh,95dvw)]"
+          )}>
+          <PositionAnalysis
+            evaluation={chessApiEvaluation}
+            isConnected={isConnected}
+            isLoading={isAnalysisLoading}
+            isMobile={isMobile}
+          />
         </div>
       )}
       {isMobile && showAnalysis && (
