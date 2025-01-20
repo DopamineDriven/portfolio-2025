@@ -7,10 +7,10 @@ import { useAdvantageTracker } from "@/hooks/use-advantage-tracker";
 import { AdvantageChartVertical } from "@/ui/advantage-chart-vertical";
 
 export function AnalyzeAdvantageVertical() {
-  const { game, moves } = useGame();
+  const { game, moves, isNavigatingHistory } = useGame();
   const { chessApiEvaluation } = useChessWebSocketContext();
   const { advantageHistory, addAdvantagePoint, resetAdvantageHistory } =
-    useAdvantageTracker();
+    useAdvantageTracker(isNavigatingHistory);
 
   useEffect(() => {
     if (chessApiEvaluation?.text) {
