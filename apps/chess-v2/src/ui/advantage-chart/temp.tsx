@@ -49,9 +49,9 @@ export function AdvantageChartTwo({ data, height: _height = 300 }: {data: {
         <stop offset="95%" stopColor="#ffffffe6" stopOpacity={1} />
       </linearGradient>
     </defs>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="moveNumber" />
-          <YAxis domain={[-10, 10]} />
+          <CartesianGrid strokeDasharray="none" />
+          <XAxis dataKey="moveNumber" tick={false} strokeDasharray={"none"} />
+          <YAxis domain={[-10, 10]} strokeDasharray={"none"} />
           <ChartTooltip content={<ChartTooltipContent />} />
           <ReferenceLine y={0} stroke="#ffffffe6" strokeDasharray="3 3" />
           <Area
