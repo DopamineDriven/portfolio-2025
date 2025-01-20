@@ -1,12 +1,16 @@
 "use client";
 
 import type { Move, Square } from "chess.js";
-import type { Comment as PgnComment, ShortMove } from "chess.js/index";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import { Key } from "chessground/types";
 import type { SoundKeys } from "@/lib/sound";
-import type { StockfishDifficulty, StockfishMode } from "@/types/chess";
+import type {
+  PgnComment,
+  ShortMove,
+  StockfishDifficulty,
+  StockfishMode
+} from "@/types/chess";
 import type { CapturedPiecesProps, MaterialCount } from "@/types/values";
 import type { ChessColor } from "@/utils/chess-types";
 import { playSound } from "@/lib/sound";
@@ -198,6 +202,98 @@ export function useGameState({
     [isSoundEnabled]
   );
 
+  /**
+ *   const handlePromotion = useCallback(
+    (from: Square, to: Square, promotion: "n" | "b" | "r" | "q") => {
+      setState((prev) => {
+        const newGame = new Chess(game.fen())
+        const move = newGame.move({ from, to, promotion })
+
+        if (move) {
+          const newCapturedPieces = { ...prev.capturedPieces }
+          const newMaterialScore = { ...prev.materialScore }
+
+          // Adjust captured pieces and material score
+          const promotedColor = move.color === "w" ? "white" : "black"
+          const oppositeColor = promotedColor === "white" ? "black" : "white"
+
+          // Remove pawn from captured pieces
+          newCapturedPieces[oppositeColor].p -= 1
+
+          // Add new promoted piece to captured pieces (as it's no longer considered "captured")
+          newCapturedPieces[oppositeColor][promotion as keyof MaterialCount] += 1
+
+          // Recalculate material score
+          const calculatedScore = calculateMaterialScore(newCapturedPieces)
+          newMaterialScore.white = calculatedScore.white
+          newMaterialScore.black = calculatedScore.black
+
+          return {
+            ...prev,
+            game: newGame,
+            capturedPieces: newCapturedPieces,
+            materialScore: newMaterialScore,
+            promotionSquare: null,
+            isPlayerTurn: !prev.isPlayerTurn,
+            lastMove: [from, to],
+            moves: [...prev.moves, move.san],
+            moveCounter: prev.moveCounter + 1,
+          }
+        }
+        return prev
+      })
+    },
+    [calculateMaterialScore, game],
+  )
+
+
+
+  const getGameResult = (game: Chess, playerColor: ChessColor) => {
+    if (game.isCheckmate()) {
+      if (game.turn() === toChessJSColor(playerColor)) {
+        return "Stockfish wins!" as const;
+      } else return "You win!" as const;
+    } else if (game.isDraw()) {
+      return "It's a draw!" as const;
+    } else if (
+      game.isStalemate() ||
+      game.isThreefoldRepetition() ||
+      game.isInsufficientMaterial()
+    ) {
+      return "Stalemate!" as const;
+    } else if (game.isGameOver()) {
+      return "Game over!" as const;
+    }
+    return null;
+  };
+
+
+ */
+  // 1) Keep your PIECE_VALUES the same
+  // 2) Create a helper to scan the board for material:
+
+  function computeMaterialScore(game: Chess) {
+    let white = 0;
+    let black = 0;
+    const board = game.board();
+    // board is 2D array (8 rows, each with 8 squares)
+
+    for (const row of board) {
+      for (const square of row) {
+        if (square) {
+          const color = square.color; // 'w' or 'b'
+          const pieceType = square.type; // 'p', 'n', 'b', 'r', 'q', 'k'
+          const value = PIECE_VALUES[pieceType];
+          if (color === "w") {
+            white += value;
+          } else {
+            black += value;
+          }
+        }
+      }
+    }
+    return { white, black };
+  }
   // handle promotion
   const handlePromotion = useCallback((from: Square, to: Square) => {
     setState(prev => ({
@@ -224,7 +320,6 @@ export function useGameState({
     }
     return null;
   };
-
 
   // calculate material score
   const calculateMaterialScore = useCallback(
@@ -324,6 +419,11 @@ export function useGameState({
             const calculatedScore = calculateMaterialScore(newCapturedPieces);
             newMaterialScore.white = calculatedScore.white;
             newMaterialScore.black = calculatedScore.black;
+
+            console.log(
+              `[calculateMaterialScore]: `,
+              JSON.stringify(calculatedScore, null, 2)
+            );
           }
 
           // deduplicated new moves array
@@ -334,12 +434,17 @@ export function useGameState({
           if (previousMove !== moveResult.san || existingMoves.length === 0) {
             existingMoves[prevState.moveCounter] = moveResult.san;
           }
-
+          console.log(
+            `[computeMaterialScore]: `,
+            JSON.stringify(computeMaterialScore(newGame), null, 2)
+          );
           const newMoveHistory = [...prevState.moveHistory, moveResult];
           const newComments = game.getComments();
           return {
             ...prevState,
-            isPlayerTurn: chessColorHelper(newGame.turn()) === chessColorHelper(selectedColor),
+            isPlayerTurn:
+              chessColorHelper(newGame.turn()) ===
+              chessColorHelper(selectedColor),
             lastMove: [moveResult.from as Key, moveResult.to as Key],
             moves: existingMoves,
             moveCounter: prevState.moveCounter + 1,
@@ -455,8 +560,8 @@ export function useGameState({
   // set player color
   const setPlayerColor = useCallback(
     (newColor: ChessColor) => {
-      if (newColor !==initialColor) {
-        setSelectedColor(newColor)
+      if (newColor !== initialColor) {
+        setSelectedColor(newColor);
       }
       setState(prevState => ({
         ...prevState,
@@ -471,12 +576,6 @@ export function useGameState({
   // set selected difficulty
   const setDifficulty = useCallback(
     (newDifficulty: StockfishDifficulty) => {
-      console.log(
-        `setDifficulty useCallback`,
-        newDifficulty,
-        `initialDifficulty`,
-        initialDifficulty
-      );
       if (newDifficulty !== initialDifficulty) {
         setSelectedDifficulty(newDifficulty);
       }
@@ -531,9 +630,6 @@ export function useGameState({
   const goToMove = useCallback(
     (index: number) => {
       if (index >= -1 && index < state.moveHistory.length) {
-        console.log(
-          `[[game-context.tsx]] Setting isNavigatingHistory: ${index !== state.moveHistory.length - 1}`
-        );
         setIsNavigatingHistory(index !== state.moveHistory.length - 1);
         const newGame = new Chess();
 
@@ -569,9 +665,6 @@ export function useGameState({
           comments: newComments,
           isNavigatingHistory: index !== state.moveHistory.length - 1
         }));
-        console.log(
-          `[[game-context.tsx]] After setState, isNavigatingHistory: ${index !== state.moveHistory.length - 1}`
-        );
       }
     },
     [state.moveHistory, setGame, calculateMaterialScore]
@@ -630,9 +723,6 @@ export function useGameState({
   }, [game]);
 
   const setIsNavigatingHistoryExplicitly = useCallback((value: boolean) => {
-    console.log(
-      `[[game-context.tsx]] Explicitly setting isNavigatingHistory to ${value}`
-    );
     setIsNavigatingHistory(value);
     setState(prevState => ({
       ...prevState,

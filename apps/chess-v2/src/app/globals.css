@@ -67,6 +67,39 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none; /* Chrome, Safari and Opera */
   }
+
+  .tooltip {
+    transition-timing-function: cubic-bezier(0.6, -0.28, 0.74, 0.05);
+    transition-property: transform;
+    visibility: hidden;
+    position: absolute;
+    transition-duration: 500ms;
+  }
+
+  .has-tooltip:hover .tooltip {
+    transition-timing-function: cubic-bezier(0.6, -0.28, 0.74, 0.05);
+    transition-property: transform;
+    transition-duration: 500ms;
+    visibility: visible;
+    text-wrap: nowrap;
+    z-index: 50;
+    margin-top: auto;
+    border-radius: 0.5rem;
+    background-color: hsla(215, 28%, 17%, 0.75);
+    margin-bottom: auto;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    user-select: none;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border-collapse: collapse;
+    letter-spacing: -0.025em;
+    font-size: 0.625rem;
+    line-height: 0.875rem;
+    transform: translate3d(-2rem, 0, 0);
+    color: hsl(220, 14%, 96%);
+    @apply top-0;
+  }
 }
 
 /* Chess specific styles */

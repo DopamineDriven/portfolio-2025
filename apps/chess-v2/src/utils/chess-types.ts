@@ -1,7 +1,6 @@
-import type { Move, PieceSymbol } from "chess.js";
-import type { Square } from "chess.js/index";
+import type { Move, PieceSymbol, Square } from "chess.js";
 
-// import { FLAGS } from "chess.js/index";
+
 
 export type ChessColor = "w" | "b" | "white" | "black";
 
