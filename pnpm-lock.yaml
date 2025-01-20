@@ -301,9 +301,6 @@ importers:
       '@portfolio/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
-      '@types/chess.js':
-        specifier: ^0.13.7
-        version: 0.13.7
       '@types/gtag.js':
         specifier: ^0.0.20
         version: 0.0.20
@@ -2643,9 +2640,6 @@ packages:
 
   '@types/babel__traverse@7.20.6':
     resolution: {integrity: sha512-r1bzfrm0tomOI8g1SzvCaQHo6Lcv6zu0EA+W2kHrt8dyrHQxGzBBL4kdkzIS+jBMV+EYcMAEAqXqYaLJq5rOZg==}
-
-  '@types/chess.js@0.13.7':
-    resolution: {integrity: sha512-o9TeeBdFXelFJXOD9+6sT6bbpBvWG0ZbpOnlIyUNXBjewh7xoFS0+BifGc71T45D5E952io3i8dDsaN6hnLaxw==}
 
   '@types/d3-array@3.2.1':
     resolution: {integrity: sha512-Y2Jn2idRrLzUfAKV2LyRImR+y4oa2AntrgID95SHJxuMUrkNXmanDSed71sRNZysveJVt1hLLemQZIady0FpEg==}
@@ -8879,8 +8873,6 @@ snapshots:
   '@types/babel__traverse@7.20.6':
     dependencies:
       '@babel/types': 7.26.3
-
-  '@types/chess.js@0.13.7': {}
 
   '@types/d3-array@3.2.1': {}
 

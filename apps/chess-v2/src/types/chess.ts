@@ -1,3 +1,4 @@
+import type { PieceSymbol, Square } from "chess.js";
 import type { Color, Key } from "chessground/types";
 
 export type Dests = Map<Key, Key[]>;
@@ -69,3 +70,27 @@ export const pieceImgObj = {
   white_rook:
     "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess/public/pieces/white-rook.svg"
 } as const;
+
+export interface ShortMove {
+  /**
+   * The location the piece is moving from.
+   * Must be in san format, e.g "h8"
+   */
+  from: Square;
+
+  /**
+   * The location the piece is moving to.
+   * Must be in san format, e.g "a1"
+   */
+  to: Square;
+
+  /**
+   * If this move results in a promotion, this will have the unit promotion.
+   */
+  promotion?: Exclude<PieceSymbol, "p" | "k">;
+}
+
+export interface PgnComment {
+  fen: string;
+  comment: string;
+}

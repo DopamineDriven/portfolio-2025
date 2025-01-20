@@ -33,8 +33,11 @@ export const handlePieceIcons = (target: keyof typeof PIECE_VALUES) => {
     case "q": {
       return "Queen";
     }
-    default: {
+    case "r": {
       return "Rook";
+    }
+    default: {
+      return "Queen";
     }
   }
 };
