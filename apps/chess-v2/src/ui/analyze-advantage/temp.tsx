@@ -53,7 +53,7 @@ export function AnalyzeAdvantage() {
   }, [moves.length, resetAdvantageHistory, isNavigatingHistory]);
   // flex w-full flex-row items-center
   return (
-    <div className="mx-auto hidden h-fit w-full sm:flex sm:flex-row">
+    <div className="mx-auto max-h-[40dvh] overflow-y-auto sm:max-h-fit w-full flex flex-row">
       <AdvantageChart
         data={pairMovesAndAverage(advantageHistory)}
         height={350}
