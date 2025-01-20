@@ -7,9 +7,9 @@ export const size = {
   width: 1200,
   height: 630
 };
-export const contentType = "image/png";
+export const contentType = "image/webp";
 export default async function Image() {
-  const absoluteUrl = new URL("./og.png", import.meta.url);
+  const absoluteUrl = new URL("./og_webp.webp", import.meta.url);
 
   const fontAbsoluteUrl = new URL(
     "./BasisGrotesquePro-Light.ttf",
