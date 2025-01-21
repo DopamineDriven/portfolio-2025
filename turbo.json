@@ -46,6 +46,7 @@
     "NO_COLOR",
     "NODE_ENV",
     "NPM_TOKEN",
+    "OPEN_AI_KEY ",
     "PORT",
     "VERCEL_ENV",
     "VERCEL_GIT_PROVIDER",
