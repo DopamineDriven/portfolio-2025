@@ -5,7 +5,7 @@ import * as tailwindcssMotion from "tailwindcss-motion";
 export default {
   content: ["src/**/*.{js,ts,jsx,tsx}"],
   darkMode: "selector",
-
+  future: { hoverOnlyWhenSupported: true },
   theme: {
     extend: {
       backgroundImage: {

@@ -37,6 +37,7 @@ export const metadata = {
     default: "Next Chess Bot",
     template: "%s | Next Chess Bot"
   },
+  verification: { google: "WiuGYHLPegAsEoxCa_7DGSsG6tB_AU9D822XBPNxtpI" },
   description: "Elevate your Game - play against Stockfish",
   authors: [{ name: "Andrew Ross", url: "https://github.com/DopamineDriven" }],
   creator: "Andrew Ross",
