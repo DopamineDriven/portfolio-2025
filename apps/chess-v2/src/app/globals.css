@@ -112,6 +112,15 @@
   background-color: rgba(130, 77, 255, 0.4) !important;
 }
 
+.cg-wrap square.hint-path {
+  background: radial-gradient(
+    circle,
+    rgba(130, 77, 255, 0.4), 25%,
+    transparent 25%
+  ) !important;
+  border-radius: 50% !important;
+}
+
 .cg-wrap square.hint-to {
   background-color: rgba(130, 77, 255, 0.4) !important;
 }
@@ -165,6 +174,8 @@
   min-width: 0;
   position: relative;
 }
+
+
 
 body::-webkit-scrollbar {
   display: thin; /* modify scrollbar for Chrome, Safari and Opera https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp */

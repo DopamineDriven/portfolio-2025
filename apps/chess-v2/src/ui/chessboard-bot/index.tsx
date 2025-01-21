@@ -1,6 +1,6 @@
 "use client";
 
-import type { Square } from "chess.js";
+import type { Chess, Square } from "chess.js";
 import type { Key } from "chessground/types";
 import type { CSSProperties, FC } from "react";
 import React, { useCallback, useEffect, useState } from "react";
@@ -195,15 +195,61 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
     requestChessApiEvaluation(game);
   }, [game, requestChessApiEvaluation]);
 
+  const squaresOnPath = (game: Chess, from: Square, to: Square) => {
+    // Identify what piece is on `from` so we know whether it’s sliding (rook, bishop, queen)
+    const piece = game.get(from);
+    if (!piece) return [];
+
+    // For knights, pawns, king (non-sliding), we only highlight from + to
+    if (["n", "p"].includes(piece.type)) {
+      return [];
+    }
+
+    // Otherwise we handle rook, bishop, queen (which can “slide”)
+    const path: Square[] = [];
+    // Convert e.g. "a1" => { file: 1, rank: 1 } to do some math
+    const fromFile = from.charCodeAt(0); // "a"=97 in ASCII
+    const fromRank = parseInt(from[1]!);
+    const toFile = to.charCodeAt(0);
+    const toRank = parseInt(to[1]!);
+
+    const fileDirection = Math.sign(toFile - fromFile);
+    const rankDirection = Math.sign(toRank - fromRank);
+
+    // Step from the square right after `from` until we reach `to` or run out of board
+    let currentFile = fromFile + fileDirection;
+    let currentRank = fromRank + rankDirection;
+
+    while (
+      currentFile !== toFile || // not at the destination file
+      currentRank !== toRank // not at the destination rank
+    ) {
+      const sq: Square = (String.fromCharCode(currentFile) +
+        currentRank.toString()) as Square;
+
+      path.push(sq);
+
+      currentFile += fileDirection;
+      currentRank += rankDirection;
+    }
+
+    return path;
+  };
+
   const handleShowHint = useCallback(() => {
     if (chessApiEvaluation?.from && chessApiEvaluation?.to) {
       const newHintSquares = new Map<Key, string>();
       newHintSquares.set(chessApiEvaluation.from as Key, "hint-from");
       newHintSquares.set(chessApiEvaluation.to as Key, "hint-to");
+
+      const pathSquares = squaresOnPath(game, chessApiEvaluation?.from as Square, chessApiEvaluation?.to as Square)
+      pathSquares.forEach((sq) => {
+        newHintSquares.set(sq as Key, "hint-to");
+      });
       setHintSquares(newHintSquares);
       setShowHint(true);
     }
-  }, [chessApiEvaluation]);
+  }, [chessApiEvaluation, game]);
 
   useEffect(() => {
     if (chessApiEvaluation) {
