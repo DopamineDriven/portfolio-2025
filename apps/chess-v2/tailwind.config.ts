@@ -13,6 +13,10 @@ export default {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))"
       },
+      fontSize: {
+        sxs: ["0.625rem", { lineHeight: "0.875rem" }],
+        xxs: ["0.5rem", { lineHeight: "0.75rem" }]
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
