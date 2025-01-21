@@ -397,10 +397,8 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
           </ChessboardUser>
         </div>
       </div>
-      {isReviewMode === true && (
-        <div className={cn(isReviewMode ? "flex" : "hidden")}>
+      {!isMobile && (
           <AnalyzeAdvantage />
-        </div>
       )}
       <div className="fixed bottom-20 right-6 z-50 hidden sm:block">
         <ChatWidget
