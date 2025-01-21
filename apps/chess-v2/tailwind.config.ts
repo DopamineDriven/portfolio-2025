@@ -5,13 +5,17 @@ import * as tailwindcssMotion from "tailwindcss-motion";
 export default {
   content: ["src/**/*.{js,ts,jsx,tsx}"],
   darkMode: "selector",
-
+  future: { hoverOnlyWhenSupported: true },
   theme: {
     extend: {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))"
+      },
+      fontSize: {
+        sxs: ["0.625rem", { lineHeight: "0.875rem" }],
+        xxs: ["0.5rem", { lineHeight: "0.75rem" }]
       },
       colors: {
         border: "hsl(var(--border))",
@@ -61,7 +65,31 @@ export default {
         sm: "calc(var(--radius) - 4px)"
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"]
+        "basis-grotesque-pro-regular": [
+          "var(--font-basis-grotesque-pro-regular)"
+        ],
+        "basis-grotesque-pro-italic": [
+          "var(--font-basis-grotesque-pro-italic)"
+        ],
+        "basis-grotesque-pro-black": ["var(--font-basis-grotesque-pro-black)"],
+        "basis-grotesque-pro-black-italic": [
+          "var(--font-basis-grotesque-pro-black-italic)"
+        ],
+        "basis-grotesque-pro-bold": ["var(--font-basis-grotesque-pro-bold)"],
+        "basis-grotesque-pro-bold-italic": [
+          "var(--font-basis-grotesque-pro-bold-italic)"
+        ],
+        "basis-grotesque-pro-light": ["var(--font-basis-grotesque-pro-light)"],
+        "basis-grotesque-pro-light-italic": [
+          "var(--font-basis-grotesque-pro-light-italic)"
+        ],
+        "basis-grotesque-pro-medium": [
+          "var(--font-basis-grotesque-pro-medium)"
+        ],
+        "basis-grotesque-pro-medium-italic": [
+          "var(--font-basis-grotesque-pro-medium-italic)"
+        ],
+        "inter": ["var(--font-inter)"]
       },
       scrollBehavior: ["smooth"],
       keyframes: {
