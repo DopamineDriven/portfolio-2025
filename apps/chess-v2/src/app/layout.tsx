@@ -157,7 +157,6 @@ export default function RootLayout({
             initialMode="friendly"
             soundEnabled={true}>
             <main className="font-basis-grotesque-pro-regular">
-              {" "}
               {children}
             </main>
           </GameProvider>
