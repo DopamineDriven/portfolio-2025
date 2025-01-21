@@ -164,7 +164,7 @@ const ChartTooltipContent: React.FC<ChartToolTipEntity> = ({
 
     if (labelFormatter) {
       return (
-        <div className={cn("font-medium", labelClassName)}>
+        <div className={cn("font-basis-grotesque-pro-light", labelClassName)}>
           {labelFormatter(value, payload)}
         </div>
       );
@@ -195,7 +195,7 @@ const ChartTooltipContent: React.FC<ChartToolTipEntity> = ({
     <div
       ref={ref}
       className={cn(
-        "grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl",
+        "grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background/90 px-2.5 py-1.5 text-xs shadow-xl",
         className
       )}>
       {!nestLabel ? tooltipLabel : null}
