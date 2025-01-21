@@ -97,6 +97,16 @@ export type ElementAttributePicker<
 > = React.RefAttributes<TsxTargetedExp<T, "element">> &
   Partial<TsxTargetedExp<T, "attribute">>;
 
-export type CsSTargeted<T extends keyof React.CSSProperties> = {
+export type CSSTargeted<T extends keyof React.CSSProperties> = {
   [P in T]: React.CSSProperties[P];
 };
+
+export type CSSExclude<T extends keyof React.CSSProperties> = RemoveFields<
+  CSSTargeted<T>,
+  T
+>;
+
+export type CSSInclude<T extends keyof React.CSSProperties> = RemoveFields<
+  CSSTargeted<T>,
+  Exclude<keyof CSSTargeted<T>, T>
+>;

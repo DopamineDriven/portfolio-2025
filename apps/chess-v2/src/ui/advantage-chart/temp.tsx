@@ -41,7 +41,7 @@ export function AdvantageChartTwo({
       config={{
         advantage: {
           label: "advantage",
-          color: "#ffffffe6"
+          color: "#f5f5f5"
         }
       }}
       className={`h-auto w-full overflow-hidden sm:min-h-fit`}>
@@ -71,7 +71,7 @@ export function AdvantageChartTwo({
             <ChartTooltip content={<ChartTooltipContent />} />
             <ReferenceLine
               y={0}
-              stroke="#ffffffe6"
+              stroke="#f5f5f5"
               strokeDasharray={"none"}
               strokeOpacity={0.3}
               strokeWidth={1}
@@ -79,9 +79,9 @@ export function AdvantageChartTwo({
             <Area
               type="monotone"
               dataKey="advantage"
-              stroke="#ffffffe6"
-              color="#ffffffe6"
-              fill="#ffffffe6"
+              stroke="#f5f5f5"
+              color="#f5f5f5"
+              fill="#f5f5f5"
               baseValue={-10}
             />
           </AreaChart>
