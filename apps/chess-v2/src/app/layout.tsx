@@ -38,7 +38,10 @@ export const metadata = {
     default: "Next Chess Bot",
     template: "%s | Next Chess Bot"
   },
-  verification: { google: "WiuGYHLPegAsEoxCa_7DGSsG6tB_AU9D822XBPNxtpI" },
+  verification: {
+    google: "WiuGYHLPegAsEoxCa_7DGSsG6tB_AU9D822XBPNxtpI",
+    yandex: "21899ba30af26d68"
+  },
   description: "Elevate your Game - play against Stockfish",
   authors: [{ name: "Andrew Ross", url: "https://github.com/DopamineDriven" }],
   creator: "Andrew Ross",
@@ -153,7 +156,10 @@ export default function RootLayout({
             initialDifficulty="beginner"
             initialMode="friendly"
             soundEnabled={true}>
-            <main className="font-basis-grotesque-pro-regular"> {children}</main>
+            <main className="font-basis-grotesque-pro-regular">
+              {" "}
+              {children}
+            </main>
           </GameProvider>
         </ChessWebSocketProvider>
         <Analytics />

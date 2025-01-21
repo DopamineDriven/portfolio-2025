@@ -22,6 +22,7 @@ import ChatWidget from "@/ui/chat-widget";
 import Chessboard from "@/ui/chessboard";
 import ChessboardUser from "@/ui/chessboard-user";
 import { EvalBar } from "@/ui/eval-bar";
+import { EvalBarMobile } from "@/ui/eval-bar-mobile";
 import MoveHistory from "@/ui/move-history";
 import MoveHistoryBar from "@/ui/move-history-bar";
 import PositionAnalysis from "@/ui/position-analysis";
@@ -45,7 +46,6 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
     playerColor,
     moveHistory,
     currentMoveIndex,
-    // goToMove,
     difficulty,
     mode,
     canGoForward,
@@ -88,9 +88,8 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
   );
 
   const [showHint, setShowHint] = useState(false);
-  const [showAnalysis, setShowAnalysis] = useState(true); // Update: showAnalysis is true by default
 
-  // const [autoSuggest, setAutoSuggest] = useState(false);
+  const [showAnalysis, setShowAnalysis] = useState(true);
 
   const [isAnalysisLoading, setIsAnalysisLoading] = useState(false);
 
@@ -192,18 +191,6 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
     }
   }, [isReviewMode, currentMoveIndex, getComment]);
 
-  // const handleMoveNavigation = (index: number) => {
-  //   goToMove(index);
-  //   setOptionSquares({});
-  //   setRightClickedSquares({});
-  //   clearHighlights();
-  //   if (isReviewMode) {
-  //     setCurrentComment(getComment());
-  //   }
-
-  //   setIsNavigatingHistoryExplicitly(index !== moveHistory.length - 1);
-  // };
-
   useEffect(() => {
     requestChessApiEvaluation(game);
   }, [game, requestChessApiEvaluation]);
@@ -228,16 +215,6 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
     setHintSquares(new Map<Key, string>());
     setShowHint(false);
   }, []);
-
-  // const handleReturnToStart = () => {
-  //   handleMoveNavigation(-1);
-  //   setIsNavigatingHistoryExplicitly(true);
-  // };
-
-  // const handleReturnToCurrent = () => {
-  //   handleMoveNavigation(moveHistory.length - 1);
-  //   setIsNavigatingHistoryExplicitly(false);
-  // };
 
   const handleGoForward = () => {
     goForward();
@@ -281,7 +258,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
           )}
           <div className="relative w-full">
             {isMobile && (
-              <EvalBar
+              <EvalBarMobile
                 playerColor={playerColor}
                 evalScore={evalScore}
                 isMobile={isMobile}
@@ -302,43 +279,11 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
                   playerColor={playerColor}
                   evalScore={evalScore}
                   isMobile={isMobile}
+                  evaluation={chessApiEvaluation}
                 />
               )}
             </Chessboard>
-            {/* <div className="absolute -bottom-[6.5rem] right-14 flex flex-row gap-2 sm:hidden">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={showHint ? handleHideHint : handleShowHint}
-                aria-label={
-                  showHint ? "Hide move suggestion" : "Show move suggestion"
-                }>
-                <Lightbulb
-                  className={cn(
-                    showHint ? "stroke-purple-700" : "stroke-primary",
-                    `h-6 w-6`
-                  )}
-                />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setShowAnalysis(!showAnalysis)}
-                aria-label={
-                  showAnalysis
-                    ? "Hide position analysis"
-                    : "Show position analysis"
-                }>
-                <Info
-                  className={cn(
-                    showAnalysis ? "stroke-purple-700" : "stroke-primary",
-                    `h-6 w-6`
-                  )}
-                />
-              </Button>
-            </div> */}
           </div>
-
           <ChessboardUser
             capturedPieces={capturedPieces}
             materialScore={materialScore}
@@ -397,9 +342,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
           </ChessboardUser>
         </div>
       </div>
-      {!isMobile && (
-          <AnalyzeAdvantage />
-      )}
+      {!isMobile && <AnalyzeAdvantage />}
       <div className="fixed bottom-20 right-6 z-50 hidden sm:block">
         <ChatWidget
           messages={messages}
