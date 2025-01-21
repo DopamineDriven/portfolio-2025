@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/react";
 import { ChessWebSocketProvider } from "@/contexts/chess-websocket-context";
 import { GameProvider } from "@/contexts/game-context";
 import {
@@ -152,9 +153,10 @@ export default function RootLayout({
             initialDifficulty="beginner"
             initialMode="friendly"
             soundEnabled={true}>
-            <main className="font-basis-grotesque-pro-light"> {children}</main>
+            <main className="font-basis-grotesque-pro-regular"> {children}</main>
           </GameProvider>
         </ChessWebSocketProvider>
+        <Analytics />
       </body>
       <Script
         async

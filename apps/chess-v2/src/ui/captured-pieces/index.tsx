@@ -41,11 +41,11 @@ export default function CapturedPieces({
     return (
       <div
         key={`${piece}-${index}`}
-        className={cn("absolute h-5 w-5", index === 0 ? "relative" : `left-0`)}
+        className={cn("absolute h-5 w-5")}
         style={{
           transform:
             index > 0
-              ? `translateX(${piece === "p" ? index * 6 : index * 4}px)`
+              ? `translate3d(${piece === "p" ? index * 6 : index * 6}px, 0, 0)`
               : undefined,
           zIndex: total - index
         }}>
@@ -61,6 +61,18 @@ export default function CapturedPieces({
     );
   };
 
+  function getGroupWidth(pieceType: keyof typeof PIECE_VALUES, count: number) {
+    // base icon size is 20px (since h-5 w-5 ≈ 20px)
+    // offset is 6px for pawns, 4px for other pieces
+    const iconWidth = 20;
+    const offset = pieceType === "p" ? 6 : 4;
+
+    // The first piece occupies `iconWidth`,
+    // and each additional piece is offset by `offset`.
+    // So total needed width = iconWidth + offset*(count - 1).
+    return iconWidth + offset * (count - 1);
+  }
+
   // Create arrays of icons for each piece type
   const pieceGroups = Object.entries(capturedPieces)
     .filter(([_, count]) => count > 0) // Only show pieces that have been captured
@@ -73,11 +85,13 @@ export default function CapturedPieces({
     })
     .map(([piece, count]) => {
       const pieceType = piece as keyof typeof PIECE_VALUES;
+      const width = getGroupWidth(pieceType, count);
       // const maxWidth = pieceType === "p" ? 118 : count * 4 + 20; // 104px for pawns, dynamic for others
       return (
         <div
           key={piece}
-          className={cn("relative flex h-5 w-auto grow items-center")}
+          className={cn("relative shrink-0")}
+          style={{width, height: 20}}
           // style={{ width: `${maxWidth}px` }}>
         >
           {Array.from({ length: count }, (_, i) =>
@@ -89,7 +103,7 @@ export default function CapturedPieces({
 
   return (
     <div className={cn("flex flex-nowrap items-center gap-1", className)}>
-      <div className="flex flex-nowrap items-center gap-1">{pieceGroups}</div>
+      <div className="flex flex-row items-center gap-1 sm:gap-2">{pieceGroups}</div>
       {showScore && score > 0 && (
         <span className="text-sm font-medium text-white">&nbsp;+{score}</span>
       )}
