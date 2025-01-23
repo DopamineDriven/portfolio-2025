@@ -12,7 +12,7 @@ const Card: React.FC<TsxTargetedReact19<"div">> = ({
   <div
     ref={ref}
     className={cn(
-      "rounded-xl border bg-card text-card-foreground shadow",
+      "rounded-xl grow border bg-card text-card-foreground shadow",
       className
     )}
     {...props}
@@ -63,7 +63,7 @@ const CardContent: React.FC<TsxTargetedReact19<"div">> = ({
   className,
   ref,
   ...props
-}) => <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />;
+}) => <div ref={ref} className={cn("pt-0", className)} {...props} />;
 CardContent.displayName = "CardContent";
 
 const CardFooter: React.FC<TsxTargetedReact19<"div">> = ({
@@ -73,7 +73,7 @@ const CardFooter: React.FC<TsxTargetedReact19<"div">> = ({
 }) => (
   <div
     ref={ref}
-    className={cn("flex items-center p-6 pt-0", className)}
+    className={cn("flex items-center pt-0", className)}
     {...props}
   />
 );

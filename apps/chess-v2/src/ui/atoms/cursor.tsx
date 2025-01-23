@@ -1,9 +1,8 @@
 "use client";
 
-import React, { memo, useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Cursor } from "motion-cursor";
-import { AnimatePresence } from "motion/react";
-import * as motion from "motion/react-client";
+import { AnimatePresence, motion, MotionStyle } from "motion/react";
 import { cn } from "@/lib/utils";
 
 type CustomCursorProps = React.ComponentPropsWithRef<typeof Cursor>;
@@ -21,59 +20,62 @@ interface CustomCursorEntity extends Omit<CustomCursorProps, "children"> {
  *
  * The React DOM style prop, enhanced with support for MotionValues and separate transform values.
  * */
-const CustomCursor = memo(
-  ({
-    children,
-    tooltipContent,
-style,
-    tooltipClassName,
-    className,
-    consumerClassName,
-    ...cursorProps
-  }: React.PropsWithChildren<CustomCursorEntity>) => {
-    const [isHovering, setIsHovering] = useState(false);
+const CustomCursor: React.FC<React.PropsWithChildren<CustomCursorEntity>> = ({
+  children,
+  tooltipContent,
+  style,
+  tooltipClassName,
+  className,
+  consumerClassName,
+  ...cursorProps
+}) => {
+  const [isHovering, setIsHovering] = useState(false);
 
-    const handleHoverStart = useCallback(() => setIsHovering(true), []);
-    const handleHoverEnd = useCallback(() => setIsHovering(false), []);
-    const defaultCursorStyle = useMemo(
-      () => ({
-        backgroundColor: "hsl(0,0%,96%)",
+  const handleHoverStart = useCallback(() => setIsHovering(true), []);
+  const handleHoverEnd = useCallback(() => setIsHovering(false), []);
+  const defaultCursorStyle = useMemo(
+    () =>
+      ({
+        backgroundColor: "#1f2937",
         borderRadius: 10,
-        ...style,
-      }),
-      [style],
-    )
-    return (
-      <>
-        <AnimatePresence>
-          {isHovering && (
-            <Cursor
-              {...cursorProps}
-              className={cn("rounded-[0.625rem] bg-[hsl(0,0%,96%)]", className)}
-              follow
-              style={defaultCursorStyle}
-              offset={{ x: -20, y: 20 }}
-              variants={{ exit: { opacity: 0 } }}>
-              <div
-                className={cn(
-                  "m-0 p-[0.9375rem] font-basis-grotesque-pro-regular text-lg tracking-tight text-[hsl(215_28%_17%)]",
-                  tooltipClassName
-                )}>
-                {tooltipContent}
-              </div>
-            </Cursor>
-          )}
-        </AnimatePresence>
-        <motion.div
-          className={cn(consumerClassName)}
-          onHoverEnd={handleHoverEnd}
-          onHoverStart={handleHoverStart}>
-          {children}
-        </motion.div>
-      </>
-    );
-  }
-);
+        borderWidth: "2px",
+        borderColor: "#f5f5f5",
+        borderCollapse: "collapse",
+
+        ...style
+      }) satisfies MotionStyle,
+    [style]
+  );
+  return (
+    <>
+      <AnimatePresence>
+        {isHovering && (
+          <Cursor
+            {...cursorProps}
+            className={cn(className)}
+            follow
+            style={defaultCursorStyle}
+            offset={{ x: -20, y: 20 }}
+            variants={{ exit: { opacity: 0 } }}>
+            <div
+              className={cn(
+                "m-0 p-[0.9375rem] font-basis-grotesque-pro-medium text-lg tracking-tight text-[#f5f5f5]",
+                tooltipClassName
+              )}>
+              {tooltipContent}
+            </div>
+          </Cursor>
+        )}
+      </AnimatePresence>
+      <motion.div
+        className={cn(consumerClassName)}
+        onHoverEnd={handleHoverEnd}
+        onHoverStart={handleHoverStart}>
+        {children}
+      </motion.div>
+    </>
+  );
+};
 
 CustomCursor.displayName = "CustomCursor";
 

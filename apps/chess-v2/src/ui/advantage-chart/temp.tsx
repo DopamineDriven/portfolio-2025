@@ -44,15 +44,16 @@ export function AdvantageChartTwo({
           color: "#f5f5f5"
         }
       }}
-      className={`h-auto w-full overflow-hidden sm:min-h-fit`}>
+      className={`h-auto w-full overflow-hidden sm:max-h-[300px]`}>
       <div className="mx-auto">
-        <ResponsiveContainer width={"100%"} height={300}>
+        <ResponsiveContainer width={"99%"} aspect={1.8}>
           <AreaChart
             data={chartData}
+
             margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="adv" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity={0.9} />
+                <stop offset="0%" stopColor="#f5f5f5" stopOpacity={0.9} />
                 <stop offset="50%" stopColor="#808080" stopOpacity={0.6} />
                 <stop offset="100%" stopColor="#000000" stopOpacity={0.9} />
               </linearGradient>

@@ -98,7 +98,6 @@
     line-height: 0.875rem;
     transform: translate3d(-2rem, 0, 0);
     color: hsl(220, 14%, 96%);
-    @apply top-0;
   }
 }
 
@@ -113,12 +112,13 @@
 }
 
 .cg-wrap square.hint-path {
-  background: radial-gradient(
+  background-color: rgba(130, 77, 255, 0.4) !important;
+  /* background: radial-gradient(
     circle,
     rgba(130, 77, 255, 0.4), 25%,
     transparent 25%
   ) !important;
-  border-radius: 50% !important;
+  border-radius: 50% !important; */
 }
 
 .cg-wrap square.hint-to {
@@ -151,7 +151,7 @@
   flex-flow: row;
   width: calc(100% - 1.5rem);
   height: 1rem !important;
-  text-transform: uppercase !important;
+  text-transform: lowercase !important;
   text-align: center;
 }
 

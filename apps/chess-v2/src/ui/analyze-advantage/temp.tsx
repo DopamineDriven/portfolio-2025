@@ -6,6 +6,7 @@ import { useGame } from "@/contexts/game-context";
 import { useAdvantageTracker } from "@/hooks/use-advantage-tracker";
 import { MoveAdvantage } from "@/types/advantage";
 import { AdvantageChartTwo as AdvantageChart } from "@/ui/advantage-chart/temp";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/atoms/card";
 
 function pairMovesAndAverage(raw: MoveAdvantage[]) {
   const result = [];
@@ -22,7 +23,8 @@ function pairMovesAndAverage(raw: MoveAdvantage[]) {
     // For the x-axis, you can use whichever moveNumber you prefer.
     // Many folks label the *pair* by White's move number (w.moveNumber) or (i/2 + 1).
     // Or you could do (w.moveNumber + b.moveNumber)/2 if you want a midpoint.
-    const combinedMoveNumber = w.moveNumber === 1 ? 1 : Math.floor(w.moveNumber/2);
+    const combinedMoveNumber =
+      w.moveNumber === 1 ? 1 : Math.floor(w.moveNumber / 2);
     // or: = Math.floor((w.moveNumber + b.moveNumber) / 2)
 
     result.push({
@@ -53,11 +55,18 @@ export function AnalyzeAdvantage() {
   }, [moves.length, resetAdvantageHistory, isNavigatingHistory]);
   // flex w-full flex-row items-center
   return (
-    <div className="mx-auto max-h-[40dvh] overflow-y-auto sm:max-h-fit w-full flex flex-row mt-10">
-      <AdvantageChart
-        data={pairMovesAndAverage(advantageHistory)}
-        height={350}
-      />
+    <div className="mx-auto mt-10 flex grow flex-row overflow-y-auto sm:max-h-fit !w-[min(90dvh,95dvw)]">
+      <Card>
+        <CardHeader>
+          <CardTitle>Position Advantage</CardTitle>
+        </CardHeader>
+        <CardContent className="mx-auto">
+          <AdvantageChart
+            data={pairMovesAndAverage(advantageHistory)}
+            height={300}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }

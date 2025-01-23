@@ -292,6 +292,7 @@ export function useGameState({
         }
       }
     }
+
     return { white, black };
   }
   // handle promotion
@@ -301,6 +302,14 @@ export function useGameState({
       promotionSquare: { from, to }
     }));
   }, []);
+
+  const handleScore = (score: number) => {
+    if (score > 39) {
+      return score - 39 + 39;
+    } else {
+      return 39 - score;
+    }
+  };
 
   const getGameResult = (game: Chess, playerColor: ChessColor) => {
     if (game.isCheckmate()) {
@@ -327,29 +336,13 @@ export function useGameState({
       const getScore = (pieces: MaterialCount) => {
         const score = Object.entries(pieces).reduce((total, [piece, count]) => {
           const pieceType = piece.toLowerCase() as keyof typeof PIECE_VALUES;
-          console.log(
-            "[getScore] piece:",
-            piece,
-            "count:",
-            count,
-            "value:",
-            PIECE_VALUES[pieceType]
-          );
           return total + PIECE_VALUES[pieceType] * count;
         }, 0);
         console.log("[getScore] total score:", score);
         return score;
       };
-
       const whiteScore = getScore(capturedPieces.black); // pieces white has captured
       const blackScore = getScore(capturedPieces.white); // pieces black has captured
-
-      console.log(
-        "[calculateMaterialScore] whiteScore:",
-        whiteScore,
-        "blackScore:",
-        blackScore
-      );
       return {
         white: whiteScore,
         black: blackScore
@@ -434,10 +427,9 @@ export function useGameState({
           if (previousMove !== moveResult.san || existingMoves.length === 0) {
             existingMoves[prevState.moveCounter] = moveResult.san;
           }
-          console.log(
-            `[computeMaterialScore]: `,
-            JSON.stringify(computeMaterialScore(newGame), null, 2)
-          );
+
+          const inferredScore = computeMaterialScore(newGame);
+
           const newMoveHistory = [...prevState.moveHistory, moveResult];
           const newComments = game.getComments();
           return {
@@ -451,7 +443,10 @@ export function useGameState({
             gameOver: newGame.isGameOver(),
             gameResult: getGameResult(newGame, prevState.playerColor),
             capturedPieces: newCapturedPieces,
-            materialScore: newMaterialScore,
+            materialScore: {
+              white: handleScore(inferredScore.black),
+              black: handleScore(inferredScore.white)
+            },
             moveHistory: newMoveHistory,
             currentMoveIndex: newMoveHistory.length - 1,
             comments: newComments,
@@ -496,7 +491,6 @@ export function useGameState({
     // (2) Listen for best move
     engine.onMessage(({ bestMove }) => {
       if (bestMove) {
-        console.log(bestMove);
         const from = bestMove.substring(0, 2) as Square;
         const to = bestMove.substring(2, 4) as Square;
         const promotion =
@@ -522,11 +516,11 @@ export function useGameState({
   }, [
     engine,
     game,
-    selectedColor,
     state.gameOver,
     state.difficulty,
     state.isPlayerTurn,
     makeMove,
+    selectedColor,
     isNavigatingHistory
   ]);
 
