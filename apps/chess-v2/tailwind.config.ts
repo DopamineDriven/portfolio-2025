@@ -5,6 +5,7 @@ import * as tailwindcssMotion from "tailwindcss-motion";
 export default {
   content: ["src/**/*.{js,ts,jsx,tsx}"],
   darkMode: "selector",
+  important: true,
   future: { hoverOnlyWhenSupported: true },
   theme: {
     extend: {
@@ -89,7 +90,7 @@ export default {
         "basis-grotesque-pro-medium-italic": [
           "var(--font-basis-grotesque-pro-medium-italic)"
         ],
-        "inter": ["var(--font-inter)"]
+        inter: ["var(--font-inter)"]
       },
       scrollBehavior: ["smooth"],
       keyframes: {
