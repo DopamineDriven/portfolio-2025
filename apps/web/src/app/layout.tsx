@@ -3,7 +3,7 @@ import React from "react";
 import { Poppins as _Poppins, Inter } from "next/font/google";
 import { Footer } from "@/ui/Footer";
 import { LoadingAnimation } from "@/ui/LoadingAnimation";
-import { Navbar } from "@/ui/Nav";
+import { default as Navbar } from "@/ui/Nav/alt";
 import { ThemeProvider } from "@/ui/Providers/ThemeProvider";
 import "./global.css";
 

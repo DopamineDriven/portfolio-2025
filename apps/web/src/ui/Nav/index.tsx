@@ -2,7 +2,7 @@
 
 import { Moon, Sun } from "lucide-react";
 import { useThemeTransition } from "@/hooks/use-theme-transition";
-import { ArLogo } from "../svg/ar-logo";
+import { ArLogo } from "@/ui/svg/ar-logo";
 
 export function Navbar() {
   const { transitionTheme, transitioning, toggleTheme } = useThemeTransition();

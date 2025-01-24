@@ -26,7 +26,7 @@ export function EvalBar({
     <CustomCursor tooltipContent={<p>{`${evalScore}`}</p>}>
       <div
         className={cn(
-          "mb-1 !h-4 !w-[min(80dvh,100dvw)] sm:mb-0 sm:mr-1 sm:!h-[min(80dvh,95dvw)] sm:!w-10",
+          "mb-1 !h-2 !w-[min(80dvh,100dvw)] sm:mb-0 sm:mr-1 sm:!h-[min(80dvh,95dvw)] sm:!w-10",
           !isMobile && chessGroundColor === "black"
             ? "rotate-180"
             : isMobile && chessGroundColor === "white"
@@ -35,11 +35,11 @@ export function EvalBar({
         )}>
         <div
           className={cn(
-            "relative h-4 w-full overflow-hidden bg-black sm:h-full sm:w-10"
+            "relative h-2 w-full overflow-hidden bg-black sm:h-full sm:w-10"
           )}>
           <div
             className={cn(
-              "absolute bottom-0 left-0 h-4 w-full overflow-hidden bg-white transition-transform duration-500 motion-ease-in-out-quad sm:h-full sm:w-10"
+              "absolute bottom-0 left-0 h-2 w-full overflow-hidden bg-white transition-transform duration-500 motion-ease-in-out-quad sm:h-full sm:w-10"
             )}
             style={{
               transform: isMobile

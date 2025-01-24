@@ -30,7 +30,7 @@ export function EvalBarMobile({
       <Tooltip open={open} onOpenChange={setOpen}>
         <div
           className={cn(
-            "mb-1 !h-4 !w-[min(80dvh,100dvw)] select-none sm:mb-0 sm:mr-1 sm:!h-[min(80dvh,95dvw)] sm:!w-10",
+            "mb-1 !h-2 !w-[min(80dvh,100dvw)] select-none sm:mb-0 sm:mr-1 sm:!h-[min(80dvh,95dvw)] sm:!w-10",
             !isMobile && chessGroundColor === "black"
               ? "rotate-180"
               : isMobile && chessGroundColor === "white"
@@ -56,11 +56,11 @@ export function EvalBarMobile({
             }}>
             <div
               className={cn(
-                "relative h-4 w-full overflow-hidden bg-black sm:h-full sm:w-10"
+                "relative h-2 w-full overflow-hidden bg-black sm:h-full sm:w-10"
               )}>
               <div
                 className={cn(
-                  "absolute bottom-0 left-0 h-4 w-full overflow-hidden bg-white transition-transform duration-500 motion-ease-in-out-quad sm:h-full sm:w-10"
+                  "absolute bottom-0 left-0 h-2 w-full overflow-hidden bg-white transition-transform duration-500 motion-ease-in-out-quad sm:h-full sm:w-10"
                 )}
                 style={{
                   transform: isMobile
@@ -75,3 +75,34 @@ export function EvalBarMobile({
     </TooltipProvider>
   );
 }
+/**
+ *
+ *
+ *         <div
+          className="relative h-auto overflow-hidden cursor-pointer"
+          {...(!isMobile
+            ? {
+                onMouseEnter: () => setIsHovered(true),
+                onMouseLeave: () => {
+                  setIsHovered(false)
+                  setHoveredItem(null)
+                },
+              }
+            : {
+                onClick: () => setIsMenuOpen(!isMenuOpen),
+              })}
+        >
+             <motion.div
+                initial={{ y: 0 }}
+                animate={{ y: 0 }}
+                exit={{ y: -40 }}
+                enter={{y: 0}}
+                transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
+              className="flex w-full justify-between">
+              <span className="text-[#f5f5f5]">Menu</span>
+              <span>Menu</span>
+              <Link href="/" className="text-[#f5f5f5]">
+                AR
+              </Link>
+            </motion.div>
+ */

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
+import { ArLogo } from "@/ui/svg/ar-logo";
 
 const menuItems = [
   { name: "Home", href: "/" },
@@ -36,15 +37,15 @@ export default function Navbar() {
   }, [isMobile]);
 
   return (
-    <header className="z-100 fixed left-0 top-0 w-full bg-[#808080] backdrop-blur-sm">
+    <header className="fixed left-0 top-0 z-50 w-full">
       <AnimatePresence mode="wait">
         <motion.nav
           key="navbar"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.8, ease: [0.77, 0, 0.175, 1] }}
-          className="relative flex w-full items-center justify-center py-4"
+          transition={{ duration: 0.5, ease: [0.77, 0, 0.175, 1] }}
+          className="relative flex h-16 w-full items-center justify-center"
           {...(!isMobile
             ? {
                 onMouseEnter: () => setIsHovered(true),
@@ -67,7 +68,7 @@ export default function Navbar() {
                 className="flex w-full justify-between px-4">
                 <span>Menu</span>
                 <Link href="/" className="text-[#f5f5f5]">
-                  AR
+                  <ArLogo className="h-9 w-9" />
                 </Link>
               </motion.span>
             ) : (
@@ -98,7 +99,7 @@ export default function Navbar() {
                         onMouseLeave={() => !isMobile && setHoveredItem(null)}>
                         <Link
                           href={item.href}
-                          className="relative block w-full px-4 py-2 text-center"
+                          className="relative block w-full px-4 py-4 text-center"
                           onClick={() => isMobile && setIsMenuOpen(false)}>
                           <motion.div
                             className="relative z-10 w-full text-lg"
