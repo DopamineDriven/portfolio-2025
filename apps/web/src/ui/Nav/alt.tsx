@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { ArLogo } from "@/ui/svg/ar-logo";
+import { cn } from "@/lib/utils";
 
 const menuItems = [
   { name: "Home", href: "/" },
@@ -21,7 +22,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
+      setIsMobile(window.innerWidth < 640);
     };
 
     checkMobile();
@@ -37,7 +38,7 @@ export default function Navbar() {
   }, [isMobile]);
 
   return (
-    <header className="fixed left-0 top-0 z-50 w-full">
+    <header className="fixed left-0 top-0 z-50 w-full h-auto min-h-12 sm:min-h-14 grow font-light">
       <AnimatePresence mode="wait">
         <motion.nav
           key="navbar"
@@ -45,7 +46,7 @@ export default function Navbar() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.5, ease: [0.77, 0, 0.175, 1] }}
-          className="relative flex h-16 w-full items-center justify-center"
+          className="relative flex h-12 sm:h-14 w-full my-auto align-middle items-center justify-center backdrop-blur-sm"
           {...(!isMobile
             ? {
                 onMouseEnter: () => setIsHovered(true),
@@ -68,7 +69,7 @@ export default function Navbar() {
                 className="flex w-full justify-between px-4">
                 <span>Menu</span>
                 <Link href="/" className="text-[#f5f5f5]">
-                  <ArLogo className="h-9 w-9" />
+                  <ArLogo className="w-full max-h-6 sm:max-h-9" />
                 </Link>
               </motion.span>
             ) : (
@@ -78,9 +79,9 @@ export default function Navbar() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
                 transition={{ duration: 0.5, ease: [0.77, 0, 0.175, 1] }}
-                className="w-full">
+                className="w-full sm:h-auto h-full">
                 <AnimatePresence>
-                  <motion.div className="grid w-full grid-cols-5">
+                  <motion.div className={cn("grid w-full", isMobile ? "grid-rows-5" : "grid-cols-5")}>
                     {menuItems.map((item, index) => (
                       <motion.div
                         key={item.name}
@@ -99,10 +100,10 @@ export default function Navbar() {
                         onMouseLeave={() => !isMobile && setHoveredItem(null)}>
                         <Link
                           href={item.href}
-                          className="relative block w-full px-4 py-4 text-center"
+                          className="relative block w-full px-4 sm:py-4 text-center"
                           onClick={() => isMobile && setIsMenuOpen(false)}>
                           <motion.div
-                            className="relative z-10 w-full text-lg"
+                            className="relative h-full sm:h-auto z-50 w-full text-lg"
                             animate={{
                               color:
                                 !isMobile && hoveredItem === item.name
@@ -144,6 +145,7 @@ export default function Navbar() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
+
                   transition={{ duration: 0.5, ease: [0.77, 0, 0.175, 1] }}
                   className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
                   onClick={() => setIsMenuOpen(false)}

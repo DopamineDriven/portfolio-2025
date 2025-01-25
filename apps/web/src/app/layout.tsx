@@ -3,9 +3,10 @@ import React from "react";
 import { Poppins as _Poppins, Inter } from "next/font/google";
 import { Footer } from "@/ui/Footer";
 import { LoadingAnimation } from "@/ui/LoadingAnimation";
-import { default as Navbar } from "@/ui/Nav/alt";
+import { default as Navbar } from "@/ui/Nav/temp-2";
 import { ThemeProvider } from "@/ui/Providers/ThemeProvider";
 import "./global.css";
+import { cn } from "@/lib/utils";
 
 /* populate relevant values in src/lib/site-url.ts and uncomment for url injetion */
 // import { getSiteUrl } from "@/lib/site-url";
@@ -45,8 +46,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning lang="en">
-      <body className={inter.className}>
+    <html suppressHydrationWarning lang="en" className={cn(inter.className, "")}>
+      <body>
         <ThemeProvider>
           <LoadingAnimation />
           <div className="flex min-h-[100dvh] flex-col">
