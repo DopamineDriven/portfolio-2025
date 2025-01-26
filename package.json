@@ -30,7 +30,7 @@
     "update:pnpm": "curl -fsSL https://get.pnpm.io/install.sh | sh -"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.11",
+    "@changesets/cli": "^2.27.12",
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
     "@portfolio/tsconfig": "workspace:*",
