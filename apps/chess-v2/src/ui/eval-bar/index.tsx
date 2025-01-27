@@ -26,7 +26,7 @@ export function EvalBar({
     <CustomCursor tooltipContent={<p>{`${evalScore}`}</p>}>
       <div
         className={cn(
-          "mb-1 !h-2 !w-[min(80dvh,100dvw)] sm:mb-0 sm:mr-1 sm:!h-[min(80dvh,95dvw)] sm:!w-10",
+          "mb-1 h-2! w-[min(80dvh,100dvw)]! sm:mb-0 sm:mr-1 sm:h-[min(80dvh,95dvw)]! sm:w-10!",
           !isMobile && chessGroundColor === "black"
             ? "rotate-180"
             : isMobile && chessGroundColor === "white"

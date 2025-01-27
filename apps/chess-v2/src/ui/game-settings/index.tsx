@@ -201,7 +201,7 @@ export default function GameSettings({
               onClick={() => setIsSoundEnabled(!isSoundEnabled)}
               className={`h-6 w-12 rounded-full ${
                 isSoundEnabled ? "bg-green-600" : "bg-gray-400"
-              } transition-colors duration-200 ease-in-out focus:outline-none`}>
+              } transition-colors duration-200 ease-in-out focus:outline-hidden`}>
               <span
                 className={`ml-1 mt-1 block h-4 w-4 rounded-full bg-white transition-transform duration-200 ease-in-out ${
                   isSoundEnabled ? "translate-x-6 transform" : ""

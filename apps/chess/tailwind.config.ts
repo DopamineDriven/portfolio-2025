@@ -1,5 +1,4 @@
 import type { Config as TailwindConfig } from "tailwindcss";
-import * as motionPlugin from "tailwindcss-motion";
 
 export default {
   content: ["src/**/*.{js,ts,jsx,tsx}"],
@@ -76,6 +75,6 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out"
       }
     }
-  },
-  plugins: [motionPlugin]
+  }
 } satisfies TailwindConfig;
+

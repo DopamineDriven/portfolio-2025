@@ -55,7 +55,7 @@ export function AnalyzeAdvantage() {
   }, [moves.length, resetAdvantageHistory, isNavigatingHistory]);
   // flex w-full flex-row items-center
   return (
-    <div className="mx-auto mt-10 flex grow flex-row overflow-y-auto sm:max-h-fit !w-[min(90dvh,95dvw)]">
+    <div className="mx-auto mt-10 flex grow flex-row overflow-y-auto sm:max-h-fit w-[min(90dvh,95dvw)]!">
       <Card>
         <CardHeader>
           <CardTitle>Position Advantage</CardTitle>

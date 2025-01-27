@@ -1,12 +1,9 @@
 import type { Config as TailwindConfig } from "tailwindcss";
-import formsPlugin from "@tailwindcss/forms";
-import typographyPlugin from "@tailwindcss/typography";
-import * as motionPlugin from "tailwindcss-motion";
-import { fontFamily } from "tailwindcss/defaultTheme";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
   content: ["src/**/*.{js,ts,jsx,tsx,md,mdx}", "content/**/*.mdx"],
-  darkMode: ["selector"],
+  darkMode:  "selector",
   future: { hoverOnlyWhenSupported: true },
   theme: {
     container: {
@@ -18,7 +15,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans]
+        sans: ["var(--font-sans)", ...defaultTheme.fontFamily.sans]
       },
       colors: {
         border: "hsl(var(--border))",
@@ -92,6 +89,5 @@ export default {
         "8xl": "96rem"
       }
     }
-  },
-  plugins: [motionPlugin, formsPlugin, typographyPlugin]
+  }
 } satisfies TailwindConfig;

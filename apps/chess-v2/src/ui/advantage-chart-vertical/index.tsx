@@ -23,7 +23,7 @@ export function AdvantageChartVertical({ advantage }: { advantage: number }) {
           color: "hsl(var(--chart-1))"
         }
       }}
-      className={`!h-[min(80dvh,100dvw)] w-16 sm:!h-[min(80dvh,95dvw)]`}>
+      className={`h-[min(80dvh,100dvw)]! w-16 sm:h-[min(80dvh,95dvw)]!`}>
       <ResponsiveContainer width={"100%"} height={"100%"}>
         <ComposedChart
           data={chartDataVertical}
