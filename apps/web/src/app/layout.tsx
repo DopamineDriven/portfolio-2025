@@ -52,7 +52,7 @@ export default function RootLayout({
           <LoadingAnimation />
           <div className="flex min-h-[100dvh] flex-col">
             <Navbar />
-            <main className="theme-transition flex-grow">{children}</main>
+            <main className="theme-transition grow">{children}</main>
             <Footer />
           </div>
         </ThemeProvider>

@@ -23,7 +23,7 @@ export function shimmerScaffold<
 }
 
 /**
- * use in the "blurDataUrl" property of the Nextjs Image component and set the "placeholder" property to "blur"
+ * use in the "blurDataUrl" property of the Nextjs Image component and set the "placeholder" property to "blur-sm"
  */
 export function shimmer<
   const W extends SafeNumber,

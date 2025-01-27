@@ -1,6 +1,92 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@config "../../tailwind.config.ts";
+@plugin "tailwindcss-animate";
+@plugin "tailwindcss-motion";
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@utility scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+}
+
+@utility tooltip {
+  transition-timing-function: cubic-bezier(0.6, -0.28, 0.74, 0.05);
+  transition-property: transform;
+  visibility: hidden;
+  position: absolute;
+  transition-duration: 500ms;
+
+  .has-tooltip:hover & {
+    transition-timing-function: cubic-bezier(0.6, -0.28, 0.74, 0.05);
+    transition-property: transform;
+    transition-duration: 500ms;
+    visibility: visible;
+    text-wrap: nowrap;
+    z-index: 50;
+    margin-top: auto;
+    border-radius: 0.5rem;
+    background-color: hsla(215, 28%, 17%, 0.75);
+    margin-bottom: auto;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    user-select: none;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border-collapse: collapse;
+    letter-spacing: -0.025em;
+    font-size: 0.625rem;
+    line-height: 0.875rem;
+    transform: translate3d(-2rem, 0, 0);
+    color: hsl(220, 14%, 96%);
+  }
+}
+
+@utility has-tooltip {
+  &:hover .tooltip {
+    transition-timing-function: cubic-bezier(0.6, -0.28, 0.74, 0.05);
+    transition-property: transform;
+    transition-duration: 500ms;
+    visibility: visible;
+    text-wrap: nowrap;
+    z-index: 50;
+    margin-top: auto;
+    border-radius: 0.5rem;
+    background-color: hsla(215, 28%, 17%, 0.75);
+    margin-bottom: auto;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    user-select: none;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border-collapse: collapse;
+    letter-spacing: -0.025em;
+    font-size: 0.625rem;
+    line-height: 0.875rem;
+    transform: translate3d(-2rem, 0, 0);
+    color: hsl(220, 14%, 96%);
+  }
+}
 
 @layer base {
   :root {
@@ -56,48 +142,6 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-  }
-}
-
-@layer utilities {
-  .scrollbar-hide {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none; /* Chrome, Safari and Opera */
-  }
-
-  .tooltip {
-    transition-timing-function: cubic-bezier(0.6, -0.28, 0.74, 0.05);
-    transition-property: transform;
-    visibility: hidden;
-    position: absolute;
-    transition-duration: 500ms;
-  }
-
-  .has-tooltip:hover .tooltip {
-    transition-timing-function: cubic-bezier(0.6, -0.28, 0.74, 0.05);
-    transition-property: transform;
-    transition-duration: 500ms;
-    visibility: visible;
-    text-wrap: nowrap;
-    z-index: 50;
-    margin-top: auto;
-    border-radius: 0.5rem;
-    background-color: hsla(215, 28%, 17%, 0.75);
-    margin-bottom: auto;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    user-select: none;
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-    border-collapse: collapse;
-    letter-spacing: -0.025em;
-    font-size: 0.625rem;
-    line-height: 0.875rem;
-    transform: translate3d(-2rem, 0, 0);
-    color: hsl(220, 14%, 96%);
   }
 }
 

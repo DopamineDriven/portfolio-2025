@@ -30,7 +30,7 @@ export function EvalBarMobile({
       <Tooltip open={open} onOpenChange={setOpen}>
         <div
           className={cn(
-            "mb-1 !h-2 !w-[min(80dvh,100dvw)] select-none sm:mb-0 sm:mr-1 sm:!h-[min(80dvh,95dvw)] sm:!w-10",
+            "mb-1 h-2! w-[min(80dvh,100dvw)]! select-none sm:mb-0 sm:mr-1 sm:h-[min(80dvh,95dvw)]! sm:w-10!",
             !isMobile && chessGroundColor === "black"
               ? "rotate-180"
               : isMobile && chessGroundColor === "white"

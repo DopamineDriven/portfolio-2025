@@ -39,7 +39,7 @@ export default function ChatWidget({
               <X className="h-6 w-6" />
             </Button>
           </div>
-          <div className="flex-grow overflow-y-auto p-4">
+          <div className="grow overflow-y-auto p-4">
             {messages.map((msg, index) => (
               <div key={index} className="mb-2">
                 <span className="font-bold text-white">{msg.username}: </span>

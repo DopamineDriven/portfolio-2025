@@ -12,7 +12,7 @@ const Card: React.FC<TsxTargetedReact19<"div">> = ({
   <div
     ref={ref}
     className={cn(
-      "rounded-xl grow border bg-card text-card-foreground shadow",
+      "rounded-xl grow border bg-card text-card-foreground shadow-sm",
       className
     )}
     {...props}

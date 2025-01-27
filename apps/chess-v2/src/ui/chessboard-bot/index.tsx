@@ -337,7 +337,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
     console.log(`[difficulty:mode]: ${difficulty}:${mode}`);
   }, [difficulty, mode]);
   return (
-    <div className="mx-auto h-auto !w-[min(90dvh,100dvw)] sm:!w-[min(90dvh,95dvw)] sm:px-2 lg:px-4">
+    <div className="mx-auto h-auto w-[min(90dvh,100dvw)]! sm:w-[min(90dvh,95dvw)]! sm:px-2 lg:px-4">
       <div className="flex w-full flex-col lg:flex-row">
         <div className="mx-auto w-full">
           {isMobile ? (
@@ -467,8 +467,8 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
         </Button>
       </div>
       {showGameModal && (
-        <div className="motion-preset-confetti fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 motion-duration-[5000ms]">
-          <div className="rounded-lg bg-white p-6">
+        <div className=" fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="rounded-lg bg-white p-6 motion-preset-confetti  motion-duration-[5000ms]">
             <h2 className="mb-4 text-2xl font-bold text-gray-900">
               {gameResult}
             </h2>
@@ -507,7 +507,7 @@ const ChessboardBot: FC<ChessboardBotProps> = ({ onRestart, country }) => {
         <div
           className={cn(
             "z-20 flex flex-row bg-gray-800/95 p-2 text-white transition-all duration-300 ease-in-out",
-            "max-h-[12.5dvh] overflow-y-auto sm:!w-[min(90dvh,95dvw)]"
+            "max-h-[12.5dvh] overflow-y-auto sm:w-[min(90dvh,95dvw)]!"
           )}>
           <PositionAnalysis
             evaluation={chessApiEvaluation}

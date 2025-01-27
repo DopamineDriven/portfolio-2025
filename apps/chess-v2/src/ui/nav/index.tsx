@@ -36,7 +36,7 @@ export default function Navbar() {
   }, [isMobile]);
 
   return (
-    <header className="z-100 fixed left-0 top-0 w-full bg-[#808080] backdrop-blur-sm">
+    <header className="z-100 fixed left-0 top-0 w-full bg-[#808080] backdrop-blur-xs">
       <AnimatePresence mode="wait">
         <motion.nav
           key="navbar"
@@ -144,7 +144,7 @@ export default function Navbar() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.5, ease: [0.77, 0, 0.175, 1] }}
-                  className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+                  className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs"
                   onClick={() => setIsMenuOpen(false)}
                 />
               )}

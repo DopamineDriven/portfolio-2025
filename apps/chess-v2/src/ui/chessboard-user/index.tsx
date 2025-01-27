@@ -50,7 +50,7 @@ function ChessboardUser<const T extends "Stockfish" | "Player">({
                   width={30}
                   height={20}
                   src={`https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess-v2/public/flags/no.svg`}
-                  className="row-span-1 my-0 aspect-[3/2] h-3 w-[1.125rem] object-cover sm:h-4 sm:w-6"
+                  className="row-span-1 my-0 aspect-3/2 h-3 w-[1.125rem] object-cover sm:h-4 sm:w-6"
                 />
               </div>
               <div className="mt-1 min-h-5 text-pretty font-sans text-[0.75rem] leading-normal tracking-tight sm:text-[1rem]">
@@ -109,7 +109,7 @@ function ChessboardUser<const T extends "Stockfish" | "Player">({
                   width={30}
                   height={20}
                   src={`https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess-v2/public/flags/${countryToFile}.svg`}
-                  className="row-span-1 my-0 aspect-[3/2] h-3 w-[1.125rem] object-cover sm:h-4 sm:w-6"
+                  className="row-span-1 my-0 aspect-3/2 h-3 w-[1.125rem] object-cover sm:h-4 sm:w-6"
                 />
               </div>
               <div className="mt-1 min-h-5 text-pretty font-sans text-[0.75rem] leading-normal tracking-tight sm:text-[1rem]">

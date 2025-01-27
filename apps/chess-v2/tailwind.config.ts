@@ -1,6 +1,4 @@
 import type { Config } from "tailwindcss";
-import tailwindcssAnimate from "tailwindcss-animate";
-import * as tailwindcssMotion from "tailwindcss-motion";
 
 export default {
   content: ["src/**/*.{js,ts,jsx,tsx}"],
@@ -92,7 +90,6 @@ export default {
         ],
         inter: ["var(--font-inter)"]
       },
-      scrollBehavior: ["smooth"],
       keyframes: {
         slideDownAndFade: {
           from: { opacity: "0", transform: "translateY(-2px)" },
@@ -122,6 +119,5 @@ export default {
           "slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)"
       }
     }
-  },
-  plugins: [tailwindcssMotion, tailwindcssAnimate]
+  }
 } satisfies Config;

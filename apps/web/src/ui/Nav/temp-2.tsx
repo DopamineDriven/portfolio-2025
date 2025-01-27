@@ -36,7 +36,7 @@ export default function Navbar() {
   }, [isMobile]);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 overflow-hidden">
+    <header className="fixed top-0 left-0 w-full z-50 overflow-hidden mx-auto self-center">
       <AnimatePresence mode="wait">
         <motion.nav
           key="navbar"
@@ -44,7 +44,7 @@ export default function Navbar() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.8, ease: [0.77, 0, 0.175, 1] }}
-          className="flex justify-center pb-4 items-center relative backdrop-blur-sm w-full max-h-fit"
+          className="flex justify-center items-center relative backdrop-blur-sm w-full max-h-fit mx-auto max-w-7xl"
           {...(!isMobile
             ? {
                 onMouseEnter: () => setIsHovered(true),
@@ -66,7 +66,7 @@ export default function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5, ease: [0.77, 0, 0.175, 1] }}
-                  className="flex w-full justify-between px-8 pt-4"
+                  className="flex w-full justify-between px-8 py-2 text-center"
                 >
                   <span>Menu</span>
                   <Link href="/" className="text-[#f5f5f5]">
@@ -105,7 +105,7 @@ export default function Navbar() {
                             onClick={() => isMobile && setIsMenuOpen(false)}
                           >
                             <motion.div
-                              className="relative z-50 sm:z-10 text-lg w-full"
+                              className="relative z-50 sm:z-10 w-full"
                               animate={{
                                 color: !isMobile && hoveredItem === item.name ? "#000" : "#fff",
                               }}

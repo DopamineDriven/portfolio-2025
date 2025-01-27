@@ -28,11 +28,11 @@ const ImageScaffolder: FC<ComponentPropsWithRef<typeof Image>> = ({
           src={src}
           alt={alt}
           width={width}
-          placeholder="blur"
+          placeholder="blur-sm"
           blurDataURL={shimmer([width, height])}
           height={height}
           className={cn(
-            "aspect-[2/3] w-full rounded-xl bg-zinc-800/5 object-cover shadow-lg transition-all duration-300",
+            "aspect-2/3 w-full rounded-xl bg-zinc-800/5 object-cover shadow-lg transition-all duration-300",
             className
           )}
         />

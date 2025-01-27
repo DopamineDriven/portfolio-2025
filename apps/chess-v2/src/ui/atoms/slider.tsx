@@ -40,7 +40,7 @@ const Slider: FC<SliderProps> = ({
     </SliderPrimitive.Track>
     <SliderPrimitive.Thumb
       className={cn(
-        "block h-4 w-4 rounded-full border shadow transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+        "block h-4 w-4 rounded-full border shadow-sm transition-colors focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50",
         thumbClassName
           ? thumbClassName
           : "border-primary/50 bg-background focus-visible:ring-1 focus-visible:ring-ring"

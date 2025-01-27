@@ -257,10 +257,11 @@ export default function Chessboard({
       <div
         ref={boardRef}
         className={cn(
-          "!size-[min(80dvh,100dvw)] sm:!size-[min(80dvh,95dvw)]",
-          "!aspect-square",
+          "size-[min(80dvh,100dvw)]! sm:size-[min(80dvh,95dvw)]!",
+          "aspect-square!",
           "overflow-hidden",
-          "object-cover"
+          "object-cover",
+          "grow"
         )}
         style={{
           boxShadow: "rgba(0, 0, 0, 0.5) 0px 4px 12px"
@@ -550,8 +551,8 @@ export default function Chessboard({
       <div
         ref={boardRef}
         className={cn(
-          "!size-[min(80dvh,100dvw)] sm:!size-[min(80dvh,95dvw)]",
-          "!aspect-square",
+          "size-[min(80dvh,100dvw)]! sm:size-[min(80dvh,95dvw)]!",
+          "aspect-square!",
           "overflow-hidden",
           "object-cover"
         )}
