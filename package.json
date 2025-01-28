@@ -31,12 +31,12 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.12",
+    "@d0paminedriven/turbogen": "^0.6.0",
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
     "@portfolio/tsconfig": "workspace:*",
-    "@d0paminedriven/turbogen": "^0.6.0",
     "@total-typescript/ts-reset": "^0.6.1",
-    "@types/node": "^22.10.10",
+    "@types/node": "^22.12.0",
     "concurrently": "^9.1.2",
     "dotenv": "^16.4.7",
     "dotenv-cli": "^8.0.0",
@@ -55,5 +55,10 @@
     "node": ">=22",
     "npm": ">=10",
     "pnpm": ">=9"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "rehype-pretty-code": "patches/rehype-pretty-code.patch"
+    }
   }
 }
