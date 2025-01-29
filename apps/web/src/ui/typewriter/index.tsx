@@ -1,7 +1,7 @@
 "use client";
 
 import type { FC } from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useAnimationContext } from "@/context/animation-context";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,8 @@ export const LandingPageTypeWriter: FC = () => {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [isTypingComplete, setIsTypingComplete] = useState(false);
   const [isReplaying, setIsReplaying] = useState(false);
+  const [containerHeight, setContainerHeight] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
   const { animationStates, resetTypewriterAnimation } = useAnimationContext();
 
   const lines = [
@@ -22,9 +24,25 @@ export const LandingPageTypeWriter: FC = () => {
     [6, "Let's build something amazing together!"]
   ] as const satisfies readonly [number, string][];
 
+  const lineHeights = useRef<number[]>([]);
+
   const handleTypingComplete = useCallback(() => {
     setIsTypingComplete(true);
   }, []);
+
+  const handleHeightChange = useCallback(
+    (height: number, index: number) => {
+      lineHeights.current[index] = height;
+      const totalHeight = lineHeights.current.reduce((sum, h) => sum + h, 0);
+      setContainerHeight(totalHeight + (lines.length - 1) * 4); // 4px for line spacing
+    },
+    [lines.length]
+  );
+
+  const estimateFinalHeight = useCallback(() => {
+    const maxLineHeight = Math.max(...lineHeights.current);
+    return maxLineHeight * lines.length + (lines.length - 1) * 4; // 4px for line spacing
+  }, [lines.length]);
 
   useEffect(() => {
     if (isTypingComplete && currentLineIndex < lines.length - 1) {
@@ -41,11 +59,12 @@ export const LandingPageTypeWriter: FC = () => {
     resetTypewriterAnimation();
     setCurrentLineIndex(0);
     setIsTypingComplete(false);
-    // Reset isReplaying after a brief delay to ensure proper state propagation
+    setContainerHeight(estimateFinalHeight());
+    // Reset isReplaying with a brief delay to ensure proper state propagation
     setTimeout(() => {
       setIsReplaying(false);
     }, 100);
-  }, [resetTypewriterAnimation]);
+  }, [resetTypewriterAnimation, estimateFinalHeight]);
 
   return (
     <div className="flex min-h-[5rem] flex-col space-y-2">
@@ -53,11 +72,18 @@ export const LandingPageTypeWriter: FC = () => {
         <h1 className="theme-transition mb-4 text-4xl font-bold">
           Portfolio 2025
         </h1>
-        <div className="relative inline-flex flex-col space-y-1 whitespace-nowrap">
+        <div
+          ref={containerRef}
+          className="relative inline-flex flex-col space-y-1 whitespace-nowrap"
+          style={{
+            height: `${containerHeight}px`,
+            transition: "height 0.5s ease-in-out",
+            minHeight: `${estimateFinalHeight()}px` // Ensure minimum height
+          }}>
           {animationStates.hasTypewriterPlayed === false
             ? lines
                 .slice(0, currentLineIndex + 1)
-                .map(([lineNumber, text]) => (
+                .map(([lineNumber, text], index) => (
                   <Typewriter
                     key={`${lineNumber}-${isReplaying}`}
                     lineNumber={lineNumber}
@@ -73,6 +99,7 @@ export const LandingPageTypeWriter: FC = () => {
                         ? handleTypingComplete
                         : undefined
                     }
+                    onHeightChange={height => handleHeightChange(height, index)}
                     isActive={lineNumber <= currentLineIndex + 1}
                   />
                 ))
