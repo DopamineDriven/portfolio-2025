@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useAnimationContext } from "@/context/animation-context";
 import { cn } from "@/lib/utils";
@@ -16,6 +16,7 @@ export interface TypewriterProps
   totalLines: number;
   isCurrentLine: boolean;
   isReplaying?: boolean;
+  onHeightChange: (height: number) => void;
 }
 
 const Typewriter = ({
@@ -29,14 +30,19 @@ const Typewriter = ({
   lineNumber,
   totalLines,
   isReplaying,
+  onHeightChange,
   ...props
 }: TypewriterProps) => {
   const [displayText, setDisplayText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
-  const textRef = useRef(text);
+  const textRef = useRef<HTMLSpanElement>(null);
 
   const { animationStates, setAnimationComplete } = useAnimationContext();
-
+  useLayoutEffect(() => {
+    if (textRef.current != null) {
+      onHeightChange(textRef.current.offsetHeight);
+    }
+  }, [onHeightChange, textRef]); // Removed unnecessary dependency: text
   useEffect(() => {
     if (isReplaying) {
       setDisplayText("");
@@ -48,9 +54,8 @@ const Typewriter = ({
     if (isActive) {
       setDisplayText("");
       setCurrentIndex(0);
-      textRef.current = text;
     }
-  }, [text, isActive]);
+  }, [isActive]);
 
   useEffect(() => {
     if (!animationStates.hasTypewriterPlayed && isActive) {
@@ -111,7 +116,11 @@ const Typewriter = ({
           {displayText}
         </motion.span>
         {!isActive && (
-          <span className="absolute h-0 overflow-hidden opacity-0">{text}</span>
+          <span
+            className="absolute h-0 overflow-hidden opacity-0"
+            aria-hidden="true">
+            {text}
+          </span>
         )}
       </motion.div>
     </AnimatePresence>
