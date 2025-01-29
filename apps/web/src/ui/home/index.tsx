@@ -24,7 +24,7 @@ export function HomeContent({ posts }: { posts: Post[] }) {
   const { transitionTheme } = useThemeTransition();
 
   return (
-    <div className="theme-transition flex flex-col items-center justify-center px-24 pt-32 pb-24">
+    <div className="theme-transition flex flex-col items-center justify-center container py-24">
       <motion.div
         initial={false}
         animate={{

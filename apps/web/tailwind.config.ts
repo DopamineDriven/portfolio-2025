@@ -62,8 +62,12 @@ export default {
           to: { height: "0" }
         },
         "cursor-blink": {
-          "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0" }
+          "0%, 100%": { borderColor: "transparent" },
+          "50%": { borderColor: "hsl(var(--primary))" }
+        },
+        "cursor-advance": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(100%)" }
         }
       },
       animation: {
@@ -71,7 +75,8 @@ export default {
           "accordion-down var(--theme-transition-duration) ease-out",
         "accordion-up":
           "accordion-up var(--theme-transition-duration) ease-out",
-        "cursor-blink": "cursor-blink 0.7s infinite"
+        "cursor-blink": "cursor-blink 0.7s step-end infinite",
+        "cursor-advance": "cursor-advance 0.1s linear"
       },
       borderRadius: {
         lg: "var(--radius)",
