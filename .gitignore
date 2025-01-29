@@ -40,4 +40,5 @@ dist
 notes.md
 stock.md
 .git-old
-stash.md
+
+misc/*

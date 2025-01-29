@@ -1,8 +1,8 @@
 import type { FC } from "react";
-import type { TsxExclude } from "@/types/helpers";
+import type { TsxExclude19 } from "@/types/react";
 import { cn } from "@/lib/utils";
 
-export const Logo: FC<TsxExclude<"svg", "fill" | "viewBox" | "xmlns">> = ({
+export const Logo: FC<TsxExclude19<"svg", "fill" | "viewBox" | "xmlns">> = ({
   className,
   ...svg
 }) => (

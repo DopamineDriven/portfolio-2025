@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import React from "react";
 import { Poppins as _Poppins, Inter } from "next/font/google";
-import { Footer } from "@/ui/Footer";
-import { LoadingAnimation } from "@/ui/LoadingAnimation";
-import { default as Navbar } from "@/ui/Nav/temp-2";
-import { ThemeProvider } from "@/ui/Providers/ThemeProvider";
+import { Footer } from "@/ui/footer";
+import { LoadingAnimation } from "@/ui/loading-animation";
+import { default as Navbar } from "@/ui/nav";
+import { ThemeProvider } from "@/ui/providers/theme-provider";
 import "./global.css";
+import { AnimationContextProvider } from "@/context/animation-context";
 import { cn } from "@/lib/utils";
 
 /* populate relevant values in src/lib/site-url.ts and uncomment for url injetion */
@@ -46,16 +47,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning lang="en" className={cn(inter.className, "")}>
+    <html
+      suppressHydrationWarning
+      lang="en"
+      className={cn(inter.className, "")}>
       <body>
-        <ThemeProvider>
-          <LoadingAnimation />
-          <div className="flex min-h-[100dvh] flex-col">
-            <Navbar />
-            <main className="theme-transition grow">{children}</main>
-            <Footer />
-          </div>
-        </ThemeProvider>
+        <AnimationContextProvider>
+          <ThemeProvider>
+            <LoadingAnimation />
+            <div className="flex min-h-[100dvh] flex-col">
+              <Navbar />
+              <main className="theme-transition grow">{children}</main>
+              <Footer />
+            </div>
+          </ThemeProvider>
+        </AnimationContextProvider>
       </body>
     </html>
   );

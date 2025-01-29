@@ -146,52 +146,6 @@ export type ToCamelCase<S extends string> = string extends S
 
 /* Case helper types END  */
 
-/* Experimental React Type Helpers BEGIN */
-
-export type InferTsxTargetedFlexi<T> =
-  T extends React.DetailedHTMLProps<infer U, infer E> ? readonly [U, E] : T;
-
-export type Selector<
-  T,
-  K extends "attribute" | "element" | "tuple"
-> = T extends readonly [infer A, infer B]
-  ? K extends "attribute"
-    ? A
-    : K extends "element"
-      ? B
-      : readonly [A, B]
-  : T;
-
-export type FlexiKeys = Unenumerate<readonly ["attribute", "element", "tuple"]>;
-
-export type TsxTargetedExp<
-  T extends keyof React.JSX.IntrinsicElements,
-  K extends FlexiKeys
-> = {
-  readonly [P in T]: Selector<
-    InferTsxTargetedFlexi<React.JSX.IntrinsicElements[P]>,
-    K
-  >;
-}[T];
-
-export type TsxExcludeExp<
-  I extends FlexiKeys,
-  K extends keyof React.JSX.IntrinsicElements,
-  J extends keyof TsxTargetedExp<K, I>
-> = RemoveFields<TsxTargetedExp<K, I>, J>;
-
-export type TsxIncludeExp<
-  I extends FlexiKeys,
-  K extends keyof React.JSX.IntrinsicElements,
-  J extends keyof TsxTargetedExp<K, I>
-> = RemoveFields<TsxTargetedExp<K, I>, Exclude<keyof TsxTargetedExp<K, I>, J>>;
-
-export type ElementAttributePicker<
-  T extends keyof React.JSX.IntrinsicElements
-> = React.RefAttributes<TsxTargetedExp<T, "element">> &
-  Partial<TsxTargetedExp<T, "attribute">>;
-
-/* Experimental React Type Helpers END */
 
 /* Helper functions BEGIN */
 
