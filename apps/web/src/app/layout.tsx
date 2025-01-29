@@ -6,6 +6,8 @@ import { LoadingAnimation } from "@/ui/loading-animation";
 import { default as Navbar } from "@/ui/nav";
 import { ThemeProvider } from "@/ui/providers/theme-provider";
 import "./global.css";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AnimationContextProvider } from "@/context/animation-context";
 import { cn } from "@/lib/utils";
 
@@ -62,6 +64,8 @@ export default function RootLayout({
             </div>
           </ThemeProvider>
         </AnimationContextProvider>
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
