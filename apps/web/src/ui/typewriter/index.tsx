@@ -14,6 +14,7 @@ export const LandingPageTypeWriter: FC = () => {
   const [containerHeight, setContainerHeight] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const { animationStates, resetTypewriterAnimation } = useAnimationContext();
+  const lineHeights = useRef<number[]>([]);
 
   const lines = [
     [1, "I'm Andrew S. Ross, a passionate full stack developer and"],
@@ -24,7 +25,7 @@ export const LandingPageTypeWriter: FC = () => {
     [6, "Let's build something amazing together!"]
   ] as const satisfies readonly [number, string][];
 
-  const lineHeights = useRef<number[]>([]);
+  const initialHeight = lines.length * 40;
 
   const handleTypingComplete = useCallback(() => {
     setIsTypingComplete(true);
@@ -34,15 +35,20 @@ export const LandingPageTypeWriter: FC = () => {
     (height: number, index: number) => {
       lineHeights.current[index] = height;
       const totalHeight = lineHeights.current.reduce((sum, h) => sum + h, 0);
-      setContainerHeight(totalHeight + (lines.length - 1) * 4); // 4px for line spacing
+      const spacingHeight = (lines.length - 1) * 4; // 4px spacing between lines
+      setContainerHeight(Math.max(totalHeight + spacingHeight, initialHeight));
     },
-    [lines.length]
+    [lines.length, initialHeight]
   );
 
   const estimateFinalHeight = useCallback(() => {
-    const maxLineHeight = Math.max(...lineHeights.current);
-    return maxLineHeight * lines.length + (lines.length - 1) * 4; // 4px for line spacing
-  }, [lines.length]);
+    if (lineHeights.current.length === 0) return initialHeight;
+    const maxLineHeight = Math.max(...lineHeights.current.filter(Boolean));
+    return Math.max(
+      maxLineHeight * lines.length + (lines.length - 1) * 4,
+      initialHeight
+    );
+  }, [lines.length, initialHeight]);
 
   useEffect(() => {
     if (isTypingComplete && currentLineIndex < lines.length - 1) {
@@ -54,17 +60,23 @@ export const LandingPageTypeWriter: FC = () => {
       return () => clearTimeout(timeout);
     }
   }, [isTypingComplete, currentLineIndex, lines.length]);
+
   const handleReplay = useCallback(() => {
     setIsReplaying(true);
     resetTypewriterAnimation();
     setCurrentLineIndex(0);
     setIsTypingComplete(false);
-    setContainerHeight(estimateFinalHeight());
+    const estimatedHeight = estimateFinalHeight();
+    setContainerHeight(estimatedHeight);
     // Reset isReplaying with a brief delay to ensure proper state propagation
     setTimeout(() => {
       setIsReplaying(false);
     }, 100);
   }, [resetTypewriterAnimation, estimateFinalHeight]);
+
+  useEffect(() => {
+    setContainerHeight(initialHeight);
+  }, [initialHeight]);
 
   return (
     <div className="flex min-h-[5rem] flex-col space-y-2">
@@ -72,43 +84,47 @@ export const LandingPageTypeWriter: FC = () => {
         <h1 className="theme-transition mb-4 text-4xl font-bold">
           Portfolio 2025
         </h1>
-        <div
-          ref={containerRef}
-          className="relative inline-flex flex-col space-y-1 whitespace-nowrap"
-          style={{
-            height: `${containerHeight}px`,
-            transition: "height 0.5s ease-in-out",
-            minHeight: `${estimateFinalHeight()}px` // Ensure minimum height
-          }}>
-          {animationStates.hasTypewriterPlayed === false
-            ? lines
-                .slice(0, currentLineIndex + 1)
-                .map(([lineNumber, text], index) => (
-                  <Typewriter
-                    key={`${lineNumber}-${isReplaying}`}
-                    lineNumber={lineNumber}
-                    text={text}
-                    isReplaying={isReplaying}
-                    totalLines={lines.length}
-                    isCurrentLine={lineNumber === currentLineIndex + 1}
-                    className={cn(
-                      "theme-transition text-lg md:text-xl lg:text-2xl"
-                    )}
-                    onTypingComplete={
-                      lineNumber === currentLineIndex + 1
-                        ? handleTypingComplete
-                        : undefined
-                    }
-                    onHeightChange={height => handleHeightChange(height, index)}
-                    isActive={lineNumber <= currentLineIndex + 1}
-                  />
-                ))
-            : lines.map(([lineNumber, text]) => (
-                <span key={lineNumber} className="theme-transition text-2xl">
-                  {text}
-                </span>
-              ))}
-          <div className="relative h-10 w-full">
+        <div className="relative">
+          <div
+            ref={containerRef}
+            className="mb-4 inline-flex flex-col space-y-1 whitespace-nowrap"
+            style={{
+              height: `${containerHeight}px`,
+              transition: "height 0.5s ease-in-out",
+              minHeight: `${initialHeight}px` // Ensure minimum height
+            }}>
+            {animationStates.hasTypewriterPlayed === false
+              ? lines
+                  .slice(0, currentLineIndex + 1)
+                  .map(([lineNumber, text], index) => (
+                    <Typewriter
+                      key={`${lineNumber}-${isReplaying}`}
+                      lineNumber={lineNumber}
+                      text={text}
+                      isReplaying={isReplaying}
+                      totalLines={lines.length}
+                      isCurrentLine={lineNumber === currentLineIndex + 1}
+                      className={cn(
+                        "theme-transition text-lg md:text-xl lg:text-2xl"
+                      )}
+                      onTypingComplete={
+                        lineNumber === currentLineIndex + 1
+                          ? handleTypingComplete
+                          : undefined
+                      }
+                      onHeightChange={height =>
+                        handleHeightChange(height, index)
+                      }
+                      isActive={lineNumber <= currentLineIndex + 1}
+                    />
+                  ))
+              : lines.map(([lineNumber, text]) => (
+                  <span key={lineNumber} className="theme-transition text-2xl">
+                    {text}
+                  </span>
+                ))}
+          </div>
+          <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 transform">
             <AnimatePresence>
               {animationStates.hasTypewriterPlayed && !isReplaying && (
                 <motion.button
@@ -120,7 +136,7 @@ export const LandingPageTypeWriter: FC = () => {
                     ease: [0, 0.71, 0.2, 1.01]
                   }}
                   onClick={handleReplay}
-                  className="absolute left-1/2 -translate-x-1/2 transform opacity-50 transition-opacity hover:opacity-100"
+                  className="stroke-current/50 transition-opacity hover:stroke-current/100"
                   aria-label="Replay animation">
                   <motion.svg
                     xmlns="http://www.w3.org/2000/svg"
