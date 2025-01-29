@@ -17,8 +17,8 @@ export const LandingPageTypeWriter: FC = () => {
     [1, "I'm Andrew S. Ross, a passionate full stack developer and"],
     [2, "tinkerer with several years of Lead experience driven to create"],
     [3, "outstanding experiences for end-users and developers alike."],
-    [4, "I specialize in Node.js, Typescript, React, and Next.js with"],
-    [5, "a strong background in package development."],
+    [4, "I specialize in Node.js, Typescript, React, and Next.js"],
+    [5, "with a solid foundation in package development."],
     [6, "Let's build something amazing together!"]
   ] as const satisfies readonly [number, string][];
 
