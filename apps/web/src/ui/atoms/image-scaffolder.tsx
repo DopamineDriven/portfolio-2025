@@ -1,12 +1,12 @@
 "use client";
 
-import type { ComponentPropsWithRef, FC } from "react";
+import type { ComponentPropsWithRef } from "react";
 import Image from "next/image";
 import { motion } from "motion/react";
 import { shimmer } from "@/lib/shimmer";
 import { cn } from "@/lib/utils";
 
-const ImageScaffolder: FC<ComponentPropsWithRef<typeof Image>> = ({
+const ImageScaffolder = ({
   src,
   alt,
   width = 176,
@@ -14,7 +14,7 @@ const ImageScaffolder: FC<ComponentPropsWithRef<typeof Image>> = ({
   className,
   ref,
   ...rest
-}) => {
+}: ComponentPropsWithRef<typeof Image>) => {
   return (
     <motion.div
       className="relative"
@@ -43,7 +43,7 @@ const ImageScaffolder: FC<ComponentPropsWithRef<typeof Image>> = ({
           transition={{ duration: 0.3 }}
         />
       </motion.div>
-      <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-zinc-900/10" />
+      <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-zinc-900/10 ring-inset" />
     </motion.div>
   );
 };

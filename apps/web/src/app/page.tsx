@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getPosts } from "@/lib/posts";
-import { HomeContent } from "@/ui/HomeContent";
+import { HomeContent } from "@/ui/home";
 
 export const metadata = {
   title: "Home"

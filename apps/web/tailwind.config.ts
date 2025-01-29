@@ -3,7 +3,7 @@ import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
   content: ["src/**/*.{js,ts,jsx,tsx,md,mdx}", "content/**/*.mdx"],
-  darkMode:  "selector",
+  darkMode: "selector",
   future: { hoverOnlyWhenSupported: true },
   theme: {
     container: {
@@ -60,12 +60,18 @@ export default {
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" }
+        },
+        "cursor-blink": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0" }
         }
       },
       animation: {
         "accordion-down":
           "accordion-down var(--theme-transition-duration) ease-out",
-        "accordion-up": "accordion-up var(--theme-transition-duration) ease-out"
+        "accordion-up":
+          "accordion-up var(--theme-transition-duration) ease-out",
+        "cursor-blink": "cursor-blink 0.7s infinite"
       },
       borderRadius: {
         lg: "var(--radius)",

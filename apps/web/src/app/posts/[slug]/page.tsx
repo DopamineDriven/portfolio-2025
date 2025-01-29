@@ -4,7 +4,7 @@ import type { Options as RehypeOptions } from "rehype-pretty-code";
 import { transformerMetaWordHighlight } from "@shikijs/transformers";
 import rehypePrettyCode from "rehype-pretty-code";
 import type { InferGSPRT } from "@/types/next";
-import { MdxRenderer } from "@/components/MDXHandler";
+import { MdxRenderer } from "@/ui/mdx-handler";
 
 const options = {
   grid: true,
@@ -43,7 +43,7 @@ export default async function Post({
   const source = await fs.readFile(filePath, "utf8");
 
   return (
-    <article className="prose max-w-none dark:prose-invert">
+    <article className="prose dark:prose-invert max-w-none">
       <MdxRenderer
         source={source}
         options={{

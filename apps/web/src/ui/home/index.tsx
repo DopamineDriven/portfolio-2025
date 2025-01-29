@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import type { Post } from "@/lib/posts";
 import { useThemeTransition } from "@/hooks/use-theme-transition";
+import LandingPageTypeWriter from "@/ui/typewriter";
 
 export const proficiencies = [
   "Next.js / React.js",
@@ -23,7 +24,7 @@ export function HomeContent({ posts }: { posts: Post[] }) {
   const { transitionTheme } = useThemeTransition();
 
   return (
-    <div className="theme-transition flex flex-col items-center justify-center p-24 pt-32">
+    <div className="theme-transition flex flex-col items-center justify-center px-24 pt-32 pb-24">
       <motion.div
         initial={false}
         animate={{
@@ -37,13 +38,7 @@ export function HomeContent({ posts }: { posts: Post[] }) {
       />
       <div className="theme-transition space-y-12">
         <section>
-          <h1 className="theme-transition mb-4 text-4xl font-bold">
-            Portfolio 2025
-          </h1>
-          <p className="theme-transition text-xl">
-            I'm Andrew S. Ross, a passionate engineer and tinkerer creating
-            amazing web experiences.
-          </p>
+          <LandingPageTypeWriter />
         </section>
         <section>
           <h2 className="theme-transition mb-4 text-2xl font-semibold">
@@ -54,7 +49,7 @@ export function HomeContent({ posts }: { posts: Post[] }) {
               href="https://experience.biolifeplasma.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="theme-transition block rounded-lg bg-secondary p-4 hover:opacity-90">
+              className="theme-transition bg-secondary block rounded-lg p-4 hover:opacity-90">
               <h3 className="theme-transition text-lg font-semibold">
                 BioLife XR Experience
               </h3>
@@ -67,7 +62,7 @@ export function HomeContent({ posts }: { posts: Post[] }) {
               href="https://www.thefaderoominc.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="theme-transition block rounded-lg bg-secondary p-4 hover:opacity-90">
+              className="theme-transition bg-secondary block rounded-lg p-4 hover:opacity-90">
               <h3 className="theme-transition text-lg font-semibold">
                 The Fade Room Inc
               </h3>
@@ -76,7 +71,7 @@ export function HomeContent({ posts }: { posts: Post[] }) {
                 reviews, a sizable gallery, and online booking.
               </p>
             </a>
-            <div className="theme-transition rounded-lg bg-secondary p-4">
+            <div className="theme-transition bg-secondary rounded-lg p-4">
               <h3 className="theme-transition text-lg font-semibold">
                 Cortina CRM
               </h3>
@@ -85,7 +80,7 @@ export function HomeContent({ posts }: { posts: Post[] }) {
                 authentication.
               </p>
             </div>
-            <div className="theme-transition rounded-lg bg-secondary p-4">
+            <div className="theme-transition bg-secondary rounded-lg p-4">
               <h3 className="theme-transition text-lg font-semibold">
                 Headless WP Strategy
               </h3>
@@ -105,10 +100,10 @@ export function HomeContent({ posts }: { posts: Post[] }) {
               <article key={post.slug} className="group">
                 <Link href={`/posts/${post.slug}`}>
                   <div className="space-y-2">
-                    <h3 className="theme-transition text-xl font-semibold group-hover:text-primary">
+                    <h3 className="theme-transition group-hover:text-primary text-xl font-semibold">
                       {post.title}
                     </h3>
-                    <time className="theme-transition text-sm text-secondary">
+                    <time className="theme-transition text-secondary text-sm">
                       {new Date(post.date).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "long",
@@ -139,10 +134,10 @@ export function HomeContent({ posts }: { posts: Post[] }) {
               </h2>
               <ul
                 role="list"
-                className="theme-transition -mx-6 grid list-none grid-cols-2 gap-0.5 overflow-hidden bg-background/80 text-foreground sm:mx-0 sm:rounded-2xl md:grid-cols-3">
+                className="theme-transition bg-background/80 text-foreground -mx-6 grid list-none grid-cols-2 gap-0.5 overflow-hidden sm:mx-0 sm:rounded-2xl md:grid-cols-3">
                 {proficiencies.map((proficiency, i) => (
                   <li
-                    className="theme-transition rounded-lg bg-primary p-8 text-center align-middle text-primary-foreground sm:p-10 dark:bg-foreground/80 dark:text-background"
+                    className="theme-transition bg-primary text-primary-foreground dark:bg-foreground/80 dark:text-background rounded-lg p-8 text-center align-middle sm:p-10"
                     key={`proficiency-${i++}`}>
                     {proficiency}
                   </li>

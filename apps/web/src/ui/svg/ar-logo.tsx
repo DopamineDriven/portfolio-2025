@@ -1,8 +1,8 @@
 import type { FC } from "react";
-import type { TsxExclude } from "@/types/helpers";
+import type { TsxExclude19 } from "@/types/react";
 import { cn } from "@/lib/utils";
 
-export const ArLogo: FC<TsxExclude<"svg", "viewBox" | "fill" | "xmlns">> = ({
+export const ArLogo: FC<TsxExclude19<"svg", "viewBox" | "fill" | "xmlns">> = ({
   className,
   ...svg
 }) => (
@@ -34,10 +34,9 @@ export const ArLogo: FC<TsxExclude<"svg", "viewBox" | "fill" | "xmlns">> = ({
   </svg>
 );
 
-export const OldArLogo: FC<TsxExclude<"svg", "fill" | "viewBox" | "xmlns">> = ({
-  className,
-  ...svg
-}) => (
+export const ArLogoOld: FC<
+  TsxExclude19<"svg", "fill" | "viewBox" | "xmlns">
+> = ({ className, ...svg }) => (
   <svg
     viewBox="0 0 65 65"
     fill="none"

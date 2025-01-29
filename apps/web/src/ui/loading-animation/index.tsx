@@ -18,12 +18,12 @@ export function LoadingAnimation() {
 
   return (
     <motion.div
-      className="theme-transition fixed inset-0 z-50 flex items-center justify-center bg-background"
+      className="theme-transition bg-background fixed inset-0 z-50 flex items-center justify-center"
       initial={{ opacity: 1 }}
       animate={{ opacity: 0 }}
       transition={{ duration: 0.5, delay: 1.5 }}>
       <motion.div
-        className="px-4 text-center text-4xl font-bold text-primary"
+        className="text-primary px-4 text-center text-4xl font-bold"
         initial={{ scale: 0.5, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.5 }}>

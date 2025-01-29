@@ -1,6 +1,8 @@
+"use client";
+
 import type { MDXRemoteProps } from "next-mdx-remote/rsc";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { useMDXComponents } from "../../mdx-components";
+import { useMDXComponents } from "../../../mdx-components";
 
 export function MdxRenderer({
   source,
