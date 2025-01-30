@@ -45,7 +45,7 @@ export default function Navbar() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.8, ease: [0.77, 0, 0.175, 1] }}
-          className="relative mx-auto flex max-h-fit w-full max-w-7xl items-center justify-center backdrop-blur-sm"
+          className="relative mx-auto flex max-h-fit w-full max-w-10xl items-center justify-center backdrop-blur-sm"
           {...(!isMobile
             ? {
                 onMouseEnter: () => setIsHovered(true),
