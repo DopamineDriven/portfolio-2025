@@ -17,6 +17,7 @@ export interface TypewriterProps
   isCurrentLine: boolean;
   isReplaying?: boolean;
   onHeightChange: (height: number) => void;
+  isMobile: boolean;
 }
 
 const Typewriter = ({
@@ -31,6 +32,7 @@ const Typewriter = ({
   totalLines,
   isReplaying,
   onHeightChange,
+  isMobile,
   ...props
 }: TypewriterProps) => {
   const [displayText, setDisplayText] = useState("");
@@ -42,7 +44,8 @@ const Typewriter = ({
     if (textRef.current != null) {
       onHeightChange(textRef.current.offsetHeight);
     }
-  }, [onHeightChange, textRef]); // Removed unnecessary dependency: text
+  }, [onHeightChange, textRef]);
+
   useEffect(() => {
     if (isReplaying) {
       setDisplayText("");
@@ -56,6 +59,10 @@ const Typewriter = ({
       setCurrentIndex(0);
     }
   }, [isActive]);
+
+  useEffect(() => {
+    console.log(isMobile);
+  }, [isMobile]);
 
   useEffect(() => {
     if (!animationStates.hasTypewriterPlayed && isActive) {
@@ -102,9 +109,9 @@ const Typewriter = ({
         {...props}>
         <motion.span
           className={cn(
-            `inline-block whitespace-pre-wrap`,
+            `relative inline-block break-words whitespace-pre-wrap`,
             isCurrentLine
-              ? "border-primary animate-cursor-blink border-r-[0.15em] border-solid"
+              ? "border-primary animate-cursor-blink after:bg-primary sm:after:animate-cursor-blink after:animate-cursor-blink-mobile border-r-[0.15em] border-solid after:absolute after:ml-[0.0625rem] after:inline-block after:h-[1.1em] after:w-[0.15em] after:translate-y-[0.05em] after:content-[''] sm:after:h-[1.25em] sm:after:translate-y-[0.125em]"
               : ""
           )}
           style={{

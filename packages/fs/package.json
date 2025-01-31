@@ -59,9 +59,9 @@
     "dotenv": "^16.4.7"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "^7.49.1",
-    "@swc/core": "^1.10.11",
-    "@swc/wasm": "^1.10.11",
+    "@microsoft/api-extractor": "^7.49.2",
+    "@swc/core": "^1.10.12",
+    "@swc/wasm": "^1.10.12",
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
     "@portfolio/tsconfig": "workspace:*",

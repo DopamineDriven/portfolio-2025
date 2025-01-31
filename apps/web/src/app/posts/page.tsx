@@ -1,6 +1,6 @@
-import fs from "fs/promises";
 import path from "path";
 import Link from "next/link";
+import { Fs } from "@d0paminedriven/fs";
 import matter from "gray-matter";
 
 interface Post {
@@ -14,12 +14,13 @@ interface Post {
 
 async function getPosts(): Promise<Post[]> {
   const postsDirectory = path.join(process.cwd(), "src/content");
-  const files = await fs.readdir(postsDirectory);
+  const fs = new Fs(process.cwd());
+  const files = fs.readDir(postsDirectory, { recursive: true });
 
   const posts = await Promise.all(
     files.map(async filename => {
       const filePath = path.join(postsDirectory, filename);
-      const fileContent = await fs.readFile(filePath, "utf8");
+      const fileContent = fs.fileToBuffer(filePath).toString("utf-8");
       const { data, content } = matter(fileContent);
       const typedData = data as Omit<Post, "content">;
       return {
@@ -49,10 +50,10 @@ export default async function BlogPage() {
           <article key={post.slug} className="group">
             <Link href={`/posts/${post.slug}`}>
               <div className="space-y-2">
-                <h2 className="text-2xl font-semibold transition-colors group-hover:text-primary">
+                <h2 className="group-hover:text-primary text-2xl font-semibold transition-colors">
                   {post.title}
                 </h2>
-                <time className="text-sm text-secondary">
+                <time className="text-secondary text-sm">
                   {new Date(post.date).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
