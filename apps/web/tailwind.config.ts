@@ -61,9 +61,14 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" }
         },
+
         "cursor-blink": {
-          "0%, 100%": { borderColor: "transparent" },
-          "50%": { borderColor: "hsl(var(--primary))" }
+          "0%, 100%": { opacity: "0" },
+          "50%": { opacity: "1" }
+        },
+        "cursor-blink-mobile": {
+          "0%, 100%": { opacity: "0" },
+          "50%": { opacity: "1" }
         },
         "cursor-advance": {
           "0%": { transform: "translateX(0)" },
@@ -76,6 +81,7 @@ export default {
         "accordion-up":
           "accordion-up var(--theme-transition-duration) ease-out",
         "cursor-blink": "cursor-blink 0.7s step-end infinite",
+        "cursor-blink-mobile": "cursor-blink-mobile 0.7s step-end infinite",
         "cursor-advance": "cursor-advance 0.1s linear"
       },
       borderRadius: {

@@ -8,6 +8,10 @@ export function MdxRenderer({
 }: Omit<MDXRemoteProps, "components">) {
   const components = useMDXComponents({});
   return (
-    <MDXRemote source={source} components={components} options={options} />
+    <MDXRemote
+      source={source}
+      components={components}
+      options={options}
+    />
   );
 }

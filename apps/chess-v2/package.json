@@ -44,7 +44,7 @@
     "react-dom": "^19.0.0",
     "react-window": "^1.8.11",
     "recharts": "^2.15.1",
-    "tailwind-merge": "^2.6.0"
+    "tailwind-merge": "^3.0.1"
   },
   "devDependencies": {
     "@csstools/postcss-oklab-function": "^4.0.7",
