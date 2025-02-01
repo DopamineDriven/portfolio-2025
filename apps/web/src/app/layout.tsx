@@ -11,20 +11,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AnimationContextProvider } from "@/context/animation-context";
 import { cn } from "@/lib/utils";
 
-/* populate relevant values in src/lib/site-url.ts and uncomment for url injetion */
-// import { getSiteUrl } from "@/lib/site-url";
-
-// const geistSans = Geist({
-//   subsets: ["latin"]
-// });
-
-// const geistMono = Geist_Mono({
-//   subsets: ["latin"]
-// });
-
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-// const poppins = Poppins({ weight: ["400", "600", "700"], subsets: ["latin"] });
-
 export const viewport = {
   colorScheme: "normal",
   userScalable: true,
@@ -45,9 +32,9 @@ export const metadata = {
 
 export default function RootLayout({
   children
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <html
       suppressHydrationWarning
@@ -57,7 +44,7 @@ export default function RootLayout({
         <AnimationContextProvider>
           <ThemeProvider>
             <LoadingAnimation />
-            <div className="flex min-h-[100dvh] flex-col max-w-10xl mx-auto container sm:px-6 lg:px-8">
+            <div className="max-w-10xl container mx-auto flex min-h-[100dvh] flex-col sm:px-6 lg:px-8">
               <Navbar />
               <main className="theme-transition grow">{children}</main>
               <Footer />

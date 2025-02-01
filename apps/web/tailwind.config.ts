@@ -15,7 +15,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-sans)", ...defaultTheme.fontFamily.sans]
+        sans: ["var(--font-sans)", ...defaultTheme.fontFamily.sans],
+        inter: ["var(--font-inter)"]
       },
       colors: {
         border: "oklch(var(--border))",
