@@ -1,13 +1,13 @@
 "use client";
 
-import type React from "react";
+import type { ComponentPropsWithRef } from "react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useAnimationContext } from "@/context/animation-context";
 import { cn } from "@/lib/utils";
 
 export interface TypewriterProps
-  extends React.ComponentPropsWithRef<typeof motion.div> {
+  extends ComponentPropsWithRef<typeof motion.div> {
   text: string;
   delay?: number;
   onTypingComplete?: () => void;
@@ -20,7 +20,7 @@ export interface TypewriterProps
   isMobile: boolean;
 }
 
-const Typewriter = ({
+function Typewriter({
   text,
   delay = 50,
   className,
@@ -34,7 +34,7 @@ const Typewriter = ({
   onHeightChange,
   isMobile,
   ...props
-}: TypewriterProps) => {
+}: TypewriterProps) {
   const [displayText, setDisplayText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const textRef = useRef<HTMLSpanElement>(null);
@@ -59,10 +59,6 @@ const Typewriter = ({
       setCurrentIndex(0);
     }
   }, [isActive]);
-
-  useEffect(() => {
-    console.log(isMobile);
-  }, [isMobile]);
 
   useEffect(() => {
     if (!animationStates.hasTypewriterPlayed && isActive) {
@@ -109,10 +105,13 @@ const Typewriter = ({
         {...props}>
         <motion.span
           className={cn(
-            `relative inline-block break-words whitespace-pre-wrap`,
-            isCurrentLine
-              ? "border-primary animate-cursor-blink after:bg-primary sm:after:animate-cursor-blink after:animate-cursor-blink-mobile border-r-[0.15em] border-solid after:absolute after:ml-[0.0625rem] after:inline-block after:h-[1.1em] after:w-[0.15em] after:translate-y-[0.05em] after:content-[''] sm:after:h-[1.25em] sm:after:translate-y-[0.125em]"
-              : ""
+            "relative inline-block break-words whitespace-pre-wrap",
+            isCurrentLine && [
+              "after:bg-primary after:absolute after:ml-[0.0625rem] after:inline-block after:w-[0.15em] after:content-['']",
+              isMobile
+                ? "after:animate-cursor-blink-mobile after:h-[1.1em] after:-translate-y-[0.05em]"
+                : "after:animate-cursor-blink after:h-[1.25em] after:-translate-y-[0.125em]"
+            ]
           )}
           style={{
             width: isActive ? "auto" : "0ch",
@@ -132,7 +131,7 @@ const Typewriter = ({
       </motion.div>
     </AnimatePresence>
   );
-};
+}
 
 Typewriter.displayName = "Typewriter";
 
