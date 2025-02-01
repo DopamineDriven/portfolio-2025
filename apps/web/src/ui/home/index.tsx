@@ -27,7 +27,7 @@ export function HomeContent({ posts }: { posts: Post[] }) {
         <section>
           <LandingPageTypeWriter />
         </section>
-        <section>
+        <section className="max-w-7xl mx-auto">
           <div className="my-12 w-full">
             <h2 className="mb-8 text-center text-2xl font-bold">
               Technical Proficiencies
@@ -86,7 +86,7 @@ export function HomeContent({ posts }: { posts: Post[] }) {
             </div>
           </div>
         </section>
-        <section>
+        <section className="container">
           <h2 className="theme-transition mb-4 text-2xl font-semibold">
             Recent Blog Posts
           </h2>
