@@ -73,6 +73,10 @@ export default {
         "cursor-advance": {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(100%)" }
+        },
+        "carousel-scroll": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-100%)" }
         }
       },
       animation: {
@@ -82,7 +86,8 @@ export default {
           "accordion-up var(--theme-transition-duration) ease-out",
         "cursor-blink": "cursor-blink 0.7s step-end infinite",
         "cursor-blink-mobile": "cursor-blink-mobile 0.7s step-end infinite",
-        "cursor-advance": "cursor-advance 0.1s linear"
+        "cursor-advance": "cursor-advance 0.1s linear",
+        carousel: "carousel-scroll var(--animation-duration) linear infinite"
       },
       borderRadius: {
         lg: "var(--radius)",

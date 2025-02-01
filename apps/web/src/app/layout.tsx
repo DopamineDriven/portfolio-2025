@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
 //   subsets: ["latin"]
 // });
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 // const poppins = Poppins({ weight: ["400", "600", "700"], subsets: ["latin"] });
 
 export const viewport = {
@@ -57,7 +57,7 @@ export default function RootLayout({
         <AnimationContextProvider>
           <ThemeProvider>
             <LoadingAnimation />
-            <div className="flex min-h-[100dvh] flex-col">
+            <div className="flex min-h-[100dvh] flex-col max-w-10xl mx-auto container sm:px-6 lg:px-8">
               <Navbar />
               <main className="theme-transition grow">{children}</main>
               <Footer />

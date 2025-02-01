@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @config "../../tailwind.config.ts";
 @plugin "@tailwindcss/forms";
@@ -24,6 +24,7 @@
   }
 }
 
+/* prettier-ignore */
 @layer base {
   :root {
     --background: 1.0000000000000002 0.0000000000000004996003610813204 0;
@@ -48,6 +49,8 @@
     --radius: 0.5rem;
     --theme-transition-duration: 0.5s;
     --loading-animation-duration: 2s;
+    --animation-duration: 60s;
+    --visible-items: 5;
   }
   .dark {
     --background: 0.1370608055115447 0.03597153479968494 258.52581130794215;
@@ -273,4 +276,35 @@ pre[class*="language-"] {
 .token.important,
 .token.variable {
   color: oklch(86.06% 0.1731 91.94);
+}
+
+/* Carousel smooth scrolling */
+.animate-carousel {
+  animation: carousel-scroll var(--animation-duration) linear infinite;
+}
+
+@keyframes carousel-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(
+      calc(-100% / var(--visible-items) * (var(--visible-items) - 1))
+    );
+  }
+}
+
+@media (width < 640px) {
+  .animate-carousel {
+    animation: carousel-scroll-mobile var(--animation-duration) linear infinite;
+  }
+
+  @keyframes carousel-scroll-mobile {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(calc(-100% * var(--visible-items)));
+    }
+  }
 }
