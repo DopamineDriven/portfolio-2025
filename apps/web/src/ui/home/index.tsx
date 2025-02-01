@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { motion } from "motion/react";
 import type { Post } from "@/lib/posts";
-import { useThemeTransition } from "@/hooks/use-theme-transition";
+// import { useThemeTransition } from "@/hooks/use-theme-transition";
 import LandingPageTypeWriter from "@/ui/typewriter";
 
-export const proficiencies = [
+const proficiencies = [
   "Next.js / React.js",
   "TypeScript / Node.js",
   "Packages / Workspaces",
@@ -21,18 +21,18 @@ export const proficiencies = [
 
 export function HomeContent({ posts }: { posts: Post[] }) {
   const recentPosts = posts.slice(0, 3); // Get the 3 most recent posts
-  const { transitionTheme } = useThemeTransition();
+  // const { transitionTheme } = useThemeTransition();
 
   return (
     <div className="theme-transition flex flex-col items-center justify-center container py-24">
       <motion.div
         initial={false}
-        animate={{
-          backgroundColor:
-            transitionTheme === "dark"
-              ? "rgb(26, 26, 26)"
-              : "rgb(255, 255, 255)"
-        }}
+        // animate={{
+        //   backgroundColor:
+        //     transitionTheme === "dark"
+        //       ? "rgb(26, 26, 26)"
+        //       : "rgb(255, 255, 255)"
+        // }}
         transition={{ duration: 0.5, ease: "easeInOut" }}
         className="fixed inset-0 z-[-1]"
       />

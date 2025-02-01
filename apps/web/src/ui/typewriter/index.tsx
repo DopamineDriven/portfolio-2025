@@ -139,7 +139,7 @@ export const LandingPageTypeWriter: FC = () => {
               />
             ))}
           </div>
-          <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 transform">
+          <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 transform">
             <AnimatePresence>
               {animationStates.hasTypewriterPlayed && !isReplaying && (
                 <motion.button

@@ -89,10 +89,11 @@
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: oklch(var(--border));
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: oklch(var(--background));
+    color: oklch(var(--foreground));
     transition:
       background-color var(--theme-transition-duration) ease-in-out,
       color var(--theme-transition-duration) ease-in-out;
@@ -107,7 +108,7 @@
 
 @supports not (backdrop-filter: blur(4px)) {
   .backdrop-blur-sm {
-    background-color: rgba(var(--background), 0.9);
+    background-color: color-mix(in oklab, var(--background) 90%, transparent);
   }
 }
 
@@ -144,16 +145,16 @@ code > [data-line]::before {
   width: 1rem;
   margin-right: 1rem;
   text-align: right;
-  color: #6b7280;
+  color: oklch(55.1% 0.0234 264.36);
 }
 
 .highlighted {
-  background-color: rgba(250, 204, 21, 0.35);
-  border-left: 0.125rem solid #fbbf24;
+  background-color: oklch(86.06% 0.1731 91.94 / 35%);
+  border-left: 0.125rem solid oklch(83.69% 0.1644 84.43);
 }
 
 .word {
-  background-color: #eab2087f;
+  background-color: oklch(79.33% 0.1614 85.51 / 49.8%);
   border-radius: 0.25rem;
   padding: 0.25rem;
 }
@@ -164,18 +165,18 @@ code > [data-line]::before {
 
 .prose pre {
   background-color: #1f2937;
-  color: #c9d1d9;
+  color: oklch(85.69% 0.0141 247.99);
   position: relative;
 }
 
 .prose code {
-  color: #c9d1d9;
+  color: oklch(85.69% 0.0141 247.99);
   background-color: transparent;
   padding: 0;
 }
 
 .prose a {
-  color: #58a6ff;
+  color: oklch(71.53% 0.1518100004775152 253.30612539990454);
   text-decoration: none;
 }
 
@@ -189,7 +190,7 @@ code > [data-line]::before {
 .prose h4,
 .prose h5,
 .prose h6 {
-  color: #111827;
+  color: oklch(21.01% 0.0318 264.66);
 }
 
 .dark .prose h1,
@@ -198,36 +199,36 @@ code > [data-line]::before {
 .dark .prose h4,
 .dark .prose h5,
 .dark .prose h6 {
-  color: #c9d1d9;
+  color: oklch(85.69% 0.0141 247.99);
 }
 
 .prose p,
 .prose ul,
 .prose ol {
-  color: #374151;
+  color: oklch(37.29% 0.0306 259.73);
 }
 
 .dark .prose p,
 .dark .prose ul,
 .dark .prose ol {
-  color: #c9d1d9;
+  color: oklch(85.69% 0.0141 247.99);
 }
 
 /* Syntax highlighting */
 code[class*="language-"],
 pre[class*="language-"] {
-  color: #f3f4f6;
+  color: oklch(96.7% 0.0029 264.54);
 }
 
 .token.comment,
 .token.prolog,
 .token.doctype,
 .token.cdata {
-  color: #9ca3af;
+  color: oklch(71.37% 0.0192 261.32);
 }
 
 .token.punctuation {
-  color: #d1d5db;
+  color: oklch(87.17% 0.0093 258.34);
 }
 
 .token.property,
@@ -237,7 +238,7 @@ pre[class*="language-"] {
 .token.constant,
 .token.symbol,
 .token.deleted {
-  color: #4ade80;
+  color: oklch(80.03% 0.1821 151.71);
 }
 
 .token.selector,
@@ -246,7 +247,7 @@ pre[class*="language-"] {
 .token.char,
 .token.builtin,
 .token.inserted {
-  color: #c084fc;
+  color: oklch(72.17% 0.1767 305.5);
 }
 
 .token.operator,
@@ -254,22 +255,22 @@ pre[class*="language-"] {
 .token.url,
 .language-css .token.string,
 .style .token.string {
-  color: #fde047;
+  color: oklch(90.52% 0.1657 98.11);
 }
 
 .token.atrule,
 .token.attr-value,
 .token.keyword {
-  color: #60a5fa;
+  color: oklch(71.37% 0.1434 254.62);
 }
 
 .token.function,
 .token.class-name {
-  color: #f472b6;
+  color: oklch(72.53% 0.1752 349.76);
 }
 
 .token.regex,
 .token.important,
 .token.variable {
-  color: #facc15;
+  color: oklch(86.06% 0.1731 91.94);
 }
