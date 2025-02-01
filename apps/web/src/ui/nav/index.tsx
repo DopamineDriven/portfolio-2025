@@ -66,10 +66,10 @@ export default function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5, ease: [0.77, 0, 0.175, 1] }}
-                  className="flex w-full justify-between px-8 py-2 text-center">
+                  className="flex w-full flex-row-reverse justify-between px-[5vw] sm:px-[10vw] py-2 sm:py-4 text-center">
                   <span>Menu</span>
                   <Link href="/" className="text-[#f5f5f5]">
-                    <ArLogo className="size-5" />
+                    <ArLogo className="size-5 sm:size-7" />
                   </Link>
                 </motion.span>
               ) : (
@@ -102,7 +102,7 @@ export default function Navbar() {
                           }>
                           <Link
                             href={item.href}
-                            className="relative block w-full px-4 py-2 text-center"
+                            className="relative block w-full px-4 py-2 sm:py-3 text-center"
                             onClick={() => isMobile && setIsMenuOpen(false)}>
                             <motion.div
                               className="relative z-50 w-full sm:z-10"

@@ -5,26 +5,13 @@ import { motion } from "motion/react";
 import type { Post } from "@/lib/posts";
 // import { useThemeTransition } from "@/hooks/use-theme-transition";
 import LandingPageTypeWriter from "@/ui/typewriter";
-
-const proficiencies = [
-  "Next.js / React.js",
-  "TypeScript / Node.js",
-  "Packages / Workspaces",
-  "DX / Technical Debt Deterrence",
-  "AWS / GCP / Azure",
-  "Postgres / Mongo",
-  "UI/UX Design / Figma",
-  "Auth / Analytics",
-  "Docker / Kubernetes",
-  "WordPress / Sanity"
-];
+import { CarouselWithFade } from "../carousel";
 
 export function HomeContent({ posts }: { posts: Post[] }) {
   const recentPosts = posts.slice(0, 3); // Get the 3 most recent posts
   // const { transitionTheme } = useThemeTransition();
-
   return (
-    <div className="theme-transition flex flex-col items-center justify-center container py-24">
+    <div className="theme-transition container mx-auto flex flex-col items-center justify-center py-24 sm:px-6 lg:px-8">
       <motion.div
         initial={false}
         // animate={{
@@ -41,6 +28,14 @@ export function HomeContent({ posts }: { posts: Post[] }) {
           <LandingPageTypeWriter />
         </section>
         <section>
+          <div className="my-12 w-full">
+            <h2 className="mb-8 text-center text-2xl font-bold">
+              Technical Proficiencies
+            </h2>
+            <CarouselWithFade />
+          </div>
+        </section>
+        <section className="container">
           <h2 className="theme-transition mb-4 text-2xl font-semibold">
             Featured Projects
           </h2>
@@ -124,26 +119,6 @@ export function HomeContent({ posts }: { posts: Post[] }) {
               className="theme-transition text-primary hover:underline">
               View all blog posts →
             </Link>
-          </div>
-        </section>
-        <section>
-          <div className="theme-transition bg-current py-24 sm:py-32">
-            <div className="theme-transition mx-auto max-w-7xl px-6 lg:px-8">
-              <h2 className="theme-transition mb-4 text-2xl font-semibold">
-                Key Skills
-              </h2>
-              <ul
-                role="list"
-                className="theme-transition bg-background/80 text-foreground -mx-6 grid list-none grid-cols-2 gap-0.5 overflow-hidden sm:mx-0 sm:rounded-2xl md:grid-cols-3">
-                {proficiencies.map((proficiency, i) => (
-                  <li
-                    className="theme-transition bg-primary text-primary-foreground dark:bg-foreground/80 dark:text-background rounded-lg p-8 text-center align-middle sm:p-10"
-                    key={`proficiency-${i++}`}>
-                    {proficiency}
-                  </li>
-                ))}
-              </ul>
-            </div>
           </div>
         </section>
       </div>
