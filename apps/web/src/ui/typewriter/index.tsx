@@ -143,7 +143,7 @@ const LandingPageTypeWriter: FC = () => {
                 isCurrentLine={lineNumber === currentLineIndex + 1}
                 className={cn(
                   "theme-transition tracking-tight",
-                  "text-sm leading-snug",
+                  "text-base leading-snug",
                   "sm:text-lg sm:leading-snug",
                   "md:text-xl md:leading-normal",
                   "lg:text-2xl"
