@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { ProficienciesCarousel } from "./proficiencies-carousel";
+import { ProficienciesCarousel } from "@/ui/carousel/proficiencies-carousel";
 
 export function CarouselWithFade() {
   const containerRef = useRef<HTMLDivElement>(null);

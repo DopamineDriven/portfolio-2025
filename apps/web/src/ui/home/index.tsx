@@ -3,23 +3,16 @@
 import Link from "next/link";
 import { motion } from "motion/react";
 import type { Post } from "@/lib/posts";
-// import { useThemeTransition } from "@/hooks/use-theme-transition";
+import { BreakoutWrapper } from "@/ui/atoms/breakout-wrapper";
+import { CarouselWithFade } from "@/ui/carousel";
 import LandingPageTypeWriter from "@/ui/typewriter";
-import { CarouselWithFade } from "../carousel";
 
 export function HomeContent({ posts }: { posts: Post[] }) {
-  const recentPosts = posts.slice(0, 3); // Get the 3 most recent posts
-  // const { transitionTheme } = useThemeTransition();
+  const recentPosts = posts.slice(0, 3);
   return (
-    <div className="theme-transition container mx-auto flex flex-col items-center justify-center py-24 sm:px-6 lg:px-8">
+    <div className="theme-transition mx-auto flex flex-col items-center justify-center sm:px-4 lg:px-6 py-24 max-w-8xl">
       <motion.div
         initial={false}
-        // animate={{
-        //   backgroundColor:
-        //     transitionTheme === "dark"
-        //       ? "rgb(26, 26, 26)"
-        //       : "rgb(255, 255, 255)"
-        // }}
         transition={{ duration: 0.5, ease: "easeInOut" }}
         className="fixed inset-0 z-[-1]"
       />
@@ -27,15 +20,15 @@ export function HomeContent({ posts }: { posts: Post[] }) {
         <section>
           <LandingPageTypeWriter />
         </section>
-        <section className="max-w-7xl mx-auto">
-          <div className="my-12 w-full">
-            <h2 className="mb-8 text-center text-2xl font-bold">
-              Technical Proficiencies
-            </h2>
+        <section className="mx-auto my-12">
+          <h2 className="mb-8 text-center text-2xl font-bold">
+            Technical Proficiencies
+          </h2>
+          <BreakoutWrapper>
             <CarouselWithFade />
-          </div>
+          </BreakoutWrapper>
         </section>
-        <section className="container">
+        <section>
           <h2 className="theme-transition mb-4 text-2xl font-semibold">
             Featured Projects
           </h2>
@@ -86,7 +79,7 @@ export function HomeContent({ posts }: { posts: Post[] }) {
             </div>
           </div>
         </section>
-        <section className="container">
+        <section>
           <h2 className="theme-transition mb-4 text-2xl font-semibold">
             Recent Blog Posts
           </h2>
