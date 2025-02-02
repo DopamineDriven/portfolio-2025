@@ -10,7 +10,8 @@
     "build": "next build",
     "format": "prettier --write \"**/*.{ts,tsx,cts,mts,js,jsx,mjs,cjs,json,yaml,yml,css,html,md,mdx,graphql,gql}\" --ignore-unknown --cache",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postbuild": "tsx src/services/postbuild.ts"
   },
   "dependencies": {
     "@d0paminedriven/chess-icons": "^0.4.0",

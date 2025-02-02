@@ -2,14 +2,15 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export const alt = "Next Chess Bot";
+export const alt = "Andrew Ross Portfolio";
 export const size = {
   width: 1200,
-  height: 630
+  height: 628
 };
-export const contentType = "image/jpeg";
+export const contentType = "image/png";
+
 export default async function Image() {
-  const absoluteUrl = new URL("./og_jpg.jpg", import.meta.url);
+  const absoluteUrl = new URL("./ar-og.png", import.meta.url);
 
   const fontAbsoluteUrl = new URL(
     "./BasisGrotesquePro-Light.ttf",
@@ -23,7 +24,7 @@ export default async function Image() {
     ]);
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch SVG: ${response.statusText}`);
+      throw new Error(`Failed to fetch image: ${response.statusText}`);
     }
     if (!responseFont.ok) {
       throw new Error(`Failed to fetch SVG: ${responseFont.statusText}`);
@@ -33,7 +34,7 @@ export default async function Image() {
 
     // Encode to base64
     const base64Encoded = Buffer.from(arrayBuffer).toString("base64");
-    const ogDataUrl = `data:image/jpeg;base64,${base64Encoded}`;
+    const twitterDataUrl = `data:image/png;base64,${base64Encoded}`;
 
     return new ImageResponse(
       (
@@ -52,9 +53,9 @@ export default async function Image() {
             backgroundPosition: "center"
           }}>
           <img
-            src={ogDataUrl}
-            alt="Next Chess Bot OG Image"
-            width="630"
+            src={twitterDataUrl}
+            alt="Andrew Ross Og Image"
+            width="628"
             height="1200"
             style={{
               position: "absolute",
@@ -75,12 +76,12 @@ export default async function Image() {
           <div
             style={{
               position: "absolute",
-              top: "50px",
+              top: "48px",
               display: "flex",
               flexDirection: "row",
               left: "50%",
               transform: "translateX(-50%)",
-              padding: "30px 60px",
+              padding: "28px 58px",
               background: "rgba(255, 255, 255, 0.1)",
               WebkitBackdropFilter: "blur(10px)",
               borderRadius: "20px",
@@ -91,40 +92,40 @@ export default async function Image() {
             <div
               style={{
                 color: "white",
-                fontSize: "72px",
+                fontSize: "70px",
                 fontWeight: 600,
                 textAlign: "center",
                 letterSpacing: "-0.025em",
                 textShadow: "2px 2px 4px rgba(0,0,0,0.5)"
               }}>
-              Next Chess Bot
+              Andrew Ross
             </div>
           </div>
           <div
             style={{
               position: "absolute",
-              bottom: "40px",
+              bottom: "38px",
               left: "50%",
               letterSpacing: "-0.025rem",
               transform: "translateX(-50%)",
               color: "white",
               background: "rgba(0, 0, 0, 0.5)",
-              fontSize: "32px",
+              fontSize: "31px",
               fontWeight: 900,
               borderRadius: "10px",
               textAlign: "center",
-              padding: "12.5px 25px",
+              padding: "12px 24px",
               WebkitBackdropFilter: "blur(10px)",
               opacity: 0.85,
               zIndex: 1
             }}>
-            Elevate Your Game
+            Portfolio 2025
           </div>
         </div>
       ),
       {
         width: 1200,
-        height: 630,
+        height: 628,
         fonts: [
           {
             name: "Basis Grotesque Pro",
@@ -136,11 +137,11 @@ export default async function Image() {
     );
   } catch (err) {
     if (err instanceof Error) {
-      console.error(`Error generating OG image: ${err.message}`);
-      console.error(err.stack); // Log the stack trace for more detailed debugging
+      console.error(`Error generating Twitter image: ${err.message}`);
+      console.error(err.stack);
     } else {
       console.error(
-        "An unknown error occurred while generating OG image:",
+        "An unknown error occurred while generating Twitter image:",
         err
       );
     }

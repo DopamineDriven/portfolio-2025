@@ -1,6 +1,6 @@
-export const getProductionUrl = "https://prod-placeholder.com" as const;
+export const getProductionUrl = "https://www.asross.com" as const;
 
-export const getPreviewUrl = "https://preview-placeholder.vercel.app" as const;
+export const getPreviewUrl = "https://dev.asross.com" as const;
 
 export const getLocalUrl = "http://localhost:3008" as const;
 
