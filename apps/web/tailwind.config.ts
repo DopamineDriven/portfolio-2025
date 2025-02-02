@@ -1,9 +1,9 @@
 import type { Config as TailwindConfig } from "tailwindcss";
-import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
   content: ["src/**/*.{js,ts,jsx,tsx,md,mdx}", "content/**/*.mdx"],
   darkMode: "selector",
+  important: true,
   future: { hoverOnlyWhenSupported: true },
   theme: {
     container: {
@@ -15,8 +15,31 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-sans)", ...defaultTheme.fontFamily.sans],
-        inter: ["var(--font-inter)"]
+        inter: ["var(--font-inter)"],
+        "basis-grotesque-pro-regular": [
+          "var(--font-basis-grotesque-pro-regular)"
+        ],
+        "basis-grotesque-pro-italic": [
+          "var(--font-basis-grotesque-pro-italic)"
+        ],
+        "basis-grotesque-pro-black": ["var(--font-basis-grotesque-pro-black)"],
+        "basis-grotesque-pro-black-italic": [
+          "var(--font-basis-grotesque-pro-black-italic)"
+        ],
+        "basis-grotesque-pro-bold": ["var(--font-basis-grotesque-pro-bold)"],
+        "basis-grotesque-pro-bold-italic": [
+          "var(--font-basis-grotesque-pro-bold-italic)"
+        ],
+        "basis-grotesque-pro-light": ["var(--font-basis-grotesque-pro-light)"],
+        "basis-grotesque-pro-light-italic": [
+          "var(--font-basis-grotesque-pro-light-italic)"
+        ],
+        "basis-grotesque-pro-medium": [
+          "var(--font-basis-grotesque-pro-medium)"
+        ],
+        "basis-grotesque-pro-medium-italic": [
+          "var(--font-basis-grotesque-pro-medium-italic)"
+        ]
       },
       colors: {
         border: "oklch(var(--border))",
@@ -98,6 +121,10 @@ export default {
       transitionDuration: {
         theme: "var(--theme-transition-duration)",
         loading: "var(--loading-animation-duration)"
+      },
+      fontSize: {
+        sxs: ["0.625rem", { lineHeight: "0.875rem" }],
+        xxs: ["0.5rem", { lineHeight: "0.75rem" }]
       },
       backdropBlur: {
         sm: "4px"

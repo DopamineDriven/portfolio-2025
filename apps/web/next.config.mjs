@@ -26,7 +26,10 @@ const nextConfig = {
       },
       { hostname: "api.dicebear.com", protocol: "https" },
       { hostname: "images.unsplash.com", protocol: "https" },
-      { hostname: "tailwindui.com", protocol: "https" }
+      { hostname: "tailwindui.com", protocol: "https" },
+      { hostname: "www.asross.com", protocol: "https" },
+      { hostname: "dev.asross.com", protocol: "https" },
+      { hostname: "asross.com", protocol: "https" }
     ]
   }
 };

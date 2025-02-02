@@ -2,14 +2,14 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export const alt = "Next Chess Bot";
+export const alt = "Andrew Ross Portfolio 2025";
 export const size = {
   width: 1200,
   height: 630
 };
-export const contentType = "image/jpeg";
+export const contentType = "image/png";
 export default async function Image() {
-  const absoluteUrl = new URL("./og_jpg.jpg", import.meta.url);
+  const absoluteUrl = new URL("./ar-og.png", import.meta.url);
 
   const fontAbsoluteUrl = new URL(
     "./BasisGrotesquePro-Light.ttf",
@@ -23,7 +23,7 @@ export default async function Image() {
     ]);
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch SVG: ${response.statusText}`);
+      throw new Error(`Failed to fetch Image: ${response.statusText}`);
     }
     if (!responseFont.ok) {
       throw new Error(`Failed to fetch SVG: ${responseFont.statusText}`);
@@ -33,7 +33,7 @@ export default async function Image() {
 
     // Encode to base64
     const base64Encoded = Buffer.from(arrayBuffer).toString("base64");
-    const ogDataUrl = `data:image/jpeg;base64,${base64Encoded}`;
+    const ogDataUrl = `data:image/png;base64,${base64Encoded}`;
 
     return new ImageResponse(
       (
@@ -53,7 +53,7 @@ export default async function Image() {
           }}>
           <img
             src={ogDataUrl}
-            alt="Next Chess Bot OG Image"
+            alt="Andrew Ross OG Image"
             width="630"
             height="1200"
             style={{
@@ -97,7 +97,7 @@ export default async function Image() {
                 letterSpacing: "-0.025em",
                 textShadow: "2px 2px 4px rgba(0,0,0,0.5)"
               }}>
-              Next Chess Bot
+              Andrew Ross
             </div>
           </div>
           <div
@@ -118,7 +118,7 @@ export default async function Image() {
               opacity: 0.85,
               zIndex: 1
             }}>
-            Elevate Your Game
+            Portfolio 2025
           </div>
         </div>
       ),
