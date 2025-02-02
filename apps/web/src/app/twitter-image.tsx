@@ -59,7 +59,7 @@ export default async function Image() {
             height="1200"
             style={{
               position: "absolute",
-              objectFit: "cover",
+              objectFit: "contain",
               width: "100%",
               height: "100%"
             }}
@@ -70,7 +70,7 @@ export default async function Image() {
               inset: 0,
               zIndex: 2,
               background:
-                "linear-gradient(to bottom right, rgba(0,0,0,0.3), rgba(0,0,0,0.6))"
+                "linear-gradient(to bottom right, rgba(0,0,0,0.8), rgba(0,0,0,0.9))"
             }}
           />
           <div
