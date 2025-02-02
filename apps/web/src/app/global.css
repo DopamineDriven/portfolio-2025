@@ -285,26 +285,27 @@ pre[class*="language-"] {
 
 @keyframes carousel-scroll {
   0% {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translateX(
-      calc(-100% / var(--visible-items) * (var(--visible-items) - 1))
-    );
+    transform: translate3d(calc(-1 * var(--total-width)), 0, 0);
   }
 }
 
 @media (width < 640px) {
+  :root {
+    --visible-items: 3;
+  }
   .animate-carousel {
-    animation: carousel-scroll-mobile var(--animation-duration) linear infinite;
+    animation: carousel-scroll var(--animation-duration) linear infinite;
   }
 
-  @keyframes carousel-scroll-mobile {
+  @keyframes carousel-scroll {
     0% {
-      transform: translateX(0);
+      transform: translate3d(0, 0, 0);
     }
     100% {
-      transform: translateX(calc(-100% * var(--visible-items)));
+      transform: translate3d(calc(-1 * var(--total-width)), 0, 0);
     }
   }
 }

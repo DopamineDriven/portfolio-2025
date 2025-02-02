@@ -10,7 +10,7 @@ import LandingPageTypeWriter from "@/ui/typewriter";
 export function HomeContent({ posts }: { posts: Post[] }) {
   const recentPosts = posts.slice(0, 3);
   return (
-    <div className="theme-transition mx-auto flex flex-col items-center justify-center sm:px-4 lg:px-6 py-24 max-w-8xl">
+    <div className="theme-transition max-w-8xl mx-auto flex flex-col items-center justify-center py-24 sm:px-4 lg:px-6">
       <motion.div
         initial={false}
         transition={{ duration: 0.5, ease: "easeInOut" }}
@@ -32,7 +32,7 @@ export function HomeContent({ posts }: { posts: Post[] }) {
           <h2 className="theme-transition mb-4 text-2xl font-semibold">
             Featured Projects
           </h2>
-          <div className="theme-transition grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="theme-transition grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
             <a
               href="https://experience.biolifeplasma.com"
               target="_blank"

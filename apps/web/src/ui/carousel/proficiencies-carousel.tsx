@@ -32,8 +32,8 @@ export function ProficienciesCarousel() {
           const visibleItems = isMobile ? 3 : 5;
           const animationDuration = 60; // seconds
           const elementWidth = firstChild.offsetWidth;
-          const moveDistance = elementWidth * proficiencies.length;
-          container.style.setProperty("--move-distance", `${moveDistance}px`);
+          const totalWidth = elementWidth * proficiencies.length;
+          container.style.setProperty("--total-width", `${totalWidth}px`);
           container.style.setProperty(
             "--animation-duration",
             `${animationDuration}s`
@@ -54,12 +54,11 @@ export function ProficienciesCarousel() {
   return (
     <div className="w-full overflow-hidden">
       <div ref={containerRef} className="animate-carousel flex">
-        {/* two spread operators is intentional to create a seamless infinite-scrolling effect */}
         {[...proficiencies, ...proficiencies].map((item, index) => (
           <div
             key={index}
-            className="min-w-0 flex-[0_0_33.333%] px-2 sm:flex-[0_0_20%] sm:px-4">
-            <div className="bg-muted/50 dark:bg-muted/20 hover:bg-muted/70 dark:hover:bg-muted/30 m-2 flex h-full flex-col items-center justify-center rounded-lg p-6 text-center backdrop-blur-sm transition-colors">
+            className="min-w-0 flex-[0_0_33.333%] sm:flex-[0_0_20%]">
+            <div className="bg-muted/50 dark:bg-muted/20 hover:bg-muted/70 dark:hover:bg-muted/30 mx-2 flex h-full flex-col items-center justify-center rounded-lg p-6 text-center backdrop-blur-sm transition-colors">
               <item.icon />
               <span className="mt-2 text-sm font-medium">{item.name}</span>
             </div>
