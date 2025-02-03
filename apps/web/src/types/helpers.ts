@@ -202,7 +202,7 @@ export type InferIt<T, V extends "RT" | "P" | "B"> = T extends (
 
 export type ComputeRange<
   N extends number,
-  Result extends unknown[] | readonly unknown[] = []
+  Result extends unknown[] | readonly unknown[] = [0]
 > = Result["length"] extends N
   ? Result
   : ComputeRange<N, [...Result, Result["length"]]>;
@@ -210,4 +210,4 @@ export type ComputeRange<
 export type Computed<T extends readonly unknown[] | unknown[]> = [
   ...ComputeRange<T["length"]>
 ]["length"];
-// type Tester = `${ComputeRange<2>[number]}`
+

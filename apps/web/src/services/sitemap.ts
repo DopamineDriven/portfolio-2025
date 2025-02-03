@@ -1,4 +1,5 @@
 import { Fs } from "@d0paminedriven/fs";
+import { projects } from "@/lib/project-data";
 
 export class SitemapService extends Fs {
   constructor(public override cwd: string) {
@@ -35,6 +36,12 @@ export class SitemapService extends Fs {
     });
   }
 
+  get nestedProjects() {
+    return projects.map(p => {
+      return `projects/${p.slug}` as const;
+    });
+  }
+
   public mapper = (data: string[]) =>
     data.map(path => {
       return path.length < 1
@@ -58,6 +65,7 @@ export class SitemapService extends Fs {
         ""
       ]
         .concat(this.nested)
+        .concat(this.nestedProjects)
         .concat(this.getPublicData())
     ).sort((a, b) => a.localeCompare(b) - b.localeCompare(a));
   }

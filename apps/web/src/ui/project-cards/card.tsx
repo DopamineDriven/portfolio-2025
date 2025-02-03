@@ -3,17 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
-
-
-export interface Project {
-  id: string;
-  title: string;
-  description: string;
-  imageUrl: string;
-  link: string;
-  slug: string;
-}
-
+import type { Project } from "@/types/projects";
 
 interface ProjectCardProps {
   project: Project;
@@ -39,7 +29,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             sizes="(min-width: 1024px) 50vw, 100vw"
           />
           <div className="absolute inset-0 flex flex-col justify-end">
-            <div className="from-background/80 h-1/4 bg-gradient-to-t to-transparent backdrop-blur-xs" />
+            <div className="from-background/80 to-background/40 h-1/4 bg-gradient-to-t backdrop-blur-xs" />
           </div>
         </div>
         <div className="text-foreground absolute right-0 bottom-0 left-0 p-6">
