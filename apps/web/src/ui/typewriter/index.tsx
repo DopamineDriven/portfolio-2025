@@ -2,10 +2,11 @@
 
 import type { FC } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { useAnimationContext } from "@/context/animation-context";
 import { cn } from "@/lib/utils";
 import Typewriter from "@/ui/atoms/typewriter";
+
 
 const LandingPageTypeWriter: FC = () => {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
@@ -35,19 +36,19 @@ const LandingPageTypeWriter: FC = () => {
 
   const linesDesktop = [
     [1, "I'm Andrew S. Ross, an insatiably curious full stack developer"],
-    [2, "with several years of Lead experience. I strive to create"],
-    [3, "outstanding experiences for end-users and developers alike."],
-    [4, "I specialize in Node.js, Typescript, React, and Next.js"],
-    [5, "with a strong foundation in package development."],
+    [2, "with several years of Lead experience. Creating outstanding"],
+    [3, "experiences for end-users and developers alike is a major driver"],
+    [4, "of mine. I specialize in Node.js, Typescript, React, and"],
+    [5, "Next.js with a strong foundation in package development."],
     [6, "Let's build something amazing together!"]
   ] as const satisfies readonly [number, string][];
 
   const linesMobile = [
     [1, "I'm Andrew S. Ross, an insatiably curious"],
     [2, "full stack developer with several years"],
-    [3, "of Lead experience. I strive to create"],
-    [4, "outstanding experiences for end-users"],
-    [5, "and developers alike."],
+    [3, "of Lead experience. Creating outstanding"],
+    [4, "experiences for end-users and developers"],
+    [5, "alike is a major driver of mine."],
     [6, "I specialize in Node.js, Typescript,"],
     [7, "React, and Next.js with a strong"],
     [8, "foundation in package development."],
@@ -126,7 +127,7 @@ const LandingPageTypeWriter: FC = () => {
         <div className="relative">
           <div
             ref={containerRef}
-            className="mb-12 inline-flex w-full flex-col space-y-1.5 md:mb-4 md:space-y-1 text-center"
+            className="mb-12 inline-flex w-full flex-col space-y-1.5 text-center md:mb-4 md:space-y-1"
             style={{
               height: `${containerHeight}px`,
               transition: "height 0.5s ease-in-out",
@@ -159,36 +160,34 @@ const LandingPageTypeWriter: FC = () => {
             ))}
           </div>
           <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 transform">
-            <AnimatePresence>
-              {animationStates.hasTypewriterPlayed && !isReplaying && (
-                <motion.button
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  transition={{
-                    duration: 0.8,
-                    delay: 0.2,
-                    ease: [0, 0.71, 0.2, 1.01]
-                  }}
-                  onClick={handleReplay}
-                  className="z-30 cursor-pointer stroke-current/50 p-1.5 transition-opacity hover:stroke-current/100 sm:p-2"
-                  aria-label="Replay animation">
-                  <motion.svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    role="button"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="size-4 cursor-pointer sm:size-[1.125rem]">
-                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                    <path d="M3 3v5h5" />
-                  </motion.svg>
-                </motion.button>
+            <motion.button
+              initial={false}
+              animate={{
+                opacity:
+                  animationStates.hasTypewriterPlayed && !isReplaying ? 1 : 0
+              }}
+              transition={{ duration: 0.3 }}
+              onClick={handleReplay}
+              className={cn(
+                "stroke-current/50 p-2 text-current/50 transition-colors hover:stroke-current hover:text-current",
+                animationStates.hasTypewriterPlayed && !isReplaying
+                  ? "visible"
+                  : "invisible"
               )}
-            </AnimatePresence>
+              aria-label="Replay animation">
+              <motion.svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="size-4 cursor-pointer sm:size-[1.125rem]">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                <path d="M3 3v5h5" />
+              </motion.svg>
+            </motion.button>
           </div>
         </div>
       </div>
