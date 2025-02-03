@@ -50,3 +50,4 @@ export function ProjectCards() {
     </section>
   );
 }
+// #2A368F
