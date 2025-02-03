@@ -2,15 +2,15 @@
 
 import { useEffect } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "motion/react";
 import { projectDetails } from "@/lib/project-data";
 import { shimmer } from "@/lib/shimmer";
 import { Button } from "@/ui/atoms/button";
+import { notFound } from "next/navigation";
 
 export function Project({ paramSlug }: { paramSlug: string }) {
-  const router = useRouter();
   const project = projectDetails[paramSlug as keyof typeof projectDetails];
 
   useEffect(() => {
@@ -20,13 +20,8 @@ export function Project({ paramSlug }: { paramSlug: string }) {
   }, []);
 
   if (!project) {
-    return null; // or a custom 404 component
+    return notFound(); // or a custom 404 component
   }
-
-  const handleBackClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    router.push(`/?project=${project.slug}`);
-  };
 
   return (
     <motion.article
@@ -43,9 +38,9 @@ export function Project({ paramSlug }: { paramSlug: string }) {
             src={project.imageUrl || "/doge-troubleshoot.jpg"}
             alt={project.title}
             width={450}
-            blurDataURL={shimmer([450, 600])}
+            blurDataURL={shimmer([450, 450])}
             placeholder="blur"
-            height={600}
+            height={450}
             className="rounded-lg object-cover"
           />
         </motion.div>
@@ -87,7 +82,9 @@ export function Project({ paramSlug }: { paramSlug: string }) {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.6 }}
             className="mt-8 flex items-center gap-4">
-            <Button onClick={handleBackClick}>Back to Projects</Button>
+            <Link href={`/#${project.slug}`}>
+              <Button variant="outline">Back to Projects</Button>
+            </Link>
             {project.externalLink && (
               <Button asChild variant="outline">
                 <a

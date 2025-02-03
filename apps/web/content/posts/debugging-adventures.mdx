@@ -1,14 +1,24 @@
+---
+title: "Adventures in Debugging: A Developer's Tale"
+date: "2023-12-23"
+description: "Exploring common debugging strategies and the importance of systematic problem-solving in software development."
+tags: ["typescript", "react", "mdx"]
+---
+
+import Image from "next/image";
+
 # Adventures in Debugging: A Developer's Tale
 
 Every developer has been there - staring at their code, wondering why something that should work... just doesn't. Let's talk about debugging strategies and how to maintain sanity during troubleshooting sessions.
 
 <div className="my-8">
-  <img
+  <Image
     src="/doge-troubleshoot.jpg"
     alt="Two confused Shiba Inu dogs representing the confusion during debugging"
     width={600}
     height={400}
     className="rounded-lg shadow-lg"
+    priority
   />
   <p className="mt-2 text-center text-sm italic text-gray-600">
     The universal expression of a developer debugging their code
@@ -36,7 +46,7 @@ When faced with a bug, it's essential to approach the problem systematically. He
 
 ## Common Debugging Tools
 
-```ts showLineNumbers /data/
+```ts
 // Using console.log strategically
 function debugThis(data: unknown) {
   console.log("=== Debug Start ===");
