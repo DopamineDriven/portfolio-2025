@@ -1,5 +1,5 @@
-import path from "path";
 import type { Options as RehypeOptions } from "rehype-pretty-code";
+import { notFound } from "next/navigation";
 import { Fs } from "@d0paminedriven/fs";
 import { transformerMetaWordHighlight } from "@shikijs/transformers";
 import rehypePrettyCode from "rehype-pretty-code";
@@ -28,8 +28,7 @@ const options = {
 
 export async function generateStaticParams() {
   const fs = new Fs(process.cwd());
-  const postsDirectory = path.join(process.cwd(), "content");
-  const filenames = fs.readDir(postsDirectory, { recursive: true });
+  const filenames = fs.readDir("content/posts", { recursive: true });
 
   return filenames.map(filename => ({
     slug: filename.replace(/\.mdx$/, "")
@@ -41,15 +40,16 @@ export default async function Post({
 }: InferGSPRT<typeof generateStaticParams>) {
   const fs = new Fs(process.cwd());
   const { slug } = await params;
-  const filePath = path.join(process.cwd(), "content", `${slug}.mdx`);
-  const source = fs.fileToBuffer(filePath).toString("utf-8");
-
+  const source = fs.fileToBuffer(`content/posts/${slug}.mdx`).toString("utf-8");
+  if (!source) {
+    return notFound();
+  }
   return (
     <article className="prose dark:prose-invert max-w-none">
       <MdxRenderer
         source={source}
         options={{
-          parseFrontmatter:true,
+          parseFrontmatter: true,
           mdxOptions: {
             remarkPlugins: [],
             rehypePlugins: [[rehypePrettyCode, options]]

@@ -29,7 +29,7 @@ export class SitemapService extends Fs {
   }
 
   get nested() {
-    const readDir = this.readDir("content", { recursive: true });
+    const readDir = this.readDir("content/posts", { recursive: true });
     return this.omitFileExtensions(readDir).map(post => {
       return `posts/${post}` as const;
     });
