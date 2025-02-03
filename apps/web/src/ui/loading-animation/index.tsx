@@ -7,23 +7,20 @@ import { useAnimationContext } from "@/context/animation-context";
 import { cn } from "@/lib/utils";
 
 export function LoadingAnimation() {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const pathname = usePathname();
   const { setAnimationComplete } = useAnimationContext();
 
   useEffect(() => {
-    if (pathname === "/" && isVisible === false) {
-      setIsVisible(true);
+    if (pathname === "/") {
       const timer = setTimeout(() => {
         setIsVisible(false);
         setAnimationComplete("hasLoadingAnimationPlayed");
       }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [pathname, isVisible, setAnimationComplete]);
-
-  if (!isVisible) return null;
-
+  }, [pathname, setAnimationComplete]);
+  
   return (
     <motion.div
       className={cn(

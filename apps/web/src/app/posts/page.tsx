@@ -1,5 +1,5 @@
-import path from "path";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Fs } from "@d0paminedriven/fs";
 import matter from "gray-matter";
 
@@ -13,14 +13,14 @@ interface Post {
 }
 
 async function getPosts(): Promise<Post[]> {
-  const postsDirectory = path.join(process.cwd(), "src/content");
   const fs = new Fs(process.cwd());
-  const files = fs.readDir(postsDirectory, { recursive: true });
+  const files = fs.readDir("content/posts", { recursive: true });
 
   const posts = await Promise.all(
     files.map(async filename => {
-      const filePath = path.join(postsDirectory, filename);
-      const fileContent = fs.fileToBuffer(filePath).toString("utf-8");
+      const fileContent = fs
+        .fileToBuffer(`content/posts/${filename}`)
+        .toString("utf-8");
       const { data, content } = matter(fileContent);
       const typedData = data as Omit<Post, "content">;
       return {
@@ -41,7 +41,9 @@ async function getPosts(): Promise<Post[]> {
 
 export default async function BlogPage() {
   const posts = await getPosts();
-
+  if (!posts) {
+    return notFound();
+  }
   return (
     <div className="space-y-8">
       <h1 className="text-4xl font-bold">Blog</h1>

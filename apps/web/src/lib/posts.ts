@@ -1,5 +1,4 @@
-import fs from "fs/promises";
-import path from "path";
+import { Fs } from "@d0paminedriven/fs";
 import matter from "gray-matter";
 
 export interface Post {
@@ -11,14 +10,13 @@ export interface Post {
   content: string;
 }
 
-export async function getPosts(): Promise<Post[]> {
-  const postsDirectory = path.join(process.cwd(), "src/content");
-  const files = await fs.readdir(postsDirectory);
+export async function getPosts() {
+  const fs = new Fs(process.cwd());
+  const files = fs.readDir("content/posts");
 
   const posts = await Promise.all(
-    files.map(async filename => {
-      const filePath = path.join(postsDirectory, filename);
-      const fileContent = await fs.readFile(filePath, "utf8");
+    files.map(filename => {
+      const fileContent = fs.fileToBuffer(`content/posts/${filename}`).toString("utf-8");
       const { data, content } = matter(fileContent);
       const typedData = data as Omit<Post, "content">;
       return {
