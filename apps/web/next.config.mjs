@@ -29,7 +29,9 @@ const nextConfig = {
       { hostname: "tailwindui.com", protocol: "https" },
       { hostname: "www.asross.com", protocol: "https" },
       { hostname: "dev.asross.com", protocol: "https" },
-      { hostname: "asross.com", protocol: "https" }
+      { hostname: "asross.com", protocol: "https" },
+      { hostname: "raw.githubusercontent.com", protocol: "https" },
+      { hostname: "www.thefaderoominc.com", protocol: "https" }
     ]
   }
 };

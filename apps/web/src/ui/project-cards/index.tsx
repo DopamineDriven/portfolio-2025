@@ -1,3 +1,4 @@
+import { slugify } from "@/lib/slugify";
 import type { Project } from "./card";
 import { ProjectGrid } from "./card-grid";
 
@@ -8,38 +9,44 @@ const projects = [
     description: "ELEVATE YOUR GAME",
     imageUrl:
       "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess-v2/public/og.png",
-    link: "https://www.nextchessbot.com"
+    link: "https://www.nextchessbot.com",
+    slug: slugify("NEXT CHESS BOT")
   },
   {
     id: "2",
-    title: "SUBREDDIT SEARCH",
-    description: "SOLE DEVELOPER, UI/UX",
+    title: "THE FADE ROOM INC",
+    description: "EXPERIENCE THE ART OF GROOMING AT ITS FINEST",
     imageUrl:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/old-portfolio-cards-nyg2NiFU0nVgsq4YJvmOO8K8DgZcMQ.png",
-    link: "/projects/subreddit-search"
+      "https://www.thefaderoominc.com/womens-undercut.png",
+    link: "/projects/subreddit-search",
+    slug: slugify("THE FADE ROOM INC")
   },
   {
     id: "3",
-    title: "DRISDELL CONSULTING",
-    description: "SOLE DEVELOPER, UI/UX",
+    title: "BIOLIFE XR EXPERIENCE",
+    description: "IMMERSIVE DONOR EXPERIENCE (PLASMA DONATION)",
     imageUrl:
       "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/old-portfolio-cards-nyg2NiFU0nVgsq4YJvmOO8K8DgZcMQ.png",
-    link: "/projects/drisdell"
+    link: "/projects/drisdell",
+    slug: "BIOLIFE PLASMA SERVICES DONOR EXPERIENCE"
   },
   {
     id: "4",
-    title: "HOMESHARING HUB",
-    description: "SOLE DEVELOPER, UI/UX",
+    title: "HILLSIDE TO HARBOR",
+    description: "HELPING YOU NAVIGATE CHALLENGING SITUATIONS",
     imageUrl:
       "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/old-portfolio-cards-nyg2NiFU0nVgsq4YJvmOO8K8DgZcMQ.png",
-    link: "/projects/homesharing"
+    link: "/projects/homesharing",
+    slug: slugify("HILLSIDE TO HARBOR")
   }
 ] as const satisfies readonly Project[];
 
+
 export function ProjectCards() {
   return (
-    <main className="container mx-auto px-4 py-16 md:py-24">
+    <section className="mx-auto px-4 py-16 md:py-24 bg-secondary">
+      <h2 className="text-current theme-transition text-2xl">Featured Projects</h2>
       <ProjectGrid projects={projects} />
-    </main>
+    </section>
   );
 }

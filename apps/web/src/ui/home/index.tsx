@@ -6,11 +6,12 @@ import type { Post } from "@/lib/posts";
 import { BreakoutWrapper } from "@/ui/atoms/breakout-wrapper";
 import { CarouselWithFade } from "@/ui/carousel";
 import LandingPageTypeWriter from "@/ui/typewriter";
+import { ProjectCards } from "../project-cards";
 
 export function HomeContent({ posts }: { posts: Post[] }) {
   const recentPosts = posts.slice(0, 3);
   return (
-    <div className="theme-transition max-w-8xl mx-auto flex flex-col items-center justify-center py-24 sm:px-4 lg:px-6">
+    <div className="theme-transition 2xl:max-w-8xl mx-auto flex max-w-7xl flex-col items-center justify-center py-24 sm:px-4 lg:px-6">
       <motion.div
         initial={false}
         transition={{ duration: 0.5, ease: "easeInOut" }}
@@ -28,57 +29,7 @@ export function HomeContent({ posts }: { posts: Post[] }) {
             <CarouselWithFade />
           </BreakoutWrapper>
         </section>
-        <section>
-          <h2 className="theme-transition mb-4 text-2xl font-semibold">
-            Featured Projects
-          </h2>
-          <div className="theme-transition grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
-            <a
-              href="https://experience.biolifeplasma.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="theme-transition bg-secondary block rounded-lg p-4 hover:opacity-90">
-              <h3 className="theme-transition text-lg font-semibold">
-                BioLife XR Experience
-              </h3>
-              <p className="theme-transition">
-                Led development of immersive 3D Donor experience for BioLife's
-                Plasma donation centers (a Takeda subsidiary).
-              </p>
-            </a>
-            <a
-              href="https://www.thefaderoominc.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="theme-transition bg-secondary block rounded-lg p-4 hover:opacity-90">
-              <h3 className="theme-transition text-lg font-semibold">
-                The Fade Room Inc
-              </h3>
-              <p className="theme-transition">
-                Modern website for a Highland Park barbershop featuring customer
-                reviews, a sizable gallery, and online booking.
-              </p>
-            </a>
-            <div className="theme-transition bg-secondary rounded-lg p-4">
-              <h3 className="theme-transition text-lg font-semibold">
-                Cortina CRM
-              </h3>
-              <p className="theme-transition">
-                Built a CRM using Nest.js and Next.js with custom
-                authentication.
-              </p>
-            </div>
-            <div className="theme-transition bg-secondary rounded-lg p-4">
-              <h3 className="theme-transition text-lg font-semibold">
-                Headless WP Strategy
-              </h3>
-              <p className="theme-transition">
-                Architected Headless WordPress solutions for modern web
-                presence.
-              </p>
-            </div>
-          </div>
-        </section>
+        <ProjectCards />
         <section>
           <h2 className="theme-transition mb-4 text-2xl font-semibold">
             Recent Blog Posts
