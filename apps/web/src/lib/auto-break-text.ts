@@ -39,7 +39,3 @@ export function autoBreakText(
   return lines;
 }
 
-const fullText = `I'm Andrew S. Ross, an insatiably curious full stack developer with several years of Lead experience. Creating outstanding experiences for end-users and developers alike is a major driver of mine. I specialize in Node.js, Typescript, React, and Next.js with a strong foundation in package development. Let's build something amazing together!`;
-
-
-console.log(autoBreakText(fullText, 300, ""))
