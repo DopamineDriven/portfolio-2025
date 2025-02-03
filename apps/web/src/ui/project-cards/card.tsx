@@ -25,7 +25,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="group bg-background relative aspect-square w-full overflow-hidden">
+      className="group relative aspect-[3/4] w-full overflow-hidden">
       <Link
         href={`/projects/${project.slug}`}
         id={`project-${project.slug}`}

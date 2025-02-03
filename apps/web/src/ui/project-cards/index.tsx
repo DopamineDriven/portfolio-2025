@@ -1,6 +1,6 @@
+import type { Project } from "@/ui/project-cards/card";
 import { slugify } from "@/lib/slugify";
-import type { Project } from "./card";
-import { ProjectGrid } from "./card-grid";
+import { ProjectGrid } from "@/ui/project-cards/card-grid";
 
 const projects = [
   {
@@ -28,7 +28,7 @@ const projects = [
     imageUrl:
       "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/purpose-plasma.png",
     link: "/projects/drisdell",
-    slug: "BIOLIFE PLASMA SERVICES DONOR EXPERIENCE"
+    slug: slugify("BIOLIFE PLASMA SERVICES DONOR EXPERIENCE")
   },
   {
     id: "4",
@@ -41,13 +41,14 @@ const projects = [
   }
 ] as const satisfies readonly Project[];
 
-
 export function ProjectCards() {
   return (
-    <section className="mx-auto px-4 py-16 md:py-24 bg-current">
-      <h2 className="text-current theme-transition text-2xl">Featured Projects</h2>
+    <section className="mx-auto bg-current px-4 py-16 md:py-24">
+      <h2 className="theme-transition text-2xl text-current">
+        Featured Projects
+      </h2>
       <ProjectGrid projects={projects} />
     </section>
   );
 }
-// #2A368F
+
