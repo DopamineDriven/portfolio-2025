@@ -126,7 +126,7 @@ const LandingPageTypeWriter: FC = () => {
         <div className="relative">
           <div
             ref={containerRef}
-            className="mb-12 inline-flex w-full flex-col space-y-1.5 md:mb-4 md:space-y-1 text-justify text-pretty"
+            className="mb-12 inline-flex w-full flex-col space-y-1.5 md:mb-4 md:space-y-1 text-justify sm:text-center"
             style={{
               height: `${containerHeight}px`,
               transition: "height 0.5s ease-in-out",
