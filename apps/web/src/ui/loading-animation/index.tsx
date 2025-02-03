@@ -4,13 +4,11 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
-import { useAnimationContext } from "@/context/animation-context";
 
 export function LoadingAnimation() {
   const [isVisible, setIsVisible] = useState(true);
   const pathname = usePathname();
-  const {setAnimationComplete} = useAnimationContext();
-setAnimationComplete("hasLoadingAnimationPlayed")
+
   useEffect(() => {
     if (pathname === "/" && isVisible === false) {
       setIsVisible(true);
