@@ -31,25 +31,25 @@ export function HomeContent({ posts }: { posts: Post[] }) {
         </section>
         <ProjectCards />
         <section>
-          <h2 className="theme-transition mb-4 text-2xl font-semibold">
-            Recent Blog Posts
+          <h2 className="theme-transition font-basis-grotesque-pro-medium mb-4 text-2xl">
+            Recent Blog Posts 🚧
           </h2>
           <div className="theme-transition grid gap-6">
             {recentPosts.map(post => (
               <article key={post.slug} className="group">
                 <Link href={`/posts/${post.slug}`}>
                   <div className="space-y-2">
-                    <h3 className="theme-transition group-hover:text-primary text-xl font-semibold">
+                    <h3 className="theme-transition group-hover:text-foreground/80 text-xl font-semibold">
                       {post.title}
                     </h3>
-                    <time className="theme-transition text-secondary text-sm">
+                    <time className="theme-transition text-foreground font-basis-grotesque-pro-light text-sm">
                       {new Date(post.date).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "long",
                         day: "numeric"
                       })}
                     </time>
-                    <p className="theme-transition text-foreground/80">
+                    <p className="theme-transition text-foreground/80 line-clamp-2">
                       {post.description}
                     </p>
                   </div>
