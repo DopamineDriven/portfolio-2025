@@ -34,7 +34,7 @@ export const projects = [
     title: "BIOLIFE XR EXPERIENCE",
     description: "THERE'S PURPOSE IN YOUR PLASMA",
     imageUrl:
-      "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/refs/heads/master/apps/web/public/biolife-donor-experience.png",
+      "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/biolife-donor-experience.png",
     link: "/projects/biolife-xr-experience",
     slug: slugify("BIOLIFE XR EXPERIENCE")
   },
@@ -43,7 +43,7 @@ export const projects = [
     title: "HILLSIDE TO HARBOR",
     description: "HELPING YOU NAVIGATE CHALLENGING SITUATIONS",
     imageUrl:
-      "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/refs/heads/master/apps/web/public/hillsidetoharbor.png",
+      "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/hillsidetoharbor.png",
     link: "/projects/hillside-to-harbor",
     slug: slugify("HILLSIDE TO HARBOR")
   }
