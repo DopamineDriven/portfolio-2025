@@ -24,7 +24,7 @@ const projects = [
   {
     id: "3",
     title: "BIOLIFE XR EXPERIENCE",
-    description: "IMMERSIVE DONOR EXPERIENCE (PLASMA DONATION)",
+    description: "THERE'S PURPOSE IN YOUR PLASMA",
     imageUrl:
       "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/purpose-plasma.png",
     link: "/projects/drisdell",
