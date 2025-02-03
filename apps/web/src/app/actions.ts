@@ -3,7 +3,6 @@
 import { list } from "@vercel/blob";
 
 async function getResumeDownloadUrl() {
-  // eslint-disable-next-line
   const blobs = await list({ token: process.env.BLOB_READ_WRITE_TOKEN ?? "" });
   const resumeBlob = blobs.blobs.find(blob =>
     /resume-2025\.pdf/g.test(blob.pathname)
