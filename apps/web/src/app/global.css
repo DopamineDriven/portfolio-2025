@@ -278,34 +278,28 @@ pre[class*="language-"] {
   color: oklch(86.06% 0.1731 91.94);
 }
 
-/* Carousel smooth scrolling */
-.animate-carousel {
-  animation: carousel-scroll var(--animation-duration) linear infinite;
+/* Add Embla Carousel styles */
+.embla {
+  overflow: hidden;
+  width: 100%;
 }
 
-@keyframes carousel-scroll {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(calc(-1 * var(--total-width)), 0, 0);
-  }
+.embla__viewport {
+  overflow: hidden;
 }
 
-@media (width < 640px) {
-  :root {
-    --visible-items: 3;
-  }
-  .animate-carousel {
-    animation: carousel-scroll var(--animation-duration) linear infinite;
-  }
+.embla__container {
+  display: flex;
+  gap: 0;
+}
 
-  @keyframes carousel-scroll {
-    0% {
-      transform: translate3d(0, 0, 0);
-    }
-    100% {
-      transform: translate3d(calc(-1 * var(--total-width)), 0, 0);
-    }
+.embla__slide {
+  flex: 0 0 33.333%;
+  min-width: 0;
+}
+
+@media (width >= 640px) {
+  .embla__slide {
+    flex: 0 0 20%;
   }
 }

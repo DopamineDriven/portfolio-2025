@@ -34,23 +34,23 @@ const LandingPageTypeWriter: FC = () => {
   const lineHeights = useRef<number[]>([]);
 
   const linesDesktop = [
-    [1, "I'm Andrew S. Ross, a passionate full stack developer and"],
-    [2, "tinkerer with several years of Lead experience driven to create"],
+    [1, "I'm Andrew S. Ross, an insatiably curious full stack developer"],
+    [2, "with several years of Lead experience. I strive to create"],
     [3, "outstanding experiences for end-users and developers alike."],
     [4, "I specialize in Node.js, Typescript, React, and Next.js"],
-    [5, "with a solid foundation in package development."],
+    [5, "with a strong foundation in package development."],
     [6, "Let's build something amazing together!"]
   ] as const satisfies readonly [number, string][];
 
   const linesMobile = [
-    [1, "I'm Andrew S. Ross, a passionate full stack"],
-    [2, "developer and tinkerer with several years"],
-    [3, "of Lead experience. I'm driven by a desire"],
-    [4, "to create outstanding experiences for"],
-    [5, "end-users and developers alike."],
+    [1, "I'm Andrew S. Ross, an insatiably curious"],
+    [2, "full stack developer with several years"],
+    [3, "of Lead experience. I strive to create"],
+    [4, "outstanding experiences for end-users"],
+    [5, "and developers alike."],
     [6, "I specialize in Node.js, Typescript,"],
     [7, "React, and Next.js with a strong"],
-    [8, "foundation in in package development."],
+    [8, "foundation in package development."],
     [9, "Let's build something amazing together!"]
   ] as const satisfies readonly [number, string][];
 
@@ -63,7 +63,7 @@ const LandingPageTypeWriter: FC = () => {
   }, []);
 
   const calculateInitialHeight = useCallback(() => {
-    const lineHeight = isMobile ? 32 : 40;
+    const lineHeight = isMobile ? 20 : 40;
     const spacing = isMobile ? 8 : 4;
     return lines.length * lineHeight + (lines.length - 1) * spacing;
   }, [isMobile, lines.length]);
@@ -118,7 +118,7 @@ const LandingPageTypeWriter: FC = () => {
   }, [calculateInitialHeight, isMobile]);
 
   return (
-    <div className="flex min-h-[5rem] flex-col px-2 sm:px-4 md:px-8">
+    <div className="flex min-h-[4rem] flex-col px-2 sm:px-4 md:px-8">
       <div className="mx-auto w-full max-w-4xl text-center">
         <h1 className="theme-transition mb-4 text-3xl font-bold md:mb-8">
           Portfolio 2025
