@@ -17,16 +17,16 @@ const projects = [
     title: "THE FADE ROOM INC",
     description: "EXPERIENCE THE ART OF GROOMING AT ITS FINEST",
     imageUrl:
-      "https://www.thefaderoominc.com/womens-undercut.png",
+      "https://raw.githubusercontent.com/DopamineDriven/faderoom/master/apps/web/public/womens-undercut.png",
     link: "/projects/subreddit-search",
     slug: slugify("THE FADE ROOM INC")
   },
   {
     id: "3",
     title: "BIOLIFE XR EXPERIENCE",
-    description: "IMMERSIVE DONOR EXPERIENCE (PLASMA DONATION)",
+    description: "THERE'S PURPOSE IN YOUR PLASMA",
     imageUrl:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/old-portfolio-cards-nyg2NiFU0nVgsq4YJvmOO8K8DgZcMQ.png",
+      "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/purpose-plasma.png",
     link: "/projects/drisdell",
     slug: "BIOLIFE PLASMA SERVICES DONOR EXPERIENCE"
   },
@@ -35,7 +35,7 @@ const projects = [
     title: "HILLSIDE TO HARBOR",
     description: "HELPING YOU NAVIGATE CHALLENGING SITUATIONS",
     imageUrl:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/old-portfolio-cards-nyg2NiFU0nVgsq4YJvmOO8K8DgZcMQ.png",
+      "https://raw.githubusercontent.com/windycitydevs/turbo/main/apps/hillsidetoharbor/public/VerticalWithTextSquare.png",
     link: "/projects/homesharing",
     slug: slugify("HILLSIDE TO HARBOR")
   }
@@ -44,7 +44,7 @@ const projects = [
 
 export function ProjectCards() {
   return (
-    <section className="mx-auto px-4 py-16 md:py-24 bg-secondary">
+    <section className="mx-auto px-4 py-16 md:py-24 bg-current">
       <h2 className="text-current theme-transition text-2xl">Featured Projects</h2>
       <ProjectGrid projects={projects} />
     </section>
