@@ -7,7 +7,7 @@ import { ArLogo } from "@/ui/svg/ar-logo";
 
 const menuItems = [
   { name: "Home", href: "/" },
-  { name: "Work", href: "/work" },
+  { name: "Resume", href: "/resume-2025.pdf" },
   { name: "About", href: "/about" },
   { name: "Posts", href: "/posts" },
   { name: "Contact", href: "/contact" }
@@ -58,6 +58,7 @@ export default function Navbar() {
                 onClick: () => setIsMenuOpen(!isMenuOpen)
               })}>
           <div className="w-full">
+        
             <AnimatePresence mode="wait">
               {!isHovered && !isMenuOpen ? (
                 <motion.span
@@ -103,6 +104,7 @@ export default function Navbar() {
                           }>
                           <Link
                             href={item.href}
+
                             className="relative block w-full px-4 py-2 sm:py-4 text-center"
                             onClick={() => isMobile && setIsMenuOpen(false)}>
                             <motion.div
