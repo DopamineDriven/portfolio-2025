@@ -6,18 +6,17 @@ import type { AnimationState } from "@/hooks/use-animation-state";
 import { useAnimationState } from "@/hooks/use-animation-state";
 
 export interface AnimationContextType {
-  animationStates: {
-    hasTypewriterPlayed: boolean;
-    hasHeroAnimationPlayed?: boolean;
-    hasScrollAnimationPlayed?: boolean;
-  };
+  animationStates: AnimationState;
   setAnimationComplete: (animationType: keyof AnimationState) => void;
   resetAnimations: () => void;
   resetTypewriterAnimation: () => void;
+  resetLoadingAnimation: () => void;
+
   animationRefs: {
     typewriter: boolean;
     hero: boolean;
     scroll: boolean;
+    loading: boolean;
   };
 }
 

@@ -3,15 +3,18 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
+import { cn } from "@/lib/utils";
+import { useAnimationContext } from "@/context/animation-context";
 
 export function LoadingAnimation() {
   const [isVisible, setIsVisible] = useState(true);
   const pathname = usePathname();
-
+  const {setAnimationComplete} = useAnimationContext();
+setAnimationComplete("hasLoadingAnimationPlayed")
   useEffect(() => {
     if (pathname === "/" && isVisible === false) {
       setIsVisible(true);
-      const timer = setTimeout(() => setIsVisible(false), 2000);
+      const timer = setTimeout(() => {setIsVisible(false)}, 2000);
       return () => clearTimeout(timer);
     }
   }, [pathname, isVisible]);
@@ -20,7 +23,10 @@ export function LoadingAnimation() {
 
   return (
     <motion.div
-      className="theme-transition bg-background fixed inset-0 z-50 flex items-center justify-center"
+      className={cn(
+        "theme-transition bg-background inset-0 fixed items-center justify-center h-screen",
+        isVisible ? "flex" : "hidden"
+      )}
       initial={{ opacity: 1 }}
       animate={{ opacity: 0 }}
       transition={{ duration: 0.5, delay: 1.5 }}>
