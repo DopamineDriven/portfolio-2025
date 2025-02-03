@@ -1,7 +1,7 @@
 import type { Project } from "./card";
 import { ProjectGrid } from "./card-grid";
 
-const projects: Project[] = [
+const projects = [
   {
     id: "1",
     title: "NEXT CHESS BOT",
@@ -34,9 +34,9 @@ const projects: Project[] = [
       "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/old-portfolio-cards-nyg2NiFU0nVgsq4YJvmOO8K8DgZcMQ.png",
     link: "/projects/homesharing"
   }
-];
+] as const satisfies readonly Project[];
 
-export default function Page() {
+export function ProjectCards() {
   return (
     <main className="container mx-auto px-4 py-16 md:py-24">
       <ProjectGrid projects={projects} />

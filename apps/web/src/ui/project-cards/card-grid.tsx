@@ -5,7 +5,7 @@ import type { Project } from "./card";
 import { ProjectCard } from "./card";
 
 interface ProjectGridProps {
-  projects: Project[];
+  projects: readonly Project[];
 }
 
 export function ProjectGrid({ projects }: ProjectGridProps) {
