@@ -8,18 +8,24 @@ import { DockerIcon } from "@/ui/svg/docker";
 import { NextjsIcon } from "@/ui/svg/nextjs";
 import { NodejsIcon } from "@/ui/svg/nodejs";
 import { ReactIcon } from "@/ui/svg/react";
+import { SanityIcon } from "@/ui/svg/sanity";
 import { TailwindIcon } from "@/ui/svg/tailwind";
+import { TurborepoIcon } from "@/ui/svg/turborepo";
 import { TypeScriptIcon } from "@/ui/svg/typescript";
+import { V0Icon } from "@/ui/svg/v0";
 import { VercelIcon } from "@/ui/svg/vercel";
 
 const proficiencies = [
   { name: "Next.js", icon: NextjsIcon },
   { name: "TypeScript", icon: TypeScriptIcon },
   { name: "React", icon: ReactIcon },
+  { name: "Turborepo", icon: TurborepoIcon },
   { name: "Node.js", icon: NodejsIcon },
   { name: "Docker", icon: DockerIcon },
   { name: "Tailwind", icon: TailwindIcon },
-  { name: "Vercel", icon: VercelIcon }
+  { name: "v0", icon: V0Icon },
+  { name: "Vercel", icon: VercelIcon },
+  { name: "Sanity", icon: SanityIcon }
 ] as const;
 
 export function ProficienciesCarousel() {
