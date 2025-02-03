@@ -3,12 +3,12 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "motion/react";
 import { projectDetails } from "@/lib/project-data";
 import { shimmer } from "@/lib/shimmer";
 import { Button } from "@/ui/atoms/button";
-import { notFound } from "next/navigation";
 
 export function Project({ paramSlug }: { paramSlug: string }) {
   const project = projectDetails[paramSlug as keyof typeof projectDetails];
@@ -60,7 +60,7 @@ export function Project({ paramSlug }: { paramSlug: string }) {
               <h2 className="font-basis-grotesque-pro-bold mb-2 text-xl">
                 Technologies
               </h2>
-              <ul className="flex flex-wrap gap-2">
+              <ul className="flex cursor-pointer flex-wrap gap-2">
                 {project.technologies.map((tech, index) => (
                   <motion.li
                     key={tech}
@@ -82,8 +82,13 @@ export function Project({ paramSlug }: { paramSlug: string }) {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.6 }}
             className="mt-8 flex items-center gap-4">
-            <Link href={`/#${project.slug}`}>
-              <Button variant="outline">Back to Projects</Button>
+            <Link href={`/#${project.slug}`} scroll={true}>
+              <Button
+                variant="outline"
+                className="cursor-pointer"
+                type="button">
+                Back to Projects
+              </Button>
             </Link>
             {project.externalLink && (
               <Button asChild variant="outline">

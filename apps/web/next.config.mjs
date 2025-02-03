@@ -31,7 +31,12 @@ const nextConfig = {
       { hostname: "dev.asross.com", protocol: "https" },
       { hostname: "asross.com", protocol: "https" },
       { hostname: "raw.githubusercontent.com", protocol: "https" },
-      { hostname: "www.thefaderoominc.com", protocol: "https" }
+      { hostname: "www.thefaderoominc.com", protocol: "https" },
+      {
+        hostname: "ypuktmwmnilhirdf.public.blob.vercel-storage.com",
+        protocol: "https",
+        port: ""
+      }
     ]
   }
 };

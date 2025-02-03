@@ -18,7 +18,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const proj = getProject(slug as keyof typeof projectDetails);
   return {
-    title: proj.title,
+    title: proj.title.toLocaleLowerCase(),
     description: proj.description.toLowerCase()
   } satisfies Metadata;
 }
