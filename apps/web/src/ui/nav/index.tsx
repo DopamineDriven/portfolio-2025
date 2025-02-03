@@ -3,14 +3,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
+import { getResumeUrl } from "@/app/actions";
 import { ArLogo } from "@/ui/svg/ar-logo";
 
 const menuItems = [
   { name: "Home", href: "/" },
   { name: "Resume", href: "/resume-2025.pdf" },
-  { name: "About", href: "/about" },
-  { name: "Posts", href: "/posts" },
-  { name: "Contact", href: "/contact" }
+  { name: "Projects", href: "/#projects" }
 ];
 
 export default function Navbar() {
@@ -18,7 +17,26 @@ export default function Navbar() {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
+  const handleDownload = async () => {
+    try {
+      setIsDownloading(true);
+      const downloadUrl = await getResumeUrl();
+
+      // Create a temporary link and trigger the download
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = "resume-2025.pdf"; // This will be the suggested filename
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 640);
@@ -45,7 +63,7 @@ export default function Navbar() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.8, ease: [0.77, 0, 0.175, 1] }}
-          className="relative mx-auto flex max-h-fit w-full max-w-10xl items-center justify-center backdrop-blur-sm"
+          className="max-w-10xl relative mx-auto flex max-h-fit w-full items-center justify-center backdrop-blur-sm"
           {...(!isMobile
             ? {
                 onMouseEnter: () => setIsHovered(true),
@@ -57,8 +75,7 @@ export default function Navbar() {
             : {
                 onClick: () => setIsMenuOpen(!isMenuOpen)
               })}>
-          <div className="w-full">
-        
+          <div className="w-full" id="top">
             <AnimatePresence mode="wait">
               {!isHovered && !isMenuOpen ? (
                 <motion.span
@@ -67,12 +84,11 @@ export default function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5, ease: [0.77, 0, 0.175, 1] }}
-                  className="flex w-full mx-auto max-w-7xl flex-row justify-between px-4 sm:px-5 py-2 sm:py-4 text-center">
-                  <Link href="/" className="text-[#f5f5f5] block">
+                  className="mx-auto flex w-full max-w-7xl flex-row justify-between px-4 py-2 text-center sm:px-5 sm:py-4">
+                  <Link href="/" className="block text-[#f5f5f5]">
                     <ArLogo className="size-5 sm:size-7" />
                   </Link>
                   <span className="block">Menu</span>
-
                 </motion.span>
               ) : (
                 <motion.div
@@ -83,7 +99,7 @@ export default function Navbar() {
                   transition={{ duration: 0.5, ease: [0.77, 0, 0.175, 1] }}
                   className="w-full">
                   <AnimatePresence>
-                    <motion.div className="grid w-full grid-cols-1 grid-rows-5 sm:grid-cols-5 sm:grid-rows-1">
+                    <motion.div className="grid w-full grid-cols-1 grid-rows-3 sm:grid-cols-3 sm:grid-rows-1">
                       {menuItems.map((item, index) => (
                         <motion.div
                           key={item.name}
@@ -102,26 +118,48 @@ export default function Navbar() {
                           onMouseLeave={() =>
                             !isMobile && setHoveredItem(null)
                           }>
-                          <Link
-                            href={item.href}
-
-                            className="relative block w-full px-4 py-2 sm:py-4 text-center"
-                            onClick={() => isMobile && setIsMenuOpen(false)}>
-                            <motion.div
-                              className="relative z-50 w-full sm:z-10"
-                              animate={{
-                                color:
-                                  !isMobile && hoveredItem === item.name
-                                    ? "#000"
-                                    : "#fff"
-                              }}
-                              transition={{
-                                duration: 0.5,
-                                ease: [0.77, 0, 0.175, 1]
-                              }}>
-                              {item.name}
-                            </motion.div>
-                          </Link>
+                          {item.name === "Resume" ? (
+                            <button
+                              onClick={handleDownload}
+                              className="relative block w-full appearance-none px-4 py-2 text-center sm:py-4"
+                              disabled={isDownloading}
+                              role="link">
+                              <motion.div
+                                className="relative z-50 w-full sm:z-10"
+                                animate={{
+                                  color:
+                                    !isMobile && hoveredItem === item.name
+                                      ? "#000"
+                                      : "#fff"
+                                }}
+                                transition={{
+                                  duration: 0.5,
+                                  ease: [0.77, 0, 0.175, 1]
+                                }}>
+                                {item.name}
+                              </motion.div>
+                            </button>
+                          ) : (
+                            <Link
+                              href={item.href}
+                              className="relative block w-full px-4 py-2 text-center sm:py-4"
+                              onClick={() => isMobile && setIsMenuOpen(false)}>
+                              <motion.div
+                                className="relative z-50 w-full sm:z-10"
+                                animate={{
+                                  color:
+                                    !isMobile && hoveredItem === item.name
+                                      ? "#000"
+                                      : "#fff"
+                                }}
+                                transition={{
+                                  duration: 0.5,
+                                  ease: [0.77, 0, 0.175, 1]
+                                }}>
+                                {item.name}
+                              </motion.div>
+                            </Link>
+                          )}
                           <AnimatePresence>
                             {!isMobile && hoveredItem === item.name && (
                               <motion.div

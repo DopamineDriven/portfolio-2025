@@ -29,6 +29,7 @@
   "globalEnv": [
     "__NEXT_PROCESSED_ENV",
     "AUTH_TOKEN",
+    "BLOB_READ_WRITE_TOKEN",
     "CI_ENV",
     "COREPACK_ENABLE_STRICT",
     "GA_MEASUREMENT_ID",

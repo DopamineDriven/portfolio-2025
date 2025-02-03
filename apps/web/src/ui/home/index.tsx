@@ -30,7 +30,7 @@ export function HomeContent({ posts }: { posts: Post[] }) {
           </BreakoutWrapper>
         </section>
         <ProjectCards />
-        <section>
+        <section className="hidden">
           <h2 className="theme-transition font-basis-grotesque-pro-medium mb-4 text-2xl">
             Recent Blog Posts 🚧
           </h2>

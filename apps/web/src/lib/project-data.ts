@@ -54,7 +54,7 @@ export const projectDetails = {
     ...projects["0"],
     externalLink: "https://www.nextchessbot.com",
     content:
-      "Next Chess Bot is powered by Stockfish chess engine and built with Next.js. It offers players several difficulty levels to choose from, best-path highlighting on a move-by-move basis in the form of hints, previous move navigation both during a match and following it, and helps to improve chess skills overall by providing realtime advantage feedback (black vs white advantage which changes with each move). An advtage graph is currently generated on a move-by-move basis on desktop only; downloading stats from a match that illustrate relative advantage by move as a single image coming soon (powered by recharts).",
+      "Next Chess Bot is powered by Stockfish chess engine and built with Next.js. It offers players several difficulty levels to choose from, best-path highlighting on a move-by-move basis in the form of hints, previous move navigation both during a match and following it, and helps to improve chess skills overall by providing realtime advantage feedback (black vs white advantage which changes with each move). An advantage graph is currently generated on a move-by-move basis on desktop only; downloading stats from a match that illustrate relative advantage by move as a single image coming soon (powered by recharts).",
     technologies: technologySort([
       "Next.js",
       "React",

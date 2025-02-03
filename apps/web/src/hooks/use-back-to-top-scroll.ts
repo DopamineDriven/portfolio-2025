@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 
-export const useBackToTopScroll = (duration = 1000) => {
+export const useBackToTopScroll = () => {
   const scrollToTop = useCallback(() => {
     // get scrollY
     const start = window.scrollY || document.documentElement.scrollTop;
@@ -12,7 +12,7 @@ export const useBackToTopScroll = (duration = 1000) => {
     function step(currentTime: number) {
       // get normalized elapsed time (n ranges from 0 to 1)
       const elapsed = currentTime - startTime;
-      let n = elapsed / duration;
+      let n = elapsed / 2000;
       if (n > 1) n = 1; // Clamp to 1 at the end
 
       // Calculate progress based on multi–phase easing:
@@ -47,6 +47,6 @@ export const useBackToTopScroll = (duration = 1000) => {
 
     // Start the animation.
     requestAnimationFrame(step);
-  }, [duration]);
+  }, []);
   return scrollToTop;
 };

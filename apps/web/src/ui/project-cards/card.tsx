@@ -19,7 +19,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       className="group relative aspect-[3/4] w-full overflow-hidden">
       <Link
         href={`/projects/${project.slug}`}
-        id={`project-${project.slug}`}
+        id={`${project.slug}`}
         className="relative block h-full">
         <div className="relative h-full w-full transition-transform duration-500 group-hover:scale-105">
           <Image
