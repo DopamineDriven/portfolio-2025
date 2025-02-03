@@ -1,14 +1,10 @@
 "use client";
 
 import { motion } from "motion/react";
-import type { Project } from "./card";
-import { ProjectCard } from "./card";
+import type { ProjectsProps } from "@/types/projects";
+import { ProjectCard } from "@/ui/project-cards/card";
 
-interface ProjectGridProps {
-  projects: readonly Project[];
-}
-
-export function ProjectGrid({ projects }: ProjectGridProps) {
+export function ProjectGrid({ projects }: ProjectsProps) {
   return (
     <div className="grid grid-cols-1 gap-y-16 md:grid-cols-2 md:gap-x-6 lg:gap-x-8">
       {projects.map((project, index) => (

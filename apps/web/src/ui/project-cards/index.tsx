@@ -1,49 +1,10 @@
-import type { Project } from "@/ui/project-cards/card";
-import { slugify } from "@/lib/slugify";
+import type { Project } from "@/types/projects";
 import { ProjectGrid } from "@/ui/project-cards/card-grid";
 
-const projects = [
-  {
-    id: "1",
-    title: "NEXT CHESS BOT",
-    description: "ELEVATE YOUR GAME",
-    imageUrl:
-      "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess-v2/public/og.png",
-    link: "https://www.nextchessbot.com",
-    slug: slugify("NEXT CHESS BOT")
-  },
-  {
-    id: "2",
-    title: "THE FADE ROOM INC",
-    description: "EXPERIENCE THE ART OF GROOMING AT ITS FINEST",
-    imageUrl:
-      "https://raw.githubusercontent.com/DopamineDriven/faderoom/master/apps/web/public/womens-undercut.png",
-    link: "/projects/subreddit-search",
-    slug: slugify("THE FADE ROOM INC")
-  },
-  {
-    id: "3",
-    title: "BIOLIFE XR EXPERIENCE",
-    description: "THERE'S PURPOSE IN YOUR PLASMA",
-    imageUrl:
-      "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/purpose-plasma.png",
-    link: "/projects/drisdell",
-    slug: slugify("BIOLIFE PLASMA SERVICES DONOR EXPERIENCE")
-  },
-  {
-    id: "4",
-    title: "HILLSIDE TO HARBOR",
-    description: "HELPING YOU NAVIGATE CHALLENGING SITUATIONS",
-    imageUrl:
-      "https://raw.githubusercontent.com/windycitydevs/turbo/main/apps/hillsidetoharbor/public/VerticalWithTextSquare.png",
-    link: "/projects/homesharing",
-    slug: slugify("HILLSIDE TO HARBOR")
-  }
-] as const satisfies readonly Project[];
 
-export function ProjectCards() {
+export function ProjectCards({...projects}: readonly Project[]) {
   return (
-    <section className="mx-auto bg-current px-4 py-16 md:py-24">
+    <section className="mx-auto px-4 py-16 md:py-24">
       <h2 className="theme-transition text-2xl text-current">
         Featured Projects
       </h2>
