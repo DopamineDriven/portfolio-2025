@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
 import type { Project } from "@/types/projects";
+import { shimmer } from "@/lib/shimmer";
 
 interface ProjectCardProps {
   project: Project;
@@ -22,9 +23,11 @@ export function ProjectCard({ project }: ProjectCardProps) {
         className="relative block h-full">
         <div className="relative h-full w-full transition-transform duration-500 group-hover:scale-105">
           <Image
-            src={project.imageUrl || "/placeholder.svg"}
+            src={project.imageUrl ?? "/doge-troubleshoot.jpg"}
             alt={project.title}
             fill
+            placeholder="blur"
+            blurDataURL={shimmer([450, 600])}
             className="object-cover brightness-90 transition-all duration-500 group-hover:brightness-100"
             sizes="(min-width: 1024px) 50vw, 100vw"
           />
