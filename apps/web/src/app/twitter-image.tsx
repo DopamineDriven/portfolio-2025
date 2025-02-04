@@ -10,7 +10,7 @@ export const size = {
 export const contentType = "image/png";
 
 export default async function Image() {
-  const absoluteUrl = new URL("./og-new.png", import.meta.url);
+  const absoluteUrl = new URL("./og-png.png", import.meta.url);
 
   const fontAbsoluteUrl = new URL(
     "./BasisGrotesquePro-Light.ttf",
@@ -43,68 +43,68 @@ export default async function Image() {
             width: "1200px",
             height: "628px",
             position: "relative",
-            backgroundRepeat: "no-repeat",
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "space-between",
             fontFamily: '"Basis Grotesque Pro", sans-serif',
-            overflow: "hidden",
-            backgroundImage: `url(${twitterDataUrl})`,
-            backgroundSize: "cover",
-            backgroundPosition: "50% 25%"
-          }}>
+          }}
+        >
+          {/* The full-width, full-height image */}
+          <img
+            src={twitterDataUrl}
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover"  // or "contain" if you prefer
+            }}
+          />
+
+          {/* Optional gradient overlay */}
           <div
             style={{
               position: "absolute",
               inset: 0,
-              backgroundImage:
-                "linear-gradient(to bottom right, rgba(0,0,0,0.3), rgba(0,0,0,0.6))"
+              background: "linear-gradient(to bottom right, rgba(0,0,0,0.3), rgba(0,0,0,0.6))",
             }}
           />
+
+          {/* Title “Portfolio 2025” */}
           <div
             style={{
-              marginTop: "50px",
+              marginTop: 50,
+              alignSelf: "center",
+              background: "rgba(0, 0, 0, 0.4)",
               padding: "30px 60px",
-              background: "rgba(255, 255, 255, 0.1)",
-              backdropFilter: "blur(10px)",
-              display: "flex",
-              WebkitBackdropFilter: "blur(10px)",
-              borderRadius: "5px",
-              boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-              border: "1px solid rgba(255, 255, 255, 0.2)",
-              zIndex: 1
-            }}>
-            <div
-              style={{
-                color: "white",
-                fontSize: "72px",
-                fontWeight: 500,
-                textAlign: "center",
-                letterSpacing: "-0.025em",
-                textShadow: "2px 2px 4px rgba(0,0,0,0.5)"
-              }}>
-              Portfolio 2025
-            </div>
+              borderRadius: 5,
+              color: "#fff",
+              fontSize: 72,
+              fontWeight: 500,
+              textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
+              zIndex: 1,
+            }}
+          >
+            Portfolio 2025
           </div>
+
+          {/* Footer “Andrew Ross” */}
           <div
             style={{
               position: "absolute",
-              bottom: "38px",
+              bottom: 38,
               left: "50%",
-              letterSpacing: "-0.025rem",
               transform: "translateX(-50%)",
               color: "white",
               background: "rgba(0, 0, 0, 0.5)",
-              fontSize: "31px",
+              fontSize: 31,
               fontWeight: 900,
-              borderRadius: "10px",
+              borderRadius: 10,
               textAlign: "center",
               padding: "12px 24px",
-              WebkitBackdropFilter: "blur(10px)",
               opacity: 0.85,
-              zIndex: 1
-            }}>
+              zIndex: 1,
+            }}
+          >
             Andrew Ross
           </div>
         </div>
@@ -116,9 +116,9 @@ export default async function Image() {
           {
             name: "Basis Grotesque Pro",
             data: arrayBufferFont,
-            style: "normal"
-          }
-        ]
+            style: "normal",
+          },
+        ],
       }
     );
   } catch (err) {

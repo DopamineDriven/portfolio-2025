@@ -125,6 +125,11 @@ const LandingPageTypeWriter: FC = () => {
         </h1>
         <div className="relative">
           <div
+            className="pointer-events-none absolute inset-0 opacity-0 select-none"
+            aria-hidden="true">
+            {lines.join("\n")}
+          </div>
+          <div
             ref={containerRef}
             className="mb-4 inline-flex w-full flex-col space-y-1.5 text-center md:mb-4 md:space-y-1"
             style={{
