@@ -7,9 +7,9 @@ export const size = {
   width: 1200,
   height: 630
 };
-export const contentType = "image/jpeg";
+export const contentType = "image/png";
 export default async function Image() {
-  const absoluteUrl = new URL("./og-img.jpg", import.meta.url);
+  const absoluteUrl = new URL("./og-png.png", import.meta.url);
 
   const fontAbsoluteUrl = new URL(
     "./BasisGrotesquePro-Light.ttf",
@@ -33,7 +33,7 @@ export default async function Image() {
 
     // Encode to base64
     const base64Encoded = Buffer.from(arrayBuffer).toString("base64");
-    const ogDataUrl = `data:image/jpeg;base64,${base64Encoded}`;
+    const ogDataUrl = `data:image/png;base64,${base64Encoded}`;
 
     return new ImageResponse(
       (
