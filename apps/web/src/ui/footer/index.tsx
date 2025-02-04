@@ -1,8 +1,10 @@
-"use clinet";
+"use client";
 
 import type React from "react"; // Added import for React
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowUp, Mail } from "lucide-react";
 import { GithubIcon } from "@/ui/svg/github";
 import { LinkedinIcon } from "@/ui/svg/linkedin";
@@ -10,17 +12,26 @@ import { StackoverflowIcon } from "@/ui/svg/stackoverflow";
 import { XIcon } from "@/ui/svg/x";
 
 export function Footer() {
+  const [pathname, setPathname] = useState<string>("/");
+  const path = usePathname();
+
+  useEffect(() => {
+    if (path !== pathname) {
+      setPathname(path);
+    }
+  }, [pathname, path]);
+
   return (
-    <footer className="theme-transition bg-primary text-primary-foreground dark:bg-background/80 dark:text-foreground max-w-10xl p-4 mt-8">
+    <footer className="theme-transition bg-primary text-primary-foreground dark:bg-background/80 dark:text-foreground max-w-10xl mt-8 p-4">
       <div className="container mx-auto max-w-7xl px-6 text-center">
-        <div className="flex flex-col gap-4 mx-auto md:flex-row md:items-center md:justify-between">
-          <div className="flex items-center justify-between mx-auto gap-x-4">
-          <Link
-            href={`/#top`}
-            scroll={true}
-            className="text-muted-foreground ring-1 ring-foreground/50 rounded-full hover:text-foreground appearance-none text-sm transition-colors">
-            <ArrowUp />
-          </Link>
+        <div className="mx-auto flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="mx-auto flex items-center justify-between gap-x-4">
+            <Link
+              href={`${pathname}#top`}
+              scroll={true}
+              className="text-muted-foreground ring-foreground/50 hover:text-foreground appearance-none rounded-full text-sm ring-1 transition-colors">
+              <ArrowUp />
+            </Link>
             <a
               href="mailto:andrew@windycitydevs.io"
               className="text-muted-foreground hover:text-foreground transition-colors">
@@ -62,7 +73,7 @@ export function Footer() {
           </div>
         </div>
         <hr className="border-muted-foreground/20 my-8" />
-        <p className="text-muted-foreground text-center text-sxs">
+        <p className="text-muted-foreground text-sxs text-center">
           &copy;{new Date().getFullYear()} Andrew Ross. All rights reserved.
         </p>
       </div>
