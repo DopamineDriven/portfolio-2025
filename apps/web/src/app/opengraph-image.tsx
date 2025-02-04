@@ -48,6 +48,7 @@ export default async function Image() {
             justifyContent: "space-between",
             fontFamily: '"Basis Grotesque Pro", sans-serif',
             overflow: "hidden",
+            backgroundRepeat: "no-repeat",
             backgroundImage: `url(${ogDataUrl})`,
             backgroundSize: "cover",
             backgroundPosition: "50% 25%"
