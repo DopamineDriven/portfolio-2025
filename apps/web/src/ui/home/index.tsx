@@ -11,7 +11,7 @@ import { ProjectCards } from "../project-cards";
 export function HomeContent({ posts }: { posts: Post[] }) {
   const recentPosts = posts.slice(0, 3);
   return (
-    <div className="theme-transition 2xl:max-w-8xl mx-auto flex max-w-7xl flex-col items-center justify-center py-24 sm:px-4 lg:px-6">
+    <div className="theme-transition 2xl:max-w-8xl mx-auto flex max-w-7xl flex-col items-center justify-center pt-24 pb-12 sm:px-4 lg:px-6">
       <motion.div
         initial={false}
         transition={{ duration: 0.5, ease: "easeInOut" }}
@@ -22,9 +22,9 @@ export function HomeContent({ posts }: { posts: Post[] }) {
           <LandingPageTypeWriter />
         </section>
         <section className="mx-auto my-12">
-          <h2 className="mb-8 text-center text-2xl font-bold">
+          {/* <h2 className="mb-8 text-center text-2xl font-bold">
             Technical Proficiencies
-          </h2>
+          </h2> */}
           <BreakoutWrapper>
             <CarouselWithFade />
           </BreakoutWrapper>

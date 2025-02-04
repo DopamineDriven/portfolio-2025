@@ -40,7 +40,7 @@ const LandingPageTypeWriter: FC = () => {
     [3, "experiences for end-users and developers alike is a major driver"],
     [4, "of mine. I specialize in Node.js, Typescript, React, and"],
     [5, "Next.js with a strong foundation in package development."],
-    [6, "Let's build something amazing together!"]
+    [6, "Let's build something impactful together!"]
   ] as const satisfies readonly [number, string][];
 
   const linesMobile = [
@@ -52,7 +52,7 @@ const LandingPageTypeWriter: FC = () => {
     [6, "I specialize in Node.js, Typescript,"],
     [7, "React, and Next.js with a strong"],
     [8, "foundation in package development."],
-    [9, "Let's build something amazing together!"]
+    [9, "Let's build something impactful together!"]
   ] as const satisfies readonly [number, string][];
 
   const lines = isMobile ? linesMobile : linesDesktop;
@@ -119,7 +119,7 @@ const LandingPageTypeWriter: FC = () => {
   }, [calculateInitialHeight, isMobile]);
 
   return (
-    <div className="flex min-h-[4rem] flex-col px-2 sm:px-4 md:px-8">
+    <div className="flex min-h-[3rem] sm:min-h-[4rem] flex-col px-2 sm:px-4 md:px-8">
       <div className="mx-auto w-full max-w-4xl text-center">
         <h1 className="theme-transition mb-4 text-3xl font-bold md:mb-8">
           Portfolio 2025
@@ -127,7 +127,7 @@ const LandingPageTypeWriter: FC = () => {
         <div className="relative">
           <div
             ref={containerRef}
-            className="mb-12 inline-flex w-full flex-col space-y-1.5 text-center md:mb-4 md:space-y-1"
+            className="mb-4 inline-flex w-full flex-col space-y-1.5 text-center md:mb-4 md:space-y-1"
             style={{
               height: `${containerHeight}px`,
               transition: "height 0.5s ease-in-out",
@@ -159,7 +159,7 @@ const LandingPageTypeWriter: FC = () => {
               />
             ))}
           </div>
-          <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 transform">
+          <div className="absolute bottom-2 sm:-bottom-2.5 left-1/2 -translate-x-1/2 transform">
             <motion.button
               initial={false}
               animate={{

@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+
 import { AnimatePresence, motion } from "motion/react";
-import { getResumeUrl } from "@/app/actions";
 import { ArLogo } from "@/ui/svg/ar-logo";
+import { resumeData } from "@/utils/__generated__/resume-blob";
 
 const menuItems = [
   { name: "Home", href: "/" },
@@ -19,14 +20,15 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
 
+
   const handleDownload = async () => {
     try {
       setIsDownloading(true);
-      const downloadUrl = await getResumeUrl();
 
       // Create a temporary link and trigger the download
       const link = document.createElement("a");
-      link.href = downloadUrl;
+      link.href = resumeData.resumeBlob.downloadUrl;
+      link.target = "_self";
       link.download = "resume-2025.pdf"; // This will be the suggested filename
       document.body.appendChild(link);
       link.click();
@@ -47,13 +49,35 @@ export default function Navbar() {
 
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
+  useEffect(() => {
+    if (isMobile) {
+      document.body.style.overflow = isMenuOpen ? "hidden" : "auto"
+    }
+    return () => {
+      document.body.style.overflow = "auto"
+    }
+  }, [isMobile, isMenuOpen])
 
   useEffect(() => {
     setIsHovered(false);
     setHoveredItem(null);
     setIsMenuOpen(false);
   }, [isMobile]);
+  const closeMenu = useCallback(() => {
+    setIsMenuOpen(false);
+  }, []);
 
+  const onKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isMenuOpen) closeMenu();
+    },
+    [closeMenu, isMenuOpen]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [onKeyDown]);
   return (
     <header className="fixed top-0 left-0 z-50 mx-auto w-full self-center overflow-hidden">
       <AnimatePresence mode="wait">
@@ -121,7 +145,7 @@ export default function Navbar() {
                           {item.name === "Resume" ? (
                             <button
                               onClick={handleDownload}
-                              className="relative block w-full appearance-none px-4 py-2 text-center sm:py-4"
+                              className="relative block w-full appearance-none px-4 py-2 text-center sm:py-4 cursor-pointer"
                               disabled={isDownloading}
                               role="link">
                               <motion.div
@@ -188,9 +212,27 @@ export default function Navbar() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.5, ease: [0.77, 0, 0.175, 1] }}
-                  className="fixed inset-0 z-40 h-full bg-black/50 backdrop-blur-sm sm:hidden"
-                  onClick={() => setIsMenuOpen(false)}
-                />
+                  className="bg-background/50 fixed inset-0 z-40 h-full backdrop-blur-sm sm:hidden py-2"
+                  onClick={() => setIsMenuOpen(false)}>
+                  <div className="absolute top-4 right-4">
+                    <button
+                      onClick={closeMenu}
+                      className="text-foreground bg-background/20 hover:bg-background/30 rounded-full p-2 transition-colors">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="size-6">
+                        <path d="M18 6 6 18" />
+                        <path d="m6 6 12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                </motion.div>
               )}
             </AnimatePresence>
           </div>
