@@ -10,7 +10,7 @@ export const size = {
 export const contentType = "image/png";
 
 export default async function Image() {
-  const absoluteUrl = new URL("./og-png.png", import.meta.url);
+  const absoluteUrl = new URL("./og-new.png", import.meta.url);
 
   const fontAbsoluteUrl = new URL(
     "./BasisGrotesquePro-Light.ttf",
@@ -39,89 +39,74 @@ export default async function Image() {
     return new ImageResponse(
       (
         <div
+        style={{
+          width: "1200px",
+          height: "628px",
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-between",
+          fontFamily: '"Basis Grotesque Pro", sans-serif',
+          overflow: "hidden",
+          backgroundImage: `url(${twitterDataUrl})`,
+          backgroundSize: "cover",
+          backgroundPosition: "50% 25%"
+        }}>
+        <div
           style={{
-            width: "100%",
-            height: "100%",
-            position: "relative",
+            position: "absolute",
+            inset: 0,
+            backgroundImage:
+              "linear-gradient(to bottom right, rgba(0,0,0,0.3), rgba(0,0,0,0.6))"
+          }}
+        />
+        <div
+          style={{
+            marginTop: "50px",
+            padding: "30px 60px",
+            background: "rgba(255, 255, 255, 0.1)",
+            backdropFilter: "blur(10px)",
             display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            justifyContent: "space-between",
-            fontFamily: '"Basis Grotesque Pro", sans-serif',
-            overflow: "hidden",
-            backgroundSize: "cover",
-            backgroundPosition: "center"
+            WebkitBackdropFilter: "blur(10px)",
+            borderRadius: "5px",
+            boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+            zIndex: 1
           }}>
-          <img
-            src={twitterDataUrl}
-            alt="Andrew Ross Og Image"
-            width="628"
-            height="1200"
-            style={{
-              position: "absolute",
-              objectFit: "contain",
-              width: "100%",
-              height: "100%"
-            }}
-          />
           <div
             style={{
-              position: "absolute",
-              inset: 0,
-              zIndex: 2,
-              background:
-                "linear-gradient(to bottom right, rgba(0,0,0,0.8), rgba(0,0,0,0.9))"
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              top: "48px",
-              display: "flex",
-              flexDirection: "row",
-              left: "50%",
-              transform: "translateX(-50%)",
-              padding: "28px 58px",
-              background: "rgba(255, 255, 255, 0.1)",
-              WebkitBackdropFilter: "blur(10px)",
-              borderRadius: "20px",
-              boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-              zIndex: 1,
-              border: "1px solid rgba(255, 255, 255, 0.2)"
-            }}>
-            <div
-              style={{
-                color: "white",
-                fontSize: "70px",
-                fontWeight: 600,
-                textAlign: "center",
-                letterSpacing: "-0.025em",
-                textShadow: "2px 2px 4px rgba(0,0,0,0.5)"
-              }}>
-              Andrew Ross
-            </div>
-          </div>
-          <div
-            style={{
-              position: "absolute",
-              bottom: "38px",
-              left: "50%",
-              letterSpacing: "-0.025rem",
-              transform: "translateX(-50%)",
               color: "white",
-              background: "rgba(0, 0, 0, 0.5)",
-              fontSize: "31px",
-              fontWeight: 900,
-              borderRadius: "10px",
+              fontSize: "72px",
+              fontWeight: 500,
               textAlign: "center",
-              padding: "12px 24px",
-              WebkitBackdropFilter: "blur(10px)",
-              opacity: 0.85,
-              zIndex: 1
+              letterSpacing: "-0.025em",
+              textShadow: "2px 2px 4px rgba(0,0,0,0.5)"
             }}>
             Portfolio 2025
           </div>
         </div>
+        <div
+          style={{
+            position: "absolute",
+            bottom: "38px",
+            left: "50%",
+            letterSpacing: "-0.025rem",
+            transform: "translateX(-50%)",
+            color: "white",
+            background: "rgba(0, 0, 0, 0.5)",
+            fontSize: "31px",
+            fontWeight: 900,
+            borderRadius: "10px",
+            textAlign: "center",
+            padding: "12px 24px",
+            WebkitBackdropFilter: "blur(10px)",
+            opacity: 0.85,
+            zIndex: 1
+          }}>
+          Andrew Ross
+        </div>
+      </div>
       ),
       {
         width: 1200,
