@@ -72,7 +72,7 @@ export const metadata = {
     images: [
       {
         url: new URL(
-          "/og-jpg.jpg",
+          "/og-png.png",
           getSiteUrl(process.env.NODE_ENV)
         ).toString(),
         width: 1200,
