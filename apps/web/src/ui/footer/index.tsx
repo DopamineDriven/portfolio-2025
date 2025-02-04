@@ -1,4 +1,4 @@
-"use clinet";
+"use client";
 
 import type React from "react"; // Added import for React
 
