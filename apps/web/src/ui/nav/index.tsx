@@ -28,7 +28,7 @@ export default function Navbar() {
       // Create a temporary link and trigger the download
       const link = document.createElement("a");
       link.href = resumeData.resumeBlob.downloadUrl;
-      link.target = "_self";
+      link.target = "_blank";
       link.download = "resume-2025.pdf"; // This will be the suggested filename
       document.body.appendChild(link);
       link.click();

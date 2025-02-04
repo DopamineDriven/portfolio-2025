@@ -7,7 +7,6 @@ import { useAnimationContext } from "@/context/animation-context";
 import { cn } from "@/lib/utils";
 import Typewriter from "@/ui/atoms/typewriter";
 
-
 const LandingPageTypeWriter: FC = () => {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [isTypingComplete, setIsTypingComplete] = useState(false);
@@ -35,20 +34,20 @@ const LandingPageTypeWriter: FC = () => {
   const lineHeights = useRef<number[]>([]);
 
   const linesDesktop = [
-    [1, "I'm Andrew S. Ross, an insatiably curious full stack developer"],
-    [2, "with several years of Lead experience. Creating outstanding"],
-    [3, "experiences for end-users and developers alike is a major driver"],
+    [1, "I'm Andrew S. Ross, a full stack developer living in the"],
+    [2, "greater Chicagoland area. Creating outstanding experiences"],
+    [3, "for end-users and developers alike is a major driver"],
     [4, "of mine. I specialize in Node.js, Typescript, React, and"],
     [5, "Next.js with a strong foundation in package development."],
     [6, "Let's build something impactful together!"]
   ] as const satisfies readonly [number, string][];
 
   const linesMobile = [
-    [1, "I'm Andrew S. Ross, an insatiably curious"],
-    [2, "full stack developer with several years"],
-    [3, "of Lead experience. Creating outstanding"],
-    [4, "experiences for end-users and developers"],
-    [5, "alike is a major driver of mine."],
+    [1, "I'm Andrew S. Ross, a full stack developer"],
+    [2, "living in the greater Chicagoland area."],
+    [3, "Creating outstanding experiences"],
+    [4, "for end-users and developers alike"],
+    [5, "is a major driver of mine."],
     [6, "I specialize in Node.js, Typescript,"],
     [7, "React, and Next.js with a strong"],
     [8, "foundation in package development."],
@@ -119,7 +118,7 @@ const LandingPageTypeWriter: FC = () => {
   }, [calculateInitialHeight, isMobile]);
 
   return (
-    <div className="flex min-h-[3rem] sm:min-h-[4rem] flex-col px-2 sm:px-4 md:px-8">
+    <div className="flex min-h-[3rem] flex-col px-2 sm:min-h-[4rem] sm:px-4 md:px-8">
       <div className="mx-auto w-full max-w-4xl text-center">
         <h1 className="theme-transition mb-4 text-3xl font-bold md:mb-8">
           Portfolio 2025
@@ -159,7 +158,7 @@ const LandingPageTypeWriter: FC = () => {
               />
             ))}
           </div>
-          <div className="absolute bottom-2 sm:-bottom-2.5 left-1/2 -translate-x-1/2 transform">
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 transform sm:-bottom-2.5">
             <motion.button
               initial={false}
               animate={{
