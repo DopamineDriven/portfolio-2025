@@ -40,7 +40,7 @@ export const metadata = {
   metadataBase: new URL(getSiteUrl(process.env.NODE_ENV)),
   title: {
     default: "Andrew Ross",
-    template: "%s | Andrew Ross"
+    template: "%s | Portfolio"
   },
   verification: {
     google: "z8Aoz_qPBEI4Y9njJ-I4QFfRb0n85o27ihGExlwv4rQ",
@@ -69,32 +69,12 @@ export const metadata = {
     locale: "en_US",
     type: "website",
     countryName: "US",
-    images: [
-      {
-        url: new URL(
-          "/og-png.png",
-          getSiteUrl(process.env.NODE_ENV)
-        ).toString(),
-        width: 1200,
-        height: 630,
-        alt: "Andrew Ross Portfolio 2025"
-      },
-      {
-        url: new URL(
-          "/meta/apple-touch-icon.png",
-          getSiteUrl(process.env.NODE_ENV)
-        ).toString(),
-        width: 180,
-        height: 180,
-        alt: "Andrew Ross Portfolio 2025"
-      }
-    ],
     emails: ["andrew@windycitydevs.io"]
   },
   icons: [
     {
       type: "image/png",
-      rel: "apple-touch-icon",
+      rel: "apple-icon",
       url: new URL(
         "/meta/apple-touch-icon.png",
         getSiteUrl(process.env.NODE_ENV)

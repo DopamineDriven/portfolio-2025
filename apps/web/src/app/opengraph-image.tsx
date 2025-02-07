@@ -44,9 +44,8 @@ export default async function Image() {
             position: "relative",
             display: "flex",
             flexDirection: "column",
-            fontFamily: '"Basis Grotesque Pro", sans-serif',
-          }}
-        >
+            fontFamily: '"Basis Grotesque Pro", sans-serif'
+          }}>
           {/* The full-width, full-height image */}
           <img
             src={ogDataUrl}
@@ -55,7 +54,7 @@ export default async function Image() {
               inset: 0,
               width: "100%",
               height: "100%",
-              objectFit: "cover"  // or "contain" if you prefer
+              objectFit: "cover" // or "contain" if you prefer
             }}
           />
 
@@ -64,7 +63,8 @@ export default async function Image() {
             style={{
               position: "absolute",
               inset: 0,
-              background: "linear-gradient(to bottom right, rgba(0,0,0,0.3), rgba(0,0,0,0.6))",
+              background:
+                "linear-gradient(to bottom right, rgba(0,0,0,0.3), rgba(0,0,0,0.6))"
             }}
           />
 
@@ -80,9 +80,8 @@ export default async function Image() {
               fontSize: 72,
               fontWeight: 500,
               textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
-              zIndex: 1,
-            }}
-          >
+              zIndex: 1
+            }}>
             Portfolio 2025
           </div>
 
@@ -101,9 +100,8 @@ export default async function Image() {
               textAlign: "center",
               padding: "12px 24px",
               opacity: 0.85,
-              zIndex: 1,
-            }}
-          >
+              zIndex: 1
+            }}>
             Andrew Ross
           </div>
         </div>

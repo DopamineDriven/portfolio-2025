@@ -18,6 +18,8 @@
   "css.hover.documentation": true,
   "css.hover.references": true,
   "editor.bracketPairColorization.enabled": false,
+  "svg.preview.autoShow": false,
+  "svg.preview.disable": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.suggest.showStatusBar": true,
   "eslint.enable": true,
@@ -65,5 +67,8 @@
   "typescript.referencesCodeLens.showOnAllFunctions": true,
   "typescript.tsdk": "node_modules/typescript/lib",
   "yaml.hover": true,
-  "yaml.validate": true
+  "yaml.validate": true,
+  "workbench.editor.autoLockGroups": {
+    "default": true
+  }
 }
