@@ -1,14 +1,15 @@
-import type { TsxExclude19 } from "@/types/react";
+import type { ComponentPropsWithRef } from "react";
 import { cn } from "@/lib/utils";
 
 export function SanityIcon({
   className,
   ...rest
-}: TsxExclude19<"svg", "fill" | "role" | "viewBox" | "xmlns">) {
+}: Omit<ComponentPropsWithRef<"svg">, "xmlns" | "viewBox" | "fill" | "role">) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 128 128"
+      fill="none"
       role="img"
       className={cn("size-12", className)}
       {...rest}>

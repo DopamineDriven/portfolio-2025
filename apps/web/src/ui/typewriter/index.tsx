@@ -124,10 +124,8 @@ const LandingPageTypeWriter: FC = () => {
           Portfolio 2025
         </h1>
         <div className="relative">
-          <div
-            className="pointer-events-none absolute inset-0 opacity-0 select-none"
-            aria-hidden="true">
-            {lines.join("\n")}
+          <div className="sr-only" aria-hidden="true">
+            <p>{lines.join("\n")}</p>
           </div>
           <div
             ref={containerRef}
@@ -183,6 +181,7 @@ const LandingPageTypeWriter: FC = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="none"
+                role="img"
                 stroke="currentColor"
                 strokeWidth="2"
                 strokeLinecap="round"

@@ -4,9 +4,15 @@ import type { EmblaOptionsType } from "embla-carousel";
 import AutoScroll from "embla-carousel-auto-scroll";
 import useEmblaCarousel from "embla-carousel-react";
 import { cn } from "@/lib/utils";
+import { AlgoliaIcon } from "@/ui/svg/algolia";
+import { CloudinaryIcon } from "@/ui/svg/cloudinary";
+import { DatadogIcon } from "@/ui/svg/datadog";
 import { DockerIcon } from "@/ui/svg/docker";
+import { NestjsIcon } from "@/ui/svg/nestjs";
 import { NextjsIcon } from "@/ui/svg/nextjs";
 import { NodejsIcon } from "@/ui/svg/nodejs";
+import { PostgresIcon } from "@/ui/svg/postgres";
+import { PrismaIcon } from "@/ui/svg/prisma";
 import { ReactIcon } from "@/ui/svg/react";
 import { SanityIcon } from "@/ui/svg/sanity";
 import { TailwindIcon } from "@/ui/svg/tailwind";
@@ -14,6 +20,8 @@ import { TurborepoIcon } from "@/ui/svg/turborepo";
 import { TypeScriptIcon } from "@/ui/svg/typescript";
 import { V0Icon } from "@/ui/svg/v0";
 import { VercelIcon } from "@/ui/svg/vercel";
+import { WordPressIcon } from "@/ui/svg/wordpress";
+import { WpGraphQLIcon } from "@/ui/svg/wpgraphql";
 
 const proficiencies = [
   { name: "Next.js", icon: NextjsIcon },
@@ -22,10 +30,18 @@ const proficiencies = [
   { name: "Turborepo", icon: TurborepoIcon },
   { name: "Node.js", icon: NodejsIcon },
   { name: "Docker", icon: DockerIcon },
+  { name: "Cloudinary", icon: CloudinaryIcon },
   { name: "Tailwind", icon: TailwindIcon },
   { name: "v0", icon: V0Icon },
   { name: "Vercel", icon: VercelIcon },
-  { name: "Sanity", icon: SanityIcon }
+  { name: "Sanity", icon: SanityIcon },
+  { name: "Postgres", icon: PostgresIcon },
+  { name: "Algolia", icon: AlgoliaIcon },
+  { name: "Nest.js", icon: NestjsIcon },
+  { name: "WordPress", icon: WordPressIcon },
+  { name: "WP GraphQL", icon: WpGraphQLIcon },
+  { name: "Prisma", icon: PrismaIcon },
+  { name: "Datadog", icon: DatadogIcon }
 ] as const;
 
 export function ProficienciesCarousel() {
