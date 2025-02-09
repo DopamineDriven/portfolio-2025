@@ -1,15 +1,18 @@
-import type { FC } from "react";
-import type { TsxExclude19 } from "@/types/react";
+import type { ComponentPropsWithRef } from "react";
 import { cn } from "@/lib/utils";
 
-export const Logo: FC<TsxExclude19<"svg", "fill" | "viewBox" | "xmlns">> = ({
+export const Logo = ({
   className,
   ...svg
-}) => (
+}: Omit<
+  ComponentPropsWithRef<"svg">,
+  "xmlns" | "viewBox" | "fill" | "role"
+>) => (
   <svg
     viewBox="0 0 65 65"
     fill="none"
-    className={cn("theme-transition h-9 w-9", className)}
+    role="img"
+    className={cn("theme-transition size-9", className)}
     xmlns="http://www.w3.org/2000/svg"
     {...svg}>
     <circle
