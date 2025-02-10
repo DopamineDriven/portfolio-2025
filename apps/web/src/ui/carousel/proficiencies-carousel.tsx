@@ -79,7 +79,7 @@ export function ProficienciesCarousel() {
                 )}>
                 <div
                   className={cn(
-                    "bg-muted/50 dark:bg-muted/20 hover:bg-muted/70 dark:hover:bg-muted/30 flex h-full flex-col items-center justify-center rounded-lg p-6 text-center backdrop-blur-sm transition-colors",
+                    "bg-muted/50 dark:bg-muted/20 hover:bg-muted/70 dark:hover:bg-muted/30 flex h-full flex-col items-center justify-center rounded-lg p-5 text-center backdrop-blur-sm transition-colors",
                     index === 0
                       ? "mr-2"
                       : index === proficiencies.length - 1
