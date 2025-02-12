@@ -1,9 +1,54 @@
-export type ReplaceSpaces<S extends string> =
-  S extends `${infer Head} ${infer Tail}` | `${infer Head}  ${infer Tail}` | `${infer Head}   ${infer Tail}`
-    ? `${Head}-${ReplaceSpaces<Tail>}`
-    : S;
+import type { LowerAlphabet } from "@/types/unions";
 
-export type InferSlugified<T extends string> = Lowercase<ReplaceSpaces<T>>;
+export type ReplaceSpaces<S extends string> = S extends
+  | `${infer Head} ${infer Tail}`
+  | `${infer Head}  ${infer Tail}`
+  | `${infer Head}   ${infer Tail}`
+  ? `${Head}-${ReplaceSpaces<Tail>}`
+  : S;
+
+export type AllowedSlugChars =
+  | LowerAlphabet
+  | "-"
+  | " "
+  | "0"
+  | "1"
+  | "2"
+  | "3"
+  | "4"
+  | "5"
+  | "6"
+  | "7"
+  | "8"
+  | "9";
+
+export type FilterAllowed<S extends string> =
+  S extends `${infer Head}${infer Tail}`
+    ? Lowercase<Head> extends AllowedSlugChars
+      ? `${Lowercase<Head>}${FilterAllowed<Tail>}`
+      : FilterAllowed<Tail>
+    : S extends ":"
+      ? ""
+      : S;
+
+export type OmitColon<T extends string> = T extends `${infer U}:${infer X}`
+  ? `${U}${X}`
+  : T;
+
+export type OmitExclamationMark<T extends string> =
+  T extends `${infer U}!${infer X}` ? `${U}${X}` : T;
+
+export type OmitComma<T extends string> = T extends `${infer U},${infer X}`
+  ? `${U}${X}`
+  : T;
+
+export type OmitApostrophe<T extends string> = T extends `${infer U}'${infer X}`
+  ? `${U}${X}`
+  : T;
+
+export type InferSlugified<T extends string> = Lowercase<
+  ReplaceSpaces<OmitApostrophe<OmitComma<OmitExclamationMark<OmitColon<T>>>>>
+>;
 
 /**
  * Converts a given string into a URL-friendly slug.
@@ -23,4 +68,3 @@ export function slugify<const T extends string>(title: T) {
     .replace(/^-+/, "")
     .replace(/-+$/, "") as InferSlugified<T>;
 }
-

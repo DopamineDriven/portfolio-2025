@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
-import type { Post } from "@/lib/posts";
+import type { PostDetails } from "@/types/posts";
 import { BreakoutWrapper } from "@/ui/atoms/breakout-wrapper";
 import { CarouselWithFade } from "@/ui/carousel";
 import LandingPageTypeWriter from "@/ui/typewriter";
 import { ProjectCards } from "../project-cards";
 
-export function HomeContent({ posts }: { posts: Post[] }) {
+export function HomeContent({ posts }: { posts: PostDetails[] }) {
   const recentPosts = posts.slice(0, 3);
   return (
     <div className="theme-transition 2xl:max-w-8xl mx-auto flex max-w-7xl flex-col items-center justify-center pt-24 pb-12 sm:px-4 lg:px-6">

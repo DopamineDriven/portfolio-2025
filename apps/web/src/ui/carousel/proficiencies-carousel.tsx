@@ -39,7 +39,7 @@ const proficiencies = [
   { name: "Algolia", icon: AlgoliaIcon },
   { name: "Nest.js", icon: NestjsIcon },
   { name: "WordPress", icon: WordPressIcon },
-  { name: "WP GraphQL", icon: WpGraphQLIcon },
+  { name: "WPGraphQL", icon: WpGraphQLIcon },
   { name: "Prisma", icon: PrismaIcon },
   { name: "Datadog", icon: DatadogIcon }
 ] as const;
@@ -87,7 +87,9 @@ export function ProficienciesCarousel() {
                         : "mx-2"
                   )}>
                   <item.icon />
-                  <span className="mt-2 text-sm font-medium">{item.name}</span>
+                  <span className="mt-2 text-xs font-medium sm:text-sm">
+                    {item.name}
+                  </span>
                 </div>
               </div>
             ))}

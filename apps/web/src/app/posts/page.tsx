@@ -12,6 +12,9 @@ interface Post {
   content: string;
 }
 
+
+
+
 async function getPosts(): Promise<Post[]> {
   const fs = new Fs(process.cwd());
   const files = fs.readDir("content/posts", { recursive: true });

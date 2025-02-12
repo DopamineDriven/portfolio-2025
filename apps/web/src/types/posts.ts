@@ -1,4 +1,4 @@
-export interface Project {
+export interface Post {
   id: string;
   title: string;
   description: string;
@@ -7,14 +7,14 @@ export interface Project {
   slug: string;
 };
 
-export interface ProjectsProps {
-  projects: readonly Project[];
+export interface PostsProps {
+  projects: readonly Post[];
 };
 
-export interface ProjectDetail extends Project {
+export interface PostDetails extends Post {
   content: string;
   externalLink?: string;
-  technologies: string[];
+  tags: string[];
   date: string;
 }
 

@@ -1,14 +1,6 @@
 import { Fs } from "@d0paminedriven/fs";
 import matter from "gray-matter";
-
-export interface Post {
-  slug: string;
-  title: string;
-  date: string;
-  description: string;
-  tags?: string[];
-  content: string;
-}
+import type { PostDetails } from "@/types/posts";
 
 export async function getPosts() {
   const fs = new Fs(process.cwd());
@@ -16,15 +8,23 @@ export async function getPosts() {
 
   const posts = await Promise.all(
     files.map(filename => {
-      const fileContent = fs.fileToBuffer(`content/posts/${filename}`).toString("utf-8");
+      const fileContent = fs
+        .fileToBuffer(`content/posts/${filename}`)
+        .toString("utf-8");
       const { data, content } = matter(fileContent);
-      const typedData = data as Omit<Post, "content">;
+      const typedData = data as Omit<PostDetails, "content">;
+
       return {
-        slug: filename.replace(".mdx", ""),
+        slug: typedData.slug,
         title: typedData.title,
         date: typedData.date,
         description: typedData.description,
         tags: typedData.tags,
+        imageUrl: typedData.imageUrl,
+        link: typedData.link,
+        externalLink: typedData.externalLink,
+        id: typedData.id,
+
         content
       };
     })
