@@ -17,7 +17,7 @@ export const projects = [
     description: "ELEVATE YOUR GAME",
     imageUrl:
       "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess-v2/public/og.png",
-    link: "/projects/next-chess-bot",
+    link: `/projects/${slugify("NEXT CHESS BOT")}`,
     slug: slugify("NEXT CHESS BOT")
   },
   {
@@ -26,7 +26,7 @@ export const projects = [
     description: "EXPERIENCE THE ART OF GROOMING AT ITS FINEST",
     imageUrl:
       "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/thefaderoominc.png",
-    link: "/projects/the-fade-room-inc",
+    link: `/projects/${slugify("THE FADE ROOM INC")}`,
     slug: slugify("THE FADE ROOM INC")
   },
   {
@@ -35,7 +35,7 @@ export const projects = [
     description: "THERE'S PURPOSE IN YOUR PLASMA",
     imageUrl:
       "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/biolife-donor-experience.png",
-    link: "/projects/biolife-xr-experience",
+    link: `/projects/${slugify("BIOLIFE XR EXPERIENCE")}`,
     slug: slugify("BIOLIFE XR EXPERIENCE")
   },
   {
@@ -44,7 +44,7 @@ export const projects = [
     description: "HELPING YOU NAVIGATE CHALLENGING SITUATIONS",
     imageUrl:
       "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/hillsidetoharbor.png",
-    link: "/projects/hillside-to-harbor",
+    link: `/projects/${slugify("HILLSIDE TO HARBOR")}`,
     slug: slugify("HILLSIDE TO HARBOR")
   }
 ] as const satisfies ProjectsProps["projects"];
