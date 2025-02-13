@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowUpRight } from "lucide-react";
+// import { ArrowUpRight } from "lucide-react";
 import { motion } from "motion/react";
 import type { PostDetails } from "@/types/posts";
 import { shimmer } from "@/lib/shimmer";
@@ -21,7 +21,7 @@ export function PostTemplate({
   description,
   imageUrl,
   slug,
-  externalLink,
+  externalLink: _externalLink,
   tags,
   date,
   children
@@ -98,7 +98,7 @@ export function PostTemplate({
                   Back to Posts
                 </Button>
               </Link>
-              {externalLink && (
+              {/* {externalLink && (
                 <Button asChild variant="outline" className="w-full sm:w-auto">
                   <a
                     href={externalLink}
@@ -108,7 +108,7 @@ export function PostTemplate({
                     <ArrowUpRight className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
-              )}
+              )} */}
             </div>
           </motion.div>
         </div>
