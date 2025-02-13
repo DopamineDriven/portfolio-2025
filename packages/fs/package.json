@@ -59,7 +59,7 @@
     "dotenv": "^16.4.7"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "^7.49.2",
+    "@microsoft/api-extractor": "^7.50.0",
     "@swc/core": "^1.10.15",
     "@swc/wasm": "^1.10.15",
     "@portfolio/eslint-config": "workspace:*",
@@ -73,7 +73,7 @@
     "eslint": "latest",
     "jiti": "^2.4.2",
     "prettier": "latest",
-    "terser": "^5.38.1",
+    "terser": "^5.38.2",
     "tslib": "latest",
     "tsup": "latest",
     "tsx": "latest",
