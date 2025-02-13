@@ -5,10 +5,17 @@ export function PostCards({ posts }: { posts: PostDetails[] }) {
   return (
     <section className="container mx-auto px-4 py-16 md:py-24">
       <h2 className="theme-transition mb-8 flex items-center gap-2 text-2xl text-current">
-        <a className="appearance-auto" id="posts">
-          Recent Posts
+        <a className="appearance-none" id="posts">
+          Posts
         </a>
-        <span className="inline-block motion-safe:animate-pulse">
+      </h2>
+      <CardGrid posts={posts} />
+    </section>
+  );
+}
+
+/**
+ *         <span className="inline-block motion-safe:animate-pulse">
           <svg
             width="24"
             height="24"
@@ -23,8 +30,4 @@ export function PostCards({ posts }: { posts: PostDetails[] }) {
             />
           </svg>
         </span>
-      </h2>
-      <CardGrid posts={posts} />
-    </section>
-  );
-}
+ */
