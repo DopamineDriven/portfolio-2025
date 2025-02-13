@@ -8,6 +8,9 @@ patchedDependencies:
   rehype-pretty-code:
     hash: 14e25dbfd523509256fe8d68ce5e0eec454622848be3c85cebe2874d11c70bd4
     path: patches/rehype-pretty-code.patch
+  tailwindcss:
+    hash: ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8
+    path: patches/tailwindcss.patch
 
 importers:
 
@@ -132,7 +135,7 @@ importers:
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@tailwindcss/postcss':
-        specifier: ^4.0.6
+        specifier: ^4.0.5
         version: 4.0.6
       '@types/gtag.js':
         specifier: ^0.0.20
@@ -180,14 +183,14 @@ importers:
         specifier: ^0.33.5
         version: 0.33.5
       tailwindcss:
-        specifier: ^4.0.6
-        version: 4.0.6
+        specifier: ^4.0.5
+        version: 4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8)
       tailwindcss-animate:
         specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@4.0.6)
+        version: 1.0.7(tailwindcss@4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8))
       tailwindcss-motion:
-        specifier: ^1.1.0
-        version: 1.1.0(tailwindcss@4.0.6)
+        specifier: ^1.0.1
+        version: 1.1.0(tailwindcss@4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8))
       tslib:
         specifier: latest
         version: 2.8.1
@@ -316,7 +319,7 @@ importers:
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@tailwindcss/postcss':
-        specifier: ^4.0.6
+        specifier: ^4.0.5
         version: 4.0.6
       '@types/gtag.js':
         specifier: ^0.0.20
@@ -367,14 +370,14 @@ importers:
         specifier: ^0.33.5
         version: 0.33.5
       tailwindcss:
-        specifier: ^4.0.6
-        version: 4.0.6
+        specifier: ^4.0.5
+        version: 4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8)
       tailwindcss-animate:
         specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@4.0.6)
+        version: 1.0.7(tailwindcss@4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8))
       tailwindcss-motion:
-        specifier: ^1.1.0
-        version: 1.1.0(tailwindcss@4.0.6)
+        specifier: ^1.0.1
+        version: 1.1.0(tailwindcss@4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8))
       tslib:
         specifier: latest
         version: 2.8.1
@@ -549,13 +552,13 @@ importers:
         version: 2.3.2(typescript@5.7.3)
       '@tailwindcss/forms':
         specifier: ^0.5.10
-        version: 0.5.10(tailwindcss@4.0.6)
+        version: 0.5.10(tailwindcss@4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8))
       '@tailwindcss/postcss':
-        specifier: ^4.0.6
+        specifier: ^4.0.5
         version: 4.0.6
       '@tailwindcss/typography':
         specifier: ^0.5.16
-        version: 0.5.16(tailwindcss@4.0.6)
+        version: 0.5.16(tailwindcss@4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8))
       '@types/google.analytics':
         specifier: ^0.0.46
         version: 0.0.46
@@ -629,14 +632,14 @@ importers:
         specifier: ^0.33.5
         version: 0.33.5
       tailwindcss:
-        specifier: ^4.0.6
-        version: 4.0.6
+        specifier: ^4.0.5
+        version: 4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8)
       tailwindcss-animate:
         specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@4.0.6)
+        version: 1.0.7(tailwindcss@4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8))
       tailwindcss-motion:
-        specifier: ^1.1.0
-        version: 1.1.0(tailwindcss@4.0.6)
+        specifier: ^1.0.1
+        version: 1.1.0(tailwindcss@4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8))
       tslib:
         specifier: latest
         version: 2.8.1
@@ -9111,16 +9114,16 @@ snapshots:
 
   '@swc/wasm@1.10.15': {}
 
-  '@tailwindcss/forms@0.5.10(tailwindcss@4.0.6)':
+  '@tailwindcss/forms@0.5.10(tailwindcss@4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8))':
     dependencies:
       mini-svg-data-uri: 1.4.4
-      tailwindcss: 4.0.6
+      tailwindcss: 4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8)
 
   '@tailwindcss/node@4.0.6':
     dependencies:
       enhanced-resolve: 5.18.1
       jiti: 2.4.2
-      tailwindcss: 4.0.6
+      tailwindcss: 4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8)
 
   '@tailwindcss/oxide-android-arm64@4.0.6':
     optional: true
@@ -9176,15 +9179,15 @@ snapshots:
       '@tailwindcss/oxide': 4.0.6
       lightningcss: 1.29.1
       postcss: 8.5.2
-      tailwindcss: 4.0.6
+      tailwindcss: 4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8)
 
-  '@tailwindcss/typography@0.5.16(tailwindcss@4.0.6)':
+  '@tailwindcss/typography@0.5.16(tailwindcss@4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8))':
     dependencies:
       lodash.castarray: 4.4.0
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
-      tailwindcss: 4.0.6
+      tailwindcss: 4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8)
 
   '@tootallnate/once@2.0.0': {}
 
@@ -13811,15 +13814,15 @@ snapshots:
 
   tailwind-merge@3.0.1: {}
 
-  tailwindcss-animate@1.0.7(tailwindcss@4.0.6):
+  tailwindcss-animate@1.0.7(tailwindcss@4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8)):
     dependencies:
-      tailwindcss: 4.0.6
+      tailwindcss: 4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8)
 
-  tailwindcss-motion@1.1.0(tailwindcss@4.0.6):
+  tailwindcss-motion@1.1.0(tailwindcss@4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8)):
     dependencies:
-      tailwindcss: 4.0.6
+      tailwindcss: 4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8)
 
-  tailwindcss@4.0.6: {}
+  tailwindcss@4.0.6(patch_hash=ee0a5edb885282ac0fd3ab2cff2d835c305a658847d12e3c0cdbac4922089db8): {}
 
   tapable@2.2.1: {}
 

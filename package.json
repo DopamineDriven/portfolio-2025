@@ -58,7 +58,8 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "rehype-pretty-code": "patches/rehype-pretty-code.patch"
+      "rehype-pretty-code": "patches/rehype-pretty-code.patch",
+      "tailwindcss": "patches/tailwindcss.patch"
     }
   }
 }

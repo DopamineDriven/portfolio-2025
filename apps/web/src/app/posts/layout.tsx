@@ -1,7 +1,7 @@
-export default function BlogLayout({
+export default function PostLayout({
   children
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
-  return <div className="mx-auto">{children}</div>;
+}>) {
+  return <>{children}</>;
 }

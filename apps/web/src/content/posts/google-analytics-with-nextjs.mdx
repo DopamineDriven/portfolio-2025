@@ -1,0 +1,192 @@
+---
+id: "1"
+title: "Google Analytics with Next.js"
+date: "2025-02-12"
+description: "Configuring Google Analytics with Next.js and TypeScript"
+imageUrl: https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/ai/port-40.png
+link: /posts/google-analytics-with-nextjs
+slug: google-analytics-with-nextjs
+externalLink: "#"
+tags:
+  - TypeScript
+  - Next.js
+  - GA4
+---
+
+#### Install `@types/gtag.js` as a dev dependency with your preferred package manager
+
+```bash
+pnpm add -D @types/gtag.js
+```
+
+```bash
+yarn add @types/gtag.js -D
+```
+
+```bash
+npm install @types/gtag.js -D
+```
+<br />
+
+#### Create an `index.d.ts` file in the root of your current working directory
+
+```ts
+/// <reference types="gtag.js" />
+
+declare module "gtag.js";
+
+export {};
+```
+
+<br />
+#### Ensure that your `tsconfig.json` is configured to handle and track this new declaration file
+
+```json
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "declaration": true,
+    // rest...
+  },
+  "include": [
+    "index.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.ts",
+    // rest...
+  ],
+  "exclude": ["node_modules"]
+}
+
+```
+
+<br />
+#### Create an `analytics.ts` in your `utils` directory
+
+If using a top-level `src` folder (my personal preference), then this file should be located at `src/utils/analytics.ts`. Otherwise, create the file at `utils/analytics.ts`:
+
+```ts
+export const GA_TRACKING_ID = process.env.GA_MEASUREMENT_ID ?? "";
+export const GA_STREAM_ID = process.env.GA_STREAM_ID ?? "";
+
+export const pageview = (url: URL | string) => {
+  window.gtag("config", GA_TRACKING_ID, {
+    page_path: url
+  });
+};
+
+export const event = (
+  action: Gtag.EventNames,
+  {
+    event_category,
+    event_label,
+    value,
+    search_term,
+    ...props
+  }: Gtag.EventParams
+) => {
+  window?.gtag("event", action, {
+    event_category,
+    event_label,
+    value,
+    search_term,
+    ...props
+  });
+};
+
+export const logException = (
+  url: URL,
+  { description, fatal, ...rest }: Gtag.EventParams
+) => {
+  pageview(url);
+  if (description) {
+    window.gtag("event", "exception", {
+      description,
+      fatal,
+      ...rest
+    });
+  }
+};
+
+```
+<br />
+`GA_TRACKING_ID` is an identifier provided by google analytics following the creation of a new property. It should begin with `G-*`for all google analytics 4 properties.
+<br />
+`GA_STREAM_ID` is also found in the same info screen that the tracking ID is retrieved from on new property creation. It should consist of numbers only.
+<br/>
+To reference either of these values for an existing property, navigate to your google analytics dashboard, select "Admin" on the left toolbar. Then, under "Data Collection and Modification" select "Data Streams". This will take you to a "Web Stream Details" screen that provides both the stream and measurement ids
+
+<br />
+#### Import the `next/script` `Script` component and your analytics workup via a wildcard in the root `layout.tsx` file
+
+```tsx
+import Script from "next/script";
+import * as gAnalytics from "@/utils/analytics";
+```
+
+<br />
+#### Add the following two Scripts between the closing body and html tags in the returned jsx
+
+```tsx
+export default function RootLayout({
+  children
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html suppressHydrationWarning lang="en">
+      <body>{children}</body>
+      <Script
+        async
+        strategy="afterInteractive"
+        id="gtag-init"
+        dangerouslySetInnerHTML={{
+          __html: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${gAnalytics.GA_TRACKING_ID}', {
+            page_path: window.location.pathname,
+          });
+         `
+        }}
+      />
+      <Script
+        async
+        id={gAnalytics.GA_TRACKING_ID}
+        data-test={gAnalytics.GA_TRACKING_ID}
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=${gAnalytics.GA_TRACKING_ID}`}
+      />
+    </html>
+  );
+}
+
+```
+
+<br />
+#### Verify by deploying, navigating to the site, then viewing your google analytics property immediately after
+
+If everything has been configured properly, you should see at least 1 user under the "Active users in last 30 minutes" section of the analytics home page for your property
+<br/>
+Clicking on "View realtime" will provide more details on detected user location(s) and more as shown in the image below
+<div className="my-8">
+  <img
+    src="https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/realtime-users.png"
+    alt="realtime overview google analytics 4"
+    width={600}
+    height={400}
+    className="rounded-lg shadow-lg"
+  />
+  <aside className="mt-2 text-center text-sm text-gray-600 italic font-basis-grotesque-pro-light">
+    Realtime Overview
+  </aside>
+</div>

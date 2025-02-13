@@ -3,14 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
-import type { Project } from "@/types/projects";
+import type { ProjectDetail } from "@/types/projects";
 import { shimmer } from "@/lib/shimmer";
 
-interface ProjectCardProps {
-  project: Project;
-}
-
-export function ProjectCard({ project }: ProjectCardProps) {
+export function ProjectCard({ project }: { project: ProjectDetail }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -18,7 +14,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       transition={{ duration: 0.5 }}
       className="group relative aspect-[3/4] w-full overflow-hidden">
       <Link
-        href={`/projects/${project.slug}`}
+        href={project.link}
         id={`${project.slug}`}
         className="relative block h-full">
         <div className="relative h-full w-full transition-transform duration-500 group-hover:scale-105">
@@ -32,12 +28,12 @@ export function ProjectCard({ project }: ProjectCardProps) {
             sizes="(min-width: 1024px) 50vw, 100vw"
           />
           <div className="absolute inset-0 flex flex-col justify-end">
-            <div className="from-background/80 to-background/40 h-[28%] sm:h-1/4 bg-gradient-to-t backdrop-blur-xs" />
+            <div className="from-background/80 to-background/40 h-[28%] bg-gradient-to-t backdrop-blur-xs sm:h-1/4" />
           </div>
         </div>
         <div className="text-foreground absolute right-0 bottom-0 left-0 p-6">
           <motion.h2
-            className="font-basis-grotesque-pro-bold text-base sm:text-2xl tracking-wider"
+            className="font-basis-grotesque-pro-bold text-base tracking-wider sm:text-2xl"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}>

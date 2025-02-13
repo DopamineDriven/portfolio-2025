@@ -32,7 +32,7 @@ const options = {
 
 export async function generateStaticParams() {
   const fs = new Fs(process.cwd());
-  const filenames = fs.readDir("content/posts", { recursive: true });
+  const filenames = fs.readDir("src/content/posts", { recursive: true });
 
   return filenames.map(filename => ({
     slug: filename.replace(/\.mdx$/, "")
@@ -42,7 +42,9 @@ export async function generateStaticParams() {
 async function getPost({ slug }: { slug: string }) {
   const fs = new Fs(process.cwd());
 
-  const post = fs.fileToBuffer(`content/posts/${slug}.mdx`).toString("utf-8");
+  const post = fs
+    .fileToBuffer(`src/content/posts/${slug}.mdx`)
+    .toString("utf-8");
   const { data, content } = matter(post);
   const typedData = data as Omit<PostDetails, "content">;
   console.log(content);
@@ -55,8 +57,9 @@ async function getPost({ slug }: { slug: string }) {
     tags: typedData.tags,
     imageUrl: typedData.imageUrl,
     link: typedData.link,
-    externalLink: typedData.externalLink ?? "#"
-  } satisfies Omit<PostDetails, "content">;
+    externalLink: typedData.externalLink ?? "#",
+    content: omitFrontMatter(content)
+  } satisfies PostDetails;
 }
 
 export async function generateMetadata({
@@ -72,11 +75,9 @@ export async function generateMetadata({
 export default async function PostPage({
   params
 }: InferGSPRT<typeof generateStaticParams>) {
-  const fs = new Fs(process.cwd());
   const { slug } = await params;
   const post = await getPost({ slug });
-  const source = fs.fileToBuffer(`content/posts/${slug}.mdx`).toString("utf-8");
-  if (!source) {
+  if (!post) {
     return notFound();
   }
   return (
@@ -91,7 +92,7 @@ export default async function PostPage({
       slug={slug || post.slug}
       externalLink={post.externalLink}>
       <MdxRenderer
-        source={omitFrontMatter(source)}
+        source={post.content}
         options={{
           mdxOptions: {
             remarkPlugins: [],

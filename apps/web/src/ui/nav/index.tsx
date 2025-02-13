@@ -2,15 +2,15 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-
 import { AnimatePresence, motion } from "motion/react";
 import { ArLogo } from "@/ui/svg/ar-logo";
 import { resumeData } from "@/utils/__generated__/resume-blob";
 
 const menuItems = [
   { name: "Home", href: "/" },
-  { name: "Resume", href: "/resume-2025.pdf" },
-  { name: "Projects", href: "/#projects" }
+  { name: "Posts", href: "/#posts" },
+  { name: "Projects", href: "/#projects" },
+  { name: "Resume", href: "/resume-2025.pdf" }
 ];
 
 export default function Navbar() {
@@ -19,7 +19,6 @@ export default function Navbar() {
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
-
 
   const handleDownload = async () => {
     try {
@@ -51,12 +50,12 @@ export default function Navbar() {
   }, []);
   useEffect(() => {
     if (isMobile) {
-      document.body.style.overflow = isMenuOpen ? "hidden" : "auto"
+      document.body.style.overflow = isMenuOpen ? "hidden" : "auto";
     }
     return () => {
-      document.body.style.overflow = "auto"
-    }
-  }, [isMobile, isMenuOpen])
+      document.body.style.overflow = "auto";
+    };
+  }, [isMobile, isMenuOpen]);
 
   useEffect(() => {
     setIsHovered(false);
@@ -123,7 +122,7 @@ export default function Navbar() {
                   transition={{ duration: 0.5, ease: [0.77, 0, 0.175, 1] }}
                   className="w-full">
                   <AnimatePresence>
-                    <motion.div className="grid w-full grid-cols-1 grid-rows-3 sm:grid-cols-3 sm:grid-rows-1">
+                    <motion.div className="grid w-full grid-cols-1 grid-rows-4 sm:grid-cols-4 sm:grid-rows-1">
                       {menuItems.map((item, index) => (
                         <motion.div
                           key={item.name}
@@ -145,7 +144,7 @@ export default function Navbar() {
                           {item.name === "Resume" ? (
                             <button
                               onClick={handleDownload}
-                              className="relative block w-full appearance-none px-4 py-2 text-center sm:py-4 cursor-pointer"
+                              className="relative block w-full cursor-pointer appearance-none px-4 py-2 text-center sm:py-4"
                               disabled={isDownloading}
                               role="link">
                               <motion.div
@@ -212,7 +211,7 @@ export default function Navbar() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.5, ease: [0.77, 0, 0.175, 1] }}
-                  className="bg-background/50 fixed inset-0 z-40 h-full backdrop-blur-sm sm:hidden py-2"
+                  className="bg-background/50 fixed inset-0 z-40 h-full py-2 backdrop-blur-sm sm:hidden"
                   onClick={() => setIsMenuOpen(false)}>
                   <div className="absolute top-4 right-4">
                     <button
