@@ -2,37 +2,30 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Fs } from "@d0paminedriven/fs";
 import matter from "gray-matter";
+import { PostDetails } from "@/types/posts";
 
-interface Post {
-  slug: string;
-  title: string;
-  date: string;
-  description: string;
-  tags?: string[];
-  content: string;
-}
-
-
-
-
-async function getPosts(): Promise<Post[]> {
+async function getPosts(): Promise<PostDetails[]> {
   const fs = new Fs(process.cwd());
-  const files = fs.readDir("content/posts", { recursive: true });
+  const files = fs.readDir("src/content/posts", { recursive: true });
 
   const posts = await Promise.all(
     files.map(async filename => {
       const fileContent = fs
-        .fileToBuffer(`content/posts/${filename}`)
+        .fileToBuffer(`src/content/posts/${filename}`)
         .toString("utf-8");
       const { data, content } = matter(fileContent);
-      const typedData = data as Omit<Post, "content">;
+      const typedData = data as Omit<PostDetails, "content">;
       return {
-        slug: filename.replace(".mdx", ""),
+        slug: filename.replace(/\.mdx$/, ""),
         title: typedData.title,
         date: typedData.date,
         description: typedData.description,
         tags: typedData.tags,
-        content: content
+        content: content,
+        id: typedData.id,
+        link: typedData.link,
+        externalLink: typedData.externalLink,
+        imageUrl: typedData.imageUrl
       };
     })
   );

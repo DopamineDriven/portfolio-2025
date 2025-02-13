@@ -61,7 +61,7 @@
     "@swc/helpers": "^0.5.15"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "^7.49.2",
+    "@microsoft/api-extractor": "^7.50.0",
     "@swc/core": "^1.10.15",
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
@@ -73,11 +73,11 @@
     "chokidar": "^4.0.3",
     "eslint": "latest",
     "jiti": "^2.4.2",
-    "postcss": "^8.5.1",
+    "postcss": "^8.5.2",
     "prettier": "latest",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "terser": "^5.38.1",
+    "terser": "^5.38.2",
     "tslib": "latest",
     "tsup": "latest",
     "tsx": "latest",

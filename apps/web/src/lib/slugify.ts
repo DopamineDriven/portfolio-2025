@@ -46,8 +46,14 @@ export type OmitApostrophe<T extends string> = T extends `${infer U}'${infer X}`
   ? `${U}${X}`
   : T;
 
+export type OmitPeriod<T extends string> = T extends `${infer U}.${infer X}`
+  ? `${U}${X}`
+  : T;
+
 export type InferSlugified<T extends string> = Lowercase<
-  ReplaceSpaces<OmitApostrophe<OmitComma<OmitExclamationMark<OmitColon<T>>>>>
+  ReplaceSpaces<
+    OmitApostrophe<OmitComma<OmitExclamationMark<OmitColon<OmitPeriod<T>>>>>
+  >
 >;
 
 /**
@@ -68,3 +74,4 @@ export function slugify<const T extends string>(title: T) {
     .replace(/^-+/, "")
     .replace(/-+$/, "") as InferSlugified<T>;
 }
+

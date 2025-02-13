@@ -293,6 +293,28 @@ pre[class*="language-"] {
   gap: 0;
 }
 
+.embla__container__posts {
+  display: flex;
+  flex-wrap: nowrap;
+  min-width: 100%;
+}
+
+.embla__viewport__posts {
+  overflow: hidden;
+  width: 100%;
+}
+
+@media (width >= 640px) {
+  .embla__slide__posts {
+    flex: 0 0 20%;
+  }
+}
+.embla__slide__posts {
+  flex: 0 0 auto;
+  min-width: max-content;
+  margin-right: 1rem; /* Adjust as needed */
+}
+
 .embla__slide {
   flex: 0 0 33.333%;
   min-width: 0;

@@ -5,6 +5,7 @@ export interface Post {
   imageUrl: string;
   link: string;
   slug: string;
+  date: string;
 };
 
 export interface PostsProps {
@@ -15,6 +16,5 @@ export interface PostDetails extends Post {
   content: string;
   externalLink?: string;
   tags: string[];
-  date: string;
 }
 

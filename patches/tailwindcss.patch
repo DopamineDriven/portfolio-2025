@@ -1,0 +1,15 @@
+diff --git a/package.json b/package.json
+index 500653030adb3594455c6cbc54f5db2e09c3b9b9..8113557141c14fe1d95268e1e9f8c0b02ec142db 100644
+--- a/package.json
++++ b/package.json
+@@ -45,6 +45,10 @@
+       "require": "./dist/flatten-color-palette.js",
+       "import": "./dist/flatten-color-palette.mjs"
+     },
++    "./lib/util/flattenColorPalette.js": {
++      "require": "./dist/flatten-color-palette.js",
++      "import": "./dist/flatten-color-palette.mjs"
++    },
+     "./package.json": "./package.json",
+     "./index.css": "./index.css",
+     "./index": "./index.css",

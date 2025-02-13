@@ -1,25 +1,33 @@
 "use client";
 
+import type { PropsWithChildren } from "react";
 import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "motion/react";
-import { projectDetails } from "@/lib/project-data";
+import type { ProjectDetail } from "@/types/projects";
 import { shimmer } from "@/lib/shimmer";
 import { Button } from "@/ui/atoms/button";
 
-export function Project({ paramSlug }: { paramSlug: string }) {
-  const project = projectDetails[paramSlug as keyof typeof projectDetails];
-
+export function Project({
+  imageUrl,
+  slug,
+  title,
+  description,
+  externalLink,
+  technologies,
+  date,
+  children
+}: PropsWithChildren< Omit<ProjectDetail, "content">>) {
   useEffect(() => {
     if (typeof window !== "undefined") {
       window.history.scrollRestoration = "manual";
     }
   }, []);
 
-  if (!project) {
+  if (!title) {
     return notFound(); // or a custom 404 component
   }
 
@@ -35,8 +43,8 @@ export function Project({ paramSlug }: { paramSlug: string }) {
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}>
           <Image
-            src={project.imageUrl || "/doge-troubleshoot.jpg"}
-            alt={project.title}
+            src={imageUrl || "/doge-troubleshoot.jpg"}
+            alt={title}
             width={450}
             blurDataURL={shimmer([450, 450])}
             placeholder="blur"
@@ -44,24 +52,24 @@ export function Project({ paramSlug }: { paramSlug: string }) {
             className="rounded-lg object-cover"
           />
         </motion.div>
-        <div className="flex flex-col justify-between">
+        <div className="[&>p]:prose-p:text-pretty flex flex-col justify-between [&>p]:mb-2 lg:[&>p]:mb-4">
           <motion.div
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}>
             <h1 className="font-basis-grotesque-pro-bold mb-2 text-3xl">
-              {project.title}
+              {title}
             </h1>
             <p className="font-basis-grotesque-pro-regular text-muted-foreground mb-4 text-lg">
-              {project.description}
+              {description}
             </p>
-            <p className="prose-p:text-pretty mb-4">{project.content}</p>
-            <div className="mb-4">
-              <h2 className="font-basis-grotesque-pro-bold mb-2 text-xl">
+            {children}
+            <div className="my-4">
+              <h2 className="font-basis-grotesque-pro-bold my-2 text-xl">
                 Technologies
               </h2>
               <ul className="flex cursor-pointer flex-wrap gap-2">
-                {project.technologies.map((tech, index) => (
+                {technologies.map((tech, index) => (
                   <motion.li
                     key={tech}
                     initial={{ scale: 0, opacity: 0 }}
@@ -74,7 +82,7 @@ export function Project({ paramSlug }: { paramSlug: string }) {
               </ul>
             </div>
             <p className="text-muted-foreground text-sm">
-              Completed in {project.date}
+              Completed in {date}
             </p>
           </motion.div>
           <motion.div
@@ -82,7 +90,7 @@ export function Project({ paramSlug }: { paramSlug: string }) {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.6 }}
             className="mt-8 flex items-center gap-4">
-            <Link href={`/#${project.slug}`} scroll={true}>
+            <Link href={`/#${slug}`} scroll={true}>
               <Button
                 variant="outline"
                 className="cursor-pointer"
@@ -90,10 +98,10 @@ export function Project({ paramSlug }: { paramSlug: string }) {
                 Back to Projects
               </Button>
             </Link>
-            {project.externalLink && (
+            {externalLink && (
               <Button asChild variant="outline">
                 <a
-                  href={project.externalLink}
+                  href={externalLink}
                   target="_blank"
                   rel="noopener noreferrer">
                   Visit Project

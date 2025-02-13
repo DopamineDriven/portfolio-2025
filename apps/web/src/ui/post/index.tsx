@@ -93,7 +93,7 @@ export function PostTemplate({
               Published {date}
             </p>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <Link href="/projects" className="w-full sm:w-auto">
+              <Link href={`/#${slug}`}className="w-full sm:w-auto">
                 <Button variant="outline" className="w-full sm:w-auto">
                   Back to Projects
                 </Button>

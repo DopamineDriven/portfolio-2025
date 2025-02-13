@@ -1,36 +1,36 @@
 import { Fs } from "@d0paminedriven/fs";
 import matter from "gray-matter";
-import type { PostDetails } from "@/types/posts";
+import type { ProjectDetail } from "@/types/projects";
 import { omitFrontMatter } from "@/lib/omit-front-matter";
 
-export async function getPosts() {
+export async function getProjects() {
   const fs = new Fs(process.cwd());
-  const files = fs.readDir("src/content/posts");
+  const files = fs.readDir("src/content/projects");
 
-  const posts = await Promise.all(
+  const projects = await Promise.all(
     files.map(filename => {
       const fileContent = fs
-        .fileToBuffer(`src/content/posts/${filename}`)
+        .fileToBuffer(`src/content/projects/${filename}`)
         .toString("utf-8");
       const { data, content } = matter(fileContent);
-      const typedData = data as Omit<PostDetails, "content">;
+      const typedData = data as Omit<ProjectDetail, "content">;
 
       return {
         slug: typedData.slug,
         title: typedData.title,
         date: typedData.date,
         description: typedData.description,
-        tags: typedData.tags,
+        technologies: typedData.technologies,
         imageUrl: typedData.imageUrl,
         link: typedData.link,
         externalLink: typedData.externalLink,
         id: typedData.id,
         content: omitFrontMatter(content)
-      } satisfies PostDetails;
+      } satisfies ProjectDetail;
     })
   );
 
-  return posts.sort(
+  return projects.sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 }
