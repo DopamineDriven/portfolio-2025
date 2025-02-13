@@ -95,7 +95,7 @@ export function PostTemplate({
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <Link href={`/#${slug}`}className="w-full sm:w-auto">
                 <Button variant="outline" className="w-full sm:w-auto">
-                  Back to Projects
+                  Back to Posts
                 </Button>
               </Link>
               {externalLink && (

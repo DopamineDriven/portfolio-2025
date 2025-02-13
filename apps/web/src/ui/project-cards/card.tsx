@@ -12,7 +12,7 @@ export function ProjectCard({ project }: { project: ProjectDetail }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="group relative aspect-[3/4] w-full overflow-hidden">
+      className="group relative aspect-[3/4] w-full overflow-hidden md:max-w-[80%] mx-auto">
       <Link
         href={project.link}
         id={`${project.slug}`}
@@ -28,7 +28,7 @@ export function ProjectCard({ project }: { project: ProjectDetail }) {
             sizes="(min-width: 1024px) 50vw, 100vw"
           />
           <div className="absolute inset-0 flex flex-col justify-end">
-            <div className="from-background/80 to-background/40 h-[28%] bg-gradient-to-t backdrop-blur-xs sm:h-1/4" />
+            <div className="from-background/80 to-background/40 md:h-[20%] h-[28%] bg-gradient-to-t backdrop-blur-xs sm:h-1/4" />
           </div>
         </div>
         <div className="text-foreground absolute right-0 bottom-0 left-0 p-6">
