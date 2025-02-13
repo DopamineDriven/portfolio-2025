@@ -20,7 +20,7 @@ export function PostCard({ post }: { post: PostDetails }) {
         className="relative block h-full">
         <div className="relative h-full w-full transition-transform duration-500 group-hover:scale-105">
           <Image
-            src={post.imageUrl || "/placeholder.svg"}
+            src={post.imageUrl ?? "/doge-troubleshoot.jpg"}
             alt={post.title}
             fill
             placeholder="blur"
@@ -34,7 +34,7 @@ export function PostCard({ post }: { post: PostDetails }) {
         </div>
         <div className="text-foreground absolute right-0 bottom-0 left-0 p-6">
           <div className="text-muted-foreground mb-2 flex items-center gap-2 text-sm">
-            <CalendarIcon className="h-4 w-4" />
+            <CalendarIcon className="size-4" />
             <time dateTime={post.date}>{post.date}</time>
           </div>
           <motion.h2
