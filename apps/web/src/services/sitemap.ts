@@ -1,5 +1,4 @@
 import { Fs } from "@d0paminedriven/fs";
-import { projects } from "@/lib/project-data";
 
 export class SitemapService extends Fs {
   constructor(public override cwd: string) {
@@ -30,17 +29,13 @@ export class SitemapService extends Fs {
   }
 
   get nested() {
-    const readDir = this.readDir("content/posts", { recursive: true });
-    return this.omitFileExtensions(readDir).map(post => {
-      return `posts/${post}` as const;
+    const readDir = this.readDir("src/content", { recursive: true });
+    return this.omitFileExtensions(readDir.filter((t) => /\./g.test(t) === true)).map(post => {
+      return `${post}` as const;
     });
   }
 
-  get nestedProjects() {
-    return projects.map(p => {
-      return `projects/${p.slug}` as const;
-    });
-  }
+
 
   public mapper = (data: string[]) =>
     data.map(path => {
@@ -65,7 +60,6 @@ export class SitemapService extends Fs {
         ""
       ]
         .concat(this.nested)
-        .concat(this.nestedProjects)
         .concat(this.getPublicData())
     ).sort((a, b) => a.localeCompare(b) - b.localeCompare(a));
   }
@@ -95,3 +89,6 @@ ${this.templatedData(this.allPaths)}
     this.withWs("public/sitemap.xml", this.templated());
   }
 }
+
+
+
