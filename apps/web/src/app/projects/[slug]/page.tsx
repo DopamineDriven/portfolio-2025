@@ -7,7 +7,6 @@ import matter from "gray-matter";
 import rehypePrettyCode from "rehype-pretty-code";
 import type { InferGSPRT } from "@/types/next";
 import { omitFrontMatter } from "@/lib/omit-front-matter";
-import { projectDetails } from "@/lib/project-data";
 import { ProjectDetail } from "@/types/projects";
 import { MdxRenderer } from "@/ui/mdx-handler";
 import { Project } from "@/ui/project";
@@ -33,8 +32,10 @@ const options = {
 } satisfies RehypeOptions;
 
 export async function generateStaticParams() {
-  return Object.keys(projectDetails).map(project => ({
-    slug: project as keyof typeof projectDetails
+  const fs = new Fs(process.cwd());
+  const projects = fs.readDir("src/content/projects", {recursive: true});
+  return projects.map(project => ({
+    slug: project.replace(/\.mdx$/, "")
   }));
 }
 
