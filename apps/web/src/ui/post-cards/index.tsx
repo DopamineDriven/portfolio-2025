@@ -3,7 +3,7 @@ import { CardGrid } from "@/ui/post-cards/card-grid";
 
 export function PostCards({ posts }: { posts: PostDetails[] }) {
   return (
-    <section className="container mx-auto px-4 py-16 md:py-24">
+    <section className="container mx-auto px-2 md:px-4 py-16 md:py-24">
       <h2 className="theme-transition mb-8 flex items-center gap-2 text-2xl text-current">
         <a className="appearance-none" id="posts">
           Posts

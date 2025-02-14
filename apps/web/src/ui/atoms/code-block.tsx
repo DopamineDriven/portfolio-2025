@@ -1,12 +1,12 @@
 "use client";
 
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import type { ComponentPropsWithRef, ReactNode } from "react";
 import { useRef } from "react";
 import { cn } from "@/lib/utils";
 import { CopyButton } from "@/ui/atoms/copy-button";
 
 export interface CodeBlockProps
-  extends Omit<ComponentPropsWithoutRef<"pre">, "children"> {
+  extends Omit<ComponentPropsWithRef<"pre">, "children"> {
   children: ReactNode;
 }
 
@@ -22,11 +22,18 @@ export function CodeBlock({ children, className, ...rest }: CodeBlockProps) {
   };
 
   return (
-    <div className="relative">
-      <pre ref={codeRef} className={cn(className, `overflow-x-auto`)} {...rest}>
-        <CopyButton getCodeAction={getCode} />
+    <div className="relative m-0 w-full p-0">
+      <pre
+        ref={codeRef}
+        className={cn(className, `overflow-x-auto p-0`)}
+        {...rest}>
         {children}
       </pre>
+      <div className="code-header absolute top-0 right-0 cursor-pointer">
+        <CopyButton getCodeAction={getCode} />
+      </div>
     </div>
   );
 }
+
+CodeBlock.displayName = "CodeBlock";

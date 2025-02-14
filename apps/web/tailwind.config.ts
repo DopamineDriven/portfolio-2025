@@ -14,6 +14,20 @@ export default {
       }
     },
     extend: {
+      typography: {
+        quoteless: {
+          css: {
+            "li code::before": { content: "none" },
+            "li code::after": { content: "none" },
+            "a code:first-of-type::before": { content: "none" },
+            "a code:first-of-type::after": { content: "none" },
+            "p code::before": { content: "none" },
+            "p code::after": { content: "none" },
+            "blockquote p:first-of-type::before": { content: "none" },
+            "blockquote p:first-of-type::after": { content: "none" }
+          }
+        }
+      },
       fontFamily: {
         inter: ["var(--font-inter)"],
         "basis-grotesque-pro-regular": [
