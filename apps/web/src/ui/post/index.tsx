@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-// import { ArrowUpRight } from "lucide-react";
 import { motion } from "motion/react";
 import type { PostDetails } from "@/types/posts";
 import { shimmer } from "@/lib/shimmer";
@@ -34,7 +33,7 @@ export function PostTemplate({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="bg-background text-foreground container mx-auto px-4 py-16 md:py-24">
+      className="bg-background text-foreground container mx-auto px-2 py-16 md:py-24 text-sm sm:text-base font-basis-grotesque-pro-regular">
       <div className="mx-auto max-w-[1280px]">
         <BreakoutWrapper>
           <div className="mb-4 md:mx-auto md:max-w-[50%]">
@@ -49,7 +48,7 @@ export function PostTemplate({
                 height={630}
                 placeholder="blur"
                 blurDataURL={shimmer([1200, 630])}
-                className="w-full object-cover sm:rounded-lg"
+                className="w-full md:max-h-[50vh] object-cover sm:rounded-lg"
                 priority
               />
             </motion.div>
@@ -81,7 +80,7 @@ export function PostTemplate({
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.8 }}
-            className="prose dark:prose-invert [&>p]:prose-p:text-pretty max-w-none [&>p]:mb-4 lg:[&>p]:mb-8">
+            className="prose-sm sm:prose dark:prose-invert [&>p]:prose-p:text-pretty max-w-none [&>p]:mb-4 lg:[&>p]:mb-8">
             {children}
           </motion.div>
           <motion.div
@@ -92,23 +91,12 @@ export function PostTemplate({
             <p className="text-muted-foreground text-center text-sm">
               Published {date}
             </p>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-2 items-center">
               <Link href={`/#${slug}`} className="w-full sm:w-auto">
-                <Button variant="outline" className="w-full sm:w-auto">
+                <Button variant="outline" className="w-full sm:w-auto cursor-pointer">
                   Back to Posts
                 </Button>
               </Link>
-              {/* {externalLink && (
-                <Button asChild variant="outline" className="w-full sm:w-auto">
-                  <a
-                    href={externalLink}
-                    target="_blank"
-                    rel="noopener noreferrer">
-                    Visit Project
-                    <ArrowUpRight className="ml-2 h-4 w-4" />
-                  </a>
-                </Button>
-              )} */}
             </div>
           </motion.div>
         </div>

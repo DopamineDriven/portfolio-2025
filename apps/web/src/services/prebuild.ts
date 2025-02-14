@@ -40,9 +40,13 @@ export class PrebuildService extends Fs {
     if (argv[2] === "posts") {
       return this.postPaths("posts").map(path => {
         return (
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           this.parseFrontMatter.exec(
             this.fileToBuffer(`src/content/posts/${path}`).toString("utf-8")
-          )?.[0] ?? ""
+          )![0]!
+          .split(`\n`)!
+          .filter(v => v && !v.startsWith("---"))!
+          .join("\n")!
         );
       });
     } else {

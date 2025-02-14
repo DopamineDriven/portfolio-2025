@@ -13,7 +13,7 @@ export function TechnologiesCarousel({ technologies }: TechnologiesCarouselProps
   const [emblaRef] = useEmblaCarousel(
     {
       loop: true,
-      align: "center",
+      align: "start",
       skipSnaps: false,
     } satisfies EmblaOptionsType,
     [
@@ -27,7 +27,7 @@ export function TechnologiesCarousel({ technologies }: TechnologiesCarouselProps
   )
 
   return (
-    <div className="w-full overflow-hidden">
+    <div className="w-full overflow-hidden px-0.5 select-none">
       <div className="embla">
         <div className="embla__viewport__posts" ref={emblaRef}>
           <div className="embla__container__posts">

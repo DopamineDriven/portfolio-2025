@@ -17,14 +17,14 @@ export function ProjectCard({ project }: { project: ProjectDetail }) {
         href={project.link}
         id={`${project.slug}`}
         className="relative block h-full">
-        <div className="relative h-full w-full transition-transform duration-500 group-hover:scale-105">
+        <div className="relative h-full w-full transition-transform duration-500">
           <Image
             src={project.imageUrl ?? "/doge-troubleshoot.jpg"}
             alt={project.title}
             fill
             placeholder="blur"
             blurDataURL={shimmer([450, 600])}
-            className="object-cover brightness-90 transition-all duration-500 group-hover:brightness-100"
+            className="object-cover group-hover:scale-[1.02] brightness-90 transition-all duration-500 group-hover:brightness-100"
             sizes="(min-width: 1024px) 50vw, 100vw"
           />
           <div className="absolute inset-0 flex flex-col justify-end">

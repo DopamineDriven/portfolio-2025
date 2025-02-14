@@ -5,6 +5,7 @@
 @plugin "@tailwindcss/typography";
 @plugin "tailwindcss-animate";
 @plugin "tailwindcss-motion";
+@plugin "tailwind-scrollbar";
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
@@ -122,7 +123,7 @@
 }
 
 pre {
-  padding: 1rem;
+  padding: 0.5rem;
   border-radius: var(--radius);
   overflow-x: auto;
 }
@@ -137,7 +138,7 @@ code {
 }
 
 code > [data-line] {
-  padding-left: 1.5rem;
+  padding-left: 0.25rem;
   border-left: 0.125rem solid transparent;
 }
 
@@ -146,7 +147,7 @@ code > [data-line]::before {
   content: counter(line);
   display: inline-block;
   width: 1rem;
-  margin-right: 1rem;
+  margin-right: 0.5rem;
   text-align: right;
   color: oklch(55.1% 0.0234 264.36);
 }
@@ -310,9 +311,9 @@ pre[class*="language-"] {
   }
 }
 .embla__slide__posts {
-  flex: 0 0 auto;
+  flex: 0 0 50%;
   min-width: max-content;
-  margin-right: 1rem; /* Adjust as needed */
+  margin-right: 0.5rem; /* Adjust as needed */
 }
 
 .embla__slide {

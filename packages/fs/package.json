@@ -65,7 +65,7 @@
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
     "@portfolio/tsconfig": "workspace:*",
-    "@types/node": "^22.13.2",
+    "@types/node": "^22.13.3",
     "chokidar": "^4.0.3",
     "dotenv": "^16.4.7",
     "dotenv-cli": "^8.0.0",
