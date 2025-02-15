@@ -4,6 +4,7 @@
 module.exports = {
   roots: ["<rootDir>"],
   transform: {
+    // eslint-disable-next-line no-useless-escape
     "^.+\.(m|c)?(j|t)sx?$": "ts-jest"
   },
   moduleFileExtensions: [

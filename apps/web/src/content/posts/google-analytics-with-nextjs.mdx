@@ -34,8 +34,36 @@ Next, create an `index.d.ts` file in the root of your current working directory:
 
 declare module "gtag.js";
 
+declare global {
+  interface Window {
+    dataLayer?: object[];
+  }
+}
+
 export {};
 
+```
+
+The reason that we declare this global in our declaration file:
+
+```ts
+declare global {
+  interface Window {
+    dataLayer?: object[];
+  }
+}
+
+```
+
+is to ensure that the `window.dataLayer` array of objects is defined in the global context. This is an important detail because in the `dangerouslySetInnerHTML` of a script we'll set up shortly, we have the following raw js being executed:
+
+```js
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '${gAnalytics.GA_TRACKING_ID}', {
+    page_path: window.location.pathname,
+  });
 ```
 
 Ensure that your `tsconfig.json` is configured to handle and track this new declaration file:
