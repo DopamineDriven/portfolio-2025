@@ -2,6 +2,7 @@ module.exports = {
   roots: ["<rootDir>"],
   testEnvironment: "jsdom",
   transform: {
+    // eslint-disable-next-line no-useless-escape
     "^.+\.tsx?$": "ts-jest"
   },
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],

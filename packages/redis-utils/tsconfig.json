@@ -9,7 +9,7 @@
   },
   "include": [
     "**/*.ts",
-    "src/**/*.tsx",
+    "src/**/*.ts",
     "**/*.mjs",
     "**/*.preset.ts",
     "index.d.ts",
