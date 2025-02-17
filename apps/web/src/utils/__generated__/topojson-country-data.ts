@@ -186,25 +186,41 @@ export const topojsonCountryData = [
 ] as [string, string, string][];
 
 const fs = new Fs(process.cwd());
-const arrAggregator = Array.of<[string, {
-  id: string;
-  type: string;
-  sourceCountryName: string;
-  "iso-3166-1": Country;
-}]>();
-(async () => topojsonCountryData.forEach(function ([
-  countryCode,
-  countryName,
-  geometryType
-]) {
-  const scaffold = {
-    id: countryCode,
-    type: geometryType,
-    sourceCountryName: countryName,
-    "iso-3166-1": whereNumeric(countryCode) as Country
-  };
-
-  arrAggregator.push([countryCode,scaffold]);
-}))().then(() => {
-  fs.withWs("src/utils/__generated__/expanded-topo-data-obj.ts", `export const expandedTopoDataObj = ${JSON.stringify(Object.fromEntries(arrAggregator), null, 2)};`)
-}).catch(err => console.error(err));
+const arrAggregator = Array.of<
+  [
+    string,
+    {
+      id: string;
+      type: string;
+      sourceCountryName: string;
+      "iso-3166-1": Country;
+    }
+  ]
+>();
+const arrTuples =
+  Array.of<[string, `${string}:${string}:${string}:${string}`]>();
+(async () =>
+  topojsonCountryData.forEach(function ([
+    countryCode,
+    countryName,
+    geometryType
+  ]) {
+    const scaffold = {
+      id: countryCode,
+      type: geometryType,
+      sourceCountryName: countryName,
+      "iso-3166-1": whereNumeric(countryCode) as Country
+    };
+    arrTuples.push([
+      countryCode,
+      `${scaffold["iso-3166-1"].alpha2}:${scaffold["iso-3166-1"].alpha3}:${scaffold["iso-3166-1"].country}:${scaffold["iso-3166-1"].alpha2.toLowerCase()}.svg`
+    ]);
+    arrAggregator.push([countryCode, scaffold]);
+  }))()
+  .then(() => {
+    fs.withWs(
+      "src/utils/__generated__/tuple-topo-data-plus-flags.ts",
+      `export const tupleTopoData = ${JSON.stringify(Object.fromEntries(arrTuples.sort(([a], [b]) => Number.parseInt(a) - Number.parseInt(b))), null, 2)};`
+    );
+  })
+  .catch(err => console.error(err));
