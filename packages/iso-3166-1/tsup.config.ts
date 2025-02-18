@@ -8,9 +8,7 @@ const tsupConfig = (options: Options) =>
       "src/index.ts",
       "src/iso-3166-1/index.ts",
       "src/types/index.ts",
-      "!src/__generated__/**/*",
-      "!src/__tests__/**/*",
-      "!public/**/*"
+      "!src/iso-3166-1/test.ts"
     ],
     target: ["esnext"],
     dts: true,

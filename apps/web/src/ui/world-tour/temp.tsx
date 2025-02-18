@@ -58,8 +58,8 @@ const visitorData: readonly [string, number][] = [
   ["056", 3],
   ["616", 2],
   ["642", 2],
-  ["756", 1],
   ["156", 2],
+  ["756", 1],
   ["376", 1]
 ] as const;
 
@@ -257,10 +257,12 @@ const WorldTour: React.FC = () => {
         <div className="mb-4 flex items-center justify-center text-center">
           {currentFlag && (
             <Image
+            width={100}
+            height={66.67}
               src={currentFlag || "/placeholder.svg"}
               alt={`Flag of ${currentCountry[2]}`}
               className="mr-2 h-6 w-8"
-              
+
             />
           )}
           <div>
