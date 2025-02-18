@@ -8,7 +8,7 @@ import { CarouselWithFade } from "@/ui/carousel";
 import { PostCards } from "@/ui/post-cards";
 import { ProjectCards } from "@/ui/project-cards";
 import LandingPageTypeWriter from "@/ui/typewriter";
-import WorldTour from "@/ui/world-tour";
+import WorldTour from "@/ui/world-tour/temp";
 
 export function HomeContent({
   posts,
