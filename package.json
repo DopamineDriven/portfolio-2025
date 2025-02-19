@@ -37,7 +37,7 @@
     "update:pnpm": "curl -fsSL https://get.pnpm.io/install.sh | sh -"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.12",
+    "@changesets/cli": "^2.28.0",
     "@d0paminedriven/turbogen": "^0.6.0",
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
