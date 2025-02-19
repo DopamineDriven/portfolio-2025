@@ -10,7 +10,8 @@ const menuItems = [
   { name: "Home", href: "/" },
   { name: "Posts", href: "/#posts" },
   { name: "Projects", href: "/#projects" },
-  { name: "Resume", href: "/resume-2025.pdf" }
+  { name: "Resume", href: "/resume-2025.pdf" },
+  { name: "World Tour", href: "/#world-tour" }
 ];
 
 export default function Navbar() {
@@ -122,7 +123,7 @@ export default function Navbar() {
                   transition={{ duration: 0.5, ease: [0.77, 0, 0.175, 1] }}
                   className="w-full">
                   <AnimatePresence>
-                    <motion.div className="grid w-full grid-cols-1 grid-rows-4 sm:grid-cols-4 sm:grid-rows-1">
+                    <motion.div className="grid w-full grid-cols-1 grid-rows-5 sm:grid-cols-5 sm:grid-rows-1">
                       {menuItems.map((item, index) => (
                         <motion.div
                           key={item.name}
