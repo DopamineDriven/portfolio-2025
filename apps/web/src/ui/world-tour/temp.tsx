@@ -28,9 +28,9 @@ const visitorData = [
   ["250", 9],
   ["484", 6],
   ["056", 3],
+  ["156", 3],
   ["616", 2],
   ["642", 2],
-  ["156", 2],
   ["756", 1],
   ["376", 1]
 ] as const satisfies readonly [string, number][];
