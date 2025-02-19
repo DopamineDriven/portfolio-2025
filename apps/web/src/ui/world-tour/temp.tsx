@@ -32,7 +32,8 @@ const visitorData = [
   ["616", 2],
   ["642", 2],
   ["756", 1],
-  ["376", 1]
+  ["376", 1],
+  ["364", 1]
 ] as const satisfies readonly [string, number][];
 
 const WorldTour: React.FC = () => {
