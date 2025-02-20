@@ -1,4 +1,4 @@
-import WorldTour from "./temp";
+import WorldTour from "./world-tour";
 
 
 export function WorldTourLayout() {
