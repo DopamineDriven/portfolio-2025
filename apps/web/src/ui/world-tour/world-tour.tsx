@@ -25,11 +25,11 @@ import { Versor } from "@/lib/versor";
 import { BreakoutWrapper } from "@/ui/atoms/breakout-wrapper";
 
 const visitorData = [
-  ["840", 73],
+  ["840", 77],
   ["250", 9],
   ["484", 6],
+  ["156", 4],
   ["056", 3],
-  ["156", 3],
   ["616", 2],
   ["642", 2],
   ["756", 1],
@@ -337,7 +337,7 @@ const WorldTour: React.FC = () => {
   return (
     <div className="w-full sm:space-y-2">
       {/* Full-width container for the globe on mobile */}
-      <AnimatePresence mode="sync">
+      <AnimatePresence mode="popLayout">
         <div className="mx-auto w-full justify-center">
           <div className="relative isolate mx-auto mt-3 flex sm:hidden">
             <motion.div
