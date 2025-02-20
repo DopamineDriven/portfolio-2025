@@ -22,7 +22,7 @@ export function Footer() {
   }, [pathname, path]);
 
   return (
-    <footer className="theme-transition bg-primary text-primary-foreground dark:bg-background/80 dark:text-foreground max-w-10xl mt-8 p-4">
+    <footer className="theme-transition bg-background text-foreground dark:bg-background/80 dark:text-foreground max-w-10xl mt-8 p-4">
       <div className="container mx-auto max-w-7xl px-6 text-center">
         <div className="mx-auto flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="mx-auto flex items-center justify-between gap-x-4">
