@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { Iso3166_1 } from "@d0paminedriven/iso-3166-1";
 import {
-  easeQuadOut,
+  geoArea,
   geoCentroid,
   geoOrthographic,
   geoPath,
@@ -22,6 +22,7 @@ import type { TopojsonShape, World110m } from "@/types/topojson";
 import { countryCodeToObjOutput } from "@/lib/country-code-to-object";
 import { shimmer } from "@/lib/shimmer";
 import { Versor } from "@/lib/versor";
+import { BreakoutWrapper } from "@/ui/atoms/breakout-wrapper";
 
 const visitorData = [
   ["840", 73],
@@ -38,10 +39,10 @@ const visitorData = [
 
 const WorldTour: React.FC = () => {
   const isoHelper = useMemo(() => new Iso3166_1(), []);
-  const earthDefault = countryCodeToObjOutput("001", isoHelper); // Using "001" (a non-existent country code) as an escape hatch for the Earth
+  const earthDefault = countryCodeToObjOutput("001", isoHelper);
   const DEFAULT_SCALE = 190;
-  const MIN_SCALE = DEFAULT_SCALE;
-  const MAX_SCALE = 800;
+  const MIN_SCALE = DEFAULT_SCALE * 0.8;
+  const MAX_SCALE = DEFAULT_SCALE * 10;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [hasPlayed, setHasPlayed] = useState(false);
   const [currentCountry, setCurrentCountry] = useState(earthDefault);
@@ -49,12 +50,12 @@ const WorldTour: React.FC = () => {
     visitorData.reduce((sum, [, count]) => sum + count, 0)
   );
   const isInView = useInView(containerRef, { once: false, amount: "some" });
-  const d3ContainerRef = useRef<SVGSVGElement>(null);
+  const d3ContainerRef = useRef<SVGSVGElement | null>(null);
 
   const createVisualization = useCallback(
     (worldData: World110m) => {
-      const width = 600;
-      const height = 400;
+      const width = 800;
+      const height = 600;
 
       const svg = select(containerRef.current)
         .append("svg")
@@ -65,7 +66,7 @@ const WorldTour: React.FC = () => {
       const countries = feature(
         worldData,
         worldData.objects.countries
-      ) satisfies FeatureCollection<Geometry, TopojsonShape>;
+      ) as FeatureCollection<Geometry, TopojsonShape>;
 
       const projection = geoOrthographic()
         .scale(DEFAULT_SCALE)
@@ -90,82 +91,156 @@ const WorldTour: React.FC = () => {
         .attr("stroke", "#333")
         .attr("d", path);
 
-      const countryPathMap: Record<string, SVGPathElement> = {};
-      g.selectAll<SVGPathElement, Feature<Geometry>>("path.country").each(
-        function (d) {
-          if (d.id) {
-            countryPathMap[d.id] = this;
-          }
-        }
-      );
-
       const computeScaleForBounds = (
         bounds: [[number, number], [number, number]],
         currentScale: number,
-        feature: Feature
-      ) => {
+        feature: Feature<Geometry, TopojsonShape>
+      ): number => {
+        // Get the country's geometry type and area
+        const geometryType = feature.geometry.type;
+        const area = geoArea(feature);
+
+        // Log the data for analysis
+        console.log(`Country: ${feature.id}`);
+        console.log(`Area: ${area}`);
+
+        // Special cases for large countries
+        if (feature.id === "840") {
+          // US or China
+          return 500;
+        }
+        if (feature.id === "156") {
+          return 550;
+        }
+
+        // Base scale calculation from bounds
         const [[x0, y0], [x1, y1]] = bounds;
         const dx = x1 - x0;
         const dy = y1 - y0;
         const boxSize = Math.sqrt(dx * dx + dy * dy);
-        if (feature.id === "840" || feature.id === "156") {
-          console.log(
-            `Country ${feature.id} bounds:`,
-            bounds,
-            `boxSize:`,
-            boxSize
-          );
-          return 360;
+
+        // Define thresholds
+        const TINY_COUNTRY_THRESHOLD = 0.001;
+        const MEDIUM_COUNTRY_THRESHOLD = 0.03;
+        const LARGE_COUNTRY_THRESHOLD = 0.15;
+
+        // Calculate area-based zoom factor with extra boost for tiny countries
+        const baseAreaZoomFactor = Math.sqrt(0.234 / area);
+        let areaZoomFactor;
+
+        if (area < TINY_COUNTRY_THRESHOLD) {
+          // Tiny countries get extra boost
+          areaZoomFactor =
+            baseAreaZoomFactor *
+            (1 + Math.pow(TINY_COUNTRY_THRESHOLD / area, 0.3));
+        } else if (area < MEDIUM_COUNTRY_THRESHOLD) {
+          // Small countries use base calculation
+          areaZoomFactor = baseAreaZoomFactor;
+        } else if (area < LARGE_COUNTRY_THRESHOLD) {
+          // Medium countries get reduced zoom
+          areaZoomFactor = baseAreaZoomFactor * 0.7;
+        } else {
+          // Large countries get minimum zoom
+          areaZoomFactor = baseAreaZoomFactor * 0.5;
         }
 
-        console.log(
-          `Country ${feature.id} bounds:`,
-          bounds,
-          `boxSize:`,
-          boxSize
-        );
+        // Apply the standard multiplier
+        const zoomFactor = areaZoomFactor * 0.8;
 
-        // For smaller countries use original dynamic scaling
-        const zoomFactor = 1.0;
+        // Adjust geometry multiplier based on area and geometry type
+        let geometryMultiplier;
+        if (area >= MEDIUM_COUNTRY_THRESHOLD) {
+          geometryMultiplier = 0.9; // Reduce multiplier for medium and large countries
+        } else if (geometryType === "Polygon") {
+          geometryMultiplier = area < TINY_COUNTRY_THRESHOLD ? 1.4 : 1.2;
+        } else {
+          geometryMultiplier = 1.0;
+        }
+
+        // Calculate new scale incorporating area and geometry type
         let newScale =
-          (currentScale * Math.min(width, height) * zoomFactor) / boxSize;
+          (currentScale *
+            Math.min(width, height) *
+            zoomFactor *
+            geometryMultiplier) /
+          boxSize;
 
-        // Clamp the scale between MIN_SCALE and MAX_SCALE
+        // Clamp scale between MIN_SCALE and MAX_SCALE
         newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, newScale));
+
+        // Log the calculated values
+        console.log(`Area Zoom Factor: ${areaZoomFactor}`);
+        console.log(`Geometry Multiplier: ${geometryMultiplier}`);
+        console.log(`New Scale: ${newScale}`);
+        console.log("---");
 
         return newScale;
       };
 
-      const rotateAndZoomToCountry = (feature: Feature, duration = 3000) => {
-        if (!feature) return Promise.resolve();
+      const highlightCountry = (
+        country: Feature<Geometry, TopojsonShape>,
+        duration: number
+      ): Promise<void> => {
+        return new Promise<void>(resolve => {
+          const countryPath = g
+            .append("path")
+            .datum(country)
+            .attr("class", "highlight")
+            .attr("fill", "gold")
+            .attr("stroke", "none")
+            .attr("d", path)
+            .style("pointer-events", "none");
 
+          countryPath
+            .attr("opacity", 0)
+            .transition()
+            .duration(duration * 0.3)
+            .attr("opacity", 0.7)
+            .transition()
+            .duration(duration * 0.4)
+            .attr("opacity", 0.5)
+            .transition()
+            .duration(duration * 0.3)
+            .attr("opacity", 0)
+            .on("end", () => {
+              countryPath.remove();
+              resolve();
+            });
+        });
+      };
+
+      const rotateAndZoomToCountry = async (
+        feature: Feature<Geometry, TopojsonShape>,
+        duration = 3000
+      ): Promise<void> => {
+        if (!feature) return;
+
+        const bounds = path.bounds(feature);
         const [lon, lat] = geoCentroid(feature);
         const currentRotate = projection.rotate();
-        const targetRotate = [-lon, -lat, currentRotate[2]] satisfies [
-          number,
-          number,
-          number
+        const targetRotate: [number, number, number] = [
+          -lon,
+          -lat,
+          currentRotate[2]
         ];
 
-        // Calculate bounds and target scale
-        const bounds = path.bounds(feature);
+        console.log(`Initial Scale: ${projection.scale()}`);
         const targetScale = computeScaleForBounds(
           bounds,
           projection.scale(),
           feature
         );
 
-        const currentScale = projection.scale();
-
-        return new Promise<void>(resolve => {
+        // Transition to show the entire country
+        await new Promise<void>(resolve => {
           transition()
             .duration(duration)
             .tween("rotate-and-zoom", () => {
               const rotateInterpolator = Versor.interpolateAngles(
-                currentRotate satisfies [number, number, number],
+                currentRotate as [number, number, number],
                 targetRotate
               );
-              const scaleInterp = interpolate(currentScale, targetScale);
+              const scaleInterp = interpolate(projection.scale(), targetScale);
 
               return (t: number) => {
                 const rotate = rotateInterpolator(t);
@@ -180,6 +255,9 @@ const WorldTour: React.FC = () => {
             })
             .on("end", () => resolve());
         });
+
+        // Highlight the country
+        await highlightCountry(feature, 2000);
       };
 
       const runTour = async () => {
@@ -187,72 +265,30 @@ const WorldTour: React.FC = () => {
         for (const [countryCode, visitors] of sortedData) {
           const countryInfo = countryCodeToObjOutput(countryCode, isoHelper);
           if (countryInfo) {
-            // Update country info and flag before starting rotation
             setCurrentCountry(countryInfo);
             setCurrentVisitors(visitors);
 
-            // Wait for info to be visible
             await new Promise(resolve => setTimeout(resolve, 1000));
 
             const feature = countries.features.find(f => f.id === countryCode);
             if (!feature) continue;
 
-            // Zoom in to the country
             await rotateAndZoomToCountry(feature);
 
-            const pathEl = countryPathMap[countryCode];
-            if (!pathEl) continue;
-
-            // Highlight country
-            await new Promise<void>(resolve => {
-              select(pathEl)
-                .transition()
-                .duration(700)
-                .attr("fill", "gold")
-                .transition()
-                .duration(2000)
-                .attr("fill", "#eee")
-                .on("end", () => resolve());
-            });
-
-            // Pause before moving to the next country
             await new Promise(resolve => setTimeout(resolve, 1000));
-
-            // Zoom out slightly before moving to the next country
-            await new Promise<void>(resolve => {
-              transition()
-                .duration(1000)
-                .tween("zoom-out", () => {
-                  const currentScale = projection.scale();
-                  const targetScale = Math.max(MIN_SCALE, currentScale * 0.8);
-                  const scaleInterp = interpolate(currentScale, targetScale);
-
-                  return (t: number) => {
-                    const scale = scaleInterp(easeQuadOut(t));
-                    projection.scale(scale);
-                    g.selectAll("path").attr(
-                      "d",
-                      d => path(d as GeoPermissibleObjects) ?? ""
-                    );
-                  };
-                })
-                .on("end", () => resolve());
-            });
           }
         }
 
-        // Reset to Earth view
         setCurrentCountry(earthDefault);
         setCurrentVisitors(
           visitorData.reduce((sum, [, count]) => sum + count, 0)
         );
 
-        // Zoom out and reset rotation
         await new Promise<void>(resolve => {
           transition()
             .duration(2000)
             .tween("reset", () => {
-              const currentRotate = projection.rotate() satisfies [
+              const currentRotate = projection.rotate() as [
                 number,
                 number,
                 number
@@ -280,62 +316,118 @@ const WorldTour: React.FC = () => {
 
       runTour().catch(err => console.error(err));
     },
-    [MIN_SCALE, isoHelper, earthDefault]
+    [isoHelper, earthDefault, MAX_SCALE, MIN_SCALE]
   );
 
   useEffect(() => {
     if (isInView && !hasPlayed) {
       setHasPlayed(true);
-      json<World110m>("/topojson/countries-110m.json")
+      json<World110m>(
+        "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/topojson/countries-110m.json"
+      )
         .then(worldData => {
           if (worldData) {
             createVisualization(worldData);
           }
         })
-        .catch(err => console.error(err));
+        .catch(console.error);
     }
   }, [isInView, hasPlayed, createVisualization]);
 
   return (
-    <motion.div
-      ref={containerRef}
-      className="my-2 flex w-full flex-col items-start justify-around text-left sm:flex-row sm:items-start sm:justify-center sm:gap-x-8"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}>
-      <div className="flex flex-col items-start sm:ml-2 sm:w-96 sm:items-start">
-        <div className="mb-2 text-left">
-          <h2 className="theme-transition text-2xl text-current">
-            <a id="world-tour" className="appearance-auto">
-              World Tour - Total Visitors
-            </a>
-          </h2>
-          <p className="text-sm text-gray-600">Work in Progress</p>
-        </div>
-        <div className="relative isolate w-full sm:h-20">
-          <AnimatePresence mode="sync">
+    <div className="w-full sm:space-y-2">
+      {/* Full-width container for the globe on mobile */}
+      <AnimatePresence mode="sync">
+        <div className="mx-auto w-full justify-center">
+          <div className="relative isolate mx-auto mt-3 flex sm:hidden">
             <motion.div
               key={currentCountry.countryName}
-              className="absolute inset-0 flex items-start"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              transition={{ duration: 0.5 }}>
-              <div className="flex space-x-2">
-                <div className="h-auto w-[4.5rem] shrink-0 overflow-hidden sm:w-20">
+              className="flex items-start justify-center"
+              initial={{ opacity: 0, x: 50 }}
+              animate={{
+                opacity: 1,
+                x: 0,
+                transition: {
+                  delay: 0.2,
+                  type: "spring",
+                  visualDuration: 0.3,
+                  bounce: 0.4,
+                  damping: 50
+                }
+              }}
+              exit={{ opacity: 0, x: -50 }}>
+              <div className="flex items-center space-x-3">
+                <div className="h-auto w-[4.5rem] shrink-0 overflow-hidden">
                   <Image
-                    src={currentCountry.countryFlag ?? "/en.svg"}
+                    src={currentCountry.countryFlag || "/en.svg"}
                     alt={`Flag of ${currentCountry.countryName}`}
                     width={60}
+                    height={36}
                     placeholder="blur"
                     loading="eager"
                     blurDataURL={shimmer([60, 36])}
-                    height={36}
-                    className="aspect-3/2! h-auto w-full object-cover"
+                    className="aspect-3/2 h-auto w-full rounded-b-xs object-cover"
                     priority
                   />
                 </div>
-                <div className="flex flex-col space-y-1 whitespace-nowrap">
+                <div className="flex flex-col space-y-0.5">
+                  <p className="text-base font-medium text-white">
+                    {currentCountry.countryName}
+                  </p>
+                  <div className="flex flex-row items-center space-x-1">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      role="img"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="size-4 text-white">
+                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    <p className="text-base text-white">{currentVisitors}</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+          <div className="hidden sm:relative sm:isolate sm:mx-auto sm:flex sm:w-full sm:flex-row sm:justify-center sm:px-0">
+            <motion.div
+              key={currentCountry.countryName}
+              className="motion-ease-in-out-quad flex transform items-center justify-center"
+              initial={{ opacity: 0, x: 50 }}
+              animate={{
+                opacity: 1,
+                x: 0,
+                transition: {
+                  delay: 0.2,
+                  type: "spring",
+                  visualDuration: 0.3,
+                  bounce: 0.4,
+                  damping: 50
+                }
+              }}
+              exit={{ opacity: 0, x: -50 }}>
+              <div className="flex items-center space-x-3">
+                <div className="h-auto w-16 shrink-0 overflow-hidden sm:w-20">
+                  <Image
+                    src={currentCountry.countryFlag || "/en.svg"}
+                    alt={`Flag of ${currentCountry.countryName}`}
+                    width={60}
+                    height={36}
+                    placeholder="blur"
+                    loading="eager"
+                    blurDataURL={shimmer([60, 36])}
+                    className="aspect-3/2 h-auto w-full rounded-md object-cover"
+                    priority
+                  />
+                </div>
+                <div className="flex flex-col space-y-1">
                   <p className="text-lg font-medium text-white">
                     {currentCountry.countryName}
                   </p>
@@ -360,13 +452,22 @@ const WorldTour: React.FC = () => {
                 </div>
               </div>
             </motion.div>
-          </AnimatePresence>
+          </div>
+          <BreakoutWrapper>
+            <div className="mx-auto max-w-4xl">
+              <motion.div
+                ref={containerRef}
+                className="mx-auto aspect-square w-full sm:aspect-video"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}>
+                <svg ref={d3ContainerRef} className="h-8 w-full sm:h-8" />
+              </motion.div>
+            </div>
+          </BreakoutWrapper>
         </div>
-      </div>
-      <div className="relative sm:flex-1">
-        <svg ref={d3ContainerRef} className="mx-auto w-full max-w-3xl" />
-      </div>
-    </motion.div>
+      </AnimatePresence>
+    </div>
   );
 };
 

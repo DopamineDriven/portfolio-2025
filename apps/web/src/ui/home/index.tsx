@@ -8,7 +8,7 @@ import { CarouselWithFade } from "@/ui/carousel";
 import { PostCards } from "@/ui/post-cards";
 import { ProjectCards } from "@/ui/project-cards";
 import LandingPageTypeWriter from "@/ui/typewriter";
-import WorldTour from "@/ui/world-tour/temp";
+import { WorldTourLayout } from "@/ui/world-tour";
 
 export function HomeContent({
   posts,
@@ -37,12 +37,10 @@ export function HomeContent({
           </BreakoutWrapper>
         </section>
         <ProjectCards projects={projects} />
-        <section className="">
-          <PostCards posts={posts} />
-        </section>
-        <section>
-          <WorldTour />
-        </section>
+
+        <PostCards posts={posts} />
+
+        <WorldTourLayout />
       </div>
     </div>
   );
