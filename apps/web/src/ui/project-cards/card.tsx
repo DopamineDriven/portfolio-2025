@@ -12,7 +12,7 @@ export function ProjectCard({ project }: { project: ProjectDetail }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="group relative aspect-[3/4] w-full overflow-hidden md:max-w-[80%] mx-auto">
+      className="group relative aspect-[3/4] w-full overflow-hidden  mx-auto">
       <Link
         href={project.link}
         id={`${project.slug}`}

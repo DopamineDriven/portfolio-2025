@@ -8,7 +8,7 @@ export type TopojsonShape = {
     countries: {
       type: string;
       geometries: {
-        type: string;
+        type: "MultiPolygon" | "Polygon";
         arcs: number[][] | number[][][];
         id?: string;
         properties: {

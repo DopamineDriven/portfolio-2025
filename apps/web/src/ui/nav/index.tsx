@@ -108,7 +108,7 @@ export default function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5, ease: [0.77, 0, 0.175, 1] }}
-                  className="mx-auto flex w-full max-w-7xl flex-row justify-between px-4 py-2 text-center sm:px-5 sm:py-4">
+                  className="mx-auto flex w-full 2xl:max-w-8xl max-w-7xl flex-row justify-between px-4 py-2 text-center sm:px-5 sm:py-4">
                   <Link href="/" className="block text-[#f5f5f5]">
                     <ArLogo className="size-5 sm:size-7" />
                   </Link>
