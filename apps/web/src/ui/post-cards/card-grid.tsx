@@ -6,7 +6,7 @@ import { PostCard } from "@/ui/post-cards/card";
 
 export function CardGrid({ posts }: { posts: PostDetails[] }) {
   return (
-    <div className="grid grid-cols-1 gap-y-16 md:grid-cols-2 md:gap-x-6 lg:gap-x-8">
+    <div className="container max-w-screen px-6 grid grid-cols-1 gap-y-16 lg:grid-cols-2 lg:gap-x-6">
       {posts.map((post, index) => (
         <motion.div
           key={post.id}

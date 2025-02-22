@@ -249,3 +249,7 @@ export const topoDataByAlpha2Key = {
   ZM: "ZMB:894:Zambia",
   ZW: "ZWE:716:Zimbabwe"
 } as const;
+
+Object.entries(topoDataByAlpha2Key).map(([alpha2, colonSeparatedData]) => {
+  return [alpha2, colonSeparatedData]
+});

@@ -322,9 +322,7 @@ const WorldTour: React.FC = () => {
   useEffect(() => {
     if (isInView && !hasPlayed) {
       setHasPlayed(true);
-      json<World110m>(
-        "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/topojson/countries-110m.json"
-      )
+      json<World110m>("/topojson/countries-110m.json")
         .then(worldData => {
           if (worldData) {
             createVisualization(worldData);
@@ -336,13 +334,12 @@ const WorldTour: React.FC = () => {
 
   return (
     <div className="w-full sm:space-y-2">
-      {/* Full-width container for the globe on mobile */}
       <AnimatePresence mode="popLayout">
         <div className="mx-auto w-full justify-center">
-          <div className="relative isolate mx-auto mt-3 flex sm:hidden">
+          <div className="relative isolate mx-auto mt-3 flex w-full sm:mt-0 sm:flex-row sm:justify-center sm:px-0">
             <motion.div
               key={currentCountry.countryName}
-              className="flex items-start justify-center"
+              className="motion-ease-in-out-quad flex transform items-start justify-center sm:items-center"
               initial={{ opacity: 0, x: 50 }}
               animate={{
                 opacity: 1,
@@ -357,24 +354,24 @@ const WorldTour: React.FC = () => {
               }}
               exit={{ opacity: 0, x: -50 }}>
               <div className="flex items-center space-x-3">
-                <div className="h-auto w-[4.5rem] shrink-0 overflow-hidden">
+                <div className="h-auto w-[4.5rem] shrink-0 overflow-hidden sm:w-20">
                   <Image
-                    src={currentCountry.countryFlag || "/en.svg"}
+                    src={currentCountry.countryFlag ?? "/en.svg"}
                     alt={`Flag of ${currentCountry.countryName}`}
                     width={60}
                     height={36}
                     placeholder="blur"
                     loading="eager"
                     blurDataURL={shimmer([60, 36])}
-                    className="aspect-3/2 h-auto w-full rounded-b-xs object-cover"
+                    className="aspect-3/2 h-auto w-full rounded-xs object-cover"
                     priority
                   />
                 </div>
-                <div className="flex flex-col space-y-0.5">
-                  <p className="text-base font-medium text-white">
+                <div className="flex flex-col space-y-0.5 sm:space-y-1">
+                  <p className="text-base font-medium text-white sm:text-lg">
                     {currentCountry.countryName}
                   </p>
-                  <div className="flex flex-row items-center space-x-1">
+                  <div className="flex flex-row items-center space-x-1 sm:space-x-1.5">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -384,64 +381,7 @@ const WorldTour: React.FC = () => {
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className="size-4 text-white">
-                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                      <circle cx="9" cy="7" r="4" />
-                      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                    <p className="text-base text-white">{currentVisitors}</p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-          <div className="hidden sm:relative sm:isolate sm:mx-auto sm:flex sm:w-full sm:flex-row sm:justify-center sm:px-0">
-            <motion.div
-              key={currentCountry.countryName}
-              className="motion-ease-in-out-quad flex transform items-center justify-center"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{
-                opacity: 1,
-                x: 0,
-                transition: {
-                  delay: 0.2,
-                  type: "spring",
-                  visualDuration: 0.3,
-                  bounce: 0.4,
-                  damping: 50
-                }
-              }}
-              exit={{ opacity: 0, x: -50 }}>
-              <div className="flex items-center space-x-3">
-                <div className="h-auto w-16 shrink-0 overflow-hidden sm:w-20">
-                  <Image
-                    src={currentCountry.countryFlag || "/en.svg"}
-                    alt={`Flag of ${currentCountry.countryName}`}
-                    width={60}
-                    height={36}
-                    placeholder="blur"
-                    loading="eager"
-                    blurDataURL={shimmer([60, 36])}
-                    className="aspect-3/2 h-auto w-full rounded-md object-cover"
-                    priority
-                  />
-                </div>
-                <div className="flex flex-col space-y-1">
-                  <p className="text-lg font-medium text-white">
-                    {currentCountry.countryName}
-                  </p>
-                  <div className="flex flex-row items-center space-x-1.5">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      role="img"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="size-5 text-white">
+                      className="size-4 text-white sm:size-5">
                       <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                       <circle cx="9" cy="7" r="4" />
                       <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
@@ -454,14 +394,14 @@ const WorldTour: React.FC = () => {
             </motion.div>
           </div>
           <BreakoutWrapper>
-            <div className="mx-auto max-w-4xl">
+            <div className="mx-auto max-w-5xl">
               <motion.div
                 ref={containerRef}
                 className="mx-auto aspect-square w-full sm:aspect-video"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}>
-                <svg ref={d3ContainerRef} className="h-8 w-full sm:h-8" />
+                <svg ref={d3ContainerRef} className="h-8 w-full sm:h-full" />
               </motion.div>
             </div>
           </BreakoutWrapper>

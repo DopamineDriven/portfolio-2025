@@ -79,7 +79,7 @@ export default function Navbar() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [onKeyDown]);
   return (
-    <header className="fixed top-0 left-0 z-50 mx-auto w-full self-center overflow-hidden">
+    <header className="fixed top-0 left-0 z-50 mx-auto w-screen self-center overflow-hidden">
       <AnimatePresence mode="wait">
         <motion.nav
           key="navbar"
@@ -87,7 +87,7 @@ export default function Navbar() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.8, ease: [0.77, 0, 0.175, 1] }}
-          className="max-w-10xl relative mx-auto flex max-h-fit w-full items-center justify-center backdrop-blur-sm"
+          className="max-w-screen relative mx-auto flex max-h-fit w-full items-center justify-center backdrop-blur-sm"
           {...(!isMobile
             ? {
                 onMouseEnter: () => setIsHovered(true),
@@ -108,11 +108,11 @@ export default function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5, ease: [0.77, 0, 0.175, 1] }}
-                  className="mx-auto flex w-full 2xl:max-w-8xl max-w-7xl flex-row justify-between px-4 py-2 text-center sm:px-5 sm:py-4">
-                  <Link href="/" className="block text-[#f5f5f5]">
+                  className="mx-auto grid grid-cols-5  px-4 w-screen 2xl:max-w-8xl justify-between py-2 text-center sm:px-10 sm:py-4">
+                  <Link href="/" className="block text-[#f5f5f5] text-left justify-start mx-0">
                     <ArLogo className="size-5 sm:size-7" />
                   </Link>
-                  <span className="block">Menu</span>
+                  <span className="block text-right col-start-5  sm:text-right">Menu</span>
                 </motion.span>
               ) : (
                 <motion.div

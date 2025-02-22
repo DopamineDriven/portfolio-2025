@@ -15,8 +15,6 @@ const options = {
   keepBackground: true,
   theme: "dark-plus",
   onVisitLine(node) {
-    // Prevent lines from collapsing in `display: grid` mode
-    // and allow empty lines to be copy/pasted
     if (node.children.length === 0) {
       node.children = [{ type: "text", value: " " }];
     }
@@ -56,6 +54,7 @@ async function getPost({ slug }: { slug: string }) {
     description: typedData.description,
     tags: typedData.tags,
     imageUrl: typedData.imageUrl,
+    homeImageUrl: typedData.homeImageUrl,
     link: typedData.link,
     externalLink: typedData.externalLink ?? "#",
     content: omitFrontMatter(content)
@@ -88,6 +87,7 @@ export default async function PostPage({
       id={post.id}
       imageUrl={post.imageUrl}
       link={post.link}
+      homeImageUrl={post.homeImageUrl}
       title={post.title}
       slug={slug || post.slug}
       externalLink={post.externalLink}>
