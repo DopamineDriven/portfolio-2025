@@ -27,6 +27,7 @@ import { feature } from "topojson-client";
 import type { TopojsonShape as JSONDATA, World110m } from "@/types/topojson";
 import { countryCodeToObjOutput } from "@/lib/country-code-to-object";
 import { shimmer } from "@/lib/shimmer";
+import { cn } from "@/lib/utils";
 import { BreakoutWrapper } from "@/ui/atoms/breakout-wrapper";
 
 const visitorData = [
@@ -41,8 +42,6 @@ const visitorData = [
   ["376", 1],
   ["364", 1]
 ] as const satisfies readonly [string, number][];
-
-
 
 const WorldTour: React.FC = () => {
   const isoHelper = useMemo(() => new Iso3166_1(), []);
@@ -68,7 +67,7 @@ const WorldTour: React.FC = () => {
     (worldData: World110m) => {
       setIsTourRunning(true);
       setWidth(600);
-      setHeight(window.innerWidth >= 640 ? width * (10 / 16) : width * (4 / 3));
+      setHeight(window.innerWidth >= 640 ? width * (3 / 4) : width * (4 / 3));
 
       const svg = select(containerRef.current)
         .select("svg")
@@ -415,7 +414,6 @@ const WorldTour: React.FC = () => {
     ]
   );
 
-
   // Add continuous rotation when not touring
   useEffect(() => {
     if (!isTourRunning && containerRef.current) {
@@ -469,7 +467,7 @@ const WorldTour: React.FC = () => {
   }, [isInView, hasPlayed, createVisualization]);
 
   return (
-    <div className="w-full bg-background sm:space-y-2">
+    <div className="bg-background w-full sm:space-y-2">
       <AnimatePresence mode="popLayout">
         <div className="mx-auto w-full justify-center">
           <div className="relative isolate mx-auto mt-0 flex w-full flex-row justify-start px-0">
@@ -530,28 +528,24 @@ const WorldTour: React.FC = () => {
               </div>
             </motion.div>
           </div>
-
-          <div className="mx-auto max-w-5xl">
-            <div className="relative flex h-auto min-w-screen items-center justify-center sm:min-h-[60vh] sm:min-w-full">
-              {/* Shadow - adjust position relative to centered globe */}
-              {/* Globe Container */}
-
-              <BreakoutWrapper>
-                {/* <div
-                  className={cn("pointer-events-none absolute left-1/3 right-1/3 w-[60%] h-3  bg-conic-330 from-gray-900 via-gray-950 to-black blur-md rounded-full")}
-                  style={{ bottom: "0%" }} // Adjust shadow position relative to container
-                ></div> */}
+          <BreakoutWrapper>
+            <div className="mx-auto max-w-5xl">
+              <div className="relative flex h-auto min-w-screen items-center justify-center sm:min-h-[60vh] sm:min-w-full">
+                <div
+                  className={cn(
+                    "pointer-events-none absolute bottom-[10%] left-1/2 h-6 w-[60%] -translate-x-1/2 rounded-full bg-gradient-to-bl from-black/10 via-black/[0.25] to-black/30 mix-blend-soft-light blur-sm sm:bottom-[5%]"
+                  )}></div>
                 <motion.div
                   ref={containerRef}
-                  className="relative top-1/2 bottom-1/2 z-10 mx-auto flex aspect-[3/4] h-auto w-full items-center justify-center align-middle drop-shadow-sm sm:aspect-[16/10]"
+                  className="relative top-1/2 bottom-1/2 z-10 mx-auto flex aspect-[3/4] h-auto w-full items-center justify-center align-middle drop-shadow-sm sm:aspect-[4/3]"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8 }}>
                   <svg ref={d3ContainerRef} className="h-full w-full" />
                 </motion.div>
-              </BreakoutWrapper>
+              </div>
             </div>
-          </div>
+          </BreakoutWrapper>
         </div>
       </AnimatePresence>
     </div>
