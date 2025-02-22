@@ -7,21 +7,27 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { Iso3166_1 } from "@d0paminedriven/iso-3166-1";
 import {
+  interpolate as d3Interpolate,
+  easeCubicInOut,
   geoArea,
   geoCentroid,
+  geoDistance,
+  geoGraticule10,
+  geoInterpolate,
   geoOrthographic,
   geoPath,
-  interpolate,
   json,
   select,
+  timer,
   transition
 } from "d3";
+import * as d3 from "d3";
 import { AnimatePresence, motion, useInView } from "motion/react";
 import { feature } from "topojson-client";
-import type { TopojsonShape, World110m } from "@/types/topojson";
+import type { TopojsonShape as JSONDATA, World110m } from "@/types/topojson";
 import { countryCodeToObjOutput } from "@/lib/country-code-to-object";
 import { shimmer } from "@/lib/shimmer";
-import { Versor } from "@/lib/versor";
+import { cn } from "@/lib/utils";
 import { BreakoutWrapper } from "@/ui/atoms/breakout-wrapper";
 
 const visitorData = [
@@ -40,9 +46,11 @@ const visitorData = [
 const WorldTour: React.FC = () => {
   const isoHelper = useMemo(() => new Iso3166_1(), []);
   const earthDefault = countryCodeToObjOutput("001", isoHelper);
-  const DEFAULT_SCALE = 190;
+  const DEFAULT_SCALE = 170; // Reduced from 190 to show poles better
   const MIN_SCALE = DEFAULT_SCALE * 0.8;
-  const MAX_SCALE = DEFAULT_SCALE * 10;
+  const AXIAL_TILT = 23.4;
+  const MAX_SCALE = DEFAULT_SCALE * 8;
+  const TINY_COUNTRY_SCALE = DEFAULT_SCALE * 4; // New constant for very small countries
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [hasPlayed, setHasPlayed] = useState(false);
   const [currentCountry, setCurrentCountry] = useState(earthDefault);
@@ -51,35 +59,74 @@ const WorldTour: React.FC = () => {
   );
   const isInView = useInView(containerRef, { once: false, amount: "some" });
   const d3ContainerRef = useRef<SVGSVGElement | null>(null);
+  const [isTourRunning, setIsTourRunning] = useState(false);
+  const [width, setWidth] = useState(600);
+  const [height, setHeight] = useState(337.5);
 
   const createVisualization = useCallback(
     (worldData: World110m) => {
-      const width = 800;
-      const height = 600;
+      setIsTourRunning(true);
+      setWidth(600);
+      setHeight(window.innerWidth >= 640 ? width * (3 / 4) : width * (4 / 3));
 
       const svg = select(containerRef.current)
-        .append("svg")
-        .attr("viewBox", `0 0 ${width} ${height}`);
+        .select("svg")
+        .attr("viewBox", `0 0 ${width} ${height}`)
+        .attr("preserveAspectRatio", "xMidYMid meet"); // Add this line
 
       svg.selectAll("*").remove();
 
       const countries = feature(
         worldData,
         worldData.objects.countries
-      ) as FeatureCollection<Geometry, TopojsonShape>;
+      ) satisfies FeatureCollection<Geometry, JSONDATA>;
 
       const projection = geoOrthographic()
         .scale(DEFAULT_SCALE)
-        .translate([width / 2, height / 2]);
+        .translate([width / 2, height / 2]); // This centers the globe in the SVG
 
       const path = geoPath(projection);
 
       const g = svg.append("g");
 
+      // Add a background gradient
+      svg
+        .append("defs")
+        .append("radialGradient")
+        .attr("id", "globe-gradient")
+        .attr("cx", "50%")
+        .attr("cy", "50%")
+        .attr("r", "50%")
+        .selectAll("stop")
+        .data([
+          { offset: "0%", color: "rgba(255,255,255,0.1)" },
+          { offset: "100%", color: "rgba(0,0,0,0)" }
+        ])
+        .enter()
+        .append("stop")
+        .attr("offset", d => d.offset)
+        .attr("stop-color", d => d.color);
+
+      g.append("circle")
+        .attr("cx", width / 2)
+        .attr("cy", height / 2)
+        .attr("r", DEFAULT_SCALE)
+        .attr("class", "globe-gradient")
+        .style("fill", "url(#globe-gradient)")
+        .style("transform-origin", "center");
+
       g.append("path")
         .datum({ type: "Sphere" } as GeoPermissibleObjects)
         .attr("class", "sphere")
         .attr("fill", "#222")
+        .attr("d", path);
+
+      g.append("path")
+        .datum(geoGraticule10())
+        .attr("class", "graticule")
+        .attr("fill", "none")
+        .attr("stroke", "#666")
+        .attr("stroke-width", 0.5)
         .attr("d", path);
 
       g.selectAll("path.country")
@@ -91,96 +138,71 @@ const WorldTour: React.FC = () => {
         .attr("stroke", "#333")
         .attr("d", path);
 
+      const _flightPath = g
+        .append("path")
+        .attr("class", "flight-path")
+        .attr("fill", "none")
+        .attr("stroke", "gold")
+        .attr("stroke-width", 2)
+        .attr("stroke-dasharray", "4 4")
+        .style("opacity", 0);
+
       const computeScaleForBounds = (
         bounds: [[number, number], [number, number]],
         currentScale: number,
-        feature: Feature<Geometry, TopojsonShape>
-      ): number => {
-        // Get the country's geometry type and area
-        const geometryType = feature.geometry.type;
+        feature: Feature<Geometry, JSONDATA>
+      ) => {
         const area = geoArea(feature);
 
-        // Log the data for analysis
-        console.log(`Country: ${feature.id}`);
-        console.log(`Area: ${area}`);
-
-        // Special cases for large countries
-        if (feature.id === "840") {
-          // US or China
-          return 500;
-        }
-        if (feature.id === "156") {
-          return 550;
+        // Special handling for specific countries
+        if (feature.id === "840" || feature.id === "156") {
+          // USA or China
+          return 360;
         }
 
-        // Base scale calculation from bounds
         const [[x0, y0], [x1, y1]] = bounds;
         const dx = x1 - x0;
         const dy = y1 - y0;
         const boxSize = Math.sqrt(dx * dx + dy * dy);
 
-        // Define thresholds
         const TINY_COUNTRY_THRESHOLD = 0.001;
+        const SMALL_COUNTRY_THRESHOLD = 0.005;
         const MEDIUM_COUNTRY_THRESHOLD = 0.03;
         const LARGE_COUNTRY_THRESHOLD = 0.15;
 
-        // Calculate area-based zoom factor with extra boost for tiny countries
-        const baseAreaZoomFactor = Math.sqrt(0.234 / area);
-        let areaZoomFactor;
-
+        // Enhanced scaling for very small countries
         if (area < TINY_COUNTRY_THRESHOLD) {
-          // Tiny countries get extra boost
-          areaZoomFactor =
-            baseAreaZoomFactor *
-            (1 + Math.pow(TINY_COUNTRY_THRESHOLD / area, 0.3));
+          // Use a higher minimum scale for tiny countries
+          return Math.max(TINY_COUNTRY_SCALE, DEFAULT_SCALE * 5);
+        }
+
+        // Progressive scaling based on country size
+        let scaleFactor;
+        if (area < SMALL_COUNTRY_THRESHOLD) {
+          scaleFactor =
+            4 +
+            ((SMALL_COUNTRY_THRESHOLD - area) / SMALL_COUNTRY_THRESHOLD) * 2;
         } else if (area < MEDIUM_COUNTRY_THRESHOLD) {
-          // Small countries use base calculation
-          areaZoomFactor = baseAreaZoomFactor;
+          scaleFactor = 3;
         } else if (area < LARGE_COUNTRY_THRESHOLD) {
-          // Medium countries get reduced zoom
-          areaZoomFactor = baseAreaZoomFactor * 0.7;
+          scaleFactor = 2;
         } else {
-          // Large countries get minimum zoom
-          areaZoomFactor = baseAreaZoomFactor * 0.5;
+          scaleFactor = 1.5;
         }
 
-        // Apply the standard multiplier
-        const zoomFactor = areaZoomFactor * 0.8;
-
-        // Adjust geometry multiplier based on area and geometry type
-        let geometryMultiplier;
-        if (area >= MEDIUM_COUNTRY_THRESHOLD) {
-          geometryMultiplier = 0.9; // Reduce multiplier for medium and large countries
-        } else if (geometryType === "Polygon") {
-          geometryMultiplier = area < TINY_COUNTRY_THRESHOLD ? 1.4 : 1.2;
-        } else {
-          geometryMultiplier = 1.0;
-        }
-
-        // Calculate new scale incorporating area and geometry type
         let newScale =
-          (currentScale *
-            Math.min(width, height) *
-            zoomFactor *
-            geometryMultiplier) /
-          boxSize;
+          (currentScale * Math.min(width, height) * scaleFactor) / boxSize;
 
-        // Clamp scale between MIN_SCALE and MAX_SCALE
+        // Ensure the scale stays within reasonable bounds
         newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, newScale));
-
-        // Log the calculated values
-        console.log(`Area Zoom Factor: ${areaZoomFactor}`);
-        console.log(`Geometry Multiplier: ${geometryMultiplier}`);
-        console.log(`New Scale: ${newScale}`);
-        console.log("---");
 
         return newScale;
       };
 
       const highlightCountry = (
-        country: Feature<Geometry, TopojsonShape>,
+        country: Feature<Geometry, JSONDATA>,
         duration: number
-      ): Promise<void> => {
+      ) => {
         return new Promise<void>(resolve => {
           const countryPath = g
             .append("path")
@@ -210,43 +232,50 @@ const WorldTour: React.FC = () => {
       };
 
       const rotateAndZoomToCountry = async (
-        feature: Feature<Geometry, TopojsonShape>,
-        duration = 3000
-      ): Promise<void> => {
+        feature: Feature<Geometry, JSONDATA>,
+        index: number,
+        total: number
+      ) => {
         if (!feature) return;
 
-        const bounds = path.bounds(feature);
-        const [lon, lat] = geoCentroid(feature);
-        const currentRotate = projection.rotate();
-        const targetRotate: [number, number, number] = [
-          -lon,
-          -lat,
-          currentRotate[2]
-        ];
+        const [lon1, lat1] = geoCentroid(feature);
+        const [currentLon, currentLat] = projection.rotate();
+        const lon0 = -currentLon;
+        const lat0 = -currentLat;
 
-        console.log(`Initial Scale: ${projection.scale()}`);
-        const targetScale = computeScaleForBounds(
-          bounds,
-          projection.scale(),
-          feature
-        );
+        const interpolateLonLat = geoInterpolate([lon0, lat0], [lon1, lat1]);
 
-        // Transition to show the entire country
+        const s0 = projection.scale();
+        const s1 = computeScaleForBounds(path.bounds(feature), s0, feature);
+
+        // Adjust the intermediate scale based on country size
+        const area = geoArea(feature);
+        const TINY_COUNTRY_THRESHOLD = 0.001;
+        const intermediateScaleFactor =
+          area < TINY_COUNTRY_THRESHOLD ? 0.9 : 0.7;
+        const _s2 = s0 * intermediateScaleFactor; // Less extreme zoom-out for small countries
+
+        // Use a more consistent scale range
+        const minScale = DEFAULT_SCALE * 0.9;
+        const maxScale = DEFAULT_SCALE * 1.5;
+        const targetScale = Math.max(minScale, Math.min(maxScale, s1));
+
+        // Calculate the progress of the entire tour
+        const _progress = index / total;
+
+        // Adjust duration based on distance, but keep it more consistent
+        const distance = geoDistance([lon0, lat0], [lon1, lat1]);
+        const duration = 2000 + distance * 3000; // Base duration plus distance-based addition
+
         await new Promise<void>(resolve => {
           transition()
             .duration(duration)
-            .tween("rotate-and-zoom", () => {
-              const rotateInterpolator = Versor.interpolateAngles(
-                currentRotate as [number, number, number],
-                targetRotate
-              );
-              const scaleInterp = interpolate(projection.scale(), targetScale);
-
+            .ease(easeCubicInOut) // Use a smoother easing function
+            .tween("rotate", () => {
               return (t: number) => {
-                const rotate = rotateInterpolator(t);
-                const scale = scaleInterp(t);
-
-                projection.rotate(rotate).scale(scale);
+                const [lonI, latI] = interpolateLonLat(t);
+                const scale = d3Interpolate(s0, targetScale)(t);
+                projection.rotate([-lonI, -latI, AXIAL_TILT]).scale(scale);
                 g.selectAll("path").attr(
                   "d",
                   d => path(d as GeoPermissibleObjects) ?? ""
@@ -256,26 +285,82 @@ const WorldTour: React.FC = () => {
             .on("end", () => resolve());
         });
 
-        // Highlight the country
-        await highlightCountry(feature, 2000);
+        await highlightCountry(feature, 1000);
       };
 
       const runTour = async () => {
-        const sortedData = [...visitorData].sort((a, b) => b[1] - a[1]);
-        for (const [countryCode, visitors] of sortedData) {
+        setIsTourRunning(true);
+        const sortedData = visitorData.toSorted((a, b) => b[1] - a[1]);
+        const totalCountries = sortedData.length;
+
+        // Create a single path for the entire journey
+        const tourPath = g
+          .append("path")
+          .attr("class", "tour-path")
+          .attr("fill", "none")
+          .attr("stroke", "gold")
+          .attr("stroke-width", 2)
+          .attr("opacity", 0.5);
+
+        // Calculate the complete tour path
+        const tourCoordinates = sortedData
+          .map(([countryCode]) => {
+            const feature = countries.features.find(f => f.id === countryCode);
+            return feature ? geoCentroid(feature) : null;
+          })
+          .filter(Boolean);
+
+        tourPath.attr(
+          "d",
+          path({
+            type: "LineString",
+            coordinates: tourCoordinates
+          } as GeoPermissibleObjects)
+        );
+
+        for (let i = 0; i < sortedData.length; i++) {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const [countryCode, visitors] = sortedData[i]!;
           const countryInfo = countryCodeToObjOutput(countryCode, isoHelper);
           if (countryInfo) {
             setCurrentCountry(countryInfo);
             setCurrentVisitors(visitors);
 
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
             const feature = countries.features.find(f => f.id === countryCode);
             if (!feature) continue;
 
-            await rotateAndZoomToCountry(feature);
+            await rotateAndZoomToCountry(feature, i, totalCountries);
+
+            // Highlight the current segment of the tour path
+            const segmentPath = g
+              .append("path")
+              .attr("class", "current-segment")
+              .attr("fill", "none")
+              .attr("stroke", "gold")
+              .attr("stroke-width", 3)
+              .attr("opacity", 1);
+
+            if (i < totalCountries - 1) {
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              const nextCountry = sortedData[i + 1]![0];
+              const nextFeature = countries.features.find(
+                f => f.id === nextCountry
+              );
+              if (nextFeature) {
+                const currentCoords = geoCentroid(feature);
+                const nextCoords = geoCentroid(nextFeature);
+                segmentPath.attr(
+                  "d",
+                  path({
+                    type: "LineString",
+                    coordinates: [currentCoords, nextCoords]
+                  } as GeoPermissibleObjects)
+                );
+              }
+            }
 
             await new Promise(resolve => setTimeout(resolve, 1000));
+            segmentPath.remove();
           }
         }
 
@@ -284,40 +369,89 @@ const WorldTour: React.FC = () => {
           visitorData.reduce((sum, [, count]) => sum + count, 0)
         );
 
+        // Final transition back to the starting view
         await new Promise<void>(resolve => {
           transition()
             .duration(2000)
-            .tween("reset", () => {
-              const currentRotate = projection.rotate() as [
-                number,
-                number,
-                number
-              ];
+            .ease(d3.easeCubicInOut)
+            .tween("rotate", () => {
+              const currentRotation = projection.rotate();
               const currentScale = projection.scale();
-              const rotateInterpolator = Versor.interpolateAngles(
-                currentRotate,
-                [0, 0, 0]
-              );
-              const scaleInterp = interpolate(currentScale, DEFAULT_SCALE);
-
               return (t: number) => {
-                const rotate = rotateInterpolator(t);
-                const scale = scaleInterp(t);
-                projection.rotate(rotate).scale(scale);
+                const rotation = currentRotation.map(d => d * (1 - t));
+                rotation[2] = AXIAL_TILT; // Ensure the axial tilt is maintained
+                const scale = d3Interpolate(currentScale, DEFAULT_SCALE)(t);
+                projection
+                  .rotate(rotation as [number, number, number])
+                  .scale(scale);
                 g.selectAll("path").attr(
                   "d",
                   d => path(d as GeoPermissibleObjects) ?? ""
                 );
               };
             })
-            .on("end", () => resolve());
+            .on("end", () => {
+              tourPath.remove();
+              resolve();
+            });
         });
+        setIsTourRunning(false);
       };
 
-      runTour().catch(err => console.error(err));
+      runTour().catch(err => {
+        console.error(err);
+        setIsTourRunning(false);
+      });
     },
-    [isoHelper, earthDefault, MAX_SCALE, MIN_SCALE]
+    [
+      isoHelper,
+      earthDefault,
+      MAX_SCALE,
+      MIN_SCALE,
+      TINY_COUNTRY_SCALE,
+      height,
+      width
+    ]
   );
+
+  // Add continuous rotation when not touring
+  useEffect(() => {
+    if (!isTourRunning && containerRef.current) {
+      const svg = select(containerRef.current)
+        .select("svg")
+        .attr("viewBox", `0 0 ${width} ${height}`)
+        .attr(
+          "preserveAspectRatio",
+          "xMidYMid meet"
+          // window.innerWidth < 640 ? "xMidYMin" : "xMidYMid meet"
+        );
+      const g = svg.select("g");
+
+      g.select(".globe-gradient")
+        .attr("cx", width / 2)
+        .attr("cy", height / 2);
+
+      const projection = geoOrthographic()
+        .scale(DEFAULT_SCALE)
+        .translate([width / 2, height / 2]);
+      const path = geoPath(projection);
+
+      const rotationTimer = timer(elapsed => {
+        const rotation = [(elapsed * 0.01) % 360, -20, AXIAL_TILT] as [
+          number,
+          number,
+          number
+        ];
+
+        projection.rotate(rotation);
+        g.selectAll("path").attr(
+          "d",
+          d => path(d as GeoPermissibleObjects) ?? ""
+        );
+      });
+      return () => rotationTimer.stop();
+    }
+  }, [isTourRunning, height, width]);
 
   useEffect(() => {
     if (isInView && !hasPlayed) {
@@ -333,13 +467,14 @@ const WorldTour: React.FC = () => {
   }, [isInView, hasPlayed, createVisualization]);
 
   return (
-    <div className="w-full sm:space-y-2">
+    <div className="bg-background w-full sm:space-y-2">
       <AnimatePresence mode="popLayout">
         <div className="mx-auto w-full justify-center">
-          <div className="relative isolate mx-auto mt-3 flex w-full sm:mt-0 sm:flex-row sm:justify-center sm:px-0">
+          <div className="relative isolate mx-auto mt-0 flex w-full flex-row justify-start px-0">
+            <div className="absolute inset-0 bg-[oklch(0.1370608055115447_0.03597153479968494_258.52581130794215)]/30 backdrop-blur-sm"></div>
             <motion.div
               key={currentCountry.countryName}
-              className="motion-ease-in-out-quad flex transform items-start justify-center sm:items-center"
+              className="motion-ease-in-out-quad relative z-10 flex transform items-start justify-center sm:items-center"
               initial={{ opacity: 0, x: 50 }}
               animate={{
                 opacity: 1,
@@ -353,8 +488,8 @@ const WorldTour: React.FC = () => {
                 }
               }}
               exit={{ opacity: 0, x: -50 }}>
-              <div className="flex items-center space-x-3">
-                <div className="h-auto w-[4.5rem] shrink-0 overflow-hidden sm:w-20">
+              <div className="container flex items-center space-x-3">
+                <div className="h-auto w-[4.5rem] shrink-0 overflow-hidden">
                   <Image
                     src={currentCountry.countryFlag ?? "/en.svg"}
                     alt={`Flag of ${currentCountry.countryName}`}
@@ -395,14 +530,20 @@ const WorldTour: React.FC = () => {
           </div>
           <BreakoutWrapper>
             <div className="mx-auto max-w-5xl">
-              <motion.div
-                ref={containerRef}
-                className="mx-auto aspect-square w-full sm:aspect-video"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}>
-                <svg ref={d3ContainerRef} className="h-8 w-full sm:h-full" />
-              </motion.div>
+              <div className="relative flex h-auto min-w-screen items-center justify-center sm:min-h-[60vh] sm:min-w-full">
+                <div
+                  className={cn(
+                    "pointer-events-none absolute bottom-[10%] left-1/2 h-6 w-[60%] -translate-x-1/2 rounded-full bg-gradient-to-bl from-black/10 via-black/[0.25] to-black/30 mix-blend-soft-light blur-sm sm:bottom-[5%]"
+                  )}></div>
+                <motion.div
+                  ref={containerRef}
+                  className="relative top-1/2 bottom-1/2 z-10 mx-auto flex aspect-[3/4] h-auto w-full items-center justify-center align-middle drop-shadow-sm sm:aspect-[4/3]"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8 }}>
+                  <svg ref={d3ContainerRef} className="h-full w-full" />
+                </motion.div>
+              </div>
             </div>
           </BreakoutWrapper>
         </div>
