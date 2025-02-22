@@ -13,19 +13,19 @@ export function PostCard({ post }: { post: PostDetails }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="group relative w-full">
+      className="group relative aspect-[16/9]! overflow-hidden mx-auto w-full">
       <Link
         href={post.link}
         id={`${post.slug}`}
-        className="relative block aspect-[16/9] w-full overflow-hidden rounded-lg">
+        className="relative block h-full overflow-hidden rounded-lg">
         <Image
-          src={post.imageUrl ?? "/doge-troubleshoot.jpg"}
+          src={post.homeImageUrl ?? "/doge-troubleshoot.jpg"}
           alt={post.title}
-          fill
+          width={1024}
+          height={576}
           placeholder="blur"
-          blurDataURL={shimmer([1024, 512])}
-          className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-          sizes="(min-width: 1024px) 50vw, 100vw"
+          blurDataURL={shimmer([1024, 576])}
+          className="object-contain transition-all duration-500 group-hover:scale-[1.005]"
         />
         <div className="group-hover:bg-background/10 absolute -inset-x-5 inset-y-0 transition-all duration-500">
           <div className="bg-background/70 group-hover:bg-background/80 absolute inset-x-4 bottom-4 rounded-lg p-4 backdrop-blur-md transition-all duration-500">

@@ -6,8 +6,8 @@ import { transformerMetaWordHighlight } from "@shikijs/transformers";
 import matter from "gray-matter";
 import rehypePrettyCode from "rehype-pretty-code";
 import type { InferGSPRT } from "@/types/next";
+import type { ProjectDetail } from "@/types/projects";
 import { omitFrontMatter } from "@/lib/omit-front-matter";
-import { ProjectDetail } from "@/types/projects";
 import { MdxRenderer } from "@/ui/mdx-handler";
 import { Project } from "@/ui/project";
 
@@ -16,8 +16,6 @@ const options = {
   keepBackground: true,
   theme: "dark-plus",
   onVisitLine(node) {
-    // Prevent lines from collapsing in `display: grid` mode
-    // and allow empty lines to be copy/pasted
     if (node.children.length === 0) {
       node.children = [{ type: "text", value: " " }];
     }
@@ -33,7 +31,7 @@ const options = {
 
 export async function generateStaticParams() {
   const fs = new Fs(process.cwd());
-  const projects = fs.readDir("src/content/projects", {recursive: true});
+  const projects = fs.readDir("src/content/projects", { recursive: true });
   return projects.map(project => ({
     slug: project.replace(/\.mdx$/, "")
   }));
@@ -57,6 +55,7 @@ async function getProject({ slug }: { slug: string }) {
     technologies: typedData.technologies,
     imageUrl: typedData.imageUrl,
     link: typedData.link,
+    homeImageUrl: typedData.homeImageUrl,
     externalLink: typedData.externalLink ?? "#",
     content: omitFrontMatter(content)
   } satisfies ProjectDetail;
@@ -88,6 +87,7 @@ export default async function ProjectPage({
       description={project.description}
       imageUrl={project.imageUrl}
       link={project.link}
+      homeImageUrl={project.homeImageUrl}
       slug={slug}
       technologies={project.technologies}
       title={project.title}

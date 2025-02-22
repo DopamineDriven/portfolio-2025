@@ -22,6 +22,7 @@ async function getPosts(): Promise<PostDetails[]> {
         description: typedData.description,
         tags: typedData.tags,
         content: content,
+        homeImageUrl: typedData.homeImageUrl,
         id: typedData.id,
         link: typedData.link,
         externalLink: typedData.externalLink,

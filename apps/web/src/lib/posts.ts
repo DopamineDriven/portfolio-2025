@@ -20,6 +20,7 @@ export async function getPosts() {
         title: typedData.title,
         date: typedData.date,
         description: typedData.description,
+        homeImageUrl: typedData.homeImageUrl,
         tags: typedData.tags,
         imageUrl: typedData.imageUrl,
         link: typedData.link,

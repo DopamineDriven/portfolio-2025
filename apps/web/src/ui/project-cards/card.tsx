@@ -12,20 +12,20 @@ export function ProjectCard({ project }: { project: ProjectDetail }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="group relative aspect-[3/4] w-full overflow-hidden  mx-auto">
+      className="group relative aspect-[3/4]! max-w-[calc(100vw-10vw)] overflow-hidden  mx-auto">
       <Link
         href={project.link}
         id={`${project.slug}`}
         className="relative block h-full">
-        <div className="relative h-full w-full transition-transform duration-500">
+        <div className="transition-transform duration-500">
           <Image
-            src={project.imageUrl ?? "/doge-troubleshoot.jpg"}
+            src={project.homeImageUrl ?? "/doge-troubleshoot.jpg"}
             alt={project.title}
-            fill
+            width={768}
+            height={1024}
             placeholder="blur"
-            blurDataURL={shimmer([450, 600])}
-            className="object-cover group-hover:scale-[1.02] brightness-90 transition-all duration-500 group-hover:brightness-100"
-            sizes="(min-width: 1024px) 50vw, 100vw"
+            blurDataURL={shimmer([768, 1024])}
+            className="object-contain group-hover:scale-[1.005] brightness-90 transition-all duration-500 group-hover:brightness-100"
           />
           <div className="absolute inset-0 flex flex-col justify-end">
             <div className="from-background/80 to-background/40 md:h-[20%] h-[28%] bg-gradient-to-t backdrop-blur-xs sm:h-1/4" />

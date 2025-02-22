@@ -1,17 +1,15 @@
-import WorldTour from "./world-tour";
-
+import WorldTour from "./temp-two";
 
 export function WorldTourLayout() {
   return (
-    <section className="sm:container mx-auto px-0 pt-5 md:px-4">
-      <h2 className="theme-transition flex items-center text-2xl text-current">
+    <section className="mx-auto pt-8 lg:px-4">
+      <h2 className="container heme-transition flex items-center text-2xl text-current">
         <a className="appearance-auto" id="world-tour">
           World Tour - Total Visitors
         </a>
       </h2>
-      <p className="text-muted-foreground text-sm">Work in Progress</p>
+      <p className="container text-muted-foreground text-sm mb-2">Work in Progress</p>
       <WorldTour />
     </section>
   );
 }
-

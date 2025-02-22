@@ -18,7 +18,7 @@ export function HomeContent({
   projects: ProjectDetail[];
 }) {
   return (
-    <div className="theme-transition 2xl:max-w-8xl mx-auto flex max-w-7xl flex-col items-center justify-center pt-24 pb-12 sm:px-4 lg:px-6">
+    <div className="theme-transition 2xl:max-w-8xl mx-auto flex max-w-3xl sm:max-w-7xl flex-col items-center justify-center pt-24 pb-12 sm:px-4 lg:px-6">
       <motion.div
         initial={false}
         transition={{ duration: 0.5, ease: "easeInOut" }}
@@ -29,17 +29,16 @@ export function HomeContent({
           <LandingPageTypeWriter />
         </section>
         <section className="mx-auto my-12">
-          {/* <h2 className="mb-8 text-center text-2xl font-bold">
-            Technical Proficiencies
-          </h2> */}
           <BreakoutWrapper>
             <CarouselWithFade />
           </BreakoutWrapper>
         </section>
-        <ProjectCards projects={projects} />
-
-        <PostCards posts={posts} />
-
+        <section>
+          <ProjectCards projects={projects} />
+        </section>
+        <section>
+          <PostCards posts={posts} />
+        </section>
         <WorldTourLayout />
       </div>
     </div>

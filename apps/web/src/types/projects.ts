@@ -3,6 +3,7 @@ export interface Project {
   title: string;
   description: string;
   imageUrl: string;
+  homeImageUrl: string;
   link: string;
   slug: string;
 };

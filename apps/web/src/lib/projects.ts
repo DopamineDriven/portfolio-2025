@@ -21,6 +21,7 @@ export async function getProjects() {
         date: typedData.date,
         description: typedData.description,
         technologies: typedData.technologies,
+        homeImageUrl: typedData.homeImageUrl,
         imageUrl: typedData.imageUrl,
         link: typedData.link,
         externalLink: typedData.externalLink,
