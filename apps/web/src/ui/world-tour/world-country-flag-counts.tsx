@@ -11,16 +11,16 @@ export const WorldCountryFlagCounts: FC<{
 }> = ({ countryName, flagUrl, visitors }) => {
   return (
     <div className="container flex items-center space-x-3">
-      <div className="h-auto w-[4.5rem] shrink-0 overflow-hidden">
+      <div className="h-auto w-[4.5rem] shrink-0 overflow-hidden aspect-3/2">
         <Image
           src={flagUrl ?? "/en.svg"}
           alt={`Flag of ${countryName}`}
-          width={60}
-          height={36}
+          width={72}
+          height={48}
           placeholder="blur"
           loading="eager"
-          blurDataURL={shimmer([60, 36])}
-          className="aspect-3/2 h-auto w-full rounded-xs object-cover"
+          blurDataURL={shimmer([72, 48])}
+          className="h-auto w-full rounded-xs object-cover"
           priority
         />
       </div>
