@@ -1,7 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" id="flag-icons-wf" viewBox="0 0 640 480">
-  <g fill-rule="evenodd" stroke-width="1pt">
-    <path fill="#fff" d="M0 0h640v480H0z"/>
-    <path fill="#00267f" d="M0 0h213.3v480H0z"/>
-    <path fill="#f31830" d="M426.7 0H640v480H426.7z"/>
+<svg id="flag-icons-wf" viewBox="0 0 640 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g clip-path="url(#clip0_2942_1761)">
+    <path d="M0 0H640V480H0V0Z" fill="#CE1126" />
+    <path d="M0 0H170.667V192H0V0Z" fill="white" />
+    <path d="M0 0H85.3333V192H0V0Z" fill="#002654" />
+    <path d="M0 192H256V0" stroke="white" stroke-width="6" />
+    <path
+      d="M447.999 220.8L396.799 163.2H499.199L447.999 220.8ZM430.932 240L379.732 182.4V297.6L430.932 240ZM447.999 259.2L396.799 316.8H499.199L447.999 259.2ZM465.066 240L516.266 182.4V297.6L465.066 240Z"
+      fill="white" />
   </g>
+  <defs>
+    <clipPath id="clip0_2942_1761">
+      <rect width="640" height="480" fill="white" />
+    </clipPath>
+  </defs>
 </svg>

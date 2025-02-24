@@ -1,5 +1,6 @@
 "use client";
 
+import type { Timer } from "d3";
 import type { GeoPermissibleObjects } from "d3-geo";
 import type { Feature, FeatureCollection, Geometry } from "geojson";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -22,7 +23,6 @@ import {
 import { useInView } from "motion/react";
 import { feature } from "topojson-client";
 import type { TopojsonShape as JSONDATA, World110m } from "@/types/topojson";
-import { countryCodeToObjOutput } from "@/lib/country-code-to-object";
 
 export function useWorldTour({
   visitorData
@@ -32,28 +32,40 @@ export function useWorldTour({
   const isoHelper = useMemo(() => new Iso3166_1(), []);
 
   const earthDefault = useMemo(
-    () => countryCodeToObjOutput("001", isoHelper),
+    () => isoHelper.countryCodeToObjOutput("001"),
     [isoHelper]
   );
 
   const DEFAULT_SCALE = 170; // Reduced from 190 to show poles better
+
   const MIN_SCALE = DEFAULT_SCALE * 0.8;
+
   const AXIAL_TILT = 23.4;
+
   const MAX_SCALE = DEFAULT_SCALE * 8;
+
   const TINY_COUNTRY_SCALE = DEFAULT_SCALE * 4; // New constant for very small countries
 
   const containerRef = useRef<HTMLDivElement | null>(null);
+
   const [isTourRunning, setIsTourRunning] = useState(false);
+
   const [hasPlayed, setHasPlayed] = useState(false);
+
   const dataRef = useRef(visitorData);
+
   const [currentCountry, setCurrentCountry] = useState(earthDefault);
+
   const [width, setWidth] = useState(600);
+
   const [height, setHeight] = useState(337.5);
+
   const [currentVisitors, setCurrentVisitors] = useState<number>(
     dataRef.current.reduce((sum, [, count]) => sum + count, 0)
   );
   const isInView = useInView(containerRef, { once: false, amount: "some" });
   // Keep dataRef updated but don't trigger big animations on every minor change
+
   useEffect(() => {
     dataRef.current = visitorData;
   }, [visitorData]);
@@ -62,6 +74,8 @@ export function useWorldTour({
   const sortedData = useMemo(() => {
     return visitorData.toSorted((a, b) => b[1] - a[1]);
   }, [visitorData]);
+
+  const rotationTimerRef = useRef<Timer | null>(null);
 
   const computeScaleForBounds = useCallback(
     (
@@ -322,7 +336,7 @@ export function useWorldTour({
         for (let i = 0; i < sortedData.length; i++) {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           const [countryCode, visitors] = sortedData[i]!;
-          const countryInfo = countryCodeToObjOutput(countryCode, isoHelper);
+          const countryInfo = isoHelper.countryCodeToObjOutput(countryCode);
           if (countryInfo) {
             setCurrentCountry(countryInfo);
             setCurrentVisitors(visitors);
@@ -425,11 +439,7 @@ export function useWorldTour({
       const svg = select(containerRef.current)
         .select("svg")
         .attr("viewBox", `0 0 ${width} ${height}`)
-        .attr(
-          "preserveAspectRatio",
-          "xMidYMid meet"
-          // window.innerWidth < 640 ? "xMidYMin" : "xMidYMid meet"
-        );
+        .attr("preserveAspectRatio", "xMidYMid meet");
       const g = svg.select("g");
 
       g.select(".globe-gradient")
@@ -440,21 +450,28 @@ export function useWorldTour({
         .scale(DEFAULT_SCALE)
         .translate([width / 2, height / 2]);
       const path = geoPath(projection);
+      if (!rotationTimerRef.current) {
+        rotationTimerRef.current = timer(elapsed => {
+          const rotation = [(elapsed * 0.01) % 360, -20, AXIAL_TILT] as [
+            number,
+            number,
+            number
+          ];
 
-      const rotationTimer = timer(elapsed => {
-        const rotation = [(elapsed * 0.01) % 360, -20, AXIAL_TILT] as [
-          number,
-          number,
-          number
-        ];
+          projection.rotate(rotation);
+          g.selectAll("path").attr(
+            "d",
+            d => path(d as GeoPermissibleObjects) ?? ""
+          );
+        });
+      }
 
-        projection.rotate(rotation);
-        g.selectAll("path").attr(
-          "d",
-          d => path(d as GeoPermissibleObjects) ?? ""
-        );
-      });
-      return () => rotationTimer.stop();
+      return () => {
+        if (rotationTimerRef.current) {
+          rotationTimerRef.current.stop();
+          rotationTimerRef.current = null;
+        }
+      };
     }
   }, [isTourRunning, height, width]);
 

@@ -3,15 +3,18 @@
 import type { FC } from "react";
 import Image from "next/image";
 import { shimmer } from "@/lib/shimmer";
+import { cn } from "@/lib/utils";
 
 export const WorldCountryFlagCounts: FC<{
   flagUrl: string;
   countryName: string;
   visitors: string | number;
-}> = ({ countryName, flagUrl, visitors }) => {
+  flagAspectRatio: string;
+}> = ({ countryName, flagUrl, visitors, flagAspectRatio }) => {
+  const aspectClassName = `aspect-[${flagAspectRatio}]` as const;
   return (
     <div className="container flex items-center space-x-3">
-      <div className="h-auto w-[4.5rem] shrink-0 overflow-hidden aspect-3/2">
+      <div className="h-auto w-[4.5rem] shrink-0 overflow-hidden">
         <Image
           src={flagUrl ?? "/en.svg"}
           alt={`Flag of ${countryName}`}
@@ -20,7 +23,7 @@ export const WorldCountryFlagCounts: FC<{
           placeholder="blur"
           loading="eager"
           blurDataURL={shimmer([72, 48])}
-          className="h-auto w-full rounded-xs object-cover"
+          className={cn("h-auto w-full object-contain", aspectClassName)}
           priority
         />
       </div>
