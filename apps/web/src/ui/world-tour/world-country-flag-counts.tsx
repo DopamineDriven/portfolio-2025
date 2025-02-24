@@ -23,7 +23,7 @@ export const WorldCountryFlagCounts: FC<{
           placeholder="blur"
           loading="eager"
           blurDataURL={shimmer([72, 48])}
-          className={cn("h-auto w-full object-cover", aspectClassName)}
+          className={cn("h-auto w-full object-contain", aspectClassName)}
           priority
         />
       </div>
