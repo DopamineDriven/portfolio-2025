@@ -57,3 +57,35 @@ export type InferIsoDataTypeTargeted<
       ? Y
       : Z
   : never;
+
+  export type TopoDataTypeValueUnionExtended = InstanceType<
+  typeof import("@/iso-3166-1/index.ts").default
+>["topoDataAndCountryAreaAndFlagAspectRatioByCountryCode"][keyof InstanceType<
+  typeof import("@/iso-3166-1/index.ts").default
+>["topoDataAndCountryAreaAndFlagAspectRatioByCountryCode"]];
+
+
+
+export type InferExtendedIsoDataTypeTargeted<
+  T,
+  V extends
+    | "alpha-2"
+    | "alpha-3"
+    | "country-name"
+    | "surface-area"
+    | "flag-aspect-ratio"
+> = T extends `${infer X}:${infer Y}:${infer Z}:${infer A}:${infer B}`
+  ? V extends "alpha-2"
+    ? X
+    : V extends "alpha-3"
+      ? Y
+      : V extends "country-name"
+        ? Z
+        : V extends "surface-area"
+          ? A
+          : V extends "flag-aspect-ratio"
+            ? B
+            : never
+  : never;
+
+  export type FlagAspectRatioUnion = InferExtendedIsoDataTypeTargeted<TopoDataTypeValueUnionExtended, "flag-aspect-ratio">;

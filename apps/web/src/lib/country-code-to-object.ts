@@ -9,6 +9,8 @@ export function countryCodeToObjOutput(
   countryCode: string;
   countryName: string;
   countryFlag: string;
+  surfaceArea: string;
+  flagAspectRatio: string;
 } {
   if (target === "001") {
     const flagUrl =
@@ -17,21 +19,33 @@ export function countryCodeToObjOutput(
     const quasiAlpha3 = "EAR";
     const quasiCountryName = "Earth";
     const quasiCountryCode = "001";
+    const surfaceArea = "148000000";
+    const aspectRatio = "2/3";
     return {
       alpha2: quasiAlpha2,
       alpha3: quasiAlpha3,
       countryCode: quasiCountryCode,
       countryName: quasiCountryName,
-      countryFlag: flagUrl
+      countryFlag: flagUrl,
+      surfaceArea,
+      flagAspectRatio: aspectRatio
     };
   }
-  const [alpha2, alpha3, countryName, countryFlag] =
-    isoHelper.parseCountryDataAndFlag(target);
+  const [
+    alpha2,
+    alpha3,
+    countryName,
+    countryFlag,
+    surfaceArea,
+    flagAspectRatio
+  ] = isoHelper.parseCountryDataCountryFlagAndCountryArea(target);
   return {
     alpha2,
     alpha3,
     countryCode: target,
     countryName,
-    countryFlag
+    countryFlag,
+    surfaceArea,
+    flagAspectRatio
   };
 }
