@@ -54,6 +54,7 @@ const WorldTour: FC = () => {
                 countryName={currentCountry.countryName}
                 flagUrl={currentCountry.countryFlag}
                 visitors={currentVisitors}
+                flagAspectRatio={currentCountry.flagAspectRatio}
               />
             </motion.div>
           </div>

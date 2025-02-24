@@ -397,8 +397,8 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@d0paminedriven/iso-3166-1':
-        specifier: ^1.1.0
-        version: 1.1.0
+        specifier: ^1.3.0
+        version: 1.3.0
       '@d0paminedriven/redis-utils':
         specifier: ^0.1.0
         version: 0.1.0(redis@4.7.0)
@@ -1365,8 +1365,8 @@ packages:
   '@d0paminedriven/fs@0.1.0':
     resolution: {integrity: sha512-nH0IVD9+9kc4RrktcfMvjblSfZe2r2xqn+xZsern78zWuS0dB1szafgopqxX63Yg/S9E8YF32qIT84oXVHy3jg==}
 
-  '@d0paminedriven/iso-3166-1@1.1.0':
-    resolution: {integrity: sha512-kAkgvcoLwyEciAeHmBM/omzmkGWjPjguCaGvjrALcQe2fH598I5o4j8BaU/Dqrty70REUYmGgDF2ZuTTOf1NeA==}
+  '@d0paminedriven/iso-3166-1@1.3.0':
+    resolution: {integrity: sha512-qKmzeUNbPBDvaqw0mmvAv3fXfkbPz+y4I8JP84zOAzq7pHJ5bJzhahq6mU9fQGyzYv5BbG/SSOo+5NMKmCZdRw==}
 
   '@d0paminedriven/redis-utils@0.1.0':
     resolution: {integrity: sha512-EDVwTWpGpM2LehG3A3JDf1p2cd+Fj5AWNIHxFdk4Nwy6960nQZxx2g2pxA9dXHTvrYV7s5dlvbQr46cDU0aYIg==}
@@ -8058,7 +8058,7 @@ snapshots:
     dependencies:
       dotenv: 16.4.7
 
-  '@d0paminedriven/iso-3166-1@1.1.0':
+  '@d0paminedriven/iso-3166-1@1.3.0':
     dependencies:
       dotenv: 16.4.7
 
