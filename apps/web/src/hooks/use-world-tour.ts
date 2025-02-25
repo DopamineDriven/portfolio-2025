@@ -189,31 +189,31 @@ export function useWorldTour({
         .attr("stop-color", d => d.color);
 
       // Add atmosphere glow gradient
-      const atmosphereGradient = svg
-        .append("defs")
-        .append("radialGradient")
-        .attr("id", "atmosphereGlow")
-        .attr("cx", "50%")
-        .attr("cy", "50%")
-        .attr("r", "50%");
-      atmosphereGradient
-        .append("stop")
-        .attr("offset", "90%")
-        .attr("stop-color", "#4B71FF")
-        .attr("stop-opacity", 0.05);
-      atmosphereGradient
-        .append("stop")
-        .attr("offset", "100%")
-        .attr("stop-color", "#4B71FF")
-        .attr("stop-opacity", 0);
+      // const atmosphereGradient = svg
+      //   .append("defs")
+      //   .append("radialGradient")
+      //   .attr("id", "atmosphereGlow")
+      //   .attr("cx", "50%")
+      //   .attr("cy", "50%")
+      //   .attr("r", "50%");
+      // atmosphereGradient
+      //   .append("stop")
+      //   .attr("offset", "90%")
+      //   .attr("stop-color", "#4B71FF")
+      //   .attr("stop-opacity", 0.05);
+      // atmosphereGradient
+      //   .append("stop")
+      //   .attr("offset", "100%")
+      //   .attr("stop-color", "#4B71FF")
+      //   .attr("stop-opacity", 0);
 
       // Add atmosphere glow
-      g.append("circle")
-        .attr("cx", width / 2)
-        .attr("cy", height / 2)
-        .attr("r", DEFAULT_SCALE * 1.01)
-        .attr("fill", "url(#atmosphereGlow)")
-        .attr("class", "atmosphere-glow")
+      // g.append("circle")
+      //   .attr("cx", width / 2)
+      //   .attr("cy", height / 2)
+      //   .attr("r", DEFAULT_SCALE * 1.01)
+      //   .attr("fill", "url(#atmosphereGlow)")
+      //   .attr("class", "atmosphere-glow")
 
       g.append("circle")
         .attr("cx", width / 2)
