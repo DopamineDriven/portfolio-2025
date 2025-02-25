@@ -27,4 +27,6 @@ const StarFieldBackground: FC<{ height: number }> = ({ height }) => {
   );
 };
 
+StarFieldBackground.displayName = "StarFieldBackground";
+
 export default StarFieldBackground;
