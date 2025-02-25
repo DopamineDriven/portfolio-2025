@@ -13,6 +13,6 @@
     "jsx": "preserve",
     "moduleResolution": "bundler",
     "importHelpers": false,
-    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost", "WebWorker"]
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"]
   }
 }

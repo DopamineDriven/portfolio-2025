@@ -10,6 +10,7 @@
         "name": "next"
       }
     ],
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost", "WebWorker"],
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
   "include": [

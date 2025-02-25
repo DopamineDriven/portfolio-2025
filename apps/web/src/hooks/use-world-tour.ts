@@ -1,8 +1,8 @@
 "use client";
 
-import type { Timer } from "d3";
+import type { GeoPath, Selection, Timer } from "d3";
 import type { GeoPermissibleObjects } from "d3-geo";
-import type { Feature, FeatureCollection, Geometry } from "geojson";
+import type { Feature, FeatureCollection, Geometry, Polygon } from "geojson";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Iso3166_1 } from "@d0paminedriven/iso-3166-1";
 import {
@@ -27,6 +27,7 @@ import type {
   TopojsonShape as JSONDATA,
   World110m
 } from "@/types/topojson";
+import { buildTerminatorGeoJSON } from "@/lib/terminator-polygon";
 
 export function useWorldTour({
   visitorData
@@ -72,6 +73,11 @@ export function useWorldTour({
   );
   const isInView = useInView(containerRef, { once: false, amount: "some" });
   // Keep dataRef updated but don't trigger big animations on every minor change
+
+  const gRef = useRef<Selection<SVGGElement, unknown, null, undefined> | null>(
+    null
+  );
+  const pathRef = useRef<GeoPath<any, GeoPermissibleObjects> | null>(null);
 
   useEffect(() => {
     dataRef.current = visitorData;
@@ -182,16 +188,32 @@ export function useWorldTour({
         .attr("offset", d => d.offset)
         .attr("stop-color", d => d.color);
 
-    //           // Add atmosphere glow gradient
-    //   const atmosphereGradient = svg
-    //   .append("defs")
-    //   .append("radialGradient")
-    //   .attr("id", "atmosphereGlow")
-    //   .attr("cx", "50%")
-    //   .attr("cy", "50%")
-    //   .attr("r", "50%");
-    // atmosphereGradient.append("stop").attr("offset", "80%").attr("stop-color", "#4B71FF").attr("stop-opacity", 0.1)
-    // atmosphereGradient.append("stop").attr("offset", "100%").attr("stop-color", "#4B71FF").attr("stop-opacity", 0)
+      // Add atmosphere glow gradient
+      const atmosphereGradient = svg
+        .append("defs")
+        .append("radialGradient")
+        .attr("id", "atmosphereGlow")
+        .attr("cx", "50%")
+        .attr("cy", "50%")
+        .attr("r", "50%");
+      atmosphereGradient
+        .append("stop")
+        .attr("offset", "90%")
+        .attr("stop-color", "#4B71FF")
+        .attr("stop-opacity", 0.05);
+      atmosphereGradient
+        .append("stop")
+        .attr("offset", "100%")
+        .attr("stop-color", "#4B71FF")
+        .attr("stop-opacity", 0);
+
+      // Add atmosphere glow
+      g.append("circle")
+        .attr("cx", width / 2)
+        .attr("cy", height / 2)
+        .attr("r", DEFAULT_SCALE * 1.01)
+        .attr("fill", "url(#atmosphereGlow)")
+        .attr("class", "atmosphere-glow")
 
       g.append("circle")
         .attr("cx", width / 2)
@@ -223,6 +245,20 @@ export function useWorldTour({
         .attr("fill", "#eee")
         .attr("stroke", "#333")
         .attr("d", path);
+
+      // Add the terminator
+      const terminatorFeature = buildTerminatorGeoJSON(new Date(Date.now()));
+      g.selectAll<SVGPathElement, Feature<Polygon>>("path.terminator")
+        .data([terminatorFeature])
+        .join("path")
+        .attr("class", "terminator")
+        .attr("fill", "rgba(0,0,0,0.3)")
+        .attr("stroke", "none")
+        .attr("d", path);
+
+      // Store references for updates
+      gRef.current = g;
+      pathRef.current = path;
 
       const _flightPath = g
         .append("path")
@@ -310,10 +346,32 @@ export function useWorldTour({
                 const [lonI, latI] = interpolateLonLat(t);
                 const scale = d3Interpolate(s0, targetScale)(t);
                 projection.rotate([-lonI, -latI, AXIAL_TILT]).scale(scale);
-                g.selectAll("path").attr(
-                  "d",
-                  d => path(d as GeoPermissibleObjects) ?? ""
-                );
+                if (gRef.current && pathRef.current) {
+                  // Update all paths including countries
+                  gRef.current
+                    .selectAll("path")
+                    .attr("d", d =>
+                      pathRef.current != null
+                        ? pathRef.current((d as GeoPermissibleObjects) ?? "")
+                        : ""
+                    );
+
+                  // Update terminator with current time
+                  const newTerminatorFeature = buildTerminatorGeoJSON(
+                    new Date()
+                  );
+                  gRef.current
+                    .selectAll("path.terminator")
+                    .data([newTerminatorFeature])
+                    .join("path")
+                    .attr("class", "terminator")
+                    .attr("fill", "rgba(0,0,0,0.3)")
+                    .attr("stroke", "none")
+                    .attr("d", pathRef.current);
+
+                  // Update atmosphere glow
+                  g.select(".atmosphere-glow").attr("r", scale * 1.01);
+                }
               };
             })
             .on("end", () => resolve());
@@ -472,7 +530,7 @@ export function useWorldTour({
       const path = geoPath(projection);
       if (!rotationTimerRef.current) {
         rotationTimerRef.current = timer(elapsed => {
-          const rotation = [(elapsed * 0.01) % 360, -20, AXIAL_TILT] as [
+          const rotation = [-(elapsed * 0.01) % 360, -20, AXIAL_TILT] as [
             number,
             number,
             number
@@ -494,6 +552,34 @@ export function useWorldTour({
       };
     }
   }, [isTourRunning, height, width]);
+
+  useEffect(() => {
+    if (!isTourRunning) {
+      const updateTerminator = () => {
+        if (gRef.current && pathRef.current) {
+          const newTerminatorFeature = buildTerminatorGeoJSON(
+            new Date(Date.now())
+          );
+          gRef.current
+            .selectAll("path.terminator")
+            .data([newTerminatorFeature])
+            .join("path")
+            .attr("class", "terminator")
+            .attr("fill", "rgba(0,0,0,0.3)")
+            .attr("stroke", "none")
+            .attr("d", pathRef.current);
+        }
+      };
+
+      updateTerminator();
+
+      const intervalId = setInterval(() => {
+        updateTerminator();
+      }, 60_000);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [isTourRunning]);
 
   useEffect(() => {
     if (isInView && !hasPlayed) {
