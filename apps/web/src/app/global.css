@@ -279,7 +279,7 @@ pre[class*="language-"] {
   color: oklch(86.06% 0.1731 91.94);
 }
 
-/* Add Embla Carousel styles */
+/* Embla Carousel styles */
 .embla {
   overflow: hidden;
   width: 100%;
@@ -313,7 +313,7 @@ pre[class*="language-"] {
 .embla__slide__posts {
   flex: 0 0 50%;
   min-width: max-content;
-  margin-right: 0.5rem; /* Adjust as needed */
+  margin-right: 0.5rem;
 }
 
 .embla__slide {
@@ -325,4 +325,18 @@ pre[class*="language-"] {
   .embla__slide {
     flex: 0 0 20%;
   }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+.animate-twinkle {
+  animation: twinkle 5s infinite;
 }

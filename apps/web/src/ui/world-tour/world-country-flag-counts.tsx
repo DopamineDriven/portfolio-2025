@@ -1,55 +1,103 @@
 "use client";
 
 import type { FC } from "react";
+import { useCallback, useMemo } from "react";
 import Image from "next/image";
+import { AnimatePresence, motion } from "motion/react";
+import type { FlagAspectRatioUnion } from "@d0paminedriven/iso-3166-1";
 import { shimmer } from "@/lib/shimmer";
 import { cn } from "@/lib/utils";
+import { UsersIcon } from "@/ui/svg/users";
 
-export const WorldCountryFlagCounts: FC<{
+interface WorldCountryFlagCountsProps {
   flagUrl: string;
   countryName: string;
   visitors: string | number;
-  flagAspectRatio: string;
-}> = ({ countryName, flagUrl, visitors, flagAspectRatio }) => {
-  const aspectClassName = `aspect-[${flagAspectRatio}]` as const;
+  flagAspectRatio: FlagAspectRatioUnion;
+}
+
+type InferAspectRatioSplit<T> = T extends `${infer X}/${infer Y}`
+  ? [X, Y]
+  : never;
+
+const flagWidth = 72;
+
+export const WorldCountryFlagCounts: FC<WorldCountryFlagCountsProps> = ({
+  countryName,
+  flagUrl,
+  visitors,
+  flagAspectRatio
+}) => {
+  const aspectClassName = `aspect-[${flagAspectRatio}]`;
+
+  const aspectRatioHelper = useCallback(
+    (flagAspectRatio: FlagAspectRatioUnion) => {
+      const [width, height] = flagAspectRatio.split(
+        "/"
+      ) as InferAspectRatioSplit<FlagAspectRatioUnion>;
+      return /\./g.test(width) === false
+        ? Number.parseInt(width, 10) / Number.parseInt(height, 10)
+        : Number.parseFloat(width) / Number.parseInt(height, 10);
+    },
+    []
+  );
+
+  const flagHeight = useMemo(() => {
+    const aspectRatio = aspectRatioHelper(flagAspectRatio);
+    return flagWidth / aspectRatio;
+  }, [flagAspectRatio, aspectRatioHelper]);
+
   return (
-    <div className="container flex items-center space-x-3">
-      <div className="h-auto w-[4.5rem] shrink-0 overflow-hidden">
+    <motion.div
+      className="container flex max-w-3xl items-center space-x-3"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.5 }}>
+      <motion.div
+        className={cn("h-auto w-[4.5rem] shrink-0 overflow-hidden")}
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}>
         <Image
           src={flagUrl ?? "/en.svg"}
           alt={`Flag of ${countryName}`}
-          width={72}
-          height={48}
+          width={flagWidth}
+          height={flagHeight}
           placeholder="blur"
           loading="eager"
-          blurDataURL={shimmer([72, 48])}
-          className={cn("h-auto w-full object-contain", aspectClassName)}
+          blurDataURL={shimmer([flagWidth, flagHeight])}
+          className={cn("h-auto w-full object-cover", aspectClassName)}
           priority
         />
-      </div>
-      <div className="flex flex-col space-y-0.5 sm:space-y-1">
-        <p className="text-base font-medium text-white sm:text-lg">
-          {countryName}
-        </p>
+      </motion.div>
+      <div className="flex flex-col space-y-0.5 whitespace-nowrap sm:space-y-1">
+        <AnimatePresence mode="wait">
+          <motion.p
+            key={countryName}
+            className="text-base font-medium text-white sm:text-lg"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}>
+            {countryName}
+          </motion.p>
+        </AnimatePresence>
         <div className="flex flex-row items-center space-x-1 sm:space-x-1.5">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            role="img"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="size-4 text-white sm:size-5">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-            <circle cx="9" cy="7" r="4" />
-            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-          </svg>
-          <p className="text-base text-white">{visitors}</p>
+          <UsersIcon className="size-4 text-white sm:size-5" />
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={visitors}
+              className="text-base text-white"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}>
+              {visitors}
+            </motion.p>
+          </AnimatePresence>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

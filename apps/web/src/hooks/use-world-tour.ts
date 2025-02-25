@@ -22,7 +22,11 @@ import {
 } from "d3";
 import { useInView } from "motion/react";
 import { feature } from "topojson-client";
-import type { TopojsonShape as JSONDATA, World110m } from "@/types/topojson";
+import type {
+  CountryCodeToObjOutputStrictReturnProps,
+  TopojsonShape as JSONDATA,
+  World110m
+} from "@/types/topojson";
 
 export function useWorldTour({
   visitorData
@@ -32,7 +36,10 @@ export function useWorldTour({
   const isoHelper = useMemo(() => new Iso3166_1(), []);
 
   const earthDefault = useMemo(
-    () => isoHelper.countryCodeToObjOutput("001"),
+    () =>
+      isoHelper.countryCodeToObjOutput(
+        "001"
+      ) as CountryCodeToObjOutputStrictReturnProps,
     [isoHelper]
   );
 
@@ -336,7 +343,9 @@ export function useWorldTour({
         for (let i = 0; i < sortedData.length; i++) {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           const [countryCode, visitors] = sortedData[i]!;
-          const countryInfo = isoHelper.countryCodeToObjOutput(countryCode);
+          const countryInfo = isoHelper.countryCodeToObjOutput(
+            countryCode
+          ) as CountryCodeToObjOutputStrictReturnProps;
           if (countryInfo) {
             setCurrentCountry(countryInfo);
             setCurrentVisitors(visitors);
