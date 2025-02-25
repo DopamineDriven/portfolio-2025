@@ -1,3 +1,4 @@
+import type { FlagAspectRatioUnion } from "@d0paminedriven/iso-3166-1";
 import type { GeometryCollection, Topology } from "topojson-specification";
 
 /** typed json object found at `public/topojson/countries-110m.json` */
@@ -36,3 +37,13 @@ export type CountryObjects = {
 };
 
 export type World110m = Topology<CountryObjects>;
+
+export type CountryCodeToObjOutputStrictReturnProps = {
+  alpha2: string;
+  alpha3: string;
+  countryCode: string;
+  countryName: string;
+  countryFlag: string;
+  surfaceArea: string;
+  flagAspectRatio: FlagAspectRatioUnion;
+}

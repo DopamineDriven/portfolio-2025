@@ -82,7 +82,7 @@
     "redis-mock": "^0.56.3",
     "terser": "^5.39.0",
     "tslib": "latest",
-    "ts-jest": "^29.2.5",
+    "ts-jest": "^29.2.6",
     "tsup": "latest",
     "tsx": "latest",
     "typescript": "latest",

@@ -114,6 +114,14 @@ export default {
         "carousel-scroll": {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-100%)" }
+        },
+        twinkle: {
+          "0%, 100%": {
+            opacity: "1"
+          },
+          "50%": {
+            opacity: "0.2"
+          }
         }
       },
       animation: {
@@ -124,7 +132,8 @@ export default {
         "cursor-blink": "cursor-blink 0.7s step-end infinite",
         "cursor-blink-mobile": "cursor-blink-mobile 0.7s step-end infinite",
         "cursor-advance": "cursor-advance 0.1s linear",
-        carousel: "carousel-scroll var(--animation-duration) linear infinite"
+        carousel: "carousel-scroll var(--animation-duration) linear infinite",
+        twinkle: "twinkle 5s infinite"
       },
       borderRadius: {
         lg: "var(--radius)",
