@@ -10,12 +10,16 @@ export function useResizeObserver<const T extends HTMLDivElement | null>(
   const [height, setHeight] = useState(0);
 
   useEffect(() => {
+    const resizeObserver = new ResizeObserver(mutations => {
+      setWidth(mutations[0]?.contentRect?.width ?? 0);
+      setHeight(mutations[0]?.contentRect?.height ?? 0);
+    });
+
     if (parentContainerRef.current) {
-      const {width: refWidth, height: refHeight} = (parentContainerRef.current.getBoundingClientRect());
-      setWidth(refWidth);
-      setHeight(refHeight);
+      resizeObserver.observe(parentContainerRef.current);
     }
-    return () => {};
+
+    return () => resizeObserver.disconnect();
   }, [parentContainerRef]);
 
   return { width, height };

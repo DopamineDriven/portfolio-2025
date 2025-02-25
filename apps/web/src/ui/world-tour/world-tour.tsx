@@ -46,7 +46,7 @@ const WorldTour: FC = () => {
             <motion.div
               key={currentCountry.countryName}
               className="motion-ease-in-out-quad relative z-10 flex transform items-start justify-center sm:items-center"
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: 50 }}
               animate={{
                 opacity: 1,
                 x: 0,
@@ -58,7 +58,7 @@ const WorldTour: FC = () => {
                   damping: 75
                 }
               }}
-              exit={{ opacity: 0, x: 50 }}>
+              exit={{ opacity: 0, x: -50 }}>
               <div className="absolute inset-x-0 inset-y-0">
                 <WorldCountryFlagCounts
                   countryName={currentCountry.countryName}
