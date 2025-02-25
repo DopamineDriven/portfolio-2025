@@ -47,7 +47,7 @@ export function useWorldTour({
 
   const MIN_SCALE = DEFAULT_SCALE * 0.8;
 
-  const AXIAL_TILT = 23.4;
+  const AXIAL_TILT = 23.44;
 
   const MAX_SCALE = DEFAULT_SCALE * 8;
 
@@ -142,7 +142,7 @@ export function useWorldTour({
     (worldData: World110m) => {
       setIsTourRunning(true);
       setWidth(600);
-      setHeight(window.innerWidth >= 640 ? width * (3 / 4) : width * (4 / 3));
+      setHeight(window.innerWidth >= 640 ? width : width * (4 / 3));
 
       const svg = select(containerRef.current)
         .select("svg")
@@ -181,6 +181,17 @@ export function useWorldTour({
         .append("stop")
         .attr("offset", d => d.offset)
         .attr("stop-color", d => d.color);
+
+    //           // Add atmosphere glow gradient
+    //   const atmosphereGradient = svg
+    //   .append("defs")
+    //   .append("radialGradient")
+    //   .attr("id", "atmosphereGlow")
+    //   .attr("cx", "50%")
+    //   .attr("cy", "50%")
+    //   .attr("r", "50%");
+    // atmosphereGradient.append("stop").attr("offset", "80%").attr("stop-color", "#4B71FF").attr("stop-opacity", 0.1)
+    // atmosphereGradient.append("stop").attr("offset", "100%").attr("stop-color", "#4B71FF").attr("stop-opacity", 0)
 
       g.append("circle")
         .attr("cx", width / 2)
@@ -499,3 +510,101 @@ export function useWorldTour({
 
   return { containerRef, currentCountry, currentVisitors };
 }
+
+/*
+
+  const highlightCountry = useCallback((
+    country: Feature<Geometry, JSONDATA>,
+    duration: number,
+    g: Selection<SVGGElement, unknown, null, undefined>,
+    path: GeoPath<any, GeoPermissibleObjects>
+  ) => {
+    return new Promise<void>(resolve => {
+      const countryPath = g
+        .append("path")
+        .datum(country)
+        .attr("class", "highlight")
+        .attr("fill", "gold")
+        .attr("stroke", "none")
+        .attr("d", path)
+        .style("pointer-events", "none");
+
+      countryPath
+        .attr("opacity", 0)
+        .transition()
+        .duration(duration * 0.3)
+        .attr("opacity", 0.7)
+        .transition()
+        .duration(duration * 0.4)
+        .attr("opacity", 0.5)
+        .transition()
+        .duration(duration * 0.3)
+        .attr("opacity", 0)
+        .on("end", () => {
+          countryPath.remove();
+          resolve();
+        });
+    });
+  }, [])
+
+  const rotateAndZoomToCountry = useCallback(async (
+    feature: Feature<Geometry, JSONDATA>,
+    index: number,
+    total: number,
+    projection: GeoProjection,
+    g: Selection<SVGGElement, unknown, null, undefined>,
+    path: GeoPath<any, GeoPermissibleObjects>
+  ) => {
+    if (!feature) return;
+
+    const [lon1, lat1] = geoCentroid(feature);
+    const [currentLon, currentLat] = projection.rotate();
+    const lon0 = -currentLon;
+    const lat0 = -currentLat;
+
+    const interpolateLonLat = geoInterpolate([lon0, lat0], [lon1, lat1]);
+
+    const s0 = projection.scale();
+    const s1 = computeScaleForBounds(path.bounds(feature), s0, feature);
+
+    // Adjust the intermediate scale based on country size
+    const area = geoArea(feature);
+    const TINY_COUNTRY_THRESHOLD = 0.001;
+    const intermediateScaleFactor =
+      area < TINY_COUNTRY_THRESHOLD ? 0.9 : 0.7;
+    const _s2 = s0 * intermediateScaleFactor; // Less extreme zoom-out for small countries
+
+    // Use a more consistent scale range
+    const minScale = DEFAULT_SCALE * 0.9;
+    const maxScale = DEFAULT_SCALE * 1.5;
+    const targetScale = Math.max(minScale, Math.min(maxScale, s1));
+
+    // Calculate the progress of the entire tour
+    const _progress = index / total;
+
+    // Adjust duration based on distance, but keep it more consistent
+    const distance = geoDistance([lon0, lat0], [lon1, lat1]);
+    const duration = 2000 + distance * 3000; // Base duration plus distance-based addition
+
+    await new Promise<void>(resolve => {
+      transition()
+        .duration(duration)
+        .ease(easeCubicInOut) // Use a smoother easing function
+        .tween("rotate", () => {
+          return (t: number) => {
+            const [lonI, latI] = interpolateLonLat(t);
+            const scale = d3Interpolate(s0, targetScale)(t);
+            projection.rotate([-lonI, -latI, AXIAL_TILT]).scale(scale);
+            g.selectAll("path").attr(
+              "d",
+              d => path(d as GeoPermissibleObjects) ?? ""
+            );
+          };
+        })
+        .on("end", () => resolve());
+    });
+
+    await highlightCountry(feature, 1000, g, path);
+  }, [computeScaleForBounds, highlightCountry])
+
+*/
