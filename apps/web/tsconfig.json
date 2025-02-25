@@ -26,5 +26,5 @@
     ".next/types/**/*.ts",
     "../../reset.d.ts"
   ],
-  "exclude": ["node_modules", "public/**/*.js"]
+  "exclude": ["public/**/*.js"]
 }

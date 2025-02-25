@@ -45,7 +45,6 @@ async function getProject({ slug }: { slug: string }) {
     .toString("utf-8");
   const { data, content } = matter(project);
   const typedData = data as Omit<ProjectDetail, "content">;
-  console.log(content);
   return {
     slug: slug,
     id: typedData.id,
