@@ -9,8 +9,6 @@
     "sourceMap": true,
     "useDefineForClassFields": true,
     "allowSyntheticDefaultImports": true,
-    "declaration": true,
-    "declarationMap": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "moduleResolution": "bundler",

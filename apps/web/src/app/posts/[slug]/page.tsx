@@ -45,7 +45,6 @@ async function getPost({ slug }: { slug: string }) {
     .toString("utf-8");
   const { data, content } = matter(post);
   const typedData = data as Omit<PostDetails, "content">;
-  console.log(content);
   return {
     slug: post.replace(/\.mdx$/, ""),
     id: typedData.id,

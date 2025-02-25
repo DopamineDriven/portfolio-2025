@@ -23,7 +23,6 @@ const tsupConfig = (options: Options) =>
     tsconfig: relative(process.cwd(), "tsconfig.json"),
     clean: true,
     outDir: "dist",
-    // onSuccess: process.env.NODE_ENV === "development" ? "node dist/index.js" : undefined,
     ...options
   }) satisfies Options;
 
