@@ -70,7 +70,7 @@
     "@d0paminedriven/fs": "^0.1.0",
     "@edge-runtime/cookies": "^6.0.0",
     "@edge-runtime/types": "^4.0.0",
-    "@google-analytics/data": "^4.12.0",
+    "@google-analytics/data": "^4.12.1",
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
     "@portfolio/tsconfig": "workspace:*",
