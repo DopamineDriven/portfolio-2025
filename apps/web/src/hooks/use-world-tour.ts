@@ -530,7 +530,7 @@ export function useWorldTour({
       const path = geoPath(projection);
       if (!rotationTimerRef.current) {
         rotationTimerRef.current = timer(elapsed => {
-          const rotation = [-(elapsed * 0.01) % 360, -20, AXIAL_TILT] as [
+          const rotation = [(elapsed * 0.01) % 360, -20, AXIAL_TILT] as [
             number,
             number,
             number
