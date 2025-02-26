@@ -1,6 +1,6 @@
 {
   "name": "@portfolio/iso-3166-1",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "convenient iso-3166-1 helpers",
   "publishConfig": {
     "access": "public",
