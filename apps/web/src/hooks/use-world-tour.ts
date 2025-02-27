@@ -144,6 +144,40 @@ export function useWorldTour({
     [MAX_SCALE, MIN_SCALE, TINY_COUNTRY_SCALE, width, height]
   );
 
+  const highlightCountry = useCallback(
+    (country: Feature<Geometry, JSONDATA>, duration: number) => {
+      if (gRef.current && pathRef.current) {
+        return new Promise<void>(resolve => {
+          const countryPath = gRef.current
+            ?.append("path")
+            .datum(country)
+            .attr("class", "highlight")
+            .attr("fill", "gold")
+            .attr("stroke", "none")
+            .attr("d", pathRef.current)
+            .style("pointer-events", "none");
+
+          countryPath
+            ?.attr("opacity", 0)
+            .transition()
+            .duration(duration * 0.3)
+            .attr("opacity", 0.7)
+            .transition()
+            .duration(duration * 0.4)
+            .attr("opacity", 0.5)
+            .transition()
+            .duration(duration * 0.3)
+            .attr("opacity", 0)
+            .on("end", () => {
+              countryPath.remove();
+              resolve();
+            });
+        });
+      }
+    },
+    []
+  );
+
   const createVisualization = useCallback(
     (worldData: World110m) => {
       setIsTourRunning(true);
@@ -248,6 +282,7 @@ export function useWorldTour({
 
       // Add the terminator
       const terminatorFeature = buildTerminatorGeoJSON(new Date(Date.now()));
+
       g.selectAll<SVGPathElement, Feature<Polygon>>("path.terminator")
         .data([terminatorFeature])
         .join("path")
@@ -268,38 +303,6 @@ export function useWorldTour({
         .attr("stroke-width", 2)
         .attr("stroke-dasharray", "4 4")
         .style("opacity", 0);
-
-      const highlightCountry = (
-        country: Feature<Geometry, JSONDATA>,
-        duration: number
-      ) => {
-        return new Promise<void>(resolve => {
-          const countryPath = g
-            .append("path")
-            .datum(country)
-            .attr("class", "highlight")
-            .attr("fill", "gold")
-            .attr("stroke", "none")
-            .attr("d", path)
-            .style("pointer-events", "none");
-
-          countryPath
-            .attr("opacity", 0)
-            .transition()
-            .duration(duration * 0.3)
-            .attr("opacity", 0.7)
-            .transition()
-            .duration(duration * 0.4)
-            .attr("opacity", 0.5)
-            .transition()
-            .duration(duration * 0.3)
-            .attr("opacity", 0)
-            .on("end", () => {
-              countryPath.remove();
-              resolve();
-            });
-        });
-      };
 
       const rotateAndZoomToCountry = async (
         feature: Feature<Geometry, JSONDATA>,
@@ -370,7 +373,9 @@ export function useWorldTour({
                     .attr("d", pathRef.current);
 
                   // Update atmosphere glow
-                  g.select(".atmosphere-glow").attr("r", scale * 1.01);
+                  gRef.current
+                    .select(".atmosphere-glow")
+                    .attr("r", scale * 1.01);
                 }
               };
             })
@@ -507,7 +512,8 @@ export function useWorldTour({
       earthDefault,
       height,
       width,
-      computeScaleForBounds
+      computeScaleForBounds,
+      highlightCountry
     ]
   );
 
@@ -599,39 +605,37 @@ export function useWorldTour({
 
 /*
 
-  const highlightCountry = useCallback((
-    country: Feature<Geometry, JSONDATA>,
-    duration: number,
-    g: Selection<SVGGElement, unknown, null, undefined>,
-    path: GeoPath<any, GeoPermissibleObjects>
-  ) => {
-    return new Promise<void>(resolve => {
-      const countryPath = g
-        .append("path")
-        .datum(country)
-        .attr("class", "highlight")
-        .attr("fill", "gold")
-        .attr("stroke", "none")
-        .attr("d", path)
-        .style("pointer-events", "none");
+      // Add atmosphere glow gradient
+      const atmosphereGradient = svg
+        .append("defs")
+        .append("radialGradient")
+        .attr("id", "atmosphereGlow")
+        .attr("cx", "50%")
+        .attr("cy", "50%")
+        .attr("r", "50%")
+        .attr("gradientUnits", "userSpaceOnUse")
+        .attr(
+          "gradientTransform",
+          `translate(${width / 2},${height / 2}) scale(${DEFAULT_SCALE * 2})`
+        );
+      atmosphereGradient
+        .append("stop")
+        .attr("offset", "90%")
+        .attr("stop-color", "#4B71FF")
+        .attr("stop-opacity", 0.05);
+      atmosphereGradient
+        .append("stop")
+        .attr("offset", "100%")
+        .attr("stop-color", "#4B71FF")
+        .attr("stop-opacity", 0);
 
-      countryPath
-        .attr("opacity", 0)
-        .transition()
-        .duration(duration * 0.3)
-        .attr("opacity", 0.7)
-        .transition()
-        .duration(duration * 0.4)
-        .attr("opacity", 0.5)
-        .transition()
-        .duration(duration * 0.3)
-        .attr("opacity", 0)
-        .on("end", () => {
-          countryPath.remove();
-          resolve();
-        });
-    });
-  }, [])
+      // Add atmosphere glow
+      g.append("circle")
+        .attr("cx", width / 2)
+        .attr("cy", height / 2)
+        .attr("r", DEFAULT_SCALE * 1.01)
+        .attr("fill", "url(#atmosphereGlow)")
+        .attr("class", "atmosphere-glow");
 
   const rotateAndZoomToCountry = useCallback(async (
     feature: Feature<Geometry, JSONDATA>,
