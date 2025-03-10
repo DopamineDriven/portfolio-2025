@@ -80,7 +80,11 @@ export const WorldCountryFlagCounts: FC<WorldCountryFlagCountsProps> = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}>
-            {countryName}
+            {/^(United Kingdom of Great Britain and Northern Ireland)$/g.test(
+              countryName
+            ) === true
+              ? "United Kingdom"
+              : countryName}
           </motion.p>
         </AnimatePresence>
         <div className="flex flex-row items-center space-x-1 sm:space-x-1.5">
