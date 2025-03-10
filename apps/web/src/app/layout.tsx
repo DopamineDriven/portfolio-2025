@@ -133,7 +133,7 @@ export default function RootLayout({
         BasisGrotesqueProBoldItalic.variable,
         inter.variable
       )}>
-      <body className="font-basis-grotesque-pro-regular">
+      <body className="font-basis-grotesque-pro-regular overflow-x-hidden">
         <AnimationContextProvider>
           <ThemeProvider>
             <LoadingAnimation />
