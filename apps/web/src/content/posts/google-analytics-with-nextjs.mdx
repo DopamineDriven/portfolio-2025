@@ -62,7 +62,7 @@ is to ensure that the `window.dataLayer` array of objects is defined in the glob
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', '${gAnalytics.GA_TRACKING_ID}', {
+  gtag('config', '${gAnalytics.GA_MEASUREMENT_ID}', {
     page_path: window.location.pathname,
   });
 ```
@@ -89,6 +89,7 @@ Ensure that your `tsconfig.json` is configured to handle and track this new decl
     "next-env.d.ts",
     "src/**/*.tsx",
     "src/**/*.ts",
+    ".next/types/**/*.ts",
     // rest...
   ],
   "exclude": ["node_modules"]
@@ -101,11 +102,11 @@ Then, create an `analytics.ts` file in the `utils` directory.
 If using a top-level `src` folder (my personal preference) then this file should be located at `src/utils/analytics.ts`. Otherwise, create the file at `utils/analytics.ts`:
 
 ```ts
-export const GA_TRACKING_ID = process.env.GA_MEASUREMENT_ID ?? "";
-export const GA_STREAM_ID = process.env.GA_STREAM_ID ?? "";
+export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "";
+export const GA_STREAM_ID = process.env.NEXT_PUBLIC_GA_STREAM_ID ?? "";
 
 export const pageview = (url: URL | string) => {
-  window.gtag("config", GA_TRACKING_ID, {
+  window.gtag("config", GA_MEASUREMENT_ID, {
     page_path: url
   });
 };
@@ -145,7 +146,7 @@ export const logException = (
 
 ```
 
-The `GA_TRACKING_ID` env variable is an identifier provided by google analytics following the creation of a new property. It should begin with `G-*` for all Google Analytics 4 (GA4) properties.
+The `GA_MEASUREMENT_ID` env variable is an identifier provided by google analytics following the creation of a new property. It should begin with `G-*` for all Google Analytics 4 (GA4) properties.
 
 The `GA_STREAM_ID` env variable is defined on the same info screen that the tracking ID is retrieved from on new property creation. It should consist of numbers only.
 
@@ -177,7 +178,7 @@ export default function RootLayout({
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', '${gAnalytics.GA_TRACKING_ID}', {
+          gtag('config', '${gAnalytics.GA_MEASUREMENT_ID}', {
             page_path: window.location.pathname,
           });
          `
@@ -185,10 +186,10 @@ export default function RootLayout({
       />
       <Script
         async
-        id={gAnalytics.GA_TRACKING_ID}
-        data-test={gAnalytics.GA_TRACKING_ID}
+        id={gAnalytics.GA_MEASUREMENT_ID}
+        data-test={gAnalytics.GA_MEASUREMENT_ID}
         strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${gAnalytics.GA_TRACKING_ID}`}
+        src={`https://www.googletagmanager.com/gtag/js?id=${gAnalytics.GA_MEASUREMENT_ID}`}
       />
     </html>
   );

@@ -1,3 +1,5 @@
+import type { WithImplicitCoercion } from "buffer";
+
 export type BufferEncodingUnion =
   | "ascii"
   | "utf8"
@@ -161,7 +163,7 @@ export type BashEnv = "development" | "production" | "test" | undefined;
 
 export type CoercionUnion = string | Uint8Array | readonly number[];
 
-export type WriteStreamDataShape = WithImplicitCoercion<CoercionUnion>;
+export type WriteStreamDataShape = WithImplicitCoercion<CoercionUnion> | CoercionUnion;
 
 export type WriteStreamProps<T extends string = string> = {
   data: WithImplicitCoercion<CoercionUnion>;
