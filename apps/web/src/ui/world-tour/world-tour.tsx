@@ -11,15 +11,20 @@ import StarFieldBackground from "@/ui/world-tour/star-field-background";
 import { WorldCountryFlagCounts } from "@/ui/world-tour/world-country-flag-counts";
 
 const visitorData = [
-  ["840", 104],
-  ["250", 11],
-  ["484", 9],
+  ["840", 132],
+  ["250", 14],
+  ["484", 11],
   ["056", 5],
-  ["156", 4],
+  ["156", 5],
+  ["826", 3],
+  ["124", 2],
   ["616", 2],
   ["642", 2],
+  ["710", 1],
   ["756", 1],
+  ["860", 1],
   ["376", 1],
+  ["788", 1],
   ["364", 1]
 ] as const satisfies readonly [string, number][];
 
