@@ -279,7 +279,7 @@ export default class Fs {
               : options
             : { autoClose: true }
         )
-        .write(Buffer.from(Buffer.from(data).toJSON().data));
+        .write(Buffer.from(Buffer.from(data as any).toJSON().data));
     }
   }
 
