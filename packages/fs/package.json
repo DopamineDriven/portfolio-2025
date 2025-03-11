@@ -59,7 +59,7 @@
     "dotenv": "^16.4.7"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "^7.51.1",
+    "@microsoft/api-extractor": "^7.52.1",
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
     "@portfolio/tsconfig": "workspace:*",
