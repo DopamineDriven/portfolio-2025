@@ -275,7 +275,7 @@ export function SkillsVisualization() {
   }, [width, height]);
 
   return (
-    <div className="relative h-full w-full" ref={containerRef}>
+    <div className="relative h-screen w-full" ref={containerRef}>
       <svg ref={svgRef} className="h-full w-full" />
       {selectedSkill && (
         <motion.div

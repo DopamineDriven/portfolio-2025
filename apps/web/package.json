@@ -69,7 +69,7 @@
   },
   "devDependencies": {
     "@csstools/postcss-oklab-function": "^4.0.8",
-    "@d0paminedriven/fs": "^0.1.0",
+    "@d0paminedriven/fs": "^0.2.0",
     "@edge-runtime/cookies": "^6.0.0",
     "@edge-runtime/types": "^4.0.0",
     "@google-analytics/data": "^4.12.1",

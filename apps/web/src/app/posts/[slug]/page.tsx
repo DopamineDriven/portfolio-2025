@@ -6,7 +6,6 @@ import matter from "gray-matter";
 import rehypePrettyCode from "rehype-pretty-code";
 import type { InferGSPRT } from "@/types/next";
 import type { PostDetails } from "@/types/posts";
-import { omitFrontMatter } from "@/lib/omit-front-matter";
 import { MdxRenderer } from "@/ui/mdx-handler";
 import { PostTemplate } from "@/ui/post";
 
@@ -46,7 +45,7 @@ async function getPost({ slug }: { slug: string }) {
   const { data, content } = matter(post);
   const typedData = data as Omit<PostDetails, "content">;
   return {
-    slug: post.replace(/\.mdx$/, ""),
+    slug: slug ?? typedData.slug,
     id: typedData.id,
     title: typedData.title,
     date: typedData.date,
@@ -56,7 +55,7 @@ async function getPost({ slug }: { slug: string }) {
     homeImageUrl: typedData.homeImageUrl,
     link: typedData.link,
     externalLink: typedData.externalLink ?? "#",
-    content: omitFrontMatter(content)
+    content: content
   } satisfies PostDetails;
 }
 

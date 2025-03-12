@@ -301,8 +301,8 @@ importers:
         specifier: ^4.0.8
         version: 4.0.8(postcss@8.5.3)
       '@d0paminedriven/fs':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.2.0
+        version: 0.2.0
       '@edge-runtime/cookies':
         specifier: ^6.0.0
         version: 6.0.0
@@ -554,8 +554,8 @@ importers:
         specifier: ^4.0.8
         version: 4.0.8(postcss@8.5.3)
       '@d0paminedriven/fs':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.2.0
+        version: 0.2.0
       '@edge-runtime/cookies':
         specifier: ^6.0.0
         version: 6.0.0
@@ -1379,6 +1379,9 @@ packages:
 
   '@d0paminedriven/fs@0.1.0':
     resolution: {integrity: sha512-nH0IVD9+9kc4RrktcfMvjblSfZe2r2xqn+xZsern78zWuS0dB1szafgopqxX63Yg/S9E8YF32qIT84oXVHy3jg==}
+
+  '@d0paminedriven/fs@0.2.0':
+    resolution: {integrity: sha512-mETFQm8Ti5z7Aycyne0w4HCF9oEZS1tyKt0kxzKoS5VPoK6f4So1SPhRh4rA2pYLMWM8xjROeeSexoN6KvuA6A==}
 
   '@d0paminedriven/iso-3166-1@1.4.0':
     resolution: {integrity: sha512-CLBdsFppYLzGoAFekYKVH786qmDn8oPuz76qUEiVXAY1C9l4e4K4RYigVDjV6/1e5rw3lcHpH7IlYwVd6qEdcw==}
@@ -8102,6 +8105,10 @@ snapshots:
       react-dom: 19.0.0(react@19.0.0)
 
   '@d0paminedriven/fs@0.1.0':
+    dependencies:
+      dotenv: 16.4.7
+
+  '@d0paminedriven/fs@0.2.0':
     dependencies:
       dotenv: 16.4.7
 
