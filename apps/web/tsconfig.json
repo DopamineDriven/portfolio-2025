@@ -21,8 +21,9 @@
     "postcss.config.mjs",
     "tailwind.config.ts",
     "mdx-components.tsx",
-    "src/**/*.tsx",
-    "src/**/*.ts",
+    "**/*.tsx",
+    "**/*.ts",
+    "**/*.mdx",
     ".next/types/**/*.ts",
     "../../reset.d.ts"
   ],
