@@ -1,0 +1,47 @@
+diff --git a/package.json b/package.json
+index 7d359e43d0debad581ae8195b247b02a91770969..80a182efb41e06976e06399009a8fa59dc9dff50 100644
+--- a/package.json
++++ b/package.json
+@@ -38,7 +38,41 @@
+   ],
+   "sideEffects": false,
+   "type": "module",
+-  "exports": "./index.js",
++  "publishConfig": {
++    "access": "public",
++    "typesVersions": {
++      "*": {
++        "*": [
++          "index.d.ts"
++        ],
++        "lib": [
++          "lib/index.d.ts"
++        ],
++        "callable-instance": [
++          "lib/callable-instance.d.ts"
++        ]
++      }
++    }
++  },
++  "typesVersions": {
++    "*": {
++      "*": [
++        "index.d.ts"
++      ],
++      "lib": [
++        "lib/index.d.ts"
++      ],
++      "callable-instance": [
++        "lib/callable-instance.d.ts"
++      ]
++    }
++  },
++  "exports": {
++    ".": "./index.js",
++    "./*": "./lib/*.js",
++    "./lib": "./lib/index.js",
++    "./callable-instance": "./lib/callable-instance.js"
++  },
+   "files": [
+     "lib/",
+     "index.d.ts",
