@@ -1,14 +1,6 @@
-import createMDX from "@next/mdx";
-
-const withMDX = createMDX();
-
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+export default {
   eslint: { ignoreDuringBuilds: false },
-  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
-  experimental: {
-    mdxRs: true
-  },
   typescript: { ignoreBuildErrors: false, tsconfigPath: "./tsconfig.json" },
   images: {
     loader: "default",
@@ -40,5 +32,3 @@ const nextConfig = {
     ]
   }
 };
-
-export default withMDX(nextConfig);

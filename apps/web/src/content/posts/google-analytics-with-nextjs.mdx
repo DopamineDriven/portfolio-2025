@@ -14,6 +14,8 @@ tags:
   - GA4
 ---
 
+#### Install the gtag types package
+
 Install `@types/gtag.js` as a dev dependency with your preferred package manager:
 
 ```bash
@@ -27,6 +29,8 @@ yarn add @types/gtag.js -D
 ```bash
 npm install @types/gtag.js -D
 ```
+
+#### Create a declaration file
 
 Next, create an `index.d.ts` file in the root of your current working directory:
 
@@ -67,6 +71,8 @@ is to ensure that the `window.dataLayer` array of objects is defined in the glob
   });
 ```
 
+#### Update the tsconfig file
+
 Ensure that your `tsconfig.json` is configured to handle and track this new declaration file:
 
 ```json
@@ -87,8 +93,8 @@ Ensure that your `tsconfig.json` is configured to handle and track this new decl
   "include": [
     "index.d.ts",
     "next-env.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.ts",
+    "**/*.tsx",
+    "**/*.ts",
     ".next/types/**/*.ts",
     // rest...
   ],
@@ -96,6 +102,8 @@ Ensure that your `tsconfig.json` is configured to handle and track this new decl
 }
 
 ```
+
+#### Create an analytics workup file
 
 Then, create an `analytics.ts` file in the `utils` directory.
 
@@ -152,6 +160,8 @@ The `GA_STREAM_ID` env variable is defined on the same info screen that the trac
 
 To reference either of these values for an existing property, navigate to your google analytics dashboard, select "Admin" on the left toolbar. Then, under "Data Collection and Modification" select "Data Streams". This will take you to a "Web Stream Details" screen that provides both the stream and measurement ids.
 
+#### Integrate analytics workup in the root layout file
+
 Import the "next/script" Script component and your analytics workup via a wildcard `import` into the root `layout.tsx` file
 
 ```tsx
@@ -195,6 +205,9 @@ export default function RootLayout({
   );
 }
 ```
+
+#### Verify that the integration is working as expected
+
 Verify by deploying, navigating to the site, then viewing your google analytics property immediately thereafter.
 
 If everything has been configured properly, you should see at least 1 user under the "Active users in last 30 minutes" section found on the analytics home page for your property.
