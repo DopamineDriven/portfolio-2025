@@ -4,13 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { ArLogo } from "@/ui/svg/ar-logo";
-import { resumeData } from "@/utils/__generated__/resume-blob";
+// import { resumeData } from "@/utils/__generated__/resume-blob";
 
 const menuItems = [
   { name: "Home", href: "/" },
   { name: "Posts", href: "/#posts" },
   { name: "Projects", href: "/#projects" },
-  { name: "Resume", href: "/Resume-2025.pdf" },
+  { name: "Resume", href: "/resume" },
   { name: "World Tour", href: "/#world-tour" }
 ];
 
@@ -19,26 +19,26 @@ export default function Navbar() {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDownloading, setIsDownloading] = useState(false);
+  // const [isDownloading, setIsDownloading] = useState(false);
 
-  const handleDownload = async () => {
-    try {
-      setIsDownloading(true);
+  // const handleDownload = async () => {
+  //   try {
+  //     setIsDownloading(true);
 
-      // Create a temporary link and trigger the download
-      const link = document.createElement("a");
-      link.href = resumeData.resumeBlob.downloadUrl;
-      link.target = "_blank";
-      link.download = "resume-2025.pdf"; // This will be the suggested filename
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error("Error:", error);
-    } finally {
-      setIsDownloading(false);
-    }
-  };
+  //     // Create a temporary link and trigger the download
+  //     const link = document.createElement("a");
+  //     link.href = resumeData.resumeBlob.downloadUrl;
+  //     link.target = "_blank";
+  //     link.download = "resume-2025.pdf"; // This will be the suggested filename
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     document.body.removeChild(link);
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   } finally {
+  //     setIsDownloading(false);
+  //   }
+  // };
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 640);
@@ -142,7 +142,26 @@ export default function Navbar() {
                           onMouseLeave={() =>
                             !isMobile && setHoveredItem(null)
                           }>
-                          {item.name === "Resume" ? (
+                            <Link
+                              href={item.href}
+                              className="relative block w-full px-4 py-2 text-center sm:py-4"
+                              onClick={() => isMobile && setIsMenuOpen(false)}>
+                              <motion.div
+                                className="relative z-50 w-full sm:z-10"
+                                animate={{
+                                  color:
+                                    !isMobile && hoveredItem === item.name
+                                      ? "#000"
+                                      : "#fff"
+                                }}
+                                transition={{
+                                  duration: 0.5,
+                                  ease: [0.77, 0, 0.175, 1]
+                                }}>
+                                {item.name}
+                              </motion.div>
+                            </Link>
+                          {/* {item.name === "Resume" ? (
                             <button
                               onClick={handleDownload}
                               className="relative block w-full cursor-pointer appearance-none px-4 py-2 text-center sm:py-4"
@@ -183,7 +202,7 @@ export default function Navbar() {
                                 {item.name}
                               </motion.div>
                             </Link>
-                          )}
+                          )} */}
                           <AnimatePresence>
                             {!isMobile && hoveredItem === item.name && (
                               <motion.div
