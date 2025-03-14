@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Globe, Mail, ArrowLeft } from "lucide-react";
+import { ArrowLeft, Mail } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { AnimatedListItem } from "@/ui/atoms/animated-list-item";
 import { Badge } from "@/ui/atoms/badge";
@@ -21,17 +21,22 @@ import { DownloadResumeButton } from "@/ui/resume/download-button";
 import { SkillsVisualization } from "@/ui/resume/skills-visualization";
 import { ResumeTimeline } from "@/ui/resume/timeline";
 import { LinkedinIcon as Linkedin } from "@/ui/svg/linkedin";
+import { GithubIcon } from "../svg/github";
 
 export function InteractiveResume() {
   const [activeTab, setActiveTab] = useState("Experience");
   const tabs = ["Experience", "Skills", "Education", "Testimonials"];
 
   return (
-    <section className="container mx-auto px-4 py-8 md:px-6 lg:py-12 font-basis-grotesque-pro-regular">
+    <section className="font-basis-grotesque-pro-regular container mx-auto px-4 py-8 md:px-6 lg:py-12">
       <div className="mb-8">
-        <Button variant="ghost" size="sm" className="inline-flex items-center justify-start" asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="inline-flex items-center justify-start"
+          asChild>
           <Link href="/" className="inline-flex items-center">
-            <ArrowLeft className="h-4 w-4 mr-2 flex-shrink-0" />
+            <ArrowLeft className="mr-2 h-4 w-4 flex-shrink-0" />
             <span className="whitespace-nowrap">Back to Home</span>
           </Link>
         </Button>
@@ -49,25 +54,33 @@ export function InteractiveResume() {
           <DownloadResumeButton />
           <div className="flex gap-2">
             <Button variant="outline" size="icon" asChild>
-              <Link href="mailto:andew@windycitydevs.io" aria-label="Email">
-                <Mail className="h-4 w-4" />
-              </Link>
+              <a
+                href="mailto:andew@windycitydevs.io"
+                aria-label="Email"
+                rel="noopener noreferrer"
+                className="appearance-none">
+                <Mail className="size-4" />
+              </a>
             </Button>
             <Button variant="outline" size="icon" asChild>
-              <Link
+              <a
+                className="apperance-none"
                 href="https://linkedin.com/in/asross"
                 target="_blank"
+                rel="noopener noreferrer"
                 aria-label="LinkedIn">
-                <Linkedin className="h-4 w-4" />
-              </Link>
+                <Linkedin className="size-4" />
+              </a>
             </Button>
             <Button variant="outline" size="icon" asChild>
-              <Link
-                href="https://asross.com"
+              <a
+                className="apperance-none"
+                rel="noopener noreferrer"
+                href="https://github.com/DopamineDriven"
                 target="_blank"
-                aria-label="Website">
-                <Globe className="h-4 w-4" />
-              </Link>
+                aria-label="Github">
+                <GithubIcon className="size-4" />
+              </a>
             </Button>
           </div>
         </div>

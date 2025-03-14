@@ -133,11 +133,11 @@ export default function RootLayout({
         BasisGrotesqueProBoldItalic.variable,
         inter.variable
       )}>
-      <body className="font-basis-grotesque-pro-regular overflow-x-hidden">
+      <body className="font-basis-grotesque-pro-regular overflow-x-hidden!">
         <AnimationContextProvider>
           <ThemeProvider>
             <LoadingAnimation />
-            <div className="max-w-[96rem] mx-auto flex min-h-[100dvh] flex-col sm:px-6 lg:px-8">
+            <div className="max-w-[96rem] overflow-x-hidden! mx-auto flex min-h-[100dvh] flex-col sm:px-6 lg:px-8">
               <Navbar />
               <main className="theme-transition">{children}</main>
               <Footer />
