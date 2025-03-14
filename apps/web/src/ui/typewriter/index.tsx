@@ -6,7 +6,7 @@ import { motion } from "motion/react";
 import { useAnimationContext } from "@/context/animation-context";
 import { cn } from "@/lib/utils";
 import Typewriter from "@/ui/atoms/typewriter";
-import SplitText from "../atoms/split-text";
+
 
 const LandingPageTypeWriter: FC = () => {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
@@ -121,22 +121,9 @@ const LandingPageTypeWriter: FC = () => {
   return (
     <div className="flex min-h-[3rem] flex-col px-2 sm:min-h-[4rem] sm:px-4 md:px-8">
       <div className="mx-auto w-full max-w-4xl text-center">
-        <SplitText
-          content="Portfolio 2025"
-          as="h1"
-          animateTarget="chars"
-          maxWidth="full"
-          headingClassName="theme-transition mb-4 text-3xl font-bold md:mb-8"
-          keyframes={{ opacity: [0, 1], y: [20, 0] }}
-          animationOptions={{
-            duration: 1.5,
-            bounce: 0.2
-          }}
-          withStagger={{
-            duration: 0.08,
-            from: "center"
-          }}
-        />
+      <h1 className="theme-transition mb-4 text-3xl font-bold md:mb-8">
+          Portfolio 2025
+        </h1>
         <div className="relative">
           <div className="sr-only" aria-hidden="true">
             <p>{lines.join("\n")}</p>
