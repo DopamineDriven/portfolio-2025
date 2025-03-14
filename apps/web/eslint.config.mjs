@@ -12,6 +12,7 @@ export default [
     rules: {
       "@typescript-eslint/consistent-type-assertions": "off",
       "@typescript-eslint/require-await": "off",
+      "@typescript-eslint/no-floating-promises": "off",
       "import/consistent-type-specifier-style": "off"
     }
   }
