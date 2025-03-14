@@ -9,7 +9,6 @@ import type {
  * helper workup for use in XOR type below
  * makes properties from U optional and undefined in T, and vice versa
  */
-
 export type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 
 /**
@@ -36,7 +35,8 @@ export type CSSWidthValue =
   | "auto"
   | "none";
 
-// Define stagger configuration
+
+/** Stagger config */
 export type StaggerConfig = {
   /** Duration between each element */
   duration: number;
@@ -59,10 +59,6 @@ export type BaseAnimationOptions = Omit<
   duration?: number;
   bounce?: number;
 };
-
-
-
-
 
 /**
  * with stagger
