@@ -29,12 +29,27 @@ export type CSSWidthValue =
   | `${number}vw`
   | `${number}dvw`
   | `${number}ch`
+  | `${number}svw`
+  | `${number}lvw`
+  | `${number}vmin`
+  | `${number}vmax`
+  | `${number}lvmin`
+  | `${number}lvmax`
+  | `${number}svmin`
+  | `${number}svmax`
+  | `${number}dvmin`
+  | `${number}dvmax`
+  | `${number}vi`
+  | `${number}lvi`
+  | `${number}svi`
+  | `${number}lvb`
+  | `${number}svb`
+  | `${number}dvb`
   | `${number}/${number}`
   | "full"
   | "fit"
   | "auto"
   | "none";
-
 
 /** Stagger config */
 export type StaggerConfig = {
@@ -58,24 +73,6 @@ export type BaseAnimationOptions = Omit<
   type?: "decay" | "spring" | "keyframes" | "tween" | "inertia";
   duration?: number;
   bounce?: number;
-};
-
-/**
- * with stagger
- */
-export type WithStaggerProps = {
-  animationOptions?: BaseAnimationOptions;
-  withStagger: StaggerConfig;
-};
-
-/**
- * with animation options field `delay`
- */
-export type WithDelayProps = {
-  animationOptions?: BaseAnimationOptions & {
-    delay: number | ((i: number, total: number) => number);
-  };
-  withStagger?: undefined;
 };
 
 /**
@@ -124,78 +121,32 @@ export type BaseSplitTextProps = {
 };
 
 /**
+ * Scatter Text props
+ */
+export type ScatterTextProps = BaseSplitTextProps & {
+  animationOptions?: AnimationOptions;
+};
+
+/**
+ * with stagger
+ */
+export type WithStaggerProps = {
+  animationOptions?: BaseAnimationOptions;
+  withStagger: StaggerConfig;
+};
+
+/**
+ * with animation options field `delay`
+ */
+export type WithDelayProps = {
+  animationOptions?: BaseAnimationOptions & {
+    delay: number | ((i: number, total: number) => number);
+  };
+  withStagger?: undefined;
+};
+
+/**
  * SplitText props to be consumed with mutually exclusive enforcement of stagger vs delay animation options
  */
 export type SplitTextProps = BaseSplitTextProps &
   XOR<WithStaggerProps, WithDelayProps>;
-
-/*
-
-  // Old version of single entity
-
-
-  type SplitTextProps = {
-  content: string;
-  className?: string;
-  headingClassName?: string;
-  as?:
-    | "h1"
-    | "h2"
-    | "h3"
-    | "h4"
-    | "h5"
-    | "h6"
-    | "p"
-    | "span"
-    | "div"
-    | "pre"
-    | "cite"
-    | "address"
-    | "aside"
-    | "blockquote"
-    | "caption"
-    | "label"
-    | "title"
-    | "small"
-    | "sub"
-    | "li"
-    | "i"
-    | "kbd"
-    | "summary";
-
-  initialElement?: ElementOrSelector;
-  withStagger?:
-    | false
-    | {
-
-        duration?: number;
-        startDelay?: number;
-        from?: "first" | "last" | "center" | number;
-        ease?: Easing;
-      };
-  keyframes?: DOMKeyframesDefinition;
-  animateTarget?: "words" | "chars" | "lines";
-  animationOptions?: Omit<
-    AnimationOptions,
-    "type" | "duration" | "bounce" | "delay"
-  > & {
-    type?: "decay" | "spring" | "keyframes" | "tween" | "inertia";
-    duration?: number;
-    bounce?: number;
-    delay?: number | ((i: number, total: number) => number);
-  };
-  maxWidth?:
-    | `${number}px`
-    | `${number}%`
-    | `${number}rem`
-    | `${number}em`
-    | `${number}vw`
-    | `${number}dvw`
-    | `${number}ch`
-    | `${number}/${number}`
-    | "full"
-    | "fit"
-    | "auto"
-    | "none";
-};
-  */
