@@ -1,12 +1,14 @@
-"use client"
+"use client";
 
-import { useCallback, useEffect, useRef, useState } from "react"
-import { animate, hover } from "motion"
-import { splitText } from "motion-plus"
-import { useMotionValue } from "motion/react"
-import type { ScatterTextProps } from "@/ui/atoms/types/scatter-text"
-import { cn } from "@/lib/utils"
-import { useResizeObserver } from "@/hooks/use-resize-observer"
+import type { AnimationOptions, DOMKeyframesDefinition } from "motion/react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { animate, hover } from "motion";
+import { splitText } from "motion-plus";
+import { useMotionValue } from "motion/react";
+import type { ScatterTextProps } from "@/ui/atoms/types/scatter-text";
+import { useResizeObserver } from "@/hooks/use-resize-observer";
+import { cn } from "@/lib/utils";
+import throttle from "lodash/throttle";
 
 export default function ScatterText({
   initialElement,
@@ -19,89 +21,125 @@ export default function ScatterText({
   keyframes = { x: 0, y: 0 },
   maxWidth = "420px",
   debug = false,
-  allowOverflow = false,
+  allowOverflow = false
 }: ScatterTextProps) {
-  const [containerElement, setContainerElement] = useState<HTMLDivElement | null>(null)
+  const [containerElement, setContainerElement] =
+    useState<HTMLDivElement | null>(null);
   const containerRef = useCallback((node: HTMLDivElement | null) => {
-    setContainerElement(node)
-  }, [])
+    setContainerElement(node);
+  }, []);
 
-  const { width: containerWidth } = useResizeObserver({ current: containerElement })
-  const elementRef = useRef<HTMLElement | null>(null)
+  const { width: containerWidth } = useResizeObserver({
+    current: containerElement
+  });
+  const elementRef = useRef<HTMLElement | null>(null);
 
   // Memoized callback for the text element ref
   const textRef = useCallback(
     (node: HTMLElement | null) => {
       if (node && !initialElement) {
-        elementRef.current = node
+        elementRef.current = node;
       }
     },
-    [initialElement],
-  )
+    [initialElement]
+  );
 
-  const keyframesRef = useRef(keyframes)
-  const velocityX = useMotionValue(0)
-  const velocityY = useMotionValue(0)
-  const prevEvent = useRef(0)
-  const [error, setError] = useState<Error | null>(null)
+  const keyframesRef = useRef(keyframes);
+  const animationRef = useRef(animationOptions);
+  const velocityX = useMotionValue(0);
+  const velocityY = useMotionValue(0);
+  const prevEvent = useRef(0);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    keyframesRef.current = keyframes
-  }, [keyframes])
+    keyframesRef.current = keyframes;
+  }, [keyframes]);
+
+  useEffect(() => {
+    animationRef.current = animationOptions;
+  }, [animationOptions]);
 
   useEffect(() => {
     if (debug) {
-      console.log(`[${maxWidth}]: ${containerWidth}px`)
+      console.log(`[${maxWidth}]: ${containerWidth}px`);
     }
-  }, [maxWidth, containerWidth, debug])
+  }, [maxWidth, containerWidth, debug]);
 
+    const splitTextRef = useRef<{
+      readonly chars: HTMLSpanElement[];
+      readonly words: HTMLSpanElement[];
+      readonly lines: HTMLSpanElement[];
+  } | null>(null);
 
-
-  useEffect(() => {
-    if (!containerElement || !elementRef.current) return
-
-    try {
-      const target = splitText(elementRef.current)
-
-      const handlePointerMove = (event: PointerEvent) => {
-        const now = performance.now()
-        const timeSinceLastEvent = Math.max(0.001, (now - prevEvent.current) / 1000)
-        prevEvent.current = now
-        velocityX.set(event.movementX / timeSinceLastEvent)
-        velocityY.set(event.movementY / timeSinceLastEvent)
+    // Re-split when `content` changes
+    useEffect(() => {
+      if (elementRef.current) {
+        splitTextRef.current = splitText(elementRef.current);
       }
+    }, [content]);
 
-      document.addEventListener("pointermove", handlePointerMove)
+  const animateScatterText = useCallback(() => {
+    if (!containerElement || !elementRef.current) return;
+    if (!splitTextRef.current) return;
+    try {
+      const target = splitTextRef.current;
+      const handlePointerMove = throttle((event: PointerEvent) => {
+        const now = performance.now();
+        const timeSinceLastEvent = Math.max(
+          0.001,
+          (now - prevEvent.current) / 1000
+        );
+        prevEvent.current = now;
+        velocityX.set(event.movementX / timeSinceLastEvent);
+        velocityY.set(event.movementY / timeSinceLastEvent);
+      }, 50);
+
+      containerElement.addEventListener("pointermove", handlePointerMove);
 
       const handleHoverStart = (element: Element, _event: PointerEvent) => {
-        const speed = Math.sqrt(velocityX.get() * velocityX.get() + velocityY.get() * velocityY.get())
-        const angle = Math.atan2(velocityY.get(), velocityX.get())
-        const distance = speed * 0.1
+        const speed = Math.sqrt(
+          velocityX.get() * velocityX.get() + velocityY.get() * velocityY.get()
+        );
+        const angle = Math.atan2(velocityY.get(), velocityX.get());
+        const distance = speed * 0.1;
 
         const dynamicKeyframes = {
           ...keyframesRef.current,
           x: Math.cos(angle) * distance,
-          y: Math.sin(angle) * distance,
-        }
+          y: Math.sin(angle) * distance
+        } satisfies DOMKeyframesDefinition;
 
-        animate(element, dynamicKeyframes, animationOptions)
+        const dynamicAnimationOpts = {
+          ...animationRef.current,
+          type: "spring",
+          stiffness: 100,
+          damping: 50
+        } satisfies AnimationOptions;
+
+        animate(element, dynamicKeyframes, dynamicAnimationOpts);
 
         return (event: PointerEvent) => {
-          event
+          event;
           // Optional hover end handler
-        }
-      }
+        };
+      };
 
-      hover(target[animateTarget], handleHoverStart)
+      hover(target[animateTarget], handleHoverStart);
 
       return () => {
-        document.removeEventListener("pointermove", handlePointerMove)
-      }
+        document.removeEventListener("pointermove", handlePointerMove);
+      };
     } catch (err) {
-      console.error("Error in ScatterText effect:", err)
-      setError(err instanceof Error ? err : new Error(String(err)))
+      console.error("Error in ScatterText useCallback: ", err);
+      setError(err instanceof Error ? err : new Error(String(err)));
     }
-  }, [content, containerElement, animateTarget, animationOptions, velocityX, velocityY])
+  }, [animateTarget, containerElement, velocityX, velocityY]);
+
+  useEffect(() => {
+    if (containerElement && elementRef.current) {
+      animateScatterText();
+    }
+  }, [containerElement, animateScatterText]);
 
   if (error) {
     return (
@@ -109,48 +147,44 @@ export default function ScatterText({
         <p>Error rendering animated text: {error.message}</p>
         <p>{content}</p>
       </div>
-    )
-  }
-
-  const getWidthClass = () => {
-    if (!maxWidth) return ""
-
-    if (["full", "fit", "auto", "none"].includes(maxWidth)) {
-      return `max-w-${maxWidth}`
-    }
-
-    if (maxWidth.endsWith("%")) {
-      return `max-w-[${maxWidth}]`
-    }
-
-    return `max-w-[${maxWidth}]`
+    );
   }
 
   return (
     <div
       className={cn(
-        "container flex flex-col items-center justify-center text-left relative space-y-2",
+        "relative container flex flex-col items-center justify-center space-y-2 text-left",
         allowOverflow ? "overflow-visible" : "overflow-hidden",
-        getWidthClass(),
+        "container flex w-full items-center justify-center",
         className,
+        maxWidth
+          ? maxWidth !== "full" &&
+            maxWidth !== "auto" &&
+            maxWidth !== "none" &&
+            maxWidth !== "fit"
+            ? `max-w-[${maxWidth}]`
+            : `max-w-${maxWidth}`
+          : `420px`,
+        className
       )}
       ref={containerRef}
-      aria-label={`Interactive text: ${content}`}
-    >
+      aria-label={`Interactive text: ${content}`}>
       <Tag
         ref={textRef}
-        className={cn("leading-none tracking-[-0.04em] will-change-[transform,opacity]", headingClassName)}
-      >
+        className={cn(
+          "leading-none tracking-[-0.04em] will-change-[transform,opacity]",
+          headingClassName
+        )}>
         {content}
       </Tag>
 
       {debug && (
-        <div className="relative mt-2 text-xs text-gray-400 bg-black/50 px-1 rounded">
+        <div className="relative mt-2 rounded bg-black/50 px-1 text-xs text-gray-400">
           Width: {containerWidth.toFixed(0)}px
         </div>
       )}
     </div>
-  )
+  );
 }
-ScatterText.displayName = "ScatterText"
 
+ScatterText.displayName = "ScatterText";

@@ -118,13 +118,15 @@ export default function WavyText({
         fontsVisible ? "visible" : "invisible"
       )}
       ref={containerRef}>
-        <Tag className={headingClassName}>      {contentBefore ?? null}</Tag>&nbsp;
+      <Tag className={headingClassName}>{contentBefore ?? null}</Tag>
+      &nbsp;
       <Tag
         ref={textRef}
         className={cn("will-change-[transform,opacity]", headingClassName)}>
         {content}
       </Tag>
-      <Tag className={headingClassName}>      {contentAfter ?? null}</Tag>
+      &nbsp;
+      <Tag className={headingClassName}>{contentAfter ?? null}</Tag>
     </div>
   );
 }

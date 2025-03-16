@@ -4,52 +4,7 @@ import type {
   Easing,
   ElementOrSelector
 } from "motion-dom";
-
-/**
- * helper workup for use in XOR type below
- * makes properties from U optional and undefined in T, and vice versa
- */
-export type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
-
-/**
- * enforces mutual exclusivity of T | U
- */
-export type XOR<T, U> = T | U extends object
-  ? (Without<T, U> & U) | (Without<U, T> & T)
-  : T | U;
-
-/**
- * valid width values
- */
-export type CSSWidthValue =
-  | `${number}px`
-  | `${number}%`
-  | `${number}rem`
-  | `${number}em`
-  | `${number}vw`
-  | `${number}dvw`
-  | `${number}ch`
-  | `${number}svw`
-  | `${number}lvw`
-  | `${number}vmin`
-  | `${number}vmax`
-  | `${number}lvmin`
-  | `${number}lvmax`
-  | `${number}svmin`
-  | `${number}svmax`
-  | `${number}dvmin`
-  | `${number}dvmax`
-  | `${number}vi`
-  | `${number}lvi`
-  | `${number}svi`
-  | `${number}lvb`
-  | `${number}svb`
-  | `${number}dvb`
-  | `${number}/${number}`
-  | "full"
-  | "fit"
-  | "auto"
-  | "none";
+import type { CSSWidthValue, TextElementTagUnion, XOR } from "./helpers";
 
 /** Stagger config */
 export type StaggerConfig = {
@@ -86,30 +41,7 @@ export type BaseSplitTextProps = {
   /** optional text element className */
   headingClassName?: string;
   /** HTML tag to be used for the text element */
-  as?:
-    | "h1"
-    | "h2"
-    | "h3"
-    | "h4"
-    | "h5"
-    | "h6"
-    | "p"
-    | "span"
-    | "div"
-    | "pre"
-    | "cite"
-    | "address"
-    | "aside"
-    | "blockquote"
-    | "caption"
-    | "label"
-    | "title"
-    | "small"
-    | "sub"
-    | "li"
-    | "i"
-    | "kbd"
-    | "summary";
+  as?: TextElementTagUnion;
   /** optional initial element or selector for splitText */
   initialElement?: ElementOrSelector;
   /** Animation keyframes */
@@ -118,13 +50,6 @@ export type BaseSplitTextProps = {
   animateTarget?: "words" | "chars" | "lines";
   /** allowed max width of the container */
   maxWidth?: CSSWidthValue;
-};
-
-/**
- * Scatter Text props
- */
-export type ScatterTextProps = BaseSplitTextProps & {
-  animationOptions?: AnimationOptions;
 };
 
 /**
