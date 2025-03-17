@@ -4,6 +4,7 @@ import React, { createElement, Fragment } from "react";
 import * as jsxRuntime from "react/jsx-runtime";
 import Image from "next/image";
 import Link from "next/link";
+// import {ScatterText, type ScatterTextProps} from "@d0paminedriven/motion";
 import { transformerMetaWordHighlight } from "@shikijs/transformers";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeReact from "rehype-react";
@@ -15,7 +16,6 @@ import { unified } from "unified";
 import { shimmer } from "@/lib/shimmer";
 import { slugify } from "@/lib/slugify";
 import { CodeBlock } from "@/ui/atoms/code-block";
-
 
 interface CustomImageProps extends ComponentPropsWithRef<typeof Image> {
   "data-zoomable"?: boolean;
@@ -60,9 +60,9 @@ function CustomLink({
 
   if (href?.startsWith("#")) {
     return (
-      <a href={href} {...props}>
+      <Link href={href} {...props}>
         {children}
-      </a>
+      </Link>
     );
   }
 
@@ -124,6 +124,17 @@ const components = {
   h2: createHeading(2),
   h3: createHeading(3),
   h4: createHeading(4),
+
+  // h4: ({ children }: { children: string }) => {
+  //   return (
+  //     <ScatterText
+  //       content={children}
+  //       containerStyles={{alignItems: "start"}}
+  //       as={"h4"}allowOverflow={true}
+  //       headingClassName="text-left"
+  //     />
+  //   );
+  // },
   h5: createHeading(5),
   h6: createHeading(6),
   img: CustomImage

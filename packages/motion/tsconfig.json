@@ -5,16 +5,14 @@
       "@/*": ["./src/*"]
     },
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "rootDir": "./src",
+"outDir": "dist"
   },
+
   "include": [
-    "**/*.ts",
+    "src/**/*.ts",
     "src/**/*.tsx",
-    "**/*.mjs",
-    "**/*.preset.ts",
-    "postcss.config.mjs",
-    "index.d.ts",
-    "tsup.config.ts",
     "../../reset.d.ts"
   ],
   "exclude": ["dist"]

@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 export function useResizeObserver<const T extends HTMLDivElement | null>(
   parentContainerRef: RefObject<T>
 ) {
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
+  const [width, setWidth] = useState<number>(0);
+  const [height, setHeight] = useState<number>(0);
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver(mutations => {

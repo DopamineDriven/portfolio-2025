@@ -1,6 +1,6 @@
 {
   "name": "@portfolio/motion",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "a text-animation-based react library built on motion",
   "files": [
     "dist/**/*.{js,mjs,cjs,d.mts,d.ts,d.cts,css,svg}"
@@ -62,6 +62,7 @@
     "lint": "eslint",
     "dev": "pnpm build",
     "prebuild": "rm -rf dist",
+    "postbuild": "tsx src/services/postbuild.ts flag-check",
     "build": "tsup",
     "clean": "git clean -xdf dist node_modules",
     "types": "tsc --emitDeclarationOnly"
@@ -74,9 +75,11 @@
     "motion-plus-react": "^0.1.5"
   },
   "dependencies": {
-    "@swc/helpers": "^0.5.15"
+    "@swc/helpers": "^0.5.15",
+    "lodash.throttle": "^4.1.1"
   },
   "devDependencies": {
+    "@d0paminedriven/fs": "^0.2.0",
     "@microsoft/api-extractor": "^7.52.1",
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
@@ -91,7 +94,6 @@
     "chokidar": "^4.0.3",
     "eslint": "latest",
     "jiti": "^2.4.2",
-    "lodash.throttle": "^4.1.1",
     "motion": "^12.5.0",
     "motion-plus": "^0.1.5",
     "motion-plus-react": "^0.1.5",

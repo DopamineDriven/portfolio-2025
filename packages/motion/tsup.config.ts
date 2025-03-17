@@ -11,11 +11,17 @@ const tsupConfig = (options: Options) =>
       "src/types/scatter-text.ts",
       "src/types/split-text.ts",
       "src/types/wave-text.ts",
-      "src/ui/scatter-text.tsx"
+      "src/ui/scatter-text.tsx",
+      "!src/services/postbuild.ts"
     ],
-    target: ["esnext"],
-    external: ["react"],
+    // esbuildOptions: (options, _) => {
+    //   options.keepNames = true;
+    //   options.minifyIdentifiers = false;
+    // },
+    // minifyIdentifiers: false,
+    // banner: { js: '"use client"' },
     dts: true,
+external: ["react"],
     watch: process.env.NODE_ENV === "development",
     keepNames: true,
     format: ["cjs", "esm"],
