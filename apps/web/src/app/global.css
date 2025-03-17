@@ -67,6 +67,14 @@ background ~= #020817
   --color-chart-3: oklch(0.6624 0.2895 320.92);
   --color-chart-4: oklch(0.6924 0.1426 165.69);
   --color-chart-5: oklch(0.8372 0.1644 84.53);
+  --color-hue-0: oklch(0.9434 0.199 105.96);
+  --color-hue-1: oklch(0.6477 0.263 359.98);
+  --color-hue-2: oklch(0.6404 0.300 324.36);
+  --color-hue-3: oklch(0.5636 0.292 301.63);
+  --color-hue-4: oklch(0.5898 0.211 259.36);
+  --color-hue-5: oklch(0.8203 0.141 210.49);
+  --color-hue-6: oklch(0.8842 0.107 168.47);
+
   --radius-sm: 0.25rem;
 
   --container-8xl: 96rem;
@@ -163,6 +171,13 @@ background ~= #020817
     --color-chart-3: oklch(0.6624 0.2895 320.92);
     --color-chart-4: oklch(0.6924 0.1426 165.69);
     --color-chart-5: oklch(0.8372 0.1644 84.53);
+    --color-hue-0: oklch(0.9434 0.199 105.96);
+    --color-hue-1: oklch(0.6477 0.263 359.98);
+    --color-hue-2: oklch(0.6404 0.300 324.36);
+    --color-hue-3: oklch(0.5636 0.292 301.63);
+    --color-hue-4: oklch(0.5898 0.211 259.36);
+    --color-hue-5: oklch(0.8203 0.141 210.49);
+    --color-hue-6: oklch(0.8842 0.107 168.47);
   }
 }
 
