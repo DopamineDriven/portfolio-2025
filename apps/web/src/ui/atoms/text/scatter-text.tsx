@@ -1,7 +1,7 @@
 "use client";
 
 import type { AnimationOptions, DOMKeyframesDefinition } from "motion/react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { animate, hover } from "motion";
 import { splitText } from "motion-plus";
 import { useMotionValue } from "motion/react";
@@ -155,8 +155,6 @@ export default function ScatterText({
       className={cn(
         "relative container flex flex-col items-center justify-center space-y-2 text-left",
         allowOverflow ? "overflow-visible" : "overflow-hidden",
-        "container flex w-full items-center justify-center",
-        className,
         maxWidth
           ? maxWidth !== "full" &&
             maxWidth !== "auto" &&
@@ -168,7 +166,11 @@ export default function ScatterText({
         className
       )}
       ref={containerRef}
-      aria-label={`Interactive text: ${content}`}>
+      aria-label={`Interactive text: ${content}`}
+      style={{
+        maxWidth: maxWidth,
+
+      }}>
       <Tag
         ref={textRef}
         className={cn(
@@ -177,7 +179,6 @@ export default function ScatterText({
         )}>
         {content}
       </Tag>
-
       {debug && (
         <div className="relative mt-2 rounded bg-black/50 px-1 text-xs text-gray-400">
           Width: {containerWidth.toFixed(0)}px
@@ -186,5 +187,3 @@ export default function ScatterText({
     </div>
   );
 }
-
-ScatterText.displayName = "ScatterText";

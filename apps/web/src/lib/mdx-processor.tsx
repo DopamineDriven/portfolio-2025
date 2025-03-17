@@ -16,6 +16,7 @@ import { shimmer } from "@/lib/shimmer";
 import { slugify } from "@/lib/slugify";
 import { CodeBlock } from "@/ui/atoms/code-block";
 
+
 interface CustomImageProps extends ComponentPropsWithRef<typeof Image> {
   "data-zoomable"?: boolean;
   [key: string]: any;
@@ -112,6 +113,7 @@ function CustomImage({
     />
   );
 }
+// Client component wrapper for SplitText
 
 const components = {
   a: CustomLink,
@@ -125,6 +127,7 @@ const components = {
   h5: createHeading(5),
   h6: createHeading(6),
   img: CustomImage
+  // animatedText: ScatterText
 };
 
 export async function processMDXToReact(content: string) {
@@ -155,3 +158,11 @@ export async function processMDXToReact(content: string) {
   // The result.result contains the React elements
   return result.result as React.ReactElement;
 }
+// declare module "react" {
+//   // eslint-disable-next-line @typescript-eslint/no-namespace
+//   namespace JSX {
+//     interface IntrinsicElements {
+//       "animatedText": ScatterTextProps;
+//     }
+//   }
+// }

@@ -1,0 +1,109 @@
+{
+  "name": "@portfolio/motion",
+  "version": "0.1.0",
+  "description": "a text-animation-based react library built on motion",
+  "files": [
+    "dist/**/*.{js,mjs,cjs,d.mts,d.ts,d.cts,css,svg}"
+  ],
+  "license": "MIT",
+  "sideEffects": true,
+  "type": "module",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "dist/*.d.ts",
+        "dist/*.d.cts",
+        "dist/*/index.d.ts"
+      ],
+      "hooks": [
+        "dist/hooks/use-resize-observer.d.ts"
+      ],
+      "types": [
+        "dist/types/helpers.d.ts",
+        "dist/types/scatter-text.d.ts",
+        "dist/types/split-text.d.ts",
+        "dist/types/wave-text.d.ts"
+      ],
+      "ui": ["dist/ui/scatter-text.d.ts"]
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "typesVersions": {
+      "*": {
+        "*": [
+          "dist/*.d.ts",
+          "dist/*/index.d.ts"
+        ],
+        "hooks": [
+          "dist/hooks/use-resize-observer.d.ts"
+        ],
+        "types": [
+          "dist/types/helpers.d.ts",
+          "dist/types/scatter-text.d.ts",
+          "dist/types/split-text.d.ts",
+          "dist/types/wave-text.d.ts"
+        ],
+        "ui": ["dist/ui/scatter-text.d.ts"]
+      }
+    }
+  },
+  "source": "src/index.ts",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js",
+    "./types": "./dist/types/*.js",
+    "./hooks/use-resize-observer": "./dist/hooks/use-resize-observer.js",
+    "./ui/scatter-text": "./dist/ui/scatter-text.js"
+  },
+  "scripts": {
+    "lint": "eslint",
+    "dev": "pnpm build",
+    "prebuild": "rm -rf dist",
+    "build": "tsup",
+    "clean": "git clean -xdf dist node_modules",
+    "types": "tsc --emitDeclarationOnly"
+  },
+  "peerDependencies": {
+    "react": ">=19",
+    "react-dom": ">=19",
+    "motion": "^12.5.0",
+    "motion-plus": "^0.1.5",
+    "motion-plus-react": "^0.1.5"
+  },
+  "dependencies": {
+    "@swc/helpers": "^0.5.15"
+  },
+  "devDependencies": {
+    "@microsoft/api-extractor": "^7.52.1",
+    "@portfolio/eslint-config": "workspace:*",
+    "@portfolio/prettier-config": "workspace:*",
+    "@portfolio/tsconfig": "workspace:*",
+    "@swc/core": "^1.11.9",
+    "@types/lodash.throttle": "^4.1.9",
+    "@types/node": "^22.13.10",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "autoprefixer": "^10.4.21",
+    "clsx": "^2.1.1",
+    "chokidar": "^4.0.3",
+    "eslint": "latest",
+    "jiti": "^2.4.2",
+    "lodash.throttle": "^4.1.1",
+    "motion": "^12.5.0",
+    "motion-plus": "^0.1.5",
+    "motion-plus-react": "^0.1.5",
+    "postcss": "^8.5.3",
+    "prettier": "latest",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "terser": "^5.39.0",
+    "tslib": "latest",
+    "tsup": "latest",
+    "tsx": "latest",
+    "typescript": "latest"
+  },
+  "prettier": "@portfolio/prettier-config"
+}
