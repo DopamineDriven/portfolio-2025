@@ -17,6 +17,7 @@
   "css.format.newlineBetweenSelectors": true,
   "css.hover.documentation": true,
   "css.hover.references": true,
+
   "editor.bracketPairColorization.enabled": false,
   "svg.preview.autoShow": false,
   "svg.preview.disable": true,

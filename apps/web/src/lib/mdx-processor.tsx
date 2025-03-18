@@ -1,5 +1,7 @@
+import type { Root } from "mdast";
 import type { ComponentPropsWithRef } from "react";
 import type { Options as RehypeOptions } from "rehype-pretty-code";
+import type { Options as RehypeSanitizeOptions } from "rehype-sanitize";
 import React, { createElement, Fragment } from "react";
 import * as jsxRuntime from "react/jsx-runtime";
 import Image from "next/image";
@@ -8,15 +10,49 @@ import Link from "next/link";
 import { transformerMetaWordHighlight } from "@shikijs/transformers";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeReact from "rehype-react";
-import rehypeSanitize from "rehype-sanitize";
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
+import remarkDirective from "remark-directive";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
+import { visit } from "unist-util-visit";
 import { shimmer } from "@/lib/shimmer";
 import { slugify } from "@/lib/slugify";
 import { CodeBlock } from "@/ui/atoms/code-block";
+import SplitText from "@/ui/atoms/text/split-text";
+import WavyText from "@/ui/atoms/text/wavy-text";
 
+function directiveToComponent() {
+  return (tree: Root) => {
+    // `visit` each directive node and transform it
+    visit(tree, node => {
+      // remark-directive attaches these node types:
+      if (
+        node.type === "textDirective" ||
+        node.type === "leafDirective" ||
+        node.type === "containerDirective"
+      ) {
+        // e.g. `node.name === 'wavyText'` or `splitText`, etc.
+        const { name, attributes } = node;
+
+        // For example, if you have `::wavyText{ content="..." maxWidth="..." }`
+        // we want to transform it into a custom React component <WavyText ... />
+        if (name === "wavyText") {
+          node.data = {
+            hName: "WavyText",
+            hProperties: { ...attributes }
+          };
+        } else if (name === "splitText") {
+          node.data = {
+            hName: "SplitText",
+            hProperties: { ...attributes }
+          };
+        }
+      }
+    });
+  };
+}
 interface CustomImageProps extends ComponentPropsWithRef<typeof Image> {
   "data-zoomable"?: boolean;
   [key: string]: any;
@@ -98,7 +134,6 @@ function CustomImage({
   "data-zoomable": _zoomable,
   ...props
 }: CustomImageProps) {
-  // If you want to implement zoomable images, you can check the zoomable prop here
   return (
     <Image
       src={src || "/placeholder.svg"}
@@ -113,7 +148,6 @@ function CustomImage({
     />
   );
 }
-// Client component wrapper for SplitText
 
 const components = {
   a: CustomLink,
@@ -145,28 +179,64 @@ export async function processMDXToReact(content: string) {
   const processor = unified();
   processor.use(remarkParse);
   processor.use(remarkGfm);
+  processor.use(remarkDirective);
+  processor.use(directiveToComponent);
+
   processor.use(remarkRehype, { allowDangerousHtml: true });
   processor.use(rehypePrettyCode, options);
   processor.use(rehypeSanitize, {
+    allowDoctypes: true,
+    tagNames: ["WavyText", "SplitText", ...(defaultSchema.tagNames ?? [])],
     attributes: {
+      ...(defaultSchema.attributes) ?? {},
       "*": ["className", "style", "id", "data*"],
       code: ["className", "data*", "style"],
       span: ["className", "style", "data*"],
-      pre: ["className", "data*", "style", "tabIndex"]
+      pre: ["className", "data*", "style", "tabIndex"],
+      SplitText: [
+        "content",
+        "maxWidth",
+        "id",
+        "data*",
+        "className",
+        "as",
+        "headingClassName",
+        "keyframes",
+        "animationOptions",
+        "withStagger",
+        "animateTarget"
+      ],
+      WavyText: [
+        "content",
+        "contentBefore",
+        "contentAfter",
+        "maxWidth",
+        "id",
+        "data*",
+        "className",
+        "as",
+        "headingClassName",
+        "keyframes",
+        "animationOptions",
+        "animateTarget"
+      ]
     }
-  });
+  } satisfies RehypeSanitizeOptions);
   processor.use(rehypeReact, {
     jsx: jsxRuntime.jsx,
     jsxs: jsxRuntime.jsxs,
     Fragment: Fragment,
     createElement,
-    components,
+    components: {
+      ...components,
+      WavyText: WavyText,
+      SplitText: SplitText
+    },
     passNode: true
   });
 
   const result = await processor.process(content);
 
-  // The result.result contains the React elements
   return result.result as React.ReactElement;
 }
 // declare module "react" {

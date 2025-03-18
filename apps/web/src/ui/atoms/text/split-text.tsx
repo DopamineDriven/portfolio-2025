@@ -113,6 +113,5 @@ function SplitText({
   );
 }
 
-SplitText.displayName = "SplitText";
 
 export default SplitText;
