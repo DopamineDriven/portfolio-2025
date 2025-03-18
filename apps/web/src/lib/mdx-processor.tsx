@@ -24,6 +24,8 @@ import SplitText from "@/ui/atoms/text/split-text";
 import WavyText from "@/ui/atoms/text/wavy-text";
 
 function directiveToComponent() {
+  // TODO handle object props here by writing them as json objects then parsing them if defined via node.attribute
+  // ::splitText{content="Install the gtag types package" as="h4" headingClassName="max-w-3xl font-medium" animateTarget="chars" }
   return (tree: Root) => {
     // `visit` each directive node and transform it
     visit(tree, node => {
