@@ -20,8 +20,8 @@ import { AnimatedTabs } from "@/ui/resume/animated-tabs";
 import { DownloadResumeButton } from "@/ui/resume/download-button";
 import { SkillsVisualization } from "@/ui/resume/skills-visualization";
 import { ResumeTimeline } from "@/ui/resume/timeline";
+import { GithubIcon } from "@/ui/svg/github";
 import { LinkedinIcon as Linkedin } from "@/ui/svg/linkedin";
-import { GithubIcon } from "../svg/github";
 
 export function InteractiveResume() {
   const [activeTab, setActiveTab] = useState("Experience");
