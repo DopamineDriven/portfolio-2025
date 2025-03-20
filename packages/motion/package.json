@@ -1,6 +1,6 @@
 {
   "name": "@portfolio/motion",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "a text-animation-based react library built on motion",
   "files": [
     "dist/**/*.{js,mjs,cjs,d.mts,d.ts,d.cts,css,svg}"
@@ -16,15 +16,21 @@
         "dist/*/index.d.ts"
       ],
       "hooks": [
+        "dist/hooks/use-gentle-text-effect.d.ts",
         "dist/hooks/use-resize-observer.d.ts"
       ],
       "types": [
+        "dist/types/gentle-text.d.ts",
         "dist/types/helpers.d.ts",
+        "dist/types/hooks.d.ts",
         "dist/types/scatter-text.d.ts",
         "dist/types/split-text.d.ts",
         "dist/types/wave-text.d.ts"
       ],
-      "ui": ["dist/ui/scatter-text.d.ts"]
+      "ui": [
+        "dist/ui/gentle-text.d.ts",
+        "dist/ui/scatter-text.d.ts"
+      ]
     }
   },
   "publishConfig": {
@@ -33,18 +39,25 @@
       "*": {
         "*": [
           "dist/*.d.ts",
+          "dist/*.d.cts",
           "dist/*/index.d.ts"
         ],
         "hooks": [
+          "dist/hooks/use-gentle-text-effect.d.ts",
           "dist/hooks/use-resize-observer.d.ts"
         ],
         "types": [
+          "dist/types/gentle-text.d.ts",
           "dist/types/helpers.d.ts",
+          "dist/types/hooks.d.ts",
           "dist/types/scatter-text.d.ts",
           "dist/types/split-text.d.ts",
           "dist/types/wave-text.d.ts"
         ],
-        "ui": ["dist/ui/scatter-text.d.ts"]
+        "ui": [
+          "dist/ui/gentle-text.d.ts",
+          "dist/ui/scatter-text.d.ts"
+        ]
       }
     }
   },
@@ -54,8 +67,10 @@
   "exports": {
     ".": "./dist/index.js",
     "./*": "./dist/*.js",
-    "./types": "./dist/types/*.js",
+    "./types/*": "./dist/types/*.js",
+    "./hooks/use-gentle-text-effect": "./dist/hooks/use-gentle-text-effect.js",
     "./hooks/use-resize-observer": "./dist/hooks/use-resize-observer.js",
+    "./ui/gentle-text": "./dist/ui/gentle-text.js",
     "./ui/scatter-text": "./dist/ui/scatter-text.js"
   },
   "scripts": {
@@ -71,7 +86,7 @@
     "react": ">=19",
     "react-dom": ">=19",
     "motion": "^12.5.0",
-    "motion-plus": "^0.1.5",
+    "motion-plus": "^0.1.6",
     "motion-plus-react": "^0.1.5"
   },
   "dependencies": {
@@ -84,10 +99,10 @@
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
     "@portfolio/tsconfig": "workspace:*",
-    "@swc/core": "^1.11.9",
+    "@swc/core": "^1.11.11",
     "@types/lodash.throttle": "^4.1.9",
     "@types/node": "^22.13.10",
-    "@types/react": "^19.0.10",
+    "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
     "autoprefixer": "^10.4.21",
     "clsx": "^2.1.1",
@@ -95,7 +110,7 @@
     "eslint": "latest",
     "jiti": "^2.4.2",
     "motion": "^12.5.0",
-    "motion-plus": "^0.1.5",
+    "motion-plus": "^0.1.6",
     "motion-plus-react": "^0.1.5",
     "postcss": "^8.5.3",
     "prettier": "latest",

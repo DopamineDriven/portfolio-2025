@@ -6,6 +6,7 @@ import React, { createElement, Fragment } from "react";
 import * as jsxRuntime from "react/jsx-runtime";
 import Image from "next/image";
 import Link from "next/link";
+import { ScatterText } from "@d0paminedriven/motion";
 // import {ScatterText, type ScatterTextProps} from "@d0paminedriven/motion";
 import { transformerMetaWordHighlight } from "@shikijs/transformers";
 import rehypePrettyCode from "rehype-pretty-code";
@@ -17,6 +18,7 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 import { visit } from "unist-util-visit";
+import type { SplitTextProps } from "@/ui/atoms/types/split-text";
 import { shimmer } from "@/lib/shimmer";
 import { slugify } from "@/lib/slugify";
 import { CodeBlock } from "@/ui/atoms/code-block";
@@ -26,6 +28,7 @@ import WavyText from "@/ui/atoms/text/wavy-text";
 function directiveToComponent() {
   // TODO handle object props here by writing them as json objects then parsing them if defined via node.attribute
   // ::splitText{content="Install the gtag types package" as="h4" headingClassName="max-w-3xl font-medium" animateTarget="chars" }
+  // ::animatedText{content="Install the gtag types package" as="h4" headingClassName="max-w-3xl font-medium" maxWidth="100%" containerClassName="text-left justify-start" animateTarget="chars" }
   return (tree: Root) => {
     // `visit` each directive node and transform it
     visit(tree, node => {
@@ -46,8 +49,47 @@ function directiveToComponent() {
             hProperties: { ...attributes }
           };
         } else if (name === "splitText") {
+          console.log(attributes);
+          const attrs = { ...attributes };
+          if (
+            "keyframes" in attrs &&
+            attrs.keyframes &&
+            typeof attrs.keyframes === "string"
+          )
+            (attrs.keyframes as unknown as NonNullable<
+              SplitTextProps["keyframes"]
+            >) = JSON.parse(attrs.keyframes) as NonNullable<
+              SplitTextProps["keyframes"]
+            >;
+          if (
+            "animationOptions" in attrs &&
+            attrs.animationOptions &&
+            typeof attrs.animationOptions === "string"
+          )
+            (attrs.animationOptions as unknown as NonNullable<
+              SplitTextProps["animationOptions"]
+            >) = JSON.parse(attrs.animationOptions) as NonNullable<
+              SplitTextProps["animationOptions"]
+            >;
+          if (
+            "withStagger" in attrs &&
+            attrs.withStagger &&
+            typeof attrs.withStagger === "string"
+          )
+            (attrs.withStagger as unknown as NonNullable<
+              SplitTextProps["withStagger"]
+            >) = JSON.parse(attrs.withStagger) as NonNullable<
+              SplitTextProps["withStagger"]
+            >;
+          console.log(attrs);
           node.data = {
             hName: "SplitText",
+            hProperties: { ...attrs }
+          };
+        } else if (name === "scatterText") {
+          console.log(attributes);
+          node.data = {
+            hName: "ScatterText",
             hProperties: { ...attributes }
           };
         }
@@ -174,7 +216,6 @@ const components = {
   h5: createHeading(5),
   h6: createHeading(6),
   img: CustomImage
-  // animatedText: ScatterText
 };
 
 export async function processMDXToReact(content: string) {
@@ -188,13 +229,34 @@ export async function processMDXToReact(content: string) {
   processor.use(rehypePrettyCode, options);
   processor.use(rehypeSanitize, {
     allowDoctypes: true,
-    tagNames: ["WavyText", "SplitText", ...(defaultSchema.tagNames ?? [])],
+    tagNames: [
+      "WavyText",
+      "ScatterText",
+      "SplitText",
+      ...(defaultSchema.tagNames ?? [])
+    ],
     attributes: {
-      ...(defaultSchema.attributes) ?? {},
+      ...(defaultSchema.attributes ?? {}),
       "*": ["className", "style", "id", "data*"],
       code: ["className", "data*", "style"],
       span: ["className", "style", "data*"],
       pre: ["className", "data*", "style", "tabIndex"],
+      ScatterText: [
+        "content",
+        "maxWidth",
+        "id",
+        "data*",
+        "containerClassName",
+        "allowOverflow",
+        "as",
+        "headingClassName",
+        "keyframes",
+        "animationOptions",
+        "withStagger",
+        "animateTarget",
+        "headingStyles",
+        "containerStyles"
+      ],
       SplitText: [
         "content",
         "maxWidth",
@@ -231,6 +293,7 @@ export async function processMDXToReact(content: string) {
     createElement,
     components: {
       ...components,
+      ScatterText: ScatterText,
       WavyText: WavyText,
       SplitText: SplitText
     },

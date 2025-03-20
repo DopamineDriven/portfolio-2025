@@ -6,11 +6,15 @@ const tsupConfig = (options: Options) =>
   ({
     entry: [
       "src/index.ts",
+      "src/hooks/use-gentle-text-effect.ts",
       "src/hooks/use-resize-observer.ts",
       "src/types/helpers.ts",
+      "src/types/gentle-text.ts",
+      "src/types/hooks.ts",
       "src/types/scatter-text.ts",
       "src/types/split-text.ts",
       "src/types/wave-text.ts",
+      "src/ui/gentle-text.tsx",
       "src/ui/scatter-text.tsx",
       "!src/services/postbuild.ts"
     ],

@@ -91,7 +91,7 @@ function SplitText({
   return (
     <div
       className={cn(
-        "flex w-full items-center justify-center text-left",
+        "flex w-full items-start justify-center text-left",
         maxWidth
           ? maxWidth !== "full" &&
             maxWidth !== "auto" &&
