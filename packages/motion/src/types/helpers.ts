@@ -39,10 +39,26 @@ export type CSSWidthValue =
   | `${number}svb`
   | `${number}dvb`
   | `${number}/${number}`
+  | `calc(${number | string})`
   | "full"
   | "fit"
-  | "auto"
-  | "none";
+  | "none"
+  | "-moz-initial"
+  | "inherit"
+  | "initial"
+  | "revert"
+  | "revert-layer"
+  | "unset"
+  | "-moz-fit-content"
+  | "-moz-max-content"
+  | "-moz-min-content"
+  | "-webkit-fit-content"
+  | "-webkit-max-content"
+  | "-webkit-min-content"
+  | "fit-content"
+  | "intrinsic"
+  | "max-content"
+  | "min-content";
 
 /** HTML tag to be used for the text element (not comprehensive)
  *
@@ -85,3 +101,37 @@ export type TextElementTagUnion =
   | "i"
   | "kbd"
   | "summary";
+
+
+/**
+   * Type Multiplication
+   type ComputeRange<
+  N extends number,
+  Result extends unknown[] = []
+> = Result['length'] extends N
+      ? Result
+      : ComputeRange<N, [...Result, Result['length']]>;
+
+type BuildArray<Length extends number, Arr extends unknown[] = []> =
+  Arr['length'] extends Length ? Arr : BuildArray<Length, [...Arr, unknown]>;
+
+// A helper type that maps every element of a tuple T to a value U
+type MapArray<T extends unknown[], U> =
+  T extends [infer First, ...infer Rest]
+    ? [U, ...MapArray<Rest, U>]
+    : [];
+
+// The Flatten helper recursively concatenates an array of arrays into one array
+type Flatten<T extends unknown[][]> =
+  T extends [infer Head extends unknown[], ...infer Tail extends unknown[][]]
+    ? [...Head, ...Flatten<Tail>]
+    : [];
+
+// Multiply by mapping each element of a BuildArray<B> to ComputeRange<A>, then flattening.
+type Multiply<A extends number, B extends number> =
+  // @ts-expect-error excessive stack depth
+  Flatten<MapArray<BuildArray<B>, ComputeRange<A>>>['length'];
+
+// Multiplty<8,5> = 40; Multiplty<8,6> = 48; etc
+type Test = Multiply<8,5>;
+*/

@@ -1,11 +1,13 @@
-import type { ScatterTextProps } from "@/types/scatter-text";
+export { useGentleTextEffect } from "@/hooks/use-gentle-text-effect";
 export { useResizeObserver } from "@/hooks/use-resize-observer";
+export type { GentleTextProps } from "@/types/gentle-text";
 export type {
   CSSWidthValue,
   TextElementTagUnion,
   Without,
   XOR
 } from "@/types/helpers";
+export type { UseGentleTextEffect } from "@/types/hooks";
 export type {
   BaseScatterTextProps,
   ScatterTextProps
@@ -20,14 +22,16 @@ export type {
 } from "@/types/split-text";
 export type { BaseWavyTextProps, WavyTextProps } from "@/types/wave-text";
 export { default as ScatterText } from "@/ui/scatter-text";
+export { default as GentleText } from "@/ui/gentle-text";
 
-declare module "react" {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace JSX {
-    interface IntrinsicElements {
-      "animatedText": ScatterTextProps;
-    }
-  }
-}
+// declare module "react" {
+//   // eslint-disable-next-line @typescript-eslint/no-namespace
+//   namespace JSX {
+//     interface IntrinsicElements {
+//       scattertext: ScatterTextProps;
+//       gentletext: GentleTextProps;
+//     }
+//   }
+// }
 
-export{};
+// export {};

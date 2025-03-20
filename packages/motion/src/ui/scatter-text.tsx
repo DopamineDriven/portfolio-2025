@@ -7,7 +7,6 @@ import type {
 } from "motion-dom";
 import type { CSSProperties } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import cn from "clsx";
 import throttle from "lodash.throttle";
 import { animate, hover } from "motion";
 import { splitText } from "motion-plus";
@@ -32,9 +31,19 @@ export default function ScatterText({
 }: ScatterTextProps) {
   const [containerElement, setContainerElement] =
     useState<HTMLDivElement | null>(null);
+
   const containerRef = useCallback((node: HTMLDivElement | null) => {
     setContainerElement(node);
   }, []);
+
+  const containerClassNameMemo = useMemo(
+    () => containerClassName,
+    [containerClassName]
+  );
+  const headingClassNameMemo = useMemo(
+    () => headingClassName,
+    [headingClassName]
+  );
 
   const { width: containerWidth } = useResizeObserver({
     current: containerElement
@@ -71,16 +80,12 @@ export default function ScatterText({
         overflow: allowOverflow ? "visible" : "hidden",
         width: containerStyles?.width ?? "100%",
         maxWidth:
-          maxWidth === "auto"
-            ? "auto"
-            : maxWidth === "fit"
-              ? "fit"
-              : maxWidth === "full"
-                ? "full"
-                : maxWidth === "none"
-                  ? "none"
-                  : `${maxWidth}`,
-        textAlign: "left",
+          containerStyles?.maxWidth ??
+          (maxWidth === "fit"
+            ? "fit-content"
+            : maxWidth === "full"
+              ? "100%"
+              : `${maxWidth}`),
         ...(containerStyles ?? {})
       }) satisfies CSSProperties,
     [containerStyles, maxWidth, allowOverflow]
@@ -217,12 +222,12 @@ export default function ScatterText({
 
   return (
     <div
-      className={cn("container-scatter", containerClassName)}
+      className={containerClassNameMemo}
       ref={containerRef}
       style={memoizedContainerStyles}>
       <Tag
         ref={textRef}
-        className={cn("scatter-text", headingClassName)}
+        className={headingClassNameMemo}
         style={memoizedHeadingStyles}>
         {content}
       </Tag>

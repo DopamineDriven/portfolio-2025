@@ -6,7 +6,6 @@ export const omitFrontMatter = <const T extends string>(frontMatter: T) => {
   return frontMatter.replace(/^---[\r\n]+([\s\S]*?)[\r\n]+---/g, "");
 };
 
-
 export function getMdxPaths<const T extends "posts" | "projects">(target: T) {
   const fs = new Fs(process.cwd());
   return fs.readDir(`src/content/${target}`);
@@ -126,3 +125,18 @@ export async function getAllPosts() {
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 }
+
+export const complexPropParser = <
+  const V extends Record<string | number | symbol, unknown>,
+  const T extends keyof V
+>(
+  attrs: Record<string, string | null | undefined> | null | undefined,
+  keys: readonly T[]
+) => {
+  const a = { ...attrs };
+  for (const key of keys) {
+    if (key in a && a && typeof key === "string")
+      (a[key] as unknown as V[T]) = JSON.parse(a[key] ?? "") as V[T];
+  }
+  return a;
+};
