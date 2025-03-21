@@ -68,6 +68,7 @@ export type CSSWidthValue =
  */
 
 export type TextElementTagUnion =
+  | "a"
   | "h1"
   | "h2"
   | "h3"
@@ -82,6 +83,7 @@ export type TextElementTagUnion =
   | "address"
   | "aside"
   | "blockquote"
+  | "button"
   | "caption"
   | "figcaption"
   | "code"

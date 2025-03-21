@@ -18,7 +18,7 @@ export function HomeContent({
   projects: ProjectDetail[];
 }) {
   return (
-    <div className="theme-transition 2xl:max-w-8xl mx-auto flex max-w-3xl sm:max-w-7xl flex-col items-center justify-center pt-24 pb-12 sm:px-4 lg:px-6">
+    <div className="theme-transition 2xl:max-w-8xl mx-auto flex max-w-3xl flex-col items-center justify-center pt-24 pb-12 sm:max-w-7xl sm:px-4 lg:px-6">
       <motion.div
         initial={false}
         transition={{ duration: 0.5, ease: "easeInOut" }}

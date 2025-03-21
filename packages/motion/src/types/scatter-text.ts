@@ -3,13 +3,18 @@ import type {
   DOMKeyframesDefinition,
   ElementOrSelector
 } from "motion-dom";
-import type { CSSWidthValue, TextElementTagUnion } from "./helpers";
 import type { CSSProperties } from "react";
+import type { CSSWidthValue, TextElementTagUnion } from "./helpers";
 
 /**
  *  Base SplitText props (animation-specific options omitted)
  */
 export type BaseScatterTextProps = {
+  /** Container element id */
+  containerId?: string;
+  /** Heading element id */
+  headingId?: string;
+  /** Text content to anim
   /** content to be split and animated */
   content: string;
   /** optional container className */

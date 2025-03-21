@@ -13,3 +13,16 @@ export function PostCards({ posts }: { posts: PostDetails[] }) {
     </div>
   );
 }
+
+/**
+ *         <GentleText
+          content="Posts"
+          textClassName="appearance-none text-left"
+          maxWidth="600px"
+          as="a"
+          textId="posts"
+          animateOnlyInView={true}
+          inViewThreshold={0.8}
+          animationOptions={{ repeat: 0 }}
+        />
+ */

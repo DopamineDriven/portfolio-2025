@@ -18,6 +18,8 @@ export default function GentleText({
   as: Tag = "p",
   containerStyles,
   textStyles,
+  textId,
+  containerId,
   initialElement,
   keyframes,
   animateTarget = "chars",
@@ -42,6 +44,10 @@ export default function GentleText({
     [containerClassName]
   );
   const textClassNameMemo = useMemo(() => textClassName, [textClassName]);
+
+  const containerIdMemo = useMemo(() => containerId, [containerId]);
+
+  const textIdMemo = useMemo(() => textId, [textId]);
 
   const [containerElement, setContainerElement] =
     useState<HTMLDivElement | null>(null);
@@ -157,19 +163,26 @@ export default function GentleText({
     [textStyles]
   );
 
+  const containerCb = useCallback(
+    (node: HTMLDivElement | null) => {
+      // combine
+      containerRef(node);
+      if (inViewRef) {
+        inViewRef.current = node;
+      }
+    },
+    [containerRef]
+  );
+
   return (
     <div
+      id={containerIdMemo}
       className={containerClassNameMemo}
-      ref={node => {
-        // combine
-        containerRef(node);
-        if (inViewRef) {
-          inViewRef.current = node;
-        }
-      }}
+      ref={containerCb}
       style={memoizedContainerStyles}>
       <AnimatePresence>
         <Tag
+          id={textIdMemo}
           ref={textRef}
           className={textClassNameMemo}
           style={memoizedTextStyles}
