@@ -13,3 +13,15 @@ export function ProjectCards({ projects }: { projects: ProjectDetail[] }) {
     </div>
   );
 }
+/**
+ *           <GentleText
+            content="Featured Projects"
+            textClassName="appearance-auto"
+            maxWidth="600px"
+            as="a"
+            textId="projects"
+            animateOnlyInView={true}
+            inViewThreshold={0.8}
+            animationOptions={{ repeat: 0 }}
+          />
+ */

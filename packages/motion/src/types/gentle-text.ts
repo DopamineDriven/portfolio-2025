@@ -11,6 +11,10 @@ import type { CSSWidthValue, TextElementTagUnion } from "@/types/helpers";
  * GentleText props
  */
 export type GentleTextProps = {
+  /** Container element id */
+  containerId?: string;
+  /** Text element id */
+  textId?: string;
   /** Text content to animate */
   content: string;
   /** Optional container className */

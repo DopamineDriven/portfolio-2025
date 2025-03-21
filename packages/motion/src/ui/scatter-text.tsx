@@ -22,6 +22,8 @@ export default function ScatterText({
   as: Tag = "h1",
   containerClassName,
   containerStyles,
+  containerId,
+  headingId,
   headingStyles,
   headingClassName,
   keyframes = { x: 0, y: 0 },
@@ -29,6 +31,10 @@ export default function ScatterText({
   debug = false,
   allowOverflow = false
 }: ScatterTextProps) {
+  const containerIdMemo = useMemo(() => containerId, [containerId]);
+
+  const headingIdMemo = useMemo(() => headingId, [headingId]);
+
   const [containerElement, setContainerElement] =
     useState<HTMLDivElement | null>(null);
 
@@ -222,11 +228,13 @@ export default function ScatterText({
 
   return (
     <div
+      id={containerIdMemo}
       className={containerClassNameMemo}
       ref={containerRef}
       style={memoizedContainerStyles}>
       <Tag
         ref={textRef}
+        id={headingIdMemo}
         className={headingClassNameMemo}
         style={memoizedHeadingStyles}>
         {content}
