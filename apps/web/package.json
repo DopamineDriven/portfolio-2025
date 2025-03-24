@@ -107,6 +107,7 @@
     "hast-util-sanitize": "^5.0.2",
     "postcss": "^8.5.3",
     "prettier": "latest",
+    "pythonia": "^1.2.2",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-pretty-code": "^0.14.1",
     "rehype-react": "^8.0.0",
