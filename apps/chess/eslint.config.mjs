@@ -13,7 +13,8 @@ export default [
       "@typescript-eslint/consistent-type-assertions": "off",
       "@typescript-eslint/require-await": "off",
       "@typescript-eslint/no-non-null-assertion": "off",
-      "import/consistent-type-specifier-style": "off"
+      "import/consistent-type-specifier-style": "off",
+      "@typescript-eslint/prefer-nullish-coalescing": "off"
     }
   }
 ];
