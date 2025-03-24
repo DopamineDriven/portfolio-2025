@@ -5,6 +5,7 @@ import type { PostDetails } from "@/types/posts";
 import { ProjectDetail } from "@/types/projects";
 import { BreakoutWrapper } from "@/ui/atoms/breakout-wrapper";
 import { CarouselWithFade } from "@/ui/carousel";
+import ArLogoParticles from "@/ui/particle/temp";
 import { PostCards } from "@/ui/post-cards";
 import { ProjectCards } from "@/ui/project-cards";
 import LandingPageTypeWriter from "@/ui/typewriter";
@@ -35,6 +36,11 @@ export function HomeContent({
         </section>
         <section>
           <ProjectCards projects={projects} />
+        </section>
+        <section>
+          <BreakoutWrapper>
+            <ArLogoParticles />
+          </BreakoutWrapper>
         </section>
         <section>
           <PostCards posts={posts} />

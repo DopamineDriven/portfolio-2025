@@ -670,6 +670,9 @@ importers:
       prettier:
         specifier: latest
         version: 3.5.3
+      pythonia:
+        specifier: ^1.2.2
+        version: 1.2.2(ws@8.18.0)
       rehype-autolink-headings:
         specifier: ^7.1.0
         version: 7.1.0
@@ -3888,6 +3891,9 @@ packages:
     resolution: {integrity: sha512-YTd+6wGlNlPxSuri7Y6X8tY2dmm12UMH66RpKMhiX6rsk5wXXnYgbUcOt8kiS31/AjfoTOvCsE+w8nZQLQnzHA==}
     engines: {node: '>= 0.4'}
 
+  caller@1.1.0:
+    resolution: {integrity: sha512-n+21IZC3j06YpCWaxmUy5AnVqhmCIM2bQtqQyy00HJlmStRt6kwDX5F9Z97pqwAB+G/tgSz6q/kUBbNyQzIubw==}
+
   callsites@3.1.0:
     resolution: {integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==}
     engines: {node: '>=6'}
@@ -6615,6 +6621,11 @@ packages:
 
   pure-rand@6.1.0:
     resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
+
+  pythonia@1.2.2:
+    resolution: {integrity: sha512-eeMdDwu3t4BRIxMFY74VChhWgSLh6DWeR7SVxmByk3VvVYtNJSGsJCAaRUVCxI8uBT0fpcBvL/k4lz4Bi/W/CQ==}
+    peerDependencies:
+      ws: ^7.5.1
 
   querystringify@2.2.0:
     resolution: {integrity: sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==}
@@ -10705,6 +10716,8 @@ snapshots:
       call-bind-apply-helpers: 1.0.1
       get-intrinsic: 1.2.7
 
+  caller@1.1.0: {}
+
   callsites@3.1.0: {}
 
   camelcase@5.3.1: {}
@@ -13907,6 +13920,12 @@ snapshots:
   punycode@2.3.1: {}
 
   pure-rand@6.1.0: {}
+
+  pythonia@1.2.2(ws@8.18.0):
+    dependencies:
+      caller: 1.1.0
+      chalk: 4.1.2
+      ws: 8.18.0
 
   querystringify@2.2.0: {}
 

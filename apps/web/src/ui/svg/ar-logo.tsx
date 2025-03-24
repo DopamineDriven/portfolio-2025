@@ -1,9 +1,8 @@
-import type { FC } from "react";
-import type { TsxExclude19 } from "@/types/react";
+import type { FC, SVGAttributes } from "react";
 import { cn } from "@/lib/utils";
 
 export const ArLogo: FC<
-  TsxExclude19<"svg", "viewBox" | "fill" | "role" | "xmlns">
+  Omit<SVGAttributes<SVGSVGElement>, "viewBox" | "fill" | "role" | "xmlns">
 > = ({ className, ...svg }) => (
   <svg
     className={cn(className, "theme-transition")}
@@ -29,9 +28,10 @@ export const ArLogo: FC<
 );
 
 export const ArLogoOld: FC<
-  TsxExclude19<"svg", "fill" | "viewBox" | "xmlns">
+  Omit<SVGAttributes<SVGSVGElement>, "viewBox" | "fill" | "role" | "xmlns">
 > = ({ className, ...svg }) => (
   <svg
+    role="img"
     viewBox="0 0 65 65"
     fill="none"
     className={cn("theme-transition", className)}

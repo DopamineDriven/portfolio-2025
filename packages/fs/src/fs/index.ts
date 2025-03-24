@@ -387,14 +387,18 @@ export default class Fs {
 
   public get gzVal() {
     return (["application/x-gzip", "application/gzip"] as const).reduce(
-      vals => vals
+      union => union
     );
+  }
+
+  public get tsVal() {
+    return (["text/typescript", "video/mp2t"] as const).reduce(union => union);
   }
 
   public get zipVal() {
     return (
       ["application/zip", "application/x-zip-compressed"] as const
-    ).reduce(vals => vals);
+    ).reduce(union => union);
   }
 
   public get mimeTypeObj() {
@@ -456,6 +460,7 @@ export default class Fs {
       pkpass: "application/vnd.apple.pkpass",
       ppt: "application/vnd.ms-powerpoint",
       pptx: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      py: "text/x-python",
       rar: "application/vnd.rar",
       rtf: "application/rtf",
       sh: "application/x-sh",
@@ -463,7 +468,7 @@ export default class Fs {
       tar: "application/x-tar",
       tif: "image/tiff",
       tiff: "image/tiff",
-      ts: "video/mp2t",
+      ts: this.tsVal,
       ttf: "font/ttf",
       txt: "text/plain",
       vsd: "application/vnd.visio",
@@ -485,8 +490,8 @@ export default class Fs {
   }
 
   public assetType<const T extends string>(url: T) {
-    return this.parseUrl(url)
-      .pathname?.split(/([.])/gim)
+    const u = this.parseUrl(url);
+    return u.pathname?.split(/([.])/gim)
       ?.reverse()?.[0] as keyof typeof this.mimeTypeObj;
   }
 
