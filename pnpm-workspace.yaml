@@ -3,3 +3,9 @@ packages:
   - docker/*
   - packages/*
   - tooling/*
+onlyBuiltDependencies:
+  - '@swc/core'
+  - '@vercel/speed-insights'
+  - esbuild
+  - protobufjs
+  - sharp

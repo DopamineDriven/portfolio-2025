@@ -14,7 +14,8 @@ export default [
       "@typescript-eslint/require-await": "off",
       "@typescript-eslint/no-floating-promises": "off",
       "import/consistent-type-specifier-style": "off",
-      "@typescript-eslint/prefer-nullish-coalescing": "off"
+      "@typescript-eslint/prefer-nullish-coalescing": "off",
+      "@typescript-eslint/prefer-for-of": "off"
     }
   }
 ];
