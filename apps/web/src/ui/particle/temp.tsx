@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AR_LOGO_PATHS } from "./ar-logo-paths";
 
 interface ArLogoParticlesProps {
@@ -9,18 +9,54 @@ interface ArLogoParticlesProps {
   className?: string;
 }
 
+type Particles = {
+  x: number;
+  y: number;
+  baseX: number;
+  baseY: number;
+  size: number;
+  color: string;
+  scatteredColor: string;
+  life: number;
+  pathIndex: number;
+}[];
+
 export default function ArLogoParticles({
   maxHeight = 400,
   aspectRatio = 2,
   className = ""
 }: ArLogoParticlesProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const mousePositionRef = useRef({ x: 0, y: 0 });
-  const isTouchingRef = useRef(false);
-  const [_isMobile, setIsMobile] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const canvasRef = useRef<HTMLCanvasElement>(null); // Reference to the canvas element
+  const containerRef = useRef<HTMLDivElement>(null); // Reference to the container element
+  const mousePositionRef = useRef({ x: 0, y: 0 }); // Reference to the mouse position
+  const isTouchingRef = useRef(false); // Reference to the touch state
+  const [_isMobile, setIsMobile] = useState(false); // State to track if the screen is mobile
+  const [isDarkMode, setIsDarkMode] = useState(true); // State to track if the dark mode is enabled
   const [dimensions, setDimensions] = useState({ width: 100, height: 50 }); // Default non-zero values
+  const animationFrameRef = useRef<number>(0);
+  const particlesRef = useRef<Particles>([]);
+
+  // Memoize color values
+  const colors = useMemo(() => {
+    const supportsP3 = typeof window !=="undefined" ? window.matchMedia("(color-gamut: p3)").matches : false;
+    return {
+      background: isDarkMode
+        ? supportsP3
+          ? "oklch(13.71% 0.036 258.53)"
+          : "#020817"
+        : supportsP3
+          ? "oklch(98.4% 0.0039 243.25)"
+          : "#f8fafc",
+      logo: isDarkMode
+        ? supportsP3
+          ? "oklch(98.4% 0.0039 243.25)"
+          : "#f8fafc"
+        : supportsP3
+          ? "oklch(13.71% 0.036 258.53)"
+          : "#020817",
+      scattered: "#00DCFF"
+    };
+  }, [isDarkMode]);
 
   // Calculate dimensions based on container size and constraints
   const updateDimensions = useCallback(() => {
@@ -81,18 +117,6 @@ export default function ArLogoParticles({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const particles = Array.of<{
-      x: number;
-      y: number;
-      baseX: number;
-      baseY: number;
-      size: number;
-      color: string;
-      scatteredColor: string;
-      life: number;
-      pathIndex: number;
-    }>();
-
     let textImageData: ImageData | null = null;
 
     function createTextImage() {
@@ -103,18 +127,11 @@ export default function ArLogoParticles({
         console.warn("Invalid canvas dimensions in createTextImage");
         return 0;
       }
-      const supportsP3 = window.matchMedia("(color-gamut: p3)").matches;
 
       ctx.save();
 
       // Clear the canvas with the background color
-      ctx.fillStyle = isDarkMode
-        ? supportsP3
-          ? "oklch(13.71% 0.036 258.53)"
-          : "#020817"
-        : supportsP3
-          ? "oklch(98.4% 0.0039 243.25)"
-          : "#f8fafc";
+      ctx.fillStyle = colors.background;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Calculate logo size safely
@@ -131,27 +148,18 @@ export default function ArLogoParticles({
       );
       ctx.scale(scale, scale);
 
-      // Set the color for all paths
-      const logoColor = isDarkMode
-        ? supportsP3
-          ? "oklch(98.4% 0.0039 243.25)"
-          : "#f8fafc"
-        : supportsP3
-          ? "oklch(13.71% 0.036 258.53)"
-          : "#020817";
-
       // Draw each path
       AR_LOGO_PATHS.forEach((pathData, index) => {
         const path = new Path2D(pathData.d);
 
         if (index === 2) {
           // Circle border path
-          ctx.strokeStyle = logoColor;
+          ctx.strokeStyle = colors.logo;
           ctx.lineWidth = pathData.strokeWidth ?? 12;
           ctx.stroke(path);
         } else {
           // Letter paths
-          ctx.fillStyle = logoColor;
+          ctx.fillStyle = colors.logo;
           ctx.fill(path);
         }
       });
@@ -163,13 +171,7 @@ export default function ArLogoParticles({
         textImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
         // Clear the canvas again for the animation
-        ctx.fillStyle = isDarkMode
-          ? supportsP3
-            ? "oklch(13.71% 0.036 258.53)"
-            : "#020817"
-          : supportsP3
-            ? "oklch(98.4% 0.0039 243.25)"
-            : "#f8fafc";
+        ctx.fillStyle = colors.background;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       } catch (error) {
         console.error("Error creating image data:", error);
@@ -205,63 +207,41 @@ export default function ArLogoParticles({
       return false;
     }
 
-    function createParticle(scale: number) {
-      if (!ctx || !canvas || !textImageData) return null;
-      const supportsP3 = window.matchMedia("(color-gamut: p3)").matches;
-      const data = textImageData.data;
-      const logoColor = isDarkMode
-        ? supportsP3
-          ? "oklch(98.4% 0.0039 243.25)"
-          : "#f8fafc"
-        : supportsP3
-          ? "oklch(13.71% 0.036 258.53)"
-          : "#020817";
-      const scatteredColor = "#00DCFF"; // Cyan color for scattered particles
+    function createParticle(scale: number, data: Uint8ClampedArray) {
+      if (!ctx || !canvas) return null;
 
       for (let attempt = 0; attempt < 100; attempt++) {
-        const x = Math.floor(Math.random() * canvas.width),
-          y = Math.floor(Math.random() * canvas.height);
+        const x = Math.floor(Math.random() * canvas.width);
+        const y = Math.floor(Math.random() * canvas.height);
 
-        // Ensure index is valid
         if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) continue;
 
         const index = (y * canvas.width + x) * 4;
 
-        // Check if this pixel is part of the logo
-        const isLogoPart = isLogoPartHelper(data, index, isDarkMode);
+        if (isLogoPartHelper(data, index, isDarkMode)) {
+          const centerX = canvas.width / 2;
+          const centerY = canvas.height / 2;
+          let pathIndex = x < centerX ? 0 : 1;
 
-        if (isLogoPart) {
-          // Determine which path this pixel belongs to
-          const centerX = canvas.width / 2,
-            centerY = canvas.height / 2;
-
-          let pathIndex = 0;
-          if (x < centerX) {
-            pathIndex = 0; // A
-          } else {
-            pathIndex = 1; // R
-          }
-
-          // If it's near the edge, it's likely the circle
           const distFromCenter = Math.sqrt(
             Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)
           );
           const logoRadius =
             Math.min(dimensions.width, dimensions.height) * 0.4 * scale;
           if (Math.abs(distFromCenter - logoRadius) < 10) {
-            pathIndex = 2; // Circle
+            pathIndex = 2;
           }
 
           return {
-            x: x,
-            y: y,
+            x,
+            y,
             baseX: x,
             baseY: y,
             size: Math.random() * 1.5 + 0.5,
-            color: logoColor,
-            scatteredColor: scatteredColor,
+            color: colors.logo,
+            scatteredColor: colors.scattered,
             life: Math.random() * 100 + 50,
-            pathIndex: pathIndex
+            pathIndex
           };
         }
       }
@@ -281,36 +261,27 @@ export default function ArLogoParticles({
         );
 
         for (let i = 0; i < particleCount; i++) {
-          const particle = createParticle(scale);
-          if (particle) particles.push(particle);
+          const particle = createParticle(
+            scale,
+            textImageData?.data || new Uint8ClampedArray()
+          );
+          if (particle) particlesRef.current.push(particle);
         }
       }
     }
-
-    let animationFrameId: number;
-
     function animate(scale: number) {
       if (!ctx || !canvas) return;
-      const supportsP3 = window.matchMedia("(color-gamut: p3)").matches;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = isDarkMode
-        ? supportsP3
-          ? "oklch(13.71% 0.036 258.53)"
-          : "#020817"
-        : supportsP3
-          ? "oklch(98.4% 0.0039 243.25)"
-          : "#f8fafc";
+      ctx.fillStyle = colors.background;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const { x: mouseX, y: mouseY } = mousePositionRef.current;
-      const maxDistance = Math.min(canvas.width, canvas.height) * 0.3; // Scale interaction radius
+      const maxDistance = Math.min(canvas.width, canvas.height) * 0.3;
 
-      for (let i = 0; i < particles.length; i++) {
-        const particle = particles[i];
-
-        if (!particle) continue;
-
-        const p = particle;
+      for (let i = 0; i < particlesRef.current.length; i++) {
+        const p = particlesRef.current[i];
+        if (!p) continue;
 
         const dx = mouseX - p.x;
         const dy = mouseY - p.y;
@@ -322,11 +293,10 @@ export default function ArLogoParticles({
         ) {
           const force = (maxDistance - distance) / maxDistance;
           const angle = Math.atan2(dy, dx);
-          const moveX = Math.cos(angle) * force * (canvas.width * 0.06); // Scale movement
+          const moveX = Math.cos(angle) * force * (canvas.width * 0.06);
           const moveY = Math.sin(angle) * force * (canvas.width * 0.06);
           p.x = p.baseX - moveX;
           p.y = p.baseY - moveY;
-
           ctx.fillStyle = p.scatteredColor;
         } else {
           p.x += (p.baseX - p.x) * 0.1;
@@ -338,38 +308,20 @@ export default function ArLogoParticles({
 
         p.life--;
         if (p.life <= 0) {
-          const newParticle = createParticle(scale);
+          const newParticle = createParticle(
+            scale,
+            textImageData?.data || new Uint8ClampedArray()
+          );
           if (newParticle) {
-            particles[i] = newParticle;
+            particlesRef.current[i] = newParticle;
           } else {
-            particles.splice(i, 1);
+            particlesRef.current.splice(i, 1);
             i--;
           }
         }
       }
 
-      // Maintain particle count with safety checks
-      const baseParticleCount = 5000;
-      const canvasArea = Math.max(canvas.width * canvas.height, 1);
-      const referenceArea = 1000 * 500;
-      const targetParticleCount = Math.min(
-        Math.floor(baseParticleCount * (canvasArea / referenceArea)),
-        10000 // Cap at 10,000 particles
-      );
-
-      // Only add more particles if we're significantly below target
-      if (particles.length < targetParticleCount * 0.8) {
-        const particlesToAdd = Math.min(
-          10,
-          targetParticleCount - particles.length
-        );
-        for (let i = 0; i < particlesToAdd; i++) {
-          const newParticle = createParticle(scale);
-          if (newParticle) particles.push(newParticle);
-        }
-      }
-
-      animationFrameId = requestAnimationFrame(() => animate(scale));
+      animationFrameRef.current = requestAnimationFrame(() => animate(scale));
     }
 
     try {
@@ -427,9 +379,11 @@ export default function ArLogoParticles({
       canvas.removeEventListener("mouseleave", handleMouseLeave);
       canvas.removeEventListener("touchstart", handleTouchStart);
       canvas.removeEventListener("touchend", handleTouchEnd);
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
     };
-  }, [dimensions, isDarkMode]);
+  }, [dimensions, isDarkMode, colors]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);

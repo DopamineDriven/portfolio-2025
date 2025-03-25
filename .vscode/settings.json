@@ -24,7 +24,7 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.suggest.showStatusBar": true,
   "eslint.enable": true,
-  "eslint.useFlatConfig": false,
+  "eslint.useFlatConfig": true,
   "eslint.rules.customizations": [
     {
       "rule": "*",
@@ -71,5 +71,6 @@
   "yaml.validate": true,
   "workbench.editor.autoLockGroups": {
     "default": true
-  }
+  },
+  "eslint.debug": true
 }
