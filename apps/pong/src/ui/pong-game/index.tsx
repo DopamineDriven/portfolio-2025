@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, useAnimationControls } from "motion/react";
 import { useElementDimensions } from "@/hooks/use-element-dimensions";
 import { useMobile } from "@/hooks/use-mobile";
@@ -10,30 +10,58 @@ import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { OrientationOverlay } from "@/ui/orientation-overlay";
 
-// Game constants
-const PADDLE_WIDTH = 15;
-const BALL_SIZE = 15;
-const BASE_BALL_SPEED = 7; // Base speed for reference width
-const REFERENCE_WIDTH = 892; // Reference width for speed scaling
-const COMPUTER_SPEED_BASE = 4; // Base computer speed
-const MAX_BALL_SPEED_BASE = 20; // Base max ball speed
-const ANGLE_IMPACT_FACTOR = 1.5;
-const PADDLE_VELOCITY_IMPACT = 1.8;
-const PADDLE_HEIGHT_PERCENTAGE = 0.18;
-const ASPECT_RATIO = 4 / 3;
-const MAX_GAME_WIDTH = 892;
-const MAX_GAME_HEIGHT = 668;
-const WINNING_SCORE = 11;
-const SCORE_DIFFERENCE_FOR_SCALING = 3;
-const MIN_PADDLE_SCALE = 0.6;
-const EDGE_BOUNCE_MULTIPLIER = 1.8;
-const MIN_ANGLE_FACTOR = 0.2;
-const TOUCH_SENSITIVITY = 0.8;
-const CENTER_PADDLE_ON_TOUCH = true;
-const POWER_SHOT_THRESHOLD = 8;
-const POWER_SHOT_MULTIPLIER = 1.5;
-const POWER_SHOT_DURATION = 800;
-const TOUCH_ZONE_WIDTH = 60; // Width in pixels for the external touch zone
+// Game dimensions and layout
+const LAYOUT = {
+  PADDLE: {
+    WIDTH: 15,
+    HEIGHT_PERCENTAGE: 0.18
+  },
+  BALL: {
+    SIZE: 15
+  },
+  GAME: {
+    ASPECT_RATIO: 4 / 3,
+    MAX_WIDTH: 892,
+    MAX_HEIGHT: 668,
+    REFERENCE_WIDTH: 892 // Width used for speed scaling
+  },
+  TOUCH: {
+    ZONE_WIDTH: 60,
+    SENSITIVITY: 0.8,
+    CENTER_PADDLE_ON_TOUCH: true
+  }
+} as const;
+
+// Game physics and mechanics
+const PHYSICS = {
+  BALL: {
+    BASE_SPEED: 7,
+    MAX_SPEED: 20
+  },
+  COMPUTER: {
+    BASE_SPEED: 4
+  },
+  PADDLE: {
+    VELOCITY_IMPACT: 1.8,
+    EDGE_BOUNCE_MULTIPLIER: 1.8,
+    MIN_ANGLE_FACTOR: 0.2,
+    ANGLE_IMPACT_FACTOR: 1.5
+  }
+} as const;
+
+// Game rules and scoring
+const RULES = {
+  WINNING_SCORE: 11,
+  SCORE_DIFFERENCE_FOR_SCALING: 3,
+  MIN_PADDLE_SCALE: 0.6
+} as const;
+
+// Power shot mechanics
+const POWER_SHOT = {
+  THRESHOLD: 8,
+  MULTIPLIER: 1.5,
+  DURATION: 800
+} as const;
 
 type GameState = "idle" | "playing" | "paused" | "gameOver";
 
@@ -54,7 +82,10 @@ export default function PongGame() {
   const playerPositionRef = useRef(0);
   const computerPositionRef = useRef(0);
   const ballPositionRef = useRef({ x: 0, y: 0 });
-  const ballDirectionRef = useRef({ x: BASE_BALL_SPEED, y: BASE_BALL_SPEED });
+  const ballDirectionRef = useRef<{ x: number; y: number }>({
+    x: PHYSICS.BALL.BASE_SPEED,
+    y: PHYSICS.BALL.BASE_SPEED
+  });
   const playerPaddleVelocityRef = useRef(0);
   const lastPlayerPositionRef = useRef(0);
   const computerPaddleVelocityRef = useRef(0);
@@ -118,22 +149,22 @@ export default function PongGame() {
     if (width <= 0) return 1.0;
     // Calculate the ratio between reference width and current width
     // We want to slow down the ball on smaller screens, so we use a square root to dampen the effect
-    return Math.sqrt(REFERENCE_WIDTH / width);
+    return Math.sqrt(LAYOUT.GAME.REFERENCE_WIDTH / width);
   }, []);
 
   // Get scaled ball speed
   const getScaledBallSpeed = useCallback(() => {
-    return BASE_BALL_SPEED / speedScaleRef.current;
+    return PHYSICS.BALL.BASE_SPEED / speedScaleRef.current;
   }, []);
 
   // Get scaled max ball speed
   const getScaledMaxBallSpeed = useCallback(() => {
-    return MAX_BALL_SPEED_BASE / speedScaleRef.current;
+    return PHYSICS.BALL.MAX_SPEED / speedScaleRef.current;
   }, []);
 
   // Get scaled computer speed
   const getScaledComputerSpeed = useCallback(() => {
-    return COMPUTER_SPEED_BASE / speedScaleRef.current;
+    return PHYSICS.COMPUTER.BASE_SPEED / speedScaleRef.current;
   }, []);
 
   // Update speed scale when game dimensions change
@@ -159,15 +190,16 @@ export default function PongGame() {
     let playerScale = 1.0;
     let computerScale = 1.0;
 
-    if (scoreDifference >= SCORE_DIFFERENCE_FOR_SCALING) {
+    if (scoreDifference >= RULES.SCORE_DIFFERENCE_FOR_SCALING) {
       playerScale = Math.max(
-        MIN_PADDLE_SCALE,
-        1.0 - (scoreDifference - SCORE_DIFFERENCE_FOR_SCALING) * 0.1
+        RULES.MIN_PADDLE_SCALE,
+        1.0 - (scoreDifference - RULES.SCORE_DIFFERENCE_FOR_SCALING) * 0.1
       );
-    } else if (scoreDifference <= -SCORE_DIFFERENCE_FOR_SCALING) {
+    } else if (scoreDifference <= -RULES.SCORE_DIFFERENCE_FOR_SCALING) {
       computerScale = Math.max(
-        MIN_PADDLE_SCALE,
-        1.0 - (Math.abs(scoreDifference) - SCORE_DIFFERENCE_FOR_SCALING) * 0.1
+        RULES.MIN_PADDLE_SCALE,
+        1.0 -
+          (Math.abs(scoreDifference) - RULES.SCORE_DIFFERENCE_FOR_SCALING) * 0.1
       );
     }
 
@@ -177,7 +209,10 @@ export default function PongGame() {
 
   // Check for game end conditions
   useEffect(() => {
-    if (playerScore >= WINNING_SCORE || computerScore >= WINNING_SCORE) {
+    if (
+      playerScore >= RULES.WINNING_SCORE ||
+      computerScore >= RULES.WINNING_SCORE
+    ) {
       const scoreDifference = Math.abs(playerScore - computerScore);
 
       if (scoreDifference >= 2) {
@@ -222,7 +257,9 @@ export default function PongGame() {
 
         setGameDimensions({ width, height });
 
-        const newPaddleHeight = Math.round(height * PADDLE_HEIGHT_PERCENTAGE);
+        const newPaddleHeight = Math.round(
+          height * LAYOUT.PADDLE.HEIGHT_PERCENTAGE
+        );
         setPaddleHeight(newPaddleHeight);
         setPlayerPaddleHeight(newPaddleHeight);
         setComputerPaddleHeight(newPaddleHeight);
@@ -237,8 +274,8 @@ export default function PongGame() {
         setComputerPosition(initialComputerPos);
 
         const initialBallPos = {
-          x: width / 2 - BALL_SIZE / 2,
-          y: height / 2 - BALL_SIZE / 2
+          x: width / 2 - LAYOUT.BALL.SIZE / 2,
+          y: height / 2 - LAYOUT.BALL.SIZE / 2
         };
         ballPositionRef.current = initialBallPos;
         setBallPosition(initialBallPos);
@@ -313,7 +350,7 @@ export default function PongGame() {
 
     powerShotTimeoutRef.current = setTimeout(() => {
       setPowerShotActive(false);
-    }, POWER_SHOT_DURATION);
+    }, POWER_SHOT.DURATION);
   }, []);
 
   // Enhanced paddle collision physics with power shots
@@ -326,33 +363,36 @@ export default function PongGame() {
       isPlayerPaddle: boolean
     ) => {
       const hitPosition =
-        (ballPos.y + BALL_SIZE / 2 - paddlePos) / paddleHeight;
+        (ballPos.y + LAYOUT.BALL.SIZE / 2 - paddlePos) / paddleHeight;
       let normalizedHitPosition = hitPosition - 0.5;
 
       const edgeFactor =
         Math.abs(normalizedHitPosition) > 0.3
-          ? EDGE_BOUNCE_MULTIPLIER
+          ? PHYSICS.PADDLE.EDGE_BOUNCE_MULTIPLIER
           : 1 +
             (Math.abs(normalizedHitPosition) / 0.3) *
-              (EDGE_BOUNCE_MULTIPLIER - 1);
+              (PHYSICS.PADDLE.EDGE_BOUNCE_MULTIPLIER - 1);
 
       normalizedHitPosition *= edgeFactor;
 
-      if (Math.abs(normalizedHitPosition) < MIN_ANGLE_FACTOR) {
+      if (Math.abs(normalizedHitPosition) < PHYSICS.PADDLE.MIN_ANGLE_FACTOR) {
         normalizedHitPosition =
-          normalizedHitPosition >= 0 ? MIN_ANGLE_FACTOR : -MIN_ANGLE_FACTOR;
+          normalizedHitPosition >= 0
+            ? PHYSICS.PADDLE.MIN_ANGLE_FACTOR
+            : -PHYSICS.PADDLE.MIN_ANGLE_FACTOR;
       }
 
       const angle = (normalizedHitPosition * Math.PI) / 3;
       const perpendicularityFactor = Math.abs(Math.sin(angle));
-      const speedBoost = perpendicularityFactor * ANGLE_IMPACT_FACTOR;
+      const speedBoost =
+        perpendicularityFactor * PHYSICS.PADDLE.ANGLE_IMPACT_FACTOR;
       const absPaddleVelocity = Math.abs(paddleVelocity);
-      const isPowerShot = absPaddleVelocity >= POWER_SHOT_THRESHOLD;
+      const isPowerShot = absPaddleVelocity >= POWER_SHOT.THRESHOLD;
 
-      let paddleImpact = absPaddleVelocity * PADDLE_VELOCITY_IMPACT;
+      let paddleImpact = absPaddleVelocity * PHYSICS.PADDLE.VELOCITY_IMPACT;
 
       if (isPowerShot) {
-        paddleImpact *= POWER_SHOT_MULTIPLIER;
+        paddleImpact *= POWER_SHOT.MULTIPLIER;
 
         if (isPlayerPaddle) {
           triggerPowerShot();
@@ -403,8 +443,8 @@ export default function PongGame() {
     }
 
     const newBallPos = {
-      x: width / 2 - BALL_SIZE / 2,
-      y: height / 2 - BALL_SIZE / 2
+      x: width / 2 - LAYOUT.BALL.SIZE / 2,
+      y: height / 2 - LAYOUT.BALL.SIZE / 2
     };
 
     ballPositionRef.current = newBallPos;
@@ -526,9 +566,9 @@ export default function PongGame() {
       }
 
       // Ball collision with top and bottom walls
-      if (newBallPos.y <= 0 || newBallPos.y >= height - BALL_SIZE) {
+      if (newBallPos.y <= 0 || newBallPos.y >= height - LAYOUT.BALL.SIZE) {
         ballDirectionRef.current.y = -ballDirectionRef.current.y;
-        newBallPos.y = newBallPos.y <= 0 ? 0 : height - BALL_SIZE;
+        newBallPos.y = newBallPos.y <= 0 ? 0 : height - LAYOUT.BALL.SIZE;
       }
 
       // Calculate computer paddle velocity
@@ -540,8 +580,8 @@ export default function PongGame() {
       // Ball collision with paddles
       // Player paddle collision
       if (
-        newBallPos.x <= PADDLE_WIDTH &&
-        newBallPos.y + BALL_SIZE >= playerPositionRef.current &&
+        newBallPos.x <= LAYOUT.PADDLE.WIDTH &&
+        newBallPos.y + LAYOUT.BALL.SIZE >= playerPositionRef.current &&
         newBallPos.y <= playerPositionRef.current + playerPaddleHeight
       ) {
         ballDirectionRef.current = handlePaddleCollision(
@@ -551,13 +591,13 @@ export default function PongGame() {
           playerPaddleVelocityRef.current,
           true
         );
-        newBallPos.x = PADDLE_WIDTH;
+        newBallPos.x = LAYOUT.PADDLE.WIDTH;
       }
 
       // Computer paddle collision
       if (
-        newBallPos.x + BALL_SIZE >= width - PADDLE_WIDTH &&
-        newBallPos.y + BALL_SIZE >= computerPositionRef.current &&
+        newBallPos.x + LAYOUT.BALL.SIZE >= width - LAYOUT.PADDLE.WIDTH &&
+        newBallPos.y + LAYOUT.BALL.SIZE >= computerPositionRef.current &&
         newBallPos.y <= computerPositionRef.current + computerPaddleHeight
       ) {
         ballDirectionRef.current = handlePaddleCollision(
@@ -567,7 +607,7 @@ export default function PongGame() {
           computerPaddleVelocityRef.current,
           false
         );
-        newBallPos.x = width - PADDLE_WIDTH - BALL_SIZE;
+        newBallPos.x = width - LAYOUT.PADDLE.WIDTH - LAYOUT.BALL.SIZE;
       }
 
       // Scoring - but only if game has been running for at least 500ms
@@ -613,7 +653,7 @@ export default function PongGame() {
       }
 
       // Move computer paddle (simple AI)
-      const ballCenter = newBallPos.y + BALL_SIZE / 2;
+      const ballCenter = newBallPos.y + LAYOUT.BALL.SIZE / 2;
       const paddleCenter =
         computerPositionRef.current + computerPaddleHeight / 2;
 
@@ -818,10 +858,7 @@ export default function PongGame() {
       gameBoardDimensions.height
     ]
   );
-  /**
- So the issues I'm facing are several, one of which is obviously the need to break down this behemoth of a tsx file into more modular, reusable parts (both the raw game logic/handling and the returned jsx itself)
 
- */
   // Handle touch start for mobile
   const handleTouchStart = useCallback(
     (e: React.TouchEvent) => {
@@ -833,7 +870,7 @@ export default function PongGame() {
       const touch = e.touches[0];
       lastTouchYRef.current = touch.clientY;
 
-      if (CENTER_PADDLE_ON_TOUCH) {
+      if (LAYOUT.TOUCH.CENTER_PADDLE_ON_TOUCH) {
         // Get the touch position relative to the game area
         const gameRect = gameAreaRef.current?.getBoundingClientRect();
         if (gameRect) {
@@ -873,7 +910,7 @@ export default function PongGame() {
 
       if (lastTouchYRef.current !== null) {
         const moveDelta =
-          (currentTouchY - lastTouchYRef.current) * TOUCH_SENSITIVITY;
+          (currentTouchY - lastTouchYRef.current) * LAYOUT.TOUCH.SENSITIVITY;
         const newPos = Math.min(
           Math.max(0, playerPositionRef.current + moveDelta),
           height - playerPaddleHeight
@@ -916,39 +953,38 @@ export default function PongGame() {
   }, [gameState]);
 
   // Calculate responsive game size based on window dimensions
-  const calculateGameSize = () => {
-    // Default to max size
-    let gameWidth = MAX_GAME_WIDTH;
-    let gameHeight = MAX_GAME_HEIGHT;
+  const calculateGameSize = useCallback(() => {
+    let gameWidth: number = LAYOUT.GAME.MAX_WIDTH;
+    let gameHeight: number = LAYOUT.GAME.MAX_HEIGHT;
 
-    // If window is smaller than max size, scale down proportionally
     if (windowSize.width > 0) {
-      const availableWidth = Math.min(windowSize.width * 0.9, MAX_GAME_WIDTH);
+      const availableWidth = Math.min(
+        windowSize.width * 0.9,
+        LAYOUT.GAME.MAX_WIDTH
+      );
       const availableHeight = Math.min(
         windowSize.height * 0.7,
-        MAX_GAME_HEIGHT
+        LAYOUT.GAME.MAX_HEIGHT
       );
 
-      // Maintain aspect ratio
-      if (availableWidth / availableHeight > ASPECT_RATIO) {
-        // Height is the limiting factor
+      if (availableWidth / availableHeight > LAYOUT.GAME.ASPECT_RATIO) {
         gameHeight = availableHeight;
-        gameWidth = gameHeight * ASPECT_RATIO;
+        gameWidth = gameHeight * LAYOUT.GAME.ASPECT_RATIO;
       } else {
-        // Width is the limiting factor
         gameWidth = availableWidth;
-        gameHeight = gameWidth / ASPECT_RATIO;
+        gameHeight = gameWidth / LAYOUT.GAME.ASPECT_RATIO;
       }
     }
 
     return { width: gameWidth, height: gameHeight };
-  };
+  }, [windowSize.width, windowSize.height]);
 
   // Get calculated game size
-  const calculatedGameSize =
-    windowSize.width > 0
+  const calculatedGameSize = useMemo(() => {
+    return windowSize.width > 0
       ? calculateGameSize()
-      : { width: MAX_GAME_WIDTH, height: MAX_GAME_HEIGHT };
+      : { width: LAYOUT.GAME.MAX_WIDTH, height: LAYOUT.GAME.MAX_HEIGHT };
+  }, [calculateGameSize, windowSize.width]);
 
   return (
     <>
@@ -995,7 +1031,7 @@ export default function PongGame() {
                 ref={touchZoneRef}
                 className="relative mr-2 h-full rounded-lg border border-white/20"
                 style={{
-                  width: `${TOUCH_ZONE_WIDTH}px`,
+                  width: `${LAYOUT.TOUCH.ZONE_WIDTH}px`,
                   backgroundColor: "rgba(255, 255, 255, 0.05)",
                   height: `${calculatedGameSize.height}px`
                 }}
@@ -1031,7 +1067,7 @@ export default function PongGame() {
                   ref={playerPaddleRef}
                   className={`absolute left-0 rounded-sm ${powerShotActive ? "bg-blue-400 shadow-[0_0_15px_5px_rgba(59,130,246,0.7)]" : "bg-blue-500"}`}
                   style={{
-                    width: PADDLE_WIDTH,
+                    width: LAYOUT.PADDLE.WIDTH,
                     height: playerPaddleHeight,
                     top: playerPosition,
                     transition: powerShotActive
@@ -1070,7 +1106,7 @@ export default function PongGame() {
                   ref={computerPaddleRef}
                   className="absolute right-0 rounded-sm bg-red-500"
                   style={{
-                    width: PADDLE_WIDTH,
+                    width: LAYOUT.PADDLE.WIDTH,
                     height: computerPaddleHeight,
                     top: computerPosition
                   }}
@@ -1089,8 +1125,8 @@ export default function PongGame() {
                       : "bg-white"
                   )}
                   style={{
-                    width: BALL_SIZE,
-                    height: BALL_SIZE,
+                    width: LAYOUT.BALL.SIZE,
+                    height: LAYOUT.BALL.SIZE,
                     left: ballPosition.x,
                     top: ballPosition.y
                   }}
@@ -1174,13 +1210,13 @@ export default function PongGame() {
                 <span
                   className={cn(
                     Number.parseFloat(displayPaddleVelocity) >=
-                      POWER_SHOT_THRESHOLD
+                      POWER_SHOT.THRESHOLD
                       ? "font-bold text-yellow-300"
                       : ""
                   )}>
                   {displayPaddleVelocity}
                   {Number.parseFloat(displayPaddleVelocity) >=
-                    POWER_SHOT_THRESHOLD && " 🔥"}
+                    POWER_SHOT.THRESHOLD && " 🔥"}
                 </span>
               </div>
               {powerShotActive && (
