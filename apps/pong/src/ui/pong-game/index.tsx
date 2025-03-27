@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { motion, useAnimationControls } from "framer-motion";
+import { motion, useAnimationControls } from "motion/react";
 import { useElementDimensions } from "@/hooks/use-element-dimensions";
 import { useMobile } from "@/hooks/use-mobile";
 import { useOrientation } from "@/hooks/use-orientation";
