@@ -17,12 +17,11 @@
     "index.d.ts",
     "global.d.ts",
     "next-env.d.ts",
-    "next.config.mjs",
+    "next.config.ts",
     "postcss.config.mjs",
     "tailwind.config.ts",
     "**/*.tsx",
     "**/*.ts",
-    "**/*.mdx",
     ".next/types/**/*.ts",
     "../../reset.d.ts"
   ],
