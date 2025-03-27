@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import { Analytics } from "@vercel/analytics/react";
 import {
   BasisGrotesqueProBlack,
   BasisGrotesqueProBlackItalic,
@@ -13,6 +13,7 @@ import {
   BasisGrotesqueProRegular
 } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "React Pong",
@@ -39,7 +40,10 @@ export default function RootLayout({
         BasisGrotesqueProBlackItalic.variable,
         BasisGrotesqueProBoldItalic.variable
       )}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
