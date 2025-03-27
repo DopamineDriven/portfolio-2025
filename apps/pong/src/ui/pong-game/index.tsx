@@ -7,6 +7,7 @@ import { useElementDimensions } from "@/hooks/use-element-dimensions";
 import { useMobile } from "@/hooks/use-mobile";
 import { useOrientation } from "@/hooks/use-orientation";
 import useWindowSize from "@/hooks/use-window-size";
+import { cn } from "@/lib/utils";
 import { OrientationOverlay } from "@/ui/orientation-overlay";
 
 // Game constants
@@ -817,7 +818,10 @@ export default function PongGame() {
       gameBoardDimensions.height
     ]
   );
+  /**
+ So the issues I'm facing are several, one of which is obviously the need to break down this behemoth of a tsx file into more modular, reusable parts (both the raw game logic/handling and the returned jsx itself)
 
+ */
   // Handle touch start for mobile
   const handleTouchStart = useCallback(
     (e: React.TouchEvent) => {
@@ -841,8 +845,8 @@ export default function PongGame() {
           );
 
           playerPositionRef.current = newPos;
+          playerPaddleControls.set({ top: newPos });
           setPlayerPosition(newPos);
-          playerPaddleControls.start({ top: newPos });
         }
       }
     },
@@ -1078,7 +1082,12 @@ export default function PongGame() {
                 {/* Ball */}
                 <motion.div
                   ref={ballRef}
-                  className={`absolute rounded-full ${powerShotActive ? "bg-blue-200 shadow-[0_0_10px_3px_rgba(59,130,246,0.7)]" : "bg-white"}`}
+                  className={cn(
+                    `absolute rounded-full`,
+                    powerShotActive
+                      ? "bg-blue-200 shadow-[0_0_10px_3px_rgba(59,130,246,0.7)]"
+                      : "bg-white"
+                  )}
                   style={{
                     width: BALL_SIZE,
                     height: BALL_SIZE,
@@ -1154,21 +1163,24 @@ export default function PongGame() {
               <div>
                 Ball Speed:{" "}
                 <span
-                  className={powerShotActive ? "font-bold text-blue-300" : ""}>
+                  className={cn(
+                    powerShotActive ? "font-bold text-blue-300" : ""
+                  )}>
                   {displayBallSpeed}
                 </span>
               </div>
               <div>
                 Paddle Velocity:{" "}
                 <span
-                  className={
-                    Number(displayPaddleVelocity) >= POWER_SHOT_THRESHOLD
+                  className={cn(
+                    Number.parseFloat(displayPaddleVelocity) >=
+                      POWER_SHOT_THRESHOLD
                       ? "font-bold text-yellow-300"
                       : ""
-                  }>
+                  )}>
                   {displayPaddleVelocity}
-                  {Number(displayPaddleVelocity) >= POWER_SHOT_THRESHOLD &&
-                    " 🔥"}
+                  {Number.parseFloat(displayPaddleVelocity) >=
+                    POWER_SHOT_THRESHOLD && " 🔥"}
                 </span>
               </div>
               {powerShotActive && (
