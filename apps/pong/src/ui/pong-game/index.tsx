@@ -3,20 +3,25 @@
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useAnimationControls } from "motion/react";
+import { useElementDimensions } from "@/hooks/use-element-dimensions";
 import { useMobile } from "@/hooks/use-mobile";
 import { useOrientation } from "@/hooks/use-orientation";
+import useWindowSize from "@/hooks/use-window-size";
 import { OrientationOverlay } from "@/ui/orientation-overlay";
 
 // Game constants
 const PADDLE_WIDTH = 15;
 const BALL_SIZE = 15;
-const BALL_SPEED = 7;
-const COMPUTER_SPEED = 4;
-const MAX_BALL_SPEED = 20;
+const BASE_BALL_SPEED = 7; // Base speed for reference width
+const REFERENCE_WIDTH = 892; // Reference width for speed scaling
+const COMPUTER_SPEED_BASE = 4; // Base computer speed
+const MAX_BALL_SPEED_BASE = 20; // Base max ball speed
 const ANGLE_IMPACT_FACTOR = 1.5;
 const PADDLE_VELOCITY_IMPACT = 1.8;
 const PADDLE_HEIGHT_PERCENTAGE = 0.18;
 const ASPECT_RATIO = 4 / 3;
+const MAX_GAME_WIDTH = 892;
+const MAX_GAME_HEIGHT = 668;
 const WINNING_SCORE = 11;
 const SCORE_DIFFERENCE_FOR_SCALING = 3;
 const MIN_PADDLE_SCALE = 0.6;
@@ -27,10 +32,14 @@ const CENTER_PADDLE_ON_TOUCH = true;
 const POWER_SHOT_THRESHOLD = 8;
 const POWER_SHOT_MULTIPLIER = 1.5;
 const POWER_SHOT_DURATION = 800;
+const TOUCH_ZONE_WIDTH = 60; // Width in pixels for the external touch zone
 
 type GameState = "idle" | "playing" | "paused" | "gameOver";
 
 export default function PongGame() {
+  // Get window size for responsive scaling
+  const windowSize = useWindowSize();
+
   // Game state (these should remain as React state since they affect UI)
   const [gameState, setGameState] = useState<GameState>("idle");
   const [playerScore, setPlayerScore] = useState(0);
@@ -44,11 +53,12 @@ export default function PongGame() {
   const playerPositionRef = useRef(0);
   const computerPositionRef = useRef(0);
   const ballPositionRef = useRef({ x: 0, y: 0 });
-  const ballDirectionRef = useRef({ x: BALL_SPEED, y: BALL_SPEED });
+  const ballDirectionRef = useRef({ x: BASE_BALL_SPEED, y: BASE_BALL_SPEED });
   const playerPaddleVelocityRef = useRef(0);
   const lastPlayerPositionRef = useRef(0);
   const computerPaddleVelocityRef = useRef(0);
   const lastComputerPositionRef = useRef(0);
+  const speedScaleRef = useRef(1.0); // Reference for speed scaling
 
   // We still need some state for the UI to render properly
   const [playerPosition, setPlayerPosition] = useState(0);
@@ -64,6 +74,7 @@ export default function PongGame() {
   // Refs for game elements and animation
   const gameAreaRef = useRef<HTMLDivElement>(null);
   const gameContainerRef = useRef<HTMLDivElement>(null);
+  const touchZoneRef = useRef<HTMLDivElement>(null);
   const playerPaddleRef = useRef<HTMLDivElement>(null);
   const computerPaddleRef = useRef<HTMLDivElement>(null);
   const ballRef = useRef<HTMLDivElement>(null);
@@ -71,6 +82,12 @@ export default function PongGame() {
   const lastTimeRef = useRef<number>(0);
   const lastTouchYRef = useRef<number | null>(null);
   const powerShotTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const wasAutoPaused = useRef(false);
+  const gameInitializedRef = useRef(false);
+
+  // Use the element dimensions hook to track game area size in real-time
+  const [gameBoardDimensions, measureGameBoard] =
+    useElementDimensions(gameAreaRef);
 
   // Animation controls
   const playerPaddleControls = useAnimationControls();
@@ -93,6 +110,44 @@ export default function PongGame() {
 
   // Add this at the top with other refs
   const velocitySmoothingRef = useRef<number[]>([0, 0, 0, 0, 0]); // Last 5 velocity readings
+  const gameStartTimeRef = useRef<number>(0);
+
+  // Calculate speed scale based on game width
+  const calculateSpeedScale = useCallback((width: number) => {
+    if (width <= 0) return 1.0;
+    // Calculate the ratio between reference width and current width
+    // We want to slow down the ball on smaller screens, so we use a square root to dampen the effect
+    return Math.sqrt(REFERENCE_WIDTH / width);
+  }, []);
+
+  // Get scaled ball speed
+  const getScaledBallSpeed = useCallback(() => {
+    return BASE_BALL_SPEED / speedScaleRef.current;
+  }, []);
+
+  // Get scaled max ball speed
+  const getScaledMaxBallSpeed = useCallback(() => {
+    return MAX_BALL_SPEED_BASE / speedScaleRef.current;
+  }, []);
+
+  // Get scaled computer speed
+  const getScaledComputerSpeed = useCallback(() => {
+    return COMPUTER_SPEED_BASE / speedScaleRef.current;
+  }, []);
+
+  // Update speed scale when game dimensions change
+  useEffect(() => {
+    if (gameBoardDimensions.width > 0) {
+      const newSpeedScale = calculateSpeedScale(gameBoardDimensions.width);
+      speedScaleRef.current = newSpeedScale;
+
+      // Log for debugging
+      console.log(
+        `Game width: ${gameBoardDimensions.width}, Speed scale: ${newSpeedScale}`
+      );
+      console.log(`Scaled ball speed: ${getScaledBallSpeed()}`);
+    }
+  }, [gameBoardDimensions.width, calculateSpeedScale, getScaledBallSpeed]);
 
   // Update paddle heights based on score difference (ability scaling)
   useEffect(() => {
@@ -151,6 +206,7 @@ export default function PongGame() {
   useEffect(() => {
     if (isMobile && isPortrait && gameState === "playing") {
       setGameState("paused");
+      wasAutoPaused.current = true;
     }
   }, [isMobile, isPortrait, gameState]);
 
@@ -158,6 +214,9 @@ export default function PongGame() {
   useEffect(() => {
     const updateDimensions = () => {
       if (gameAreaRef.current) {
+        // Use the measure function from useElementDimensions
+        measureGameBoard();
+
         const { width, height } = gameAreaRef.current.getBoundingClientRect();
 
         setGameDimensions({ width, height });
@@ -182,23 +241,37 @@ export default function PongGame() {
         };
         ballPositionRef.current = initialBallPos;
         setBallPosition(initialBallPos);
+
+        // Update speed scale
+        speedScaleRef.current = calculateSpeedScale(width);
+
+        // Mark game as initialized
+        gameInitializedRef.current = true;
       }
     };
 
     updateDimensions();
+
+    // Add a small delay to ensure dimensions are properly calculated
+    const timeoutId = setTimeout(() => {
+      updateDimensions();
+    }, 100);
+
     window.addEventListener("resize", updateDimensions);
 
     return () => {
       window.removeEventListener("resize", updateDimensions);
+      clearTimeout(timeoutId);
     };
-  }, []);
+  }, [measureGameBoard, calculateSpeedScale]);
 
   // Handle keyboard controls
   useEffect(() => {
     if (gameState !== "playing") return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      const { height } = gameDimensions;
+      // Use real-time dimensions from the hook
+      const height = gameBoardDimensions.height || gameDimensions.height;
 
       if (e.key === "ArrowUp") {
         const newPos = Math.max(0, playerPositionRef.current - 20);
@@ -221,7 +294,13 @@ export default function PongGame() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [gameState, gameDimensions, playerPaddleHeight, playerPaddleControls]);
+  }, [
+    gameState,
+    gameDimensions,
+    playerPaddleHeight,
+    playerPaddleControls,
+    gameBoardDimensions.height
+  ]);
 
   // Trigger power shot effect
   const triggerPowerShot = useCallback(() => {
@@ -279,9 +358,14 @@ export default function PongGame() {
         }
       }
 
-      const baseSpeed = BALL_SPEED + speedBoost;
-      const newSpeed = Math.min(baseSpeed + paddleImpact, MAX_BALL_SPEED);
-      const yComponent = BALL_SPEED * Math.sin(angle) + paddleVelocity * 0.5;
+      // Use scaled ball speed
+      const scaledBallSpeed = getScaledBallSpeed();
+      const scaledMaxBallSpeed = getScaledMaxBallSpeed();
+
+      const baseSpeed = scaledBallSpeed + speedBoost;
+      const newSpeed = Math.min(baseSpeed + paddleImpact, scaledMaxBallSpeed);
+      const yComponent =
+        scaledBallSpeed * Math.sin(angle) + paddleVelocity * 0.5;
 
       const newDirection = {
         x: isPlayerPaddle
@@ -297,12 +381,26 @@ export default function PongGame() {
 
       return newDirection;
     },
-    [triggerPowerShot]
+    [triggerPowerShot, getScaledBallSpeed, getScaledMaxBallSpeed]
   );
 
   // Reset ball to center
   const resetBall = useCallback(() => {
-    const { width, height } = gameDimensions;
+    if (!gameInitializedRef.current) {
+      console.log("Game not initialized, skipping ball reset");
+      return;
+    }
+
+    // Use real-time dimensions from the hook
+    const width = gameBoardDimensions.width || gameDimensions.width;
+    const height = gameBoardDimensions.height || gameDimensions.height;
+
+    // Ensure dimensions are valid
+    if (width <= 10 || height <= 10) {
+      console.log("Invalid game dimensions for ball reset:", width, height);
+      return;
+    }
+
     const newBallPos = {
       x: width / 2 - BALL_SIZE / 2,
       y: height / 2 - BALL_SIZE / 2
@@ -314,7 +412,10 @@ export default function PongGame() {
 
     const angle = (Math.random() * Math.PI) / 4 - Math.PI / 8;
     const direction = Math.random() > 0.5 ? 1 : -1;
-    const initialSpeed = BALL_SPEED * (1 + Math.random() * 0.2);
+
+    // Use scaled ball speed
+    const scaledBallSpeed = getScaledBallSpeed();
+    const initialSpeed = scaledBallSpeed * (1 + Math.random() * 0.2);
 
     ballDirectionRef.current = {
       x: direction * initialSpeed * Math.cos(angle),
@@ -343,11 +444,17 @@ export default function PongGame() {
         lastTimeRef.current = 0; // Reset time reference to ensure smooth restart
       }
     }, 500);
-  }, [gameDimensions, ballControls, gameState]);
+  }, [
+    gameDimensions,
+    ballControls,
+    gameState,
+    gameBoardDimensions,
+    getScaledBallSpeed
+  ]);
 
   // Main game loop
   useEffect(() => {
-    if (gameState !== "playing") return;
+    if (gameState !== "playing" || !gameInitializedRef.current) return;
 
     // Track paddle velocity with requestAnimationFrame
     let velocityFrameId: number | null = null;
@@ -389,13 +496,33 @@ export default function PongGame() {
         lastTimeRef.current = timestamp;
       }
 
-      const { width, height } = gameDimensions;
+      // Use real-time dimensions from the hook
+      const width = gameBoardDimensions.width || gameDimensions.width;
+      const height = gameBoardDimensions.height || gameDimensions.height;
+
+      // More robust safety check - ensure dimensions are valid
+      if (width <= 10 || height <= 10) {
+        console.log("Invalid game dimensions in game loop:", width, height);
+        gameLoopRef.current = requestAnimationFrame(gameLoop);
+        return;
+      }
 
       // Update ball position
       const newBallPos = {
         x: ballPositionRef.current.x + ballDirectionRef.current.x,
         y: ballPositionRef.current.y + ballDirectionRef.current.y
       };
+
+      // Extra safety check - if ball is way out of bounds, reset it
+      if (
+        Math.abs(newBallPos.x) > width * 2 ||
+        Math.abs(newBallPos.y) > height * 2
+      ) {
+        console.log("Ball way out of bounds, resetting:", newBallPos);
+        resetBall();
+        gameLoopRef.current = requestAnimationFrame(gameLoop);
+        return;
+      }
 
       // Ball collision with top and bottom walls
       if (newBallPos.y <= 0 || newBallPos.y >= height - BALL_SIZE) {
@@ -442,7 +569,19 @@ export default function PongGame() {
         newBallPos.x = width - PADDLE_WIDTH - BALL_SIZE;
       }
 
-      // Scoring
+      // Scoring - but only if game has been running for at least 500ms
+      const gameRunningTime = Date.now() - gameStartTimeRef.current;
+      if (gameRunningTime < 500) {
+        // Game just started, don't allow scoring yet
+        if (newBallPos.x < 0 || newBallPos.x > width) {
+          console.log("Preventing early scoring, game just started");
+          resetBall();
+          gameLoopRef.current = requestAnimationFrame(gameLoop);
+          return;
+        }
+      }
+
+      // Regular scoring logic
       if (newBallPos.x < 0) {
         // Computer scores
         setComputerScore(prev => prev + 1);
@@ -477,10 +616,13 @@ export default function PongGame() {
       const paddleCenter =
         computerPositionRef.current + computerPaddleHeight / 2;
 
+      // Use scaled computer speed
+      const scaledComputerSpeed = getScaledComputerSpeed();
+
       if (ballCenter < paddleCenter - 10) {
         const newPos = Math.max(
           0,
-          computerPositionRef.current - COMPUTER_SPEED
+          computerPositionRef.current - scaledComputerSpeed
         );
         computerPositionRef.current = newPos;
         computerPaddleControls.set({ top: newPos });
@@ -492,7 +634,7 @@ export default function PongGame() {
       } else if (ballCenter > paddleCenter + 10) {
         const newPos = Math.min(
           height - computerPaddleHeight,
-          computerPositionRef.current + COMPUTER_SPEED
+          computerPositionRef.current + scaledComputerSpeed
         );
         computerPositionRef.current = newPos;
         computerPaddleControls.set({ top: newPos });
@@ -520,17 +662,69 @@ export default function PongGame() {
   }, [
     gameState,
     gameDimensions,
-    displayPaddleVelocity,
     playerPaddleHeight,
     computerPaddleHeight,
     handlePaddleCollision,
     resetBall,
+    displayPaddleVelocity,
     ballControls,
-    computerPaddleControls
+    computerPaddleControls,
+    gameBoardDimensions,
+    getScaledComputerSpeed
   ]);
 
   // Start game
   const startGame = useCallback(() => {
+    // Ensure game is initialized before starting and dimensions are valid
+    if (
+      !gameInitializedRef.current ||
+      gameBoardDimensions.width <= 10 ||
+      gameBoardDimensions.height <= 10
+    ) {
+      console.log("Game not ready to start. Dimensions:", gameBoardDimensions);
+
+      // Force a dimension update
+      measureGameBoard();
+
+      if (gameAreaRef.current) {
+        const rect = gameAreaRef.current.getBoundingClientRect();
+        console.log("Current getBoundingClientRect:", rect);
+
+        if (rect.width > 10 && rect.height > 10) {
+          setGameDimensions({ width: rect.width, height: rect.height });
+          gameInitializedRef.current = true;
+
+          // Try again after a short delay to ensure state is updated
+          setTimeout(() => {
+            startGame();
+          }, 100);
+        } else {
+          console.log(
+            "Game area still has invalid dimensions. Cannot start game."
+          );
+          return;
+        }
+      } else {
+        console.log("Game area ref not available");
+        return;
+      }
+      return;
+    }
+
+    // Reset paddle positions to ensure they're within bounds
+    const height = gameBoardDimensions.height || gameDimensions.height;
+
+    // Center paddles vertically
+    const initialPlayerPos = height / 2 - playerPaddleHeight / 2;
+    playerPositionRef.current = initialPlayerPos;
+    setPlayerPosition(initialPlayerPos);
+    playerPaddleControls.set({ top: initialPlayerPos });
+
+    const initialComputerPos = height / 2 - computerPaddleHeight / 2;
+    computerPositionRef.current = initialComputerPos;
+    setComputerPosition(initialComputerPos);
+    computerPaddleControls.set({ top: initialComputerPos });
+
     resetBall();
     setPlayerScore(0);
     setComputerScore(0);
@@ -539,7 +733,18 @@ export default function PongGame() {
 
     setPlayerPaddleHeight(paddleHeight);
     setComputerPaddleHeight(paddleHeight);
-  }, [paddleHeight, resetBall]);
+    gameStartTimeRef.current = Date.now();
+  }, [
+    paddleHeight,
+    resetBall,
+    gameDimensions,
+    gameBoardDimensions,
+    playerPaddleHeight,
+    computerPaddleHeight,
+    measureGameBoard,
+    playerPaddleControls,
+    computerPaddleControls
+  ]);
 
   // Pause game
   const togglePause = useCallback(() => {
@@ -551,9 +756,14 @@ export default function PongGame() {
 
   // Auto-resume game when rotating back to landscape if it was paused due to orientation
   useEffect(() => {
-    if (justRotatedToLandscape && gameState === "paused") {
+    if (
+      justRotatedToLandscape &&
+      gameState === "paused" &&
+      wasAutoPaused.current
+    ) {
       setTimeout(() => {
         setGameState("playing");
+        wasAutoPaused.current = false;
       }, 500);
     }
   }, [justRotatedToLandscape, gameState]);
@@ -578,7 +788,8 @@ export default function PongGame() {
     (e: React.MouseEvent) => {
       if (gameState !== "playing" || isMobile) return;
 
-      const { height } = gameDimensions;
+      // Use real-time dimensions from the hook
+      const height = gameBoardDimensions.height || gameDimensions.height;
       const rect = gameAreaRef.current?.getBoundingClientRect();
 
       if (rect) {
@@ -602,7 +813,8 @@ export default function PongGame() {
       isMobile,
       gameDimensions,
       playerPaddleHeight,
-      playerPaddleControls
+      playerPaddleControls,
+      gameBoardDimensions.height
     ]
   );
 
@@ -611,29 +823,36 @@ export default function PongGame() {
     (e: React.TouchEvent) => {
       if (gameState !== "playing") return;
 
-      const { height } = gameDimensions;
-      if (e.touches[0]) {
-        const touch = e.touches[0];
+      // Use real-time dimensions from the hook
+      const height = gameBoardDimensions.height || gameDimensions.height;
+      if (!e.touches[0]) return;
+      const touch = e.touches[0];
+      lastTouchYRef.current = touch.clientY;
 
-        lastTouchYRef.current = touch.clientY;
+      if (CENTER_PADDLE_ON_TOUCH) {
+        // Get the touch position relative to the game area
+        const gameRect = gameAreaRef.current?.getBoundingClientRect();
+        if (gameRect) {
+          // Calculate the relative Y position in the game area
+          const relativeY = touch.clientY - gameRect.top;
+          const newPos = Math.min(
+            Math.max(0, relativeY - playerPaddleHeight / 2),
+            height - playerPaddleHeight
+          );
 
-        if (CENTER_PADDLE_ON_TOUCH) {
-          const rect = gameAreaRef.current?.getBoundingClientRect();
-          if (rect) {
-            const relativeY = touch.clientY - rect.top;
-            const newPos = Math.min(
-              Math.max(0, relativeY - playerPaddleHeight / 2),
-              height - playerPaddleHeight
-            );
-
-            playerPositionRef.current = newPos;
-            setPlayerPosition(newPos);
-            playerPaddleControls.start({ top: newPos });
-          }
+          playerPositionRef.current = newPos;
+          setPlayerPosition(newPos);
+          playerPaddleControls.start({ top: newPos });
         }
       }
     },
-    [gameState, gameDimensions, playerPaddleHeight, playerPaddleControls]
+    [
+      gameState,
+      gameDimensions,
+      playerPaddleHeight,
+      playerPaddleControls,
+      gameBoardDimensions.height
+    ]
   );
 
   // Handle touch move for mobile with sensitivity adjustment
@@ -641,33 +860,40 @@ export default function PongGame() {
     (e: React.TouchEvent) => {
       if (gameState !== "playing") return;
 
-      const { height } = gameDimensions;
-      if (e.touches[0]) {
-        const touch = e.touches[0];
+      // Use real-time dimensions from the hook
+      const height = gameBoardDimensions.height || gameDimensions.height;
+      if (!e.touches[0]) return;
+      const touch = e.touches[0];
 
-        const currentTouchY = touch.clientY;
+      const currentTouchY = touch.clientY;
 
-        if (lastTouchYRef.current !== null) {
-          const moveDelta =
-            (currentTouchY - lastTouchYRef.current) * TOUCH_SENSITIVITY;
-          const newPos = Math.min(
-            Math.max(0, playerPositionRef.current + moveDelta),
-            height - playerPaddleHeight
-          );
+      if (lastTouchYRef.current !== null) {
+        const moveDelta =
+          (currentTouchY - lastTouchYRef.current) * TOUCH_SENSITIVITY;
+        const newPos = Math.min(
+          Math.max(0, playerPositionRef.current + moveDelta),
+          height - playerPaddleHeight
+        );
 
-          playerPositionRef.current = newPos;
-          playerPaddleControls.set({ top: newPos });
+        playerPositionRef.current = newPos;
+        playerPaddleControls.set({ top: newPos });
 
-          // Only update React state occasionally to reduce renders
-          if (Date.now() % 3 === 0) {
-            setPlayerPosition(newPos);
-          }
+        // Only update React state occasionally to reduce renders
+        if (Date.now() % 3 === 0) {
+          setPlayerPosition(newPos);
         }
-
-        lastTouchYRef.current = currentTouchY;
       }
+
+      lastTouchYRef.current = currentTouchY;
+      e.preventDefault(); // Prevent scrolling while controlling
     },
-    [gameState, gameDimensions, playerPaddleHeight, playerPaddleControls]
+    [
+      gameState,
+      gameDimensions,
+      playerPaddleHeight,
+      playerPaddleControls,
+      gameBoardDimensions.height
+    ]
   );
 
   // Handle touch end
@@ -684,6 +910,41 @@ export default function PongGame() {
       velocitySmoothingRef.current = [0, 0, 0, 0, 0];
     }
   }, [gameState]);
+
+  // Calculate responsive game size based on window dimensions
+  const calculateGameSize = () => {
+    // Default to max size
+    let gameWidth = MAX_GAME_WIDTH;
+    let gameHeight = MAX_GAME_HEIGHT;
+
+    // If window is smaller than max size, scale down proportionally
+    if (windowSize.width > 0) {
+      const availableWidth = Math.min(windowSize.width * 0.9, MAX_GAME_WIDTH);
+      const availableHeight = Math.min(
+        windowSize.height * 0.7,
+        MAX_GAME_HEIGHT
+      );
+
+      // Maintain aspect ratio
+      if (availableWidth / availableHeight > ASPECT_RATIO) {
+        // Height is the limiting factor
+        gameHeight = availableHeight;
+        gameWidth = gameHeight * ASPECT_RATIO;
+      } else {
+        // Width is the limiting factor
+        gameWidth = availableWidth;
+        gameHeight = gameWidth / ASPECT_RATIO;
+      }
+    }
+
+    return { width: gameWidth, height: gameHeight };
+  };
+
+  // Get calculated game size
+  const calculatedGameSize =
+    windowSize.width > 0
+      ? calculateGameSize()
+      : { width: MAX_GAME_WIDTH, height: MAX_GAME_HEIGHT };
 
   return (
     <>
@@ -721,149 +982,167 @@ export default function PongGame() {
           </div>
         </div>
 
-        {/* Game area wrapper with 4:3 aspect ratio constraint */}
+        {/* Game area wrapper with 4:3 aspect ratio constraint and external touch zone for mobile */}
         <div className="flex w-full justify-center">
-          <div
-            className="relative max-h-[80dvh] w-full max-w-4xl"
-            style={{
-              aspectRatio: `${ASPECT_RATIO}`,
-              maxWidth: `min(100%, calc(80dvh * ${ASPECT_RATIO}))`
-            }}>
-            <div
-              ref={gameAreaRef}
-              className="absolute inset-0 touch-none overflow-hidden border-2 border-white bg-gray-800"
-              onMouseMove={!isMobile ? handleMouseMove : undefined}>
-              {/* Background pattern */}
-              {createBackgroundPattern()}
+          <div className="flex items-center justify-center">
+            {/* External touch control zone for mobile */}
+            {isMobile && !isPortrait && gameState === "playing" && (
+              <div
+                ref={touchZoneRef}
+                className="relative mr-2 h-full rounded-lg border border-white/20"
+                style={{
+                  width: `${TOUCH_ZONE_WIDTH}px`,
+                  backgroundColor: "rgba(255, 255, 255, 0.05)",
+                  height: `${calculatedGameSize.height}px`
+                }}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}>
+                {/* Visual indicator for touch zone */}
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-30">
+                  <div className="flex h-16 w-8 items-center justify-center rounded-full border border-white">
+                    <div className="h-8 w-1 rounded-full bg-white"></div>
+                  </div>
+                </div>
+              </div>
+            )}
 
-              {/* Touch control zone for mobile */}
-              {isMobile && !isPortrait && gameState === "playing" && (
-                <div
-                  className="absolute inset-y-0 left-0 z-10 w-1/3"
-                  style={{ backgroundColor: "rgba(255, 255, 255, 0.03)" }}
-                  onTouchStart={handleTouchStart}
-                  onTouchMove={handleTouchMove}
-                  onTouchEnd={handleTouchEnd}>
-                  {/* Visual indicator for touch zone */}
-                  <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-30">
-                    <div className="flex h-16 w-8 items-center justify-center rounded-full border border-white">
-                      <div className="h-8 w-1 rounded-full bg-white"></div>
+            {/* Game board */}
+            <div
+              className="relative"
+              style={{
+                width: `${calculatedGameSize.width}px`,
+                height: `${calculatedGameSize.height}px`,
+                maxWidth: "100%"
+              }}>
+              <div
+                ref={gameAreaRef}
+                className="absolute inset-0 touch-none overflow-hidden border-2 border-white bg-gray-800"
+                onMouseMove={!isMobile ? handleMouseMove : undefined}>
+                {/* Background pattern */}
+                {createBackgroundPattern()}
+
+                {/* Player paddle */}
+                <motion.div
+                  ref={playerPaddleRef}
+                  className={`absolute left-0 rounded-sm ${powerShotActive ? "bg-blue-400 shadow-[0_0_15px_5px_rgba(59,130,246,0.7)]" : "bg-blue-500"}`}
+                  style={{
+                    width: PADDLE_WIDTH,
+                    height: playerPaddleHeight,
+                    top: playerPosition,
+                    transition: powerShotActive
+                      ? "background-color 0.1s, box-shadow 0.1s"
+                      : "none"
+                  }}
+                  animate={playerPaddleControls}
+                  initial={{ top: playerPosition }}
+                  transition={{ type: "tween", duration: 0 }}
+                  drag={!isMobile ? "y" : false}
+                  dragConstraints={{
+                    top: 0,
+                    bottom:
+                      gameBoardDimensions.height > 0
+                        ? gameBoardDimensions.height - playerPaddleHeight
+                        : gameDimensions.height - playerPaddleHeight
+                  }}
+                  dragElastic={0.1}
+                  onDrag={(_, info) => {
+                    if (!isMobile) {
+                      // Use real-time dimensions from the hook
+                      const height =
+                        gameBoardDimensions.height || gameDimensions.height;
+                      const newPos = Math.min(
+                        Math.max(0, info.point.y),
+                        height - playerPaddleHeight
+                      );
+                      playerPositionRef.current = newPos;
+                      setPlayerPosition(newPos);
+                    }
+                  }}
+                />
+
+                {/* Computer paddle */}
+                <motion.div
+                  ref={computerPaddleRef}
+                  className="absolute right-0 rounded-sm bg-red-500"
+                  style={{
+                    width: PADDLE_WIDTH,
+                    height: computerPaddleHeight,
+                    top: computerPosition
+                  }}
+                  animate={computerPaddleControls}
+                  initial={{ top: computerPosition }}
+                  transition={{ type: "tween", duration: 0 }}
+                />
+
+                {/* Ball */}
+                <motion.div
+                  ref={ballRef}
+                  className={`absolute rounded-full ${powerShotActive ? "bg-blue-200 shadow-[0_0_10px_3px_rgba(59,130,246,0.7)]" : "bg-white"}`}
+                  style={{
+                    width: BALL_SIZE,
+                    height: BALL_SIZE,
+                    left: ballPosition.x,
+                    top: ballPosition.y
+                  }}
+                  animate={ballControls}
+                  initial={{ left: ballPosition.x, top: ballPosition.y }}
+                  transition={{ type: "tween", duration: 0 }}
+                />
+
+                {/* Center line */}
+                <div className="dashed absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/30" />
+
+                {/* Game state overlays */}
+                {gameState === "idle" && !showOrientationOverlay && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/70">
+                    <div className="text-center text-white">
+                      <h2 className="mb-4 text-3xl font-bold">Pong Game</h2>
+                      <p className="mb-2">
+                        Use arrow keys or click/tap to move your paddle
+                      </p>
+                      <p className="mb-2">
+                        Move your paddle quickly to hit powerful shots!
+                      </p>
+                      <p className="mb-4">
+                        First to 11 points wins (must win by 2)!
+                      </p>
+                      <button
+                        onClick={startGame}
+                        className="rounded-lg bg-green-500 px-6 py-3 text-xl text-white hover:bg-green-600">
+                        Start Game
+                      </button>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Player paddle */}
-              <motion.div
-                ref={playerPaddleRef}
-                className={`absolute left-0 rounded-sm ${powerShotActive ? "bg-blue-400 shadow-[0_0_15px_5px_rgba(59,130,246,0.7)]" : "bg-blue-500"}`}
-                style={{
-                  width: PADDLE_WIDTH,
-                  height: playerPaddleHeight,
-                  top: playerPosition,
-                  transition: powerShotActive
-                    ? "background-color 0.1s, box-shadow 0.1s"
-                    : "none"
-                }}
-                animate={playerPaddleControls}
-                initial={{ top: playerPosition }}
-                transition={{ type: "tween", duration: 0 }}
-                drag={!isMobile ? "y" : false}
-                dragConstraints={{
-                  top: 0,
-                  bottom: gameDimensions.height - playerPaddleHeight
-                }}
-                dragElastic={0.1}
-                onDrag={(_, info) => {
-                  if (!isMobile) {
-                    const newPos = info.point.y;
-                    playerPositionRef.current = newPos;
-                    setPlayerPosition(newPos);
-                  }
-                }}
-              />
-
-              {/* Computer paddle */}
-              <motion.div
-                ref={computerPaddleRef}
-                className="absolute right-0 rounded-sm bg-red-500"
-                style={{
-                  width: PADDLE_WIDTH,
-                  height: computerPaddleHeight,
-                  top: computerPosition
-                }}
-                animate={computerPaddleControls}
-                initial={{ top: computerPosition }}
-                transition={{ type: "tween", duration: 0 }}
-              />
-
-              {/* Ball */}
-              <motion.div
-                ref={ballRef}
-                className={`absolute rounded-full ${powerShotActive ? "bg-blue-200 shadow-[0_0_10px_3px_rgba(59,130,246,0.7)]" : "bg-white"}`}
-                style={{
-                  width: BALL_SIZE,
-                  height: BALL_SIZE,
-                  left: ballPosition.x,
-                  top: ballPosition.y
-                }}
-                animate={ballControls}
-                initial={{ left: ballPosition.x, top: ballPosition.y }}
-                transition={{ type: "tween", duration: 0 }}
-              />
-
-              {/* Center line */}
-              <div className="dashed absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/30" />
-
-              {/* Game state overlays */}
-              {gameState === "idle" && !showOrientationOverlay && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/70">
-                  <div className="text-center text-white">
-                    <h2 className="mb-4 text-3xl font-bold">Pong Game</h2>
-                    <p className="mb-2">
-                      Use arrow keys or click/tap to move your paddle
-                    </p>
-                    <p className="mb-2">
-                      Move your paddle quickly to hit powerful shots!
-                    </p>
-                    <p className="mb-4">
-                      First to 11 points wins (must win by 2)!
-                    </p>
-                    <button
-                      onClick={startGame}
-                      className="rounded-lg bg-green-500 px-6 py-3 text-xl text-white hover:bg-green-600">
-                      Start Game
-                    </button>
+                {gameState === "paused" && !showOrientationOverlay && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/70">
+                    <div className="text-center text-white">
+                      <h2 className="mb-4 text-3xl font-bold">Game Paused</h2>
+                      <button
+                        onClick={togglePause}
+                        className="rounded-lg bg-yellow-500 px-6 py-3 text-xl text-white hover:bg-yellow-600">
+                        Resume Game
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {gameState === "paused" && !showOrientationOverlay && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/70">
-                  <div className="text-center text-white">
-                    <h2 className="mb-4 text-3xl font-bold">Game Paused</h2>
-                    <button
-                      onClick={togglePause}
-                      className="rounded-lg bg-yellow-500 px-6 py-3 text-xl text-white hover:bg-yellow-600">
-                      Resume Game
-                    </button>
+                {gameState === "gameOver" && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/70">
+                    <div className="text-center text-white">
+                      <h2 className="mb-4 text-3xl font-bold">Game Over</h2>
+                      <p className="mb-6 text-2xl">{gameMessage}</p>
+                      <button
+                        onClick={startGame}
+                        className="rounded-lg bg-green-500 px-6 py-3 text-xl text-white hover:bg-green-600">
+                        Play Again
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
-
-              {gameState === "gameOver" && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/70">
-                  <div className="text-center text-white">
-                    <h2 className="mb-4 text-3xl font-bold">Game Over</h2>
-                    <p className="mb-6 text-2xl">{gameMessage}</p>
-                    <button
-                      onClick={startGame}
-                      className="rounded-lg bg-green-500 px-6 py-3 text-xl text-white hover:bg-green-600">
-                      Play Again
-                    </button>
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -902,7 +1181,10 @@ export default function PongGame() {
 
           {isMobile && !isPortrait && (
             <div className="text-center text-white">
-              <p>Use the touch zone on the left to control your paddle</p>
+              <p>
+                Use the touch area to the left of the game to control your
+                paddle
+              </p>
               <p className="mt-1 text-sm text-yellow-300">
                 Tip: Move quickly for power shots!
               </p>
