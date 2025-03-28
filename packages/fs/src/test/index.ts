@@ -39,7 +39,11 @@ const fs = new Fs(process.cwd());
   .catch(err => console.error(err));
 
 
-fs.fetchRemoteWriteLocal("https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/ai/port-21.png", "src/test/__gen__/port-21")
+fs.fetchRemoteWriteLocal("https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/ai/port-21.png", "src/test/__gen__/port-21");
+
+
+// https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf
+fs.fetchRemoteWriteLocal("https://raw.githubusercontent.com/mrdoob/three.js/refs/heads/dev/examples/models/gltf/collision-world.glb", "src/test/__gen__/collision-world");
 
 // function gzVal() {
 //   return (["application/x-gzip", "application/gzip"] as const).reduce(
