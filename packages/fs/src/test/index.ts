@@ -38,12 +38,45 @@ const fs = new Fs(process.cwd());
   })
   .catch(err => console.error(err));
 
+(async () => {
+  const start = performance.now();
+  const result = await fs.assetToBufferView(
+    "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/ai/port-40.png"
+  );
+  const end = performance.now();
+  console.log(`assetToBufferView took ${end - start} ms`);
+  return result;
+})()
+  .then(async data => {
+    const cleanData = fs.cleanDataUrl(data.b64encodedData);
+    const imgData = Buffer.from(cleanData, "base64");
+    const convertedImgData = await fs.imageTransform({
+      format: "avif",
+      target: imgData,
+      quality: 100,
+      resize: { widthOrOptions: { width: 1280, height: 1280} }
+    });
 
-fs.fetchRemoteWriteLocal("https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/ai/port-21.png", "src/test/__gen__/port-21");
+    fs.withWs(`src/test/__gen__/port-40.avif`, convertedImgData);
+    fs.withWs(`src/test/__gen__/port-40.${data.extension}`, imgData);
+  })
+  .catch(err => console.error(err));
 
+fs.fetchRemoteWriteLocal(
+  "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/ai/port-21.png",
+  "src/test/__gen__/port-21.webp",
+  false
+);
 
 // https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf
-fs.fetchRemoteWriteLocal("https://raw.githubusercontent.com/mrdoob/three.js/refs/heads/dev/examples/models/gltf/collision-world.glb", "src/test/__gen__/collision-world");
+fs.fetchRemoteWriteLocal(
+  "https://raw.githubusercontent.com/mrdoob/three.js/refs/heads/dev/examples/models/gltf/collision-world.glb",
+  "src/test/__gen__/collision-world"
+);
+
+// USE fluent-ffmpeg for video/animated image transforms (apng, etc)
+// https://www.npmjs.com/package/fluent-ffmpeg
+// https://www.npmjs.com/package/@types/fluent-ffmpeg
 
 // function gzVal() {
 //   return (["application/x-gzip", "application/gzip"] as const).reduce(
