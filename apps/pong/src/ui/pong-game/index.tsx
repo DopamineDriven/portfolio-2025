@@ -28,7 +28,8 @@ const LAYOUT = {
   TOUCH: {
     ZONE_WIDTH: 60,
     SENSITIVITY: 0.8,
-    CENTER_PADDLE_ON_TOUCH: true
+    CENTER_PADDLE_ON_TOUCH: true,
+    OFFSET: 20
   }
 } as const;
 
@@ -901,16 +902,14 @@ export default function PongGame() {
     (e: React.TouchEvent) => {
       if (gameState !== "playing") return;
 
-      // Use real-time dimensions from the hook
       const height = gameBoardDimensions.height || gameDimensions.height;
       if (!e.touches[0]) return;
+
       const touch = e.touches[0];
 
-      const currentTouchY = touch.clientY;
-
       if (lastTouchYRef.current !== null) {
-        const moveDelta =
-          (currentTouchY - lastTouchYRef.current) * LAYOUT.TOUCH.SENSITIVITY;
+        const moveDelta = (touch.clientY - lastTouchYRef.current) * LAYOUT.TOUCH.SENSITIVITY;
+
         const newPos = Math.min(
           Math.max(0, playerPositionRef.current + moveDelta),
           height - playerPaddleHeight
@@ -918,24 +917,16 @@ export default function PongGame() {
 
         playerPositionRef.current = newPos;
         playerPaddleControls.set({ top: newPos });
-
-        // Only update React state occasionally to reduce renders
-        if (Date.now() % 3 === 0) {
-          setPlayerPosition(newPos);
-        }
+        setPlayerPosition(newPos);
       }
 
-      lastTouchYRef.current = currentTouchY;
-      e.preventDefault(); // Prevent scrolling while controlling
+      lastTouchYRef.current = touch.clientY;
+
+      e.preventDefault();
     },
-    [
-      gameState,
-      gameDimensions,
-      playerPaddleHeight,
-      playerPaddleControls,
-      gameBoardDimensions.height
-    ]
+    [gameState, playerPaddleHeight, playerPaddleControls, gameBoardDimensions, gameDimensions]
   );
+
 
   // Handle touch end
   const handleTouchEnd = useCallback(() => {
@@ -1029,16 +1020,18 @@ export default function PongGame() {
             {isMobile && !isPortrait && gameState === "playing" && (
               <div
                 ref={touchZoneRef}
-                className="relative mr-2 h-full rounded-lg border border-white/20"
+                className="mr-2 rounded-lg border border-white/20"
                 style={{
                   width: `${LAYOUT.TOUCH.ZONE_WIDTH}px`,
+                  height: `${calculatedGameSize.height}px`,
                   backgroundColor: "rgba(255, 255, 255, 0.05)",
-                  height: `${calculatedGameSize.height}px`
+                  position: "absolute",
+                  left: `-${LAYOUT.TOUCH.ZONE_WIDTH + LAYOUT.TOUCH.OFFSET}px`,
+                  top: 0
                 }}
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}>
-                {/* Visual indicator for touch zone */}
                 <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-30">
                   <div className="flex h-16 w-8 items-center justify-center rounded-full border border-white">
                     <div className="h-8 w-1 rounded-full bg-white"></div>
