@@ -117,6 +117,7 @@ export default function PongGame() {
   const powerShotTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const wasAutoPaused = useRef(false);
   const gameInitializedRef = useRef(false);
+  const [isMobilePlay, setIsMobilePlay] = useState(false);
 
   // Use the element dimensions hook to track game area size in real-time
   const [gameBoardDimensions, measureGameBoard] =
@@ -135,6 +136,23 @@ export default function PongGame() {
 
   // Hooks
   const isMobile = useMobile();
+
+  useEffect(() => {
+    setIsMobilePlay(isMobile && gameState === "playing");
+  }, [isMobile, gameState]);
+
+  useEffect(() => {
+    if (isMobilePlay) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isMobilePlay]);
+
   const {
     isPortrait,
     isLandscape: _isLandscape,
@@ -479,13 +497,16 @@ export default function PongGame() {
     setDisplayPaddleVelocity("0.0");
 
     // Add a small delay before the ball starts moving again
-    setTimeout(() => {
+    const timerId = setTimeout(() => {
       // Only restart if still in playing state
       if (gameState === "playing") {
         // Game loop will continue automatically since we're updating the refs
         lastTimeRef.current = 0; // Reset time reference to ensure smooth restart
       }
     }, 500);
+    return () => {
+      clearTimeout(timerId);
+    }
   }, [
     gameDimensions,
     ballControls,
@@ -922,11 +943,42 @@ export default function PongGame() {
 
       lastTouchYRef.current = touch.clientY;
 
-      e.preventDefault();
+      // Removed explicit e.preventDefault() to rely on CSS overflow handling
     },
     [gameState, playerPaddleHeight, playerPaddleControls, gameBoardDimensions, gameDimensions]
   );
 
+
+  /**
+     const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (gameState !== "playing") return;
+
+      const height = gameBoardDimensions.height || gameDimensions.height;
+      if (!e.touches[0]) return;
+
+      const touch = e.touches[0];
+
+      if (lastTouchYRef.current !== null) {
+        const moveDelta = (touch.clientY - lastTouchYRef.current) * LAYOUT.TOUCH.SENSITIVITY;
+
+        const newPos = Math.min(
+          Math.max(0, playerPositionRef.current + moveDelta),
+          height - playerPaddleHeight
+        );
+
+        playerPositionRef.current = newPos;
+        playerPaddleControls.set({ top: newPos });
+        setPlayerPosition(newPos);
+      }
+
+      lastTouchYRef.current = touch.clientY;
+
+      e.preventDefault();
+    },
+    [gameState, playerPaddleHeight, playerPaddleControls, gameBoardDimensions, gameDimensions]
+  );
+   */
 
   // Handle touch end
   const handleTouchEnd = useCallback(() => {
@@ -1020,18 +1072,16 @@ export default function PongGame() {
             {isMobile && !isPortrait && gameState === "playing" && (
               <div
                 ref={touchZoneRef}
-                className="mr-2 rounded-lg border border-white/20"
+                className="relative mr-2 h-full rounded-lg border border-white/20"
                 style={{
                   width: `${LAYOUT.TOUCH.ZONE_WIDTH}px`,
-                  height: `${calculatedGameSize.height}px`,
                   backgroundColor: "rgba(255, 255, 255, 0.05)",
-                  position: "absolute",
-                  left: `-${LAYOUT.TOUCH.ZONE_WIDTH + LAYOUT.TOUCH.OFFSET}px`,
-                  top: 0
+                  height: `${calculatedGameSize.height}px`
                 }}
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}>
+                {/* Visual indicator for touch zone */}
                 <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-30">
                   <div className="flex h-16 w-8 items-center justify-center rounded-full border border-white">
                     <div className="h-8 w-1 rounded-full bg-white"></div>
