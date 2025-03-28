@@ -94,7 +94,7 @@
     "lodash.throttle": "^4.1.1"
   },
   "devDependencies": {
-    "@d0paminedriven/fs": "^0.2.0",
+    "@d0paminedriven/fs": "^1.0.0",
     "@microsoft/api-extractor": "^7.52.2",
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",

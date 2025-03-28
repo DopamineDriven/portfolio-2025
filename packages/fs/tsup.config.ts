@@ -9,7 +9,7 @@ const tsupConfig = (options: Options) =>
       "src/fs/index.ts",
       "src/types/index.ts",
       "!src/__generated__/**/*",
-      "!src/__tests__/**/*",
+      "!src/test/**/*",
       "!public/**/*"
     ],
     target: ["esnext"],

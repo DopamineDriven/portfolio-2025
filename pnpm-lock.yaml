@@ -304,8 +304,8 @@ importers:
         specifier: ^4.0.8
         version: 4.0.8(postcss@8.5.3)
       '@d0paminedriven/fs':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^1.0.0
+        version: 1.0.0
       '@edge-runtime/cookies':
         specifier: ^6.0.0
         version: 6.0.0
@@ -494,8 +494,8 @@ importers:
         specifier: ^4.0.8
         version: 4.0.8(postcss@8.5.3)
       '@d0paminedriven/fs':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^1.0.0
+        version: 1.0.0
       '@edge-runtime/cookies':
         specifier: ^6.0.0
         version: 6.0.0
@@ -765,8 +765,8 @@ importers:
         specifier: ^4.0.8
         version: 4.0.8(postcss@8.5.3)
       '@d0paminedriven/fs':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^1.0.0
+        version: 1.0.0
       '@edge-runtime/cookies':
         specifier: ^6.0.0
         version: 6.0.0
@@ -1104,8 +1104,8 @@ importers:
         version: 16.4.7
     devDependencies:
       '@d0paminedriven/fs':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^1.0.0
+        version: 1.0.0
       '@microsoft/api-extractor':
         specifier: ^7.52.2
         version: 7.52.2(@types/node@22.13.13)
@@ -1168,8 +1168,8 @@ importers:
         version: 4.1.1
     devDependencies:
       '@d0paminedriven/fs':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^1.0.0
+        version: 1.0.0
       '@microsoft/api-extractor':
         specifier: ^7.52.2
         version: 7.52.2(@types/node@22.13.13)
@@ -1715,8 +1715,8 @@ packages:
       react: '>=19'
       react-dom: '>=19'
 
-  '@d0paminedriven/fs@0.2.0':
-    resolution: {integrity: sha512-mETFQm8Ti5z7Aycyne0w4HCF9oEZS1tyKt0kxzKoS5VPoK6f4So1SPhRh4rA2pYLMWM8xjROeeSexoN6KvuA6A==}
+  '@d0paminedriven/fs@1.0.0':
+    resolution: {integrity: sha512-+tw5pldfjPlU8ILY54rfVh+Ij6/uH13SO141I1gczqoGWhlaC4TyDDL97WCvGgtELk8Moqf3OFSbXz4YfBLZzw==}
 
   '@d0paminedriven/iso-3166-1@1.4.0':
     resolution: {integrity: sha512-CLBdsFppYLzGoAFekYKVH786qmDn8oPuz76qUEiVXAY1C9l4e4K4RYigVDjV6/1e5rw3lcHpH7IlYwVd6qEdcw==}
@@ -8402,7 +8402,7 @@ snapshots:
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
-  '@d0paminedriven/fs@0.2.0':
+  '@d0paminedriven/fs@1.0.0':
     dependencies:
       dotenv: 16.4.7
 
