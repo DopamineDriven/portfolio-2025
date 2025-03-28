@@ -1038,6 +1038,9 @@ importers:
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
+      sharp:
+        specifier: ^0.33.5
+        version: 0.33.5
     devDependencies:
       '@microsoft/api-extractor':
         specifier: ^7.52.2

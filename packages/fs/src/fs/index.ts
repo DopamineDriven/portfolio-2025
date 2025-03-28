@@ -4,6 +4,7 @@ import fsAsync from "fs/promises";
 import { relative } from "path";
 import * as dotenv from "dotenv";
 import expand from "dotenv-expand";
+import sharp from "sharp";
 import type {
   ExecuteCommandProps,
   MkDirSyncOptions,
@@ -544,6 +545,12 @@ export default class Fs {
   }
 
   public async assetToBufferView<const T extends string>(path: T) {
+    const p = this.parseUrl(path);
+    const doesUrlPathContainFileExtension = /\./g.test(
+      p.pathname.split(/\//g).reverse()[0] ?? ""
+    );
+    if (doesUrlPathContainFileExtension === false)
+      console.warn(`no file extension detected in input url ${path}`);
     const response = await fetch(path);
     if (!response.ok) {
       throw new Error(`Failed to fetch asset: ${response.statusText}`);
@@ -705,7 +712,7 @@ export default class Fs {
         : outputPath;
       if (/\./g.test(formattedPath) === false) {
         throw new Error(
-          "either add false as the third argument in `fetchRemoteWriteLocal` [input, output, use-detected-file-extension (defaults to true)]"
+          "either add false as the third argument in `fetchRemoteWriteLocal` (input, output, use-detected-file-extension)"
         );
       }
       this.withWs(formattedPath, Buffer.from(cleanData, "base64"));
@@ -713,4 +720,133 @@ export default class Fs {
       return console.error(err);
     }
   }
+  // USE fluent-ffmpeg for video/animated image transforms (apng, etc)
+  // https://www.npmjs.com/package/fluent-ffmpeg
+  // https://www.npmjs.com/package/@types/fluent-ffmpeg
+  public async imageTransform<
+    const F extends
+      | "webp"
+      | "avif"
+      | "jpg"
+      | "png"
+      | "tif"
+      | "tiff"
+      | "jp2"
+      | "jpeg"
+  >({
+    format,
+    target,
+    quality = 80,
+    tint,
+    resize
+  }: {
+    format: F;
+    target: Buffer<ArrayBuffer>;
+    quality?: number;
+    tint?:
+      | string
+      | {
+          r?: number | undefined;
+          g?: number | undefined;
+          b?: number | undefined;
+          alpha?: number | undefined;
+        };
+    resize?: {
+      widthOrOptions?: number | sharp.ResizeOptions | null;
+      height?: number | null;
+      options?: sharp.ResizeOptions;
+    };
+  }) {
+    if (tint && !resize) {
+      return await sharp(target)
+        .toFormat(format, { quality })
+        .tint(tint)
+        .toBuffer();
+    } else if (!tint && resize) {
+      return await sharp(target)
+        .toFormat(format, { quality })
+        .resize(resize.widthOrOptions, resize.height, resize.options)
+        .toBuffer();
+    } else if (tint && resize) {
+      return await sharp(target)
+        .toFormat(format, { quality })
+        .tint(tint)
+        .resize(resize.widthOrOptions, resize.height, resize.options)
+        .toBuffer();
+    } else return await sharp(target).toFormat(format, { quality }).toBuffer();
+  }
+
+  // public async convertImage<
+  //   const L extends "local" | "remote",
+  //   const F extends "webp" | "avif" | "jpg" | "png",
+  //   const I extends string,
+  //   const O extends string
+  // >(isLocal: L, inputUrl: I, outputPath: O, useDetectedExtension = true) {
+  //   if (isLocal === "remote") {
+  //     try {
+  //       const result = await this.assetToBufferView(inputUrl);
+  //       const cleanData = this.cleanDataUrl(result.b64encodedData);
+  //       const imageBuffer = Buffer.from(cleanData, "base64");
+  //       const s = this.imageTransform({format: "webp", target: imageBuffer, quality: 100, resize: {options: {width: 1.2, height: 1.2}}} )
+  //       const formattedPath = useDetectedExtension
+  //         ? `${outputPath}.${result.extension}`
+  //         : outputPath;
+  //       if (/\./g.test(formattedPath) === false) {
+  //         throw new Error(
+  //           "either add false as the third argument in `fetchRemoteWriteLocal` (input, output, use-detected-file-extension)"
+  //         );
+  //       }
+  //       this.withWs(formattedPath, Buffer.from(cleanData, "base64"));
+  //     } catch (err) {
+  //       return console.error(err);
+  //     }
+  //   } else {
+  //     try {
+  //       const result = await this.assetToBufferView(inputUrl);
+  //       const cleanData = this.cleanDataUrl(result.b64encodedData);
+  //       const formattedPath = useDetectedExtension
+  //         ? `${outputPath}.${result.extension}`
+  //         : outputPath;
+  //       if (/\./g.test(formattedPath) === false) {
+  //         throw new Error(
+  //           "either add false as the third argument in `fetchRemoteWriteLocal` (input, output, use-detected-file-extension)"
+  //         );
+  //       }
+  //       this.withWs(formattedPath, Buffer.from(cleanData, "base64"));
+  //     } catch (err) {
+  //       return console.error(err);
+  //     }
+  //   }
+  // }
 }
+
+//  TODO ADD AN IMAGE CONVERTER METHOD -- INSTALL SHARP AS A DEPENDENCY
+/**
+
+import sharp from "sharp";
+import fs from "fs/promises";
+
+async function convertPngToWebp(remoteUrl: string, outputPath: string) {
+  // Fetch the remote image as a buffer.
+  const response = await fetch(remoteUrl);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch image: ${response.statusText}`);
+  }
+  const imageBuffer = await response.buffer();
+
+  // Use sharp to convert the image to WebP.
+  const webpBuffer = await sharp(imageBuffer)
+    .webp() // Convert to WebP format.
+    .toBuffer();
+
+  // Write the converted image to the output path.
+  await fs.writeFile(outputPath, webpBuffer);
+  console.log(`Image converted and saved to ${outputPath}`);
+}
+
+// Example usage:
+convertPngToWebp(
+  "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/chess-v2/public/chess-default-2.png",
+  "output.webp"
+).catch(err => console.error(err));
+ */

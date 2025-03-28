@@ -56,7 +56,8 @@
     "fix": "npm pkg fix"
   },
   "dependencies": {
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.52.2",
