@@ -391,8 +391,22 @@ export default class Fs {
     );
   }
 
+  public get objVal() {
+    return (
+      ["application/octet-stream", "text/plain", "model/obj"] as const
+    ).reduce(union => union);
+  }
+
   public get tsVal() {
-    return (["text/typescript", "video/mp2t"] as const).reduce(union => union);
+    return (
+      ["text/typescript", "video/mp2t", "video/vnd.dlna.mpeg-tts"] as const
+    ).reduce(union => union);
+  }
+
+  public get ttfVal() {
+    return (["application/font-sfnt", "font/ttf"] as const).reduce(
+      union => union
+    );
   }
 
   public get zipVal() {
@@ -424,6 +438,8 @@ export default class Fs {
       eot: "application/vnd.ms-fontobject",
       epub: "application/epub+zip",
       gif: "image/gif",
+      glb: "model/gltf-binary",
+      gltf: "model/gltf+json",
       gz: this.gzVal,
       htm: "text/html",
       html: "text/html",
@@ -436,6 +452,8 @@ export default class Fs {
       json: "application/json",
       jsonld: "application/ld+json",
       m3u8: "application/vnd.apple.mpegurl",
+      m4a: "audio/mp4",
+      m4v: "video/mp4",
       md: "text/markdown",
       mdx: "application/x-mdx",
       mid: "audio/midi",
@@ -446,10 +464,12 @@ export default class Fs {
       mpeg: "video/mpeg",
       mpkg: "application/vnd.apple.installer+xml",
       ndjson: "application/x-ndjson",
+      obj: this.objVal,
       odp: "application/vnd.oasis.opendocument.presentation",
       ods: "application/vnd.oasis.opendocument.spreadsheet",
       odt: "application/vnd.oasis.opendocument.text",
       oga: "audio/ogg",
+      ogg: "audio/ogg",
       ogv: "video/ogg",
       ogx: "application/ogg",
       opus: "audio/ogg",
@@ -461,6 +481,7 @@ export default class Fs {
       ppt: "application/vnd.ms-powerpoint",
       pptx: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
       py: "text/x-python",
+      pyc: "application/x-python-code",
       rar: "application/vnd.rar",
       rtf: "application/rtf",
       sh: "application/x-sh",
@@ -469,9 +490,11 @@ export default class Fs {
       tif: "image/tiff",
       tiff: "image/tiff",
       ts: this.tsVal,
-      ttf: "font/ttf",
+      ttf: this.ttfVal,
       txt: "text/plain",
       vsd: "application/vnd.visio",
+      vtt: "text/vtt",
+      wasm: "application/wasm",
       wav: "audio/wav",
       weba: "video/webm",
       webp: "image/webp",
@@ -491,7 +514,8 @@ export default class Fs {
 
   public assetType<const T extends string>(url: T) {
     const u = this.parseUrl(url);
-    return u.pathname?.split(/([.])/gim)
+    return u.pathname
+      ?.split(/([.])/gim)
       ?.reverse()?.[0] as keyof typeof this.mimeTypeObj;
   }
 
@@ -499,15 +523,19 @@ export default class Fs {
     return this.mimeTypeObj[input];
   }
 
+  public hmm = <const T extends ReturnType<typeof this.assetType>>(
+    input: T
+  ) => {
+    return this.mimeTypeObj[input];
+  };
+
   public async assetToBuffer<const T extends string>(path: T) {
     const [fetcher] = await Promise.all([
       fetch(path).then(t => t.arrayBuffer())
     ]);
 
     const b64encodedData =
-      `data:${this.getMime(this.assetType(path))};base64, ${Buffer.from(
-        Buffer.from(fetcher).toJSON().data
-      ).toString("base64")}` as const;
+      `data:${this.getMime(this.assetType(path))};base64, ${Buffer.from(fetcher).toString("base64")}` as const;
     const extension = this.assetType(path);
     return {
       b64encodedData,
@@ -516,30 +544,37 @@ export default class Fs {
   }
 
   public async assetToBufferView<const T extends string>(path: T) {
-    const [fetcher] = await Promise.all([
-      fetch(path).then(t => t.arrayBuffer())
-    ]);
-    // const byobRequest = new ReadableStreamBYOBRequest();
-    const reader = new ReadableStream({
-      type: "bytes",
-      async pull(controller) {
-        const byobRequest = controller.byobRequest;
-        byobRequest?.respond(byobRequest?.view?.byteLength ?? 0);
-      }
-    });
+    const response = await fetch(path);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch asset: ${response.statusText}`);
+    }
 
-    const readerByob = new ReadableStreamBYOBReader(reader);
-    const readableByteStream = fetcher;
-    const data = await readerByob.read(Buffer.from(readableByteStream));
-    const b64encodedData =
-      `data:${this.getMime(this.assetType(path))};base64, ${Buffer.from(
-        Buffer.from(data.value ?? Buffer.alloc(0)).toJSON().data
-      ).toString("base64")}` as const;
-    const extension = this.assetType(path);
-    return {
-      b64encodedData,
-      extension
-    } as const;
+    const reader = response.body?.getReader();
+    if (reader) {
+      const chunks: Uint8Array[] = [];
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        if (value) chunks.push(value);
+      }
+      // Concatenate all chunks
+      const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
+      const completeBuffer = new Uint8Array(totalLength);
+      let offset = 0;
+      for (const chunk of chunks) {
+        completeBuffer.set(chunk, offset);
+        offset += chunk.length;
+      }
+      const b64encodedData = `data:${this.getMime(this.assetType(path))};base64, ${Buffer.from(completeBuffer).toString("base64")}`;
+      const extension = this.assetType(path);
+      return { b64encodedData, extension } as const;
+    } else {
+      // Fallback: use arrayBuffer if no stream is available.
+      const arrayBuffer = await response.arrayBuffer();
+      const b64encodedData = `data:${this.getMime(this.assetType(path))};base64, ${Buffer.from(arrayBuffer).toString("base64")}`;
+      const extension = this.assetType(path);
+      return { b64encodedData, extension } as const;
+    }
   }
 
   public formatHelper<const T extends string>(f: T) {
@@ -553,7 +588,7 @@ export default class Fs {
   }
 
   public range(from: number, to: number): number[] {
-    const values: number[] = [];
+    const values = Array.of<number>();
     for (let i = from; i < to; i++) {
       values.push(i);
     }
@@ -606,10 +641,10 @@ export default class Fs {
       const sliceSize = 512;
       // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
       const typeMatch = b64Data.match(
-        /^data:(image|application|video|text|font)\/[A-Za-z0-9+-.]+;base64,/
+        /^data:(image|application|video|text|model|font)\/[A-Za-z0-9+-.]+;base64,/
       );
       const type = typeMatch?.[1];
-      console.log(type ?? "");
+
       if (!typeMatch) {
         throw new Error(`${b64Data} is not a valid data Url`);
       }
@@ -636,6 +671,46 @@ export default class Fs {
       const blob = new Blob(byteArrays, { type: type });
       // const file = new File([blob], `someblob.fileextension`);
       return blob;
+    }
+  }
+
+  public cleanDataUrl<const C extends string>(props: C) {
+    return props.replace(
+      /^data:(image|application|video|text|font|model|audio)\/[A-Za-z0-9+-.]+;base64,/,
+      ""
+    );
+  }
+
+  /**
+   *
+   * @param inputUrl remote url to fetch data from
+   * @param outputPath desired output path relative to the cwd
+   * @param useDetectedExtension optional, defaults to true
+   *
+   * if `useDetectedExtension` is false you must include the file extension in your output path &rarr;
+   *
+   *  🚫 'public/assets/image-1'
+   *
+   *  ✅ 'public/assets/image-1.png'
+   */
+  public async fetchRemoteWriteLocal<
+    const I extends string,
+    const O extends string
+  >(inputUrl: I, outputPath: O, useDetectedExtension = true) {
+    try {
+      const result = await this.assetToBufferView(inputUrl);
+      const cleanData = this.cleanDataUrl(result.b64encodedData);
+      const formattedPath = useDetectedExtension
+        ? `${outputPath}.${result.extension}`
+        : outputPath;
+      if (/\./g.test(formattedPath) === false) {
+        throw new Error(
+          "either add false as the third argument in `fetchRemoteWriteLocal` [input, output, use-detected-file-extension (defaults to true)]"
+        );
+      }
+      this.withWs(formattedPath, Buffer.from(cleanData, "base64"));
+    } catch (err) {
+      return console.error(err);
     }
   }
 }
