@@ -1,5 +1,5 @@
 {
-  "name": "@d0paminedriven/redis-utils",
+  "name": "@portfolio/redis-utils",
   "version": "1.0.0",
   "description": "convenient redis utils",
   "publishConfig": {
