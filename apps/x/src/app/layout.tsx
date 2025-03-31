@@ -15,8 +15,8 @@ import { cn } from "@/lib/utils";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "React Pong",
-  description: "React Pong Game"
+  title: `X | Integrate with X`,
+  description: "X Integration"
 };
 
 export default function RootLayout({
