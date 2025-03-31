@@ -1236,7 +1236,7 @@ export default function PongGame() {
         </div>
 
         {/* Game info and instructions - Fixed height container to prevent layout shift */}
-        <div className="mt-4 flex h-24 flex-col items-center">
+        <div className="mt-4 hidden smxs:flex h-24 flex-col items-center">
           {gameState === "playing" && (
             <div className="mb-2 flex gap-4 text-sm text-white">
               <div>
