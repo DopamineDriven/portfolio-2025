@@ -1,4 +1,4 @@
-import { NextConfig } from "next";
+import type { NextConfig } from "next";
 
 export default {
   eslint: { ignoreDuringBuilds: false },
@@ -21,7 +21,7 @@ export default {
       { hostname: "images.unsplash.com", protocol: "https" },
       { hostname: "tailwindui.com", protocol: "https" },
       { hostname: "pong.asross.com", protocol: "https" },
-      { hostname: "dev-pong.asross.com", protocol: "https" },
+      { hostname: "dev.pong.asross.com", protocol: "https" },
       { hostname: "asross.com", protocol: "https" },
       { hostname: "raw.githubusercontent.com", protocol: "https" },
       {
