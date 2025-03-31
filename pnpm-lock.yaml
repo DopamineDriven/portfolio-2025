@@ -1257,6 +1257,12 @@ importers:
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
+      dotenv-expand:
+        specifier: ^12.0.1
+        version: 12.0.1
+      redis:
+        specifier: ^4.7.0
+        version: 4.7.0
     devDependencies:
       '@microsoft/api-extractor':
         specifier: ^7.52.2
@@ -1294,9 +1300,6 @@ importers:
       dotenv-cli:
         specifier: ^8.0.0
         version: 8.0.0
-      dotenv-expand:
-        specifier: ^12.0.1
-        version: 12.0.1
       eslint:
         specifier: latest
         version: 9.23.0(jiti@2.4.2)
@@ -1309,9 +1312,6 @@ importers:
       prettier:
         specifier: latest
         version: 3.5.3
-      redis:
-        specifier: ^4.7.0
-        version: 4.7.0
       redis-mock:
         specifier: ^0.56.3
         version: 0.56.3

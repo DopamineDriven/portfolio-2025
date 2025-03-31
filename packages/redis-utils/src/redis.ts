@@ -9,9 +9,9 @@ import { createClient } from "redis";
 import { EnvHandler } from "./env.ts";
 
 export default class RedisClientWrapper<
-  M extends RedisModules = RedisModules,
-  F extends RedisFunctions = RedisFunctions,
-  S extends RedisScripts = RedisScripts
+  const M extends RedisModules,
+  const F extends RedisFunctions,
+  const S extends RedisScripts
 > extends EnvHandler {
   private client: RedisClientType<M, F, S>;
 
