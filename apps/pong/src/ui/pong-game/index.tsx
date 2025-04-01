@@ -66,13 +66,7 @@ const POWER_SHOT = {
 
 type GameState = "idle" | "playing" | "paused" | "gameOver";
 
-export default function PongGame({
-  viewport,
-  ios
-}: {
-  viewport: string;
-  ios: string;
-}) {
+export default function PongGame() {
   // Get window size for responsive scaling
   const windowSize = useWindowSize();
 
@@ -1228,15 +1222,6 @@ export default function PongGame({
                   {displayPaddleVelocity}
                   {Number.parseFloat(displayPaddleVelocity) >=
                     POWER_SHOT.THRESHOLD && " 🔥"}
-                </span>
-              </div>
-              <div>
-                Details:{" "}
-                <span
-                  className={cn(
-                    powerShotActive ? "font-bold text-blue-300" : ""
-                  )}>
-                  {viewport.concat(` ${ios === "true" ? "is iOS" : "not iOS"}`)}
                 </span>
               </div>
               {powerShotActive && (

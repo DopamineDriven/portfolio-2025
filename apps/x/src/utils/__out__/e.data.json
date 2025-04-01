@@ -1,0 +1,1621 @@
+{
+  "profile": {
+    "public_metrics": {
+      "followers_count": 551,
+      "following_count": 1250,
+      "tweet_count": 3550,
+      "listed_count": 3,
+      "like_count": 9178,
+      "media_count": 505
+    },
+    "id": "989610823105568769",
+    "name": "Andrew Ross",
+    "description": "JAMstack Development Lead at Takeda | TypeScript is 💙",
+    "username": "Dopamine_Driven"
+  },
+  "tweets": [
+    {
+      "text": "@mattpocockuk Question — why not just use an Unenumerate&lt;T&gt; helper type? \n\nWhere\n\ntype Unenumerate&lt;T&gt; = T extends (infer U)[] | readonly (infer U)[] ? U : T;\n\ntype Role = Unenumerate&lt;typeof roles&gt;;",
+      "created_at": "2024-09-03T00:34:03.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 2,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 251
+      },
+      "edit_history_tweet_ids": [
+        "1830766171282444567"
+      ],
+      "id": "1830766171282444567"
+    },
+    {
+      "text": "RT @ThePrimeagen: yes",
+      "created_at": "2024-09-03T00:31:11.000Z",
+      "public_metrics": {
+        "retweet_count": 74,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1830765448524169411"
+      ],
+      "id": "1830765448524169411"
+    },
+    {
+      "text": "@mattpocockuk “Makes devs too slow” — seems like a skill issue tbh\n\nIf the devs you’re working with are proficient in typescript it makes everything faster",
+      "created_at": "2024-09-02T18:53:05.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 43
+      },
+      "edit_history_tweet_ids": [
+        "1830680362755744138"
+      ],
+      "id": "1830680362755744138"
+    },
+    {
+      "text": "@PicturesFoIder Wait he gives it to them with the bones still in???? Those can kill the dogs, the chicken needs to be deboned first",
+      "created_at": "2024-09-02T04:28:29.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 10
+      },
+      "edit_history_tweet_ids": [
+        "1830462780798804253"
+      ],
+      "id": "1830462780798804253"
+    },
+    {
+      "text": "@t3dotgg The us government coined a bullshit term for news that isn’t false or fake but poses an inconvenience to their agenda in some way — malinformation — info governments don’t want the general public to be aware of. Ie, suppression of the entire truth or lying by omission \n\nAnyway,",
+      "created_at": "2024-09-02T04:24:15.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 1,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 468
+      },
+      "edit_history_tweet_ids": [
+        "1830461713902354823"
+      ],
+      "id": "1830461713902354823"
+    },
+    {
+      "text": "@AidenTEM @alexeylein @t3dotgg They’re the criminals, also authoritarian to boot",
+      "created_at": "2024-09-01T23:25:46.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 38
+      },
+      "edit_history_tweet_ids": [
+        "1830386596413165581"
+      ],
+      "id": "1830386596413165581"
+    },
+    {
+      "text": "@iamnot_elon Yes",
+      "created_at": "2024-09-01T00:07:59.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 11
+      },
+      "edit_history_tweet_ids": [
+        "1830034833378037968"
+      ],
+      "id": "1830034833378037968"
+    },
+    {
+      "text": "@BilliCodes My back",
+      "created_at": "2024-08-31T22:47:33.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 5
+      },
+      "edit_history_tweet_ids": [
+        "1830014594146058498"
+      ],
+      "id": "1830014594146058498"
+    },
+    {
+      "text": "@brian_lovin 0, I never have to restart it",
+      "created_at": "2024-08-30T16:59:27.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 128
+      },
+      "edit_history_tweet_ids": [
+        "1829564603988136182"
+      ],
+      "id": "1829564603988136182"
+    },
+    {
+      "text": "RT @trashh_dev: if your product designer doesn’t live life like this your app probably looks like shit https://t.co/SkwhCvabSC",
+      "created_at": "2024-08-30T16:57:34.000Z",
+      "public_metrics": {
+        "retweet_count": 18,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1829564127070605600"
+      ],
+      "id": "1829564127070605600"
+    },
+    {
+      "text": "RT @jasonbosco: Aaand... 🥁\n\nWe've reached 2️⃣0️⃣,0️⃣0️⃣0️⃣ GitHub Stars! 🎉 https://t.co/10znewhFXp",
+      "created_at": "2024-08-30T02:18:41.000Z",
+      "public_metrics": {
+        "retweet_count": 59,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1829342950850978172"
+      ],
+      "id": "1829342950850978172"
+    },
+    {
+      "text": "@DapperDomo once it becomes policy they can quietly pass legislation over the years to slide that number\nway down, until it’s a 1m then 500k then 250k etc. Do not give them the benefit of the doubt \n\nAlso 44.5% capital gains is asinine &amp; 28% corporate is the opposite of a progrowth approach",
+      "created_at": "2024-08-29T17:33:29.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 47
+      },
+      "edit_history_tweet_ids": [
+        "1829210778442056159"
+      ],
+      "id": "1829210778442056159"
+    },
+    {
+      "text": "Lightning Spear Sorc vs Tormented Zir\n\n#DiabloIV season 5\n\nhttps://t.co/U2VggxGJhF",
+      "created_at": "2024-08-29T13:21:04.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 22
+      },
+      "edit_history_tweet_ids": [
+        "1829147255883870252"
+      ],
+      "id": "1829147255883870252"
+    },
+    {
+      "text": "@t3dotgg Did you ever dabble in WSL2 though?",
+      "created_at": "2024-08-28T16:09:55.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 49
+      },
+      "edit_history_tweet_ids": [
+        "1828827360323674261"
+      ],
+      "id": "1828827360323674261"
+    },
+    {
+      "text": "RT @JLarky: people will invent funkiest stuff just to avoid classes in javascript https://t.co/aS1Bxj3MUW",
+      "created_at": "2024-08-28T16:09:09.000Z",
+      "public_metrics": {
+        "retweet_count": 4,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1828827168543273108"
+      ],
+      "id": "1828827168543273108"
+    },
+    {
+      "text": "@JLarky I love classes and use them extensively\n\nActually I use classes exclusively in certain cli-based packages I’ve written for my org",
+      "created_at": "2024-08-28T16:08:47.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 89
+      },
+      "edit_history_tweet_ids": [
+        "1828827074376949952"
+      ],
+      "id": "1828827074376949952"
+    },
+    {
+      "text": "@t3dotgg Congrats, you’ve now contracted floridamanitis",
+      "created_at": "2024-08-28T16:06:39.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 1,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 166
+      },
+      "edit_history_tweet_ids": [
+        "1828826540098060604"
+      ],
+      "id": "1828826540098060604"
+    },
+    {
+      "text": "@Star_Knight12 A or C",
+      "created_at": "2024-08-28T16:05:05.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 1,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 11
+      },
+      "edit_history_tweet_ids": [
+        "1828826146592735399"
+      ],
+      "id": "1828826146592735399"
+    },
+    {
+      "text": "@housecor The inability to test the apps behavior when the schema does fail is the biggest red flag to me",
+      "created_at": "2024-08-28T16:04:14.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 1,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 306
+      },
+      "edit_history_tweet_ids": [
+        "1828825932196667437"
+      ],
+      "id": "1828825932196667437"
+    },
+    {
+      "text": "@CreeCoder 32GB but upgrading this autumn to 128GB (new device)\n\n32GB just isn’t cutting it anymore for me",
+      "created_at": "2024-08-28T01:49:14.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 20
+      },
+      "edit_history_tweet_ids": [
+        "1828610762966737080"
+      ],
+      "id": "1828610762966737080"
+    },
+    {
+      "text": "@mattpocockuk There are plenty of teams and individuals still using legacy versions of node versions 16 and below \n\nThough publishing a major release with a “breaking changes for legacy node users” flag would be an easy solution and would encourage legacy node users to move towards the LTS",
+      "created_at": "2024-08-27T15:15:57.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 84
+      },
+      "edit_history_tweet_ids": [
+        "1828451392316416509"
+      ],
+      "id": "1828451392316416509"
+    },
+    {
+      "text": "@othingstodo_com 3",
+      "created_at": "2024-08-26T18:54:17.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 24
+      },
+      "edit_history_tweet_ids": [
+        "1828143951356018725"
+      ],
+      "id": "1828143951356018725"
+    },
+    {
+      "text": "@the_codewala Postgres and Microsoft SQL (SQL Server) at work. Postgres or Mongo for personal projects",
+      "created_at": "2024-08-26T18:53:31.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 174
+      },
+      "edit_history_tweet_ids": [
+        "1828143756606087181"
+      ],
+      "id": "1828143756606087181"
+    },
+    {
+      "text": "RT @elonmusk: https://t.co/wg1cbLVvho",
+      "created_at": "2024-08-26T18:50:34.000Z",
+      "public_metrics": {
+        "retweet_count": 34908,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1828143013044068379"
+      ],
+      "id": "1828143013044068379"
+    },
+    {
+      "text": "@wiseconnector Stability",
+      "created_at": "2024-08-26T18:48:08.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 8
+      },
+      "edit_history_tweet_ids": [
+        "1828142400931537191"
+      ],
+      "id": "1828142400931537191"
+    },
+    {
+      "text": "@madebyconley Are you using the ACF plugin with it to make custom types/fields for them? I’ve found that using ACF with a headless setup is a definite client pleaser",
+      "created_at": "2024-08-26T18:46:58.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 53
+      },
+      "edit_history_tweet_ids": [
+        "1828142106856288507"
+      ],
+      "id": "1828142106856288507"
+    },
+    {
+      "text": "@HilzFuld But that’s how they get their foot in the door. If this asinine unrealized gains tax becomes policy they can gradually slide the household income bar down to one million, then 500k, etc over time. Kind of like how they hired 60k irs agents to “go after billionaires” lol",
+      "created_at": "2024-08-26T18:39:15.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 12
+      },
+      "edit_history_tweet_ids": [
+        "1828140166097289414"
+      ],
+      "id": "1828140166097289414"
+    },
+    {
+      "text": "@HilzFuld I’m not voting for her because she wants to impose 28% corporate tax (goodbye quality white collar jobs, they’ve already been getting outsourced under the current 21% tax), a 44.5% capital gains tax (gtfo) and a 25% unrealized gains tax which she claims only impacts top earners",
+      "created_at": "2024-08-26T18:37:57.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 1,
+        "like_count": 2,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 118
+      },
+      "edit_history_tweet_ids": [
+        "1828139839335944407"
+      ],
+      "id": "1828139839335944407"
+    },
+    {
+      "text": "Just got my ticket for @nextjs Conf — claim yours!\nhttps://t.co/nx4oezFPk0",
+      "created_at": "2024-08-26T18:35:21.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 1,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 18
+      },
+      "edit_history_tweet_ids": [
+        "1828139182759518513"
+      ],
+      "id": "1828139182759518513"
+    },
+    {
+      "text": "@rainbowruff It’s only 50\n\nAlso, Mexico has 32 states\n\nPerhaps it’s Canada with too few provinces, eh",
+      "created_at": "2024-08-24T00:47:34.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 1,
+        "like_count": 2,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 413
+      },
+      "edit_history_tweet_ids": [
+        "1827145692659253255"
+      ],
+      "id": "1827145692659253255"
+    },
+    {
+      "text": "RT @RyanEls4: How non-coders think we use AI to code 🤣 https://t.co/Due8T6kU40",
+      "created_at": "2024-08-23T23:08:41.000Z",
+      "public_metrics": {
+        "retweet_count": 271,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1827120806213628147"
+      ],
+      "id": "1827120806213628147"
+    },
+    {
+      "text": "@trashh_dev I’d tend to go for a useCallback instead",
+      "created_at": "2024-08-21T23:10:55.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 298
+      },
+      "edit_history_tweet_ids": [
+        "1826396592691446261"
+      ],
+      "id": "1826396592691446261"
+    },
+    {
+      "text": "@LibertyCappy The US is not third in murders globally if you look at the meaningful data, which is murder rate per 100,000 people\n\nAccounting for population size matters. As for the second point, spot on https://t.co/zCztwgzBSy",
+      "created_at": "2024-08-20T00:59:18.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 24
+      },
+      "edit_history_tweet_ids": [
+        "1825699095790628954"
+      ],
+      "id": "1825699095790628954"
+    },
+    {
+      "text": "@ImLunaHey It can be divided by 0! (0 factorial = 1) \n\nYw",
+      "created_at": "2024-08-20T00:49:37.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 51
+      },
+      "edit_history_tweet_ids": [
+        "1825696656744133060"
+      ],
+      "id": "1825696656744133060"
+    },
+    {
+      "text": "@FrederickMelo I mean…I don’t see the allure in working from a coffee shop on their (probably) comparatively slower wifi outside the comfort of your home office where you have multiple monitors, an ergonomic chair, etc\n\nworking in a coffee shop sounds like a punishment to me",
+      "created_at": "2024-08-17T19:27:59.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 62
+      },
+      "edit_history_tweet_ids": [
+        "1824890938591764497"
+      ],
+      "id": "1824890938591764497"
+    },
+    {
+      "text": "@flyerthenag6 @ThePrimeagen How would the general public know you were a saas dev though? That’s what I’m confused about lol\n\nI don’t wear dev gear out except for once in a blue moon \n\nThis may be something more unique to SF since townies etc prob associate super high cost of living with devs/that industry",
+      "created_at": "2024-08-15T23:56:04.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 1,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 70
+      },
+      "edit_history_tweet_ids": [
+        "1824233628823441687"
+      ],
+      "id": "1824233628823441687"
+    },
+    {
+      "text": "@flyerthenag6 @ThePrimeagen Why are corporate saas devs deplorable to society?",
+      "created_at": "2024-08-15T23:49:40.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 4,
+        "like_count": 1,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 94
+      },
+      "edit_history_tweet_ids": [
+        "1824232019259429241"
+      ],
+      "id": "1824232019259429241"
+    },
+    {
+      "text": "@EvasTeslaSPlaid Get undressed, that’d be impossible",
+      "created_at": "2024-08-13T16:28:08.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 50
+      },
+      "edit_history_tweet_ids": [
+        "1823396128852955624"
+      ],
+      "id": "1823396128852955624"
+    },
+    {
+      "text": "@DorianDevelops containsChildren, probably",
+      "created_at": "2024-08-12T15:05:47.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 55
+      },
+      "edit_history_tweet_ids": [
+        "1823013017409192163"
+      ],
+      "id": "1823013017409192163"
+    },
+    {
+      "text": "@NujeSop @cigar_vet @elonmusk @GOVUK He’s not attacking the people of Britain but rather the weak leadership in place currently\n\nIf their response to memes or shitposting is threatening legal action/jailing eg mass censorship I think there just might be a problem, eh?",
+      "created_at": "2024-08-12T04:30:23.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 81
+      },
+      "edit_history_tweet_ids": [
+        "1822853111213437312"
+      ],
+      "id": "1822853111213437312"
+    },
+    {
+      "text": "@LibertyCappy Find the owner of the suitcase and collect a finders fee/couple thousand for returning it and not bringing the law into the loop as opposed to becoming someone with a target on my head were I to take the contents of the case outright",
+      "created_at": "2024-08-10T23:12:45.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 153
+      },
+      "edit_history_tweet_ids": [
+        "1822410788251799770"
+      ],
+      "id": "1822410788251799770"
+    },
+    {
+      "text": "@hashjenni Once weekly or every other week at most",
+      "created_at": "2024-08-10T23:01:16.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 49
+      },
+      "edit_history_tweet_ids": [
+        "1822407900318298414"
+      ],
+      "id": "1822407900318298414"
+    },
+    {
+      "text": "@IdiotsInCamera 12\n\nn = n*(n+1)",
+      "created_at": "2024-08-09T16:08:21.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 30
+      },
+      "edit_history_tweet_ids": [
+        "1821941596109021408"
+      ],
+      "id": "1821941596109021408"
+    },
+    {
+      "text": "@hashjenni The corporate politics of it all at the end of the day — but also having some devs that report to me who are 10-12 hrs ahead of my time zone kind of sucks, too",
+      "created_at": "2024-08-09T16:06:26.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 28
+      },
+      "edit_history_tweet_ids": [
+        "1821941113743188381"
+      ],
+      "id": "1821941113743188381"
+    },
+    {
+      "text": "@LibertyCappy AQuake47",
+      "created_at": "2024-08-09T16:03:33.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 5
+      },
+      "edit_history_tweet_ids": [
+        "1821940390016249865"
+      ],
+      "id": "1821940390016249865"
+    },
+    {
+      "text": "@trikcode Windows 11 Pro + WSL2 Ubuntu 20.04 (windows subsystem Linux)\n\nAll things dev related are done strictly in the Linux OS, windows for business related stuff and gaming",
+      "created_at": "2024-08-09T15:56:33.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 37
+      },
+      "edit_history_tweet_ids": [
+        "1821938626550235270"
+      ],
+      "id": "1821938626550235270"
+    },
+    {
+      "text": "@HumansNoContext 2 and 4 is 6\n\n7 and 8 is 15\n\n75",
+      "created_at": "2024-08-09T15:51:57.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 9
+      },
+      "edit_history_tweet_ids": [
+        "1821937471791264185"
+      ],
+      "id": "1821937471791264185"
+    },
+    {
+      "text": "@trikcode Postgres is my favorite, though I like Mongo too",
+      "created_at": "2024-08-06T22:35:58.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 1,
+        "like_count": 1,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 410
+      },
+      "edit_history_tweet_ids": [
+        "1820951981667590476"
+      ],
+      "id": "1820951981667590476"
+    },
+    {
+      "text": "@malenchi_alex You’ll enter a state of sleep deprived euphoria after a few days of utter exhaustion, will likely experience auditory hallucinations eventually, especially in places like the bathroom while showering. Your circadian rhythm will be fucked ofc. Do not recommend",
+      "created_at": "2024-08-06T22:34:25.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 12
+      },
+      "edit_history_tweet_ids": [
+        "1820951588552212592"
+      ],
+      "id": "1820951588552212592"
+    },
+    {
+      "text": "@beinlibertarian https://t.co/FdZNKwkWKC",
+      "created_at": "2024-08-06T22:32:42.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 9
+      },
+      "edit_history_tweet_ids": [
+        "1820951159412289779"
+      ],
+      "id": "1820951159412289779"
+    },
+    {
+      "text": "@TheJackForge lol, this cannot be accurate",
+      "created_at": "2024-08-06T22:30:16.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 31
+      },
+      "edit_history_tweet_ids": [
+        "1820950546620039321"
+      ],
+      "id": "1820950546620039321"
+    },
+    {
+      "text": "@amaan8429 I don’t use a framework usually but when I do I use nestjs preferentially followed by express — then again nextjs can act as a backend framework as well depending on use case. \n\nSupports edge and node runtimes out of the box, supports RSCs, etc",
+      "created_at": "2024-08-05T02:17:00.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 104
+      },
+      "edit_history_tweet_ids": [
+        "1820282829684547999"
+      ],
+      "id": "1820282829684547999"
+    },
+    {
+      "text": "RT @JLarky: https://t.co/nOngmQEy4k",
+      "created_at": "2024-08-04T06:24:11.000Z",
+      "public_metrics": {
+        "retweet_count": 443,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1819982647453524317"
+      ],
+      "id": "1819982647453524317"
+    },
+    {
+      "text": "@eNiiju @t3dotgg Yarn supports this as well but pnpm does it better imo",
+      "created_at": "2024-08-03T01:46:26.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 223
+      },
+      "edit_history_tweet_ids": [
+        "1819550361641763274"
+      ],
+      "id": "1819550361641763274"
+    },
+    {
+      "text": "@DuplotFrancois @xx1tjx @fightwithmemes Minimum wage hasn’t been around for hundreds of years though, it was first established on a federal level by the US in 1938. The earliest country to have a minimum wage was New Zealand and that happened in 1894 (130 years ago).",
+      "created_at": "2024-08-02T22:15:10.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 1,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 69
+      },
+      "edit_history_tweet_ids": [
+        "1819497195982508033"
+      ],
+      "id": "1819497195982508033"
+    },
+    {
+      "text": "@FounderKyle Yours is usually an opinion held by those with kids which makes working from home more difficult. Not everyone with kids holds this opinion but I’ve noticed a correlation (anecdotal of course)\n\nI am more productive at home than at the office because ADHD, people interrupting, etc",
+      "created_at": "2024-08-02T00:16:03.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 31
+      },
+      "edit_history_tweet_ids": [
+        "1819165227029569885"
+      ],
+      "id": "1819165227029569885"
+    },
+    {
+      "text": "RT @t3dotgg: \"Why use a library when you can just write 10 lines of vanilla JS\" feels like a self-own. The only way you can think this is i…",
+      "created_at": "2024-08-02T00:13:09.000Z",
+      "public_metrics": {
+        "retweet_count": 28,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1819164498688725127"
+      ],
+      "id": "1819164498688725127"
+    },
+    {
+      "text": "@mattpocockuk as const appended to the obj, the TLDR",
+      "created_at": "2024-08-01T18:00:37.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 1,
+        "quote_count": 0,
+        "bookmark_count": 1,
+        "impression_count": 981
+      },
+      "edit_history_tweet_ids": [
+        "1819070747844702473"
+      ],
+      "id": "1819070747844702473"
+    },
+    {
+      "text": "@t3dotgg Disagree, monorepos provide a cornerstone allowing for codebase scalability and growth\n\nin my opinion, they enhance DX too \n\nIn a single repo project that grows and grows you either have to deal with complexity/bloat or make other standalone repos if abstracting chunks of it out",
+      "created_at": "2024-07-29T18:44:49.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 1,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 425
+      },
+      "edit_history_tweet_ids": [
+        "1817994705029792098"
+      ],
+      "id": "1817994705029792098"
+    },
+    {
+      "text": "RT @HumansNoContext: What is he trying to tell us? 😭 https://t.co/MzSKasC3Hv",
+      "created_at": "2024-07-27T03:59:01.000Z",
+      "public_metrics": {
+        "retweet_count": 12425,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1817047010932937052"
+      ],
+      "id": "1817047010932937052"
+    },
+    {
+      "text": "@HumansNoContext Lmao",
+      "created_at": "2024-07-27T03:58:57.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 22
+      },
+      "edit_history_tweet_ids": [
+        "1817046997490188758"
+      ],
+      "id": "1817046997490188758"
+    },
+    {
+      "text": "RT @ThePrimeagen: feeling cute, might post some api secrets to onlyfans later",
+      "created_at": "2024-07-27T03:56:07.000Z",
+      "public_metrics": {
+        "retweet_count": 38,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1817046281870561403"
+      ],
+      "id": "1817046281870561403"
+    },
+    {
+      "text": "@DyslecixDev ✋🏼 this is a great weight for skull crushers or warming up \n\nBench with 120-140 lb dumbbells doing supersets, the gym goes up to 200 too I believe",
+      "created_at": "2024-07-27T03:53:46.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 177
+      },
+      "edit_history_tweet_ids": [
+        "1817045691220263301"
+      ],
+      "id": "1817045691220263301"
+    },
+    {
+      "text": "@housecor Tsup for bundling &amp; tsx to exe typescript files seamlessly (ts-node sucks if I’m being honest)\n\nTip: if publishing a cli package don’t forget about having tslib as a dev dependency\n\n+tip: tsup handles read/write access for you else run chmod a+x postbuild where your bin file is",
+      "created_at": "2024-07-27T03:49:05.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 1,
+        "impression_count": 69
+      },
+      "edit_history_tweet_ids": [
+        "1817044513178677570"
+      ],
+      "id": "1817044513178677570"
+    },
+    {
+      "text": "RT @trashh_dev: might take an aws cert exam and fail it just to feel something.",
+      "created_at": "2024-07-25T03:09:01.000Z",
+      "public_metrics": {
+        "retweet_count": 13,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1816309652889522371"
+      ],
+      "id": "1816309652889522371"
+    },
+    {
+      "text": "RT @ThePrimeagen: embedded project idea\n\nai touches grass",
+      "created_at": "2024-07-25T03:04:57.000Z",
+      "public_metrics": {
+        "retweet_count": 11,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1816308632033657060"
+      ],
+      "id": "1816308632033657060"
+    },
+    {
+      "text": "@TaraBull808 We had internet in the house though? Granted it was dial up…but they had no home internet in every decade preceding the 90s ever so the point seems invalid  \n\nNot sure about the commercial, I was a ‘92 baby",
+      "created_at": "2024-07-25T02:38:37.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 11
+      },
+      "edit_history_tweet_ids": [
+        "1816302003842122065"
+      ],
+      "id": "1816302003842122065"
+    },
+    {
+      "text": "RT @t3dotgg: The “11am friend” shipped 3 new features at 2am, don’t talk shit",
+      "created_at": "2024-07-25T02:36:09.000Z",
+      "public_metrics": {
+        "retweet_count": 56,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1816301381046919568"
+      ],
+      "id": "1816301381046919568"
+    },
+    {
+      "text": "RT @hackerdocc: @VictorTaelin ironically TypeScript has the best polymorphic records out of all the functional languages I've tried\n\na prog…",
+      "created_at": "2024-07-25T01:03:23.000Z",
+      "public_metrics": {
+        "retweet_count": 8,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1816278037098627072"
+      ],
+      "id": "1816278037098627072"
+    },
+    {
+      "text": "@iamBrandonTV Crash bandicoot",
+      "created_at": "2024-07-25T01:00:37.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 11
+      },
+      "edit_history_tweet_ids": [
+        "1816277339581374695"
+      ],
+      "id": "1816277339581374695"
+    },
+    {
+      "text": "@ratedjunior B, A only ever makes sense if you have a pawsy cat or maybe really small children",
+      "created_at": "2024-07-25T01:00:00.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 1,
+        "like_count": 1,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 44
+      },
+      "edit_history_tweet_ids": [
+        "1816277185013113277"
+      ],
+      "id": "1816277185013113277"
+    },
+    {
+      "text": "@GamewithDave https://t.co/9VprsmiKAz",
+      "created_at": "2024-07-24T21:44:30.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 11
+      },
+      "edit_history_tweet_ids": [
+        "1816227984564707429"
+      ],
+      "id": "1816227984564707429"
+    },
+    {
+      "text": "@BrainXpansion @AMAZlNGNATURE Yeah, I figured as much. I wonder if the Siberian tiger encounters polar bears and at what frequency? I’m thinking an adult polar bear would best a tiger 9 out of 10 times assuming there is no element of surprise",
+      "created_at": "2024-07-20T02:09:13.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 3,
+        "like_count": 16,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 7877
+      },
+      "edit_history_tweet_ids": [
+        "1814482664641933788"
+      ],
+      "id": "1814482664641933788"
+    },
+    {
+      "text": "RT @t3dotgg: Holy shit",
+      "created_at": "2024-07-20T02:07:13.000Z",
+      "public_metrics": {
+        "retweet_count": 9,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1814482161505878112"
+      ],
+      "id": "1814482161505878112"
+    },
+    {
+      "text": "@shashiwhocodes Will there be extended benefits for these extended hours such as $15-20k compensation per weekend sacrificed to meet these deadlines? if they’re that critical it should be no problemo",
+      "created_at": "2024-07-18T21:10:58.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 2,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 93
+      },
+      "edit_history_tweet_ids": [
+        "1814045221329473802"
+      ],
+      "id": "1814045221329473802"
+    },
+    {
+      "text": "RT @DThompsonDev: When you write so much spaghetti code that an Italian restaurant thinks you should work there instead. 😭😭 https://t.co/qr…",
+      "created_at": "2024-07-13T03:02:51.000Z",
+      "public_metrics": {
+        "retweet_count": 257,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1811959447201120528"
+      ],
+      "id": "1811959447201120528"
+    },
+    {
+      "text": "RT @Motabhai012: @CollinRugg Pilot's view from the cockpit while landing at night https://t.co/sB037rXGiN",
+      "created_at": "2024-07-11T13:21:36.000Z",
+      "public_metrics": {
+        "retweet_count": 52,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1811390384750088670"
+      ],
+      "id": "1811390384750088670"
+    },
+    {
+      "text": "@Lord_Arse Donkey Kong ofc",
+      "created_at": "2024-07-11T13:18:28.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 8
+      },
+      "edit_history_tweet_ids": [
+        "1811389594660651077"
+      ],
+      "id": "1811389594660651077"
+    },
+    {
+      "text": "@linux_deepin I’m a basement dwelling penguin. WSL2 Ubuntu 20.04 via Windows 11 pro",
+      "created_at": "2024-07-11T13:13:17.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 2,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 596
+      },
+      "edit_history_tweet_ids": [
+        "1811388292438319311"
+      ],
+      "id": "1811388292438319311"
+    },
+    {
+      "text": "@trikcode Pnpm",
+      "created_at": "2024-07-11T13:05:04.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 10
+      },
+      "edit_history_tweet_ids": [
+        "1811386224726229462"
+      ],
+      "id": "1811386224726229462"
+    },
+    {
+      "text": "@ashadahmed_ Pragmatic?",
+      "created_at": "2024-07-11T12:34:11.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 25
+      },
+      "edit_history_tweet_ids": [
+        "1811378452500467715"
+      ],
+      "id": "1811378452500467715"
+    },
+    {
+      "text": "@ThePrimeagen only scored one point higher https://t.co/LnuIPUD5zy",
+      "created_at": "2024-07-09T00:34:11.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 1,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 1036
+      },
+      "edit_history_tweet_ids": [
+        "1810472481607573854"
+      ],
+      "id": "1810472481607573854"
+    },
+    {
+      "text": "@amaan8429 Why would using WSL2 make you less of an engineer? It’s convenient having windows 11 pro running with Ubuntu 20.04 as my designated coding environment \n\nWSL2 is like an awesome mullet—business in the front party in the back",
+      "created_at": "2024-07-09T00:15:55.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 2,
+        "like_count": 9,
+        "quote_count": 1,
+        "bookmark_count": 1,
+        "impression_count": 2719
+      },
+      "edit_history_tweet_ids": [
+        "1810467884239401396"
+      ],
+      "id": "1810467884239401396"
+    },
+    {
+      "text": "@DavidKPiano The one with a type annotation so those reading the examples can reference its props",
+      "created_at": "2024-07-08T19:24:11.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 166
+      },
+      "edit_history_tweet_ids": [
+        "1810394470669746543"
+      ],
+      "id": "1810394470669746543"
+    },
+    {
+      "text": "@KMaddifyPartTwo Resident evil IV",
+      "created_at": "2024-07-08T04:20:11.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 12
+      },
+      "edit_history_tweet_ids": [
+        "1810166967627628678"
+      ],
+      "id": "1810166967627628678"
+    },
+    {
+      "text": "@Star_Knight12 Depends on the season…in the winter, mornings and evenings. In the summer, nighttime into the early AM \n\nAutumn and Spring are wildcards",
+      "created_at": "2024-07-08T04:17:42.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 9
+      },
+      "edit_history_tweet_ids": [
+        "1810166343456448528"
+      ],
+      "id": "1810166343456448528"
+    },
+    {
+      "text": "@ImLunaHey Idk that term does not exist at any official capacity within the org I’m at currently (a Japanese multinational). Personal day would probably be what I’d say and they’d be fine with it though",
+      "created_at": "2024-07-08T00:44:46.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 2,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 323
+      },
+      "edit_history_tweet_ids": [
+        "1810112757460562006"
+      ],
+      "id": "1810112757460562006"
+    },
+    {
+      "text": "@deba622 @natlawyerchic @smalls2672 There aren’t any alligators in Tennessee 🤔",
+      "created_at": "2024-07-07T04:19:24.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 13,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 434
+      },
+      "edit_history_tweet_ids": [
+        "1809804384559104188"
+      ],
+      "id": "1809804384559104188"
+    },
+    {
+      "text": "RT @prmshra: this is the best take on adhd , as a severe adhd myself lol\n\n@ThePrimeagen https://t.co/ZRJkNuy5jW",
+      "created_at": "2024-07-07T04:10:24.000Z",
+      "public_metrics": {
+        "retweet_count": 17,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1809802119123177808"
+      ],
+      "id": "1809802119123177808"
+    },
+    {
+      "text": "RT @shadcn: Introducing Charts.\n\nA collection of chart components that you can copy and paste into your apps. \n\nBuilt on top of Recharts. B…",
+      "created_at": "2024-07-07T03:57:36.000Z",
+      "public_metrics": {
+        "retweet_count": 1145,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1809798899961409729"
+      ],
+      "id": "1809798899961409729"
+    },
+    {
+      "text": "RT @housecor: I often see web apps with separate frontend and backend dev teams.\n\nThis front/back developer split leads to a common problem…",
+      "created_at": "2024-07-07T03:55:04.000Z",
+      "public_metrics": {
+        "retweet_count": 59,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1809798262972432824"
+      ],
+      "id": "1809798262972432824"
+    },
+    {
+      "text": "@housecor This. This is why I’ve pushed so strongly for monorepo (specifically turborepo) adoption at work including a template starter repo &amp;  a nearly hour long PowerPoint presentation to get the business side onboard as well (making quality slides can be so damn time consuming)",
+      "created_at": "2024-07-07T03:55:00.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 1,
+        "quote_count": 0,
+        "bookmark_count": 1,
+        "impression_count": 706
+      },
+      "edit_history_tweet_ids": [
+        "1809798242391019735"
+      ],
+      "id": "1809798242391019735"
+    },
+    {
+      "text": "RT @BenLesh: TIL BMW uses RxJS in their car software. https://t.co/qySeCRktIf",
+      "created_at": "2024-07-07T03:49:14.000Z",
+      "public_metrics": {
+        "retweet_count": 56,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1809796794743718300"
+      ],
+      "id": "1809796794743718300"
+    },
+    {
+      "text": "@KarbelkarMihir @trashh_dev I laughed",
+      "created_at": "2024-07-07T03:48:09.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 1,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 26
+      },
+      "edit_history_tweet_ids": [
+        "1809796519802835133"
+      ],
+      "id": "1809796519802835133"
+    },
+    {
+      "text": "@ImLunaHey A calculator widget using Python in 2011",
+      "created_at": "2024-07-07T03:38:37.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 24
+      },
+      "edit_history_tweet_ids": [
+        "1809794119901835674"
+      ],
+      "id": "1809794119901835674"
+    },
+    {
+      "text": "RT @elonmusk: When is there not one – just one – even *attempted* prosecution of that Epstein (Bill Gates &amp; Reid Hoffman come to mind)\nclie…",
+      "created_at": "2024-07-07T03:38:10.000Z",
+      "public_metrics": {
+        "retweet_count": 93872,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1809794006357856369"
+      ],
+      "id": "1809794006357856369"
+    },
+    {
+      "text": "RT @housecor: Just learned it's easy to create beautiful warnings and notes in markdown files:\n\nThis creates a note:\n[!NOTE]\n\nThis creates…",
+      "created_at": "2024-07-07T03:37:29.000Z",
+      "public_metrics": {
+        "retweet_count": 61,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1809793836492669173"
+      ],
+      "id": "1809793836492669173"
+    },
+    {
+      "text": "RT @luke_pighetti: @t3dotgg I see nothing wrong with this. Google Form + Google Sheet = redneck jira",
+      "created_at": "2024-07-07T03:34:35.000Z",
+      "public_metrics": {
+        "retweet_count": 21,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1809793107635872141"
+      ],
+      "id": "1809793107635872141"
+    },
+    {
+      "text": "RT @Hamptonism: No, it was literally revealed to me in a dream https://t.co/wbeepmSea0",
+      "created_at": "2024-07-04T23:37:18.000Z",
+      "public_metrics": {
+        "retweet_count": 1347,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "edit_history_tweet_ids": [
+        "1809008616885608695"
+      ],
+      "id": "1809008616885608695"
+    },
+    {
+      "text": "@ImLunaHey role=“yes”",
+      "created_at": "2024-07-04T21:32:37.000Z",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 18
+      },
+      "edit_history_tweet_ids": [
+        "1808977237024076285"
+      ],
+      "id": "1808977237024076285"
+    }
+  ],
+  "nextToken": "7140dibdnow9c7btw4azvoo59x4dgbbb352xyfu9gysdx",
+  "result_count": 100,
+  "userId": "989610823105568769"
+}

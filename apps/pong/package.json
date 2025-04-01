@@ -29,6 +29,7 @@
     "@radix-ui/react-tooltip": "^1.1.8",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cookie.js": "^7.0.1",
     "focus-visible": "^5.2.1",
     "lucide-react": "^0.485.0",
     "motion": "^12.6.2",
