@@ -1,15 +1,15 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { motion } from "motion/react";
+import { Suspense } from "react";
+import { Transition } from "@/ui/transition";
 
-export default function Template({ children }: { children: ReactNode }) {
+export default function Template({
+  children
+}: Readonly<{ children: ReactNode }>) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}>
-      {children}
-    </motion.div>
+    <Suspense>
+      <Transition>{children}</Transition>
+    </Suspense>
   );
 }

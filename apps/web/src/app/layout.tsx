@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import React from "react";
 import { Poppins as _Poppins, Inter } from "next/font/google";
 import { Footer } from "@/ui/footer";
-import { LoadingAnimation } from "@/ui/loading-animation";
 import { default as Navbar } from "@/ui/nav";
 import { ThemeProvider } from "@/ui/providers/theme-provider";
 import "./global.css";
@@ -136,7 +135,7 @@ export default function RootLayout({
       <body className="font-basis-grotesque-pro-regular overflow-x-hidden!">
         <AnimationContextProvider>
           <ThemeProvider>
-            <LoadingAnimation />
+            {/* <LoadingAnimation /> */}
             <div className="max-w-[96rem] overflow-x-hidden! mx-auto flex min-h-[100dvh] flex-col sm:px-6 lg:px-8">
               <Navbar />
               <main className="theme-transition">{children}</main>
