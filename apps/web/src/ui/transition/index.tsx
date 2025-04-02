@@ -2,7 +2,7 @@
 
 import type { Transition } from "motion/react";
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import {
   animate,
@@ -10,9 +10,9 @@ import {
   useMotionTemplate,
   useMotionValue,
   useMotionValueEvent,
+  useSpring,
   useTransform
 } from "motion/react";
-import { useMockLoading } from "@/hooks/use-mock-loading";
 
 // Simple in-memory cache to track visited routes
 const visitedRoutes = new Set<string>();
@@ -90,42 +90,46 @@ export function Transition({ children }: { children: React.ReactNode }) {
   // If we shouldn't animate, just return children
   if (!shouldAnimate) {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}>
-        {children}
-      </motion.div>
+      <Suspense>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}>
+          {children}
+        </motion.div>
+      </Suspense>
     );
   }
 
   // Otherwise, show the loading animation
-  return <LoadingAnimation>{children}</LoadingAnimation>;
+  return (
+    <Suspense>
+      <LoadingAnimation>{children}</LoadingAnimation>
+    </Suspense>
+  );
 }
-
-
 
 /**
  * Mock loading hook to simulate a loading progress
  * Adjusted to be slightly slower for a better visual experience
  */
-// function useMockLoading() {
-//   const progress = useSpring(0, { stiffness: 300, damping: 40 });
+function useMockLoading() {
+  const progress = useSpring(0, { stiffness: 300, damping: 40 });
 
-//   useEffect(() => {
-//     const interval = setInterval(() => {
-//       const newProgress = progress.get() + Math.random() * 0.3;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newProgress = progress.get() + Math.random() * 0.3;
 
-//       if (newProgress >= 1) {
-//         progress.set(1);
-//         clearInterval(interval);
-//       } else {
-//         progress.set(newProgress);
-//       }
-//     }, 300);
+      if (newProgress >= 1) {
+        progress.set(1);
+        clearInterval(interval);
+      } else {
+        progress.set(newProgress);
+      }
+    }, 300);
 
-//     return () => clearInterval(interval);
-//   }, [progress]);
+    return () => clearInterval(interval);
+  }, [progress]);
 
-//   return progress;
-// }
+  return progress;
+}
