@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Cookies from "cookie.js"; // or import cookie from "cookie.js" depending on the package
+import Cookies from "cookie.js";
 
 export function useIos() {
   const [isIos, setIsIos] = useState<boolean>(false);
 
   useEffect(() => {
-    // Read the "ios" cookie value (assumed to be "true" or "false")
+    // ios cookie is of type `${boolean}`
     const iosCookie = Cookies.get("ios");
     setIsIos(iosCookie === "true");
   }, []);

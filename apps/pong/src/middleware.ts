@@ -1,11 +1,7 @@
-import { NextRequest, NextResponse, userAgent as UA } from "next/server";
+import { NextRequest, NextResponse, userAgent } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const { device, os, ua } = UA(request);
-
-  const OS = os?.name ?? "";
-  console.log(OS);
-  console.log(ua);
+  const { device, ua } = userAgent(request);
 
   const response = NextResponse.next();
 
