@@ -138,10 +138,10 @@ export default function RootLayout({
             {/* <LoadingAnimation /> */}
             <div className="mx-auto flex min-h-[100dvh] max-w-[96rem] flex-col overflow-x-hidden! sm:px-6 lg:px-8">
               <Navbar />
-              <main className="theme-transition">
+              <main className="theme-transition min-h-screen">
                 {children}
-                <Footer />
               </main>
+              <Footer />
             </div>
           </ThemeProvider>
         </AnimationContextProvider>
