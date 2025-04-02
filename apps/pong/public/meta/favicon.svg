@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="512" height="512"><svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_2950_1761)">
+<path d="M422 0H90C40.2944 0 0 40.2944 0 90V422C0 471.706 40.2944 512 90 512H422C471.706 512 512 471.706 512 422V90C512 40.2944 471.706 0 422 0Z" fill="#0D1B2A"></path>
+<path d="M280 350C357.32 350 420 309.706 420 260C420 210.294 357.32 170 280 170C202.68 170 140 210.294 140 260C140 309.706 202.68 350 280 350Z" fill="url(#paint0_radial_2950_1761)"></path>
+<path d="M340 280C373.137 280 400 253.137 400 220C400 186.863 373.137 160 340 160C306.863 160 280 186.863 280 220C280 253.137 306.863 280 340 280Z" fill="url(#paint1_radial_2950_1761)"></path>
+<path d="M340 242C352.15 242 362 232.15 362 220C362 207.85 352.15 198 340 198C327.85 198 318 207.85 318 220C318 232.15 327.85 242 340 242Z" fill="white"></path>
+<path opacity="0.6" d="M330 215C335.523 215 340 212.761 340 210C340 207.239 335.523 205 330 205C324.477 205 320 207.239 320 210C320 212.761 324.477 215 330 215Z" fill="white"></path>
+<path d="M340 280C373.137 280 400 253.137 400 220C400 186.863 373.137 160 340 160C306.863 160 280 186.863 280 220C280 253.137 306.863 280 340 280Z" stroke="white" stroke-opacity="0.1" stroke-width="4"></path>
+<path d="M340 270C367.614 270 390 247.614 390 220C390 192.386 367.614 170 340 170C312.386 170 290 192.386 290 220C290 247.614 312.386 270 340 270Z" stroke="#1C7ED6" stroke-opacity="0.2" stroke-width="3"></path>
+<path d="M300 230C313.333 203.333 333.333 193.333 360 200" stroke="white" stroke-opacity="0.2" stroke-width="2"></path>
+<path d="M310 250C330 263.333 351.667 256.667 375 230" stroke="white" stroke-opacity="0.15" stroke-width="2"></path>
+<path opacity="0.3" d="M200 310L90 360" stroke="#4DABF7" stroke-width="6" stroke-linecap="round"></path>
+<path opacity="0.2" d="M220 280L110 330" stroke="#4DABF7" stroke-width="4" stroke-linecap="round"></path>
+</g>
+<defs>
+<radialGradient id="SvgjsRadialGradient1006" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(28812 37034) scale(100352 64512)">
+<stop stop-color="#4DABF7" stop-opacity="0.4"></stop>
+<stop offset="1" stop-color="#0D1B2A" stop-opacity="0"></stop>
+</radialGradient>
+<radialGradient id="SvgjsRadialGradient1005" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(31000 30880) scale(30720)">
+<stop stop-color="#A5D8FF"></stop>
+<stop offset="1" stop-color="#1C7ED6"></stop>
+</radialGradient>
+<clipPath id="SvgjsClipPath1004">
+<rect width="512" height="512" fill="white"></rect>
+</clipPath>
+</defs>
+</svg><style>@media (prefers-color-scheme: light) { :root { filter: none; } }
+@media (prefers-color-scheme: dark) { :root { filter: none; } }
+</style></svg>

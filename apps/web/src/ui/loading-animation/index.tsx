@@ -12,6 +12,13 @@ export function LoadingAnimation() {
   const { setAnimationComplete } = useAnimationContext();
 
   useEffect(() => {
+    if (pathname !== "/") {
+      const timerAltRoute = setTimeout(() => {
+        setIsVisible(false);
+        setAnimationComplete("hasLoadingAnimationPlayed");
+      }, 2000);
+      return () => clearTimeout(timerAltRoute);
+    }
     if (pathname === "/") {
       const timer = setTimeout(() => {
         setIsVisible(false);
@@ -20,12 +27,12 @@ export function LoadingAnimation() {
       return () => clearTimeout(timer);
     }
   }, [pathname, setAnimationComplete]);
-  
+
   return (
     <motion.div
       className={cn(
-        "theme-transition bg-background fixed inset-0 h-screen items-center justify-center",
-        isVisible === true ? "z-50 flex" : "z-0 hidden"
+        "theme-transition bg-background inset-0 h-screen items-center justify-center",
+        isVisible === true ? "fixed z-50 flex" : "z-0 hidden"
       )}
       initial={{ opacity: 1 }}
       animate={{ opacity: 0 }}

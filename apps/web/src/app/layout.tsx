@@ -52,11 +52,11 @@ export const metadata = {
   appleWebApp: {
     startupImage: "/apple-icon.png",
     statusBarStyle: "black-translucent",
-    title: "Next Chess Bot"
+    title: "Portfolio"
   },
   twitter: {
     card: "summary_large_image",
-    title: "Next Chess Bot",
+    title: "Portfolio 2025",
     creator: "@Dopamine_Driven",
     creatorId: "989610823105568769",
     description: "Portfolio 2025"
