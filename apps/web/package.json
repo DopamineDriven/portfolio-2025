@@ -36,6 +36,7 @@
     "@vercel/speed-insights": "^1.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cookie.js":"^7.0.1",
     "d3": "^7.9.0",
     "d3-geo": "^3.1.1",
     "d3-scale": "^4.0.2",

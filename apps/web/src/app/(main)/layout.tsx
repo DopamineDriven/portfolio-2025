@@ -4,7 +4,7 @@ import { Poppins as _Poppins, Inter } from "next/font/google";
 import { Footer } from "@/ui/footer";
 import { default as Navbar } from "@/ui/nav/temp";
 import { ThemeProvider } from "@/ui/providers/theme-provider";
-import "./global.css";
+import "../global.css";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";

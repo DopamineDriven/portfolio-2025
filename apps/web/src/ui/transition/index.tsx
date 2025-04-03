@@ -53,6 +53,8 @@ function LoadingAnimation({ children }: { children: React.ReactNode }) {
     // Create audio element
     audioRef.current = new Audio(elevatorAudio.shortest);
     audioRef.current.volume = 0.5;
+    audioRef.current.preload = "auto";
+    audioRef.current.autoplay = true;
 
     // Clean up on unmount
     return () => {
