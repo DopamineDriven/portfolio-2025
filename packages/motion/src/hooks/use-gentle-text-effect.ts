@@ -3,7 +3,7 @@
 import type {
   AnimationOptions,
   AnimationPlaybackControls,
-  AnimationPlaybackControlsWithFinished,
+  AnimationPlaybackControlsWithThen as AnimationPlaybackControlsWithFinished,
   DOMKeyframesDefinition
 } from "motion-dom";
 import { useCallback, useEffect, useRef, useState } from "react";
