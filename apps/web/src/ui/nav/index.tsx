@@ -1,10 +1,36 @@
 "use client";
 
+import type { FC, SVGAttributes } from "react";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { ArLogo } from "@/ui/svg/ar-logo";
-// import { resumeData } from "@/utils/__generated__/resume-blob";
+import { cn } from "@/lib/utils";
+
+const ArLogo: FC<
+  Omit<SVGAttributes<SVGSVGElement>, "viewBox" | "fill" | "role" | "xmlns">
+> = ({ className, ...svg }) => (
+  <svg
+    className={cn(className, "theme-transition")}
+    viewBox="0 0 512 512"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    role="img"
+    {...svg}>
+    <path
+      d="M107.701 334.338L177.229 173.979H202.963L272.49 334.338H243.144L227.117 295.897H152.397L136.144 334.338H107.701ZM162.556 271.103H216.959L189.644 207.417L162.556 271.103Z"
+      fill="currentColor"
+    />
+    <path
+      d="M258.93 334.336V175.112H329.36C347.717 175.112 362.089 179.699 372.476 188.873C382.86 198.05 388.055 210.368 388.055 225.838C388.055 238.426 384.669 248.775 377.897 256.886C371.125 265 361.945 270.725 350.354 274.061L393.021 334.339H360.286L321.011 278.839H286.699V334.339H258.933L258.93 334.336ZM286.695 254.042H327.325C337.258 254.042 345.162 251.619 351.031 246.762C356.897 241.912 359.838 235.315 359.838 226.973C359.838 218.482 356.978 211.958 351.26 207.412C345.541 202.862 337.487 200.586 327.103 200.586H286.699V254.039L286.695 254.042Z"
+      fill="currentColor"
+    />
+    <path
+      d="M6 256C6 118.156 118.156 6 256 6C393.844 6 506 118.156 506 256C506 393.844 393.844 506 256 506C118.156 506 6 393.844 6 256Z"
+      stroke="currentColor"
+      strokeWidth="12"
+    />
+  </svg>
+);
 
 const menuItems = [
   { name: "Home", href: "/" },
@@ -19,26 +45,7 @@ export default function Navbar() {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // const [isDownloading, setIsDownloading] = useState(false);
 
-  // const handleDownload = async () => {
-  //   try {
-  //     setIsDownloading(true);
-
-  //     // Create a temporary link and trigger the download
-  //     const link = document.createElement("a");
-  //     link.href = resumeData.resumeBlob.downloadUrl;
-  //     link.target = "_blank";
-  //     link.download = "resume-2025.pdf"; // This will be the suggested filename
-  //     document.body.appendChild(link);
-  //     link.click();
-  //     document.body.removeChild(link);
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //   } finally {
-  //     setIsDownloading(false);
-  //   }
-  // };
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 640);
@@ -87,7 +94,7 @@ export default function Navbar() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.8, ease: [0.77, 0, 0.175, 1] }}
-          className="max-w-screen relative mx-auto flex max-h-fit w-full items-center justify-center backdrop-blur-sm"
+          className="relative mx-auto flex max-h-fit w-full max-w-screen items-center justify-center backdrop-blur-sm"
           {...(!isMobile
             ? {
                 onMouseEnter: () => setIsHovered(true),
@@ -108,11 +115,15 @@ export default function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5, ease: [0.77, 0, 0.175, 1] }}
-                  className="mx-auto grid grid-cols-5  px-4 w-screen 2xl:max-w-8xl justify-between py-2 text-center sm:px-10 sm:py-4">
-                  <Link href="/" className="block text-[#f5f5f5] text-left justify-start mx-0">
+                  className="2xl:max-w-8xl mx-auto grid w-screen grid-cols-5 justify-between px-4 py-2 text-center sm:px-10 sm:py-4">
+                  <Link
+                    href="/"
+                    className="mx-0 block justify-start text-left text-[#f5f5f5]">
                     <ArLogo className="size-5 sm:size-7" />
                   </Link>
-                  <span className="block text-right col-start-5  sm:text-right">Menu</span>
+                  <span className="col-start-5 block text-right sm:text-right">
+                    Menu
+                  </span>
                 </motion.span>
               ) : (
                 <motion.div
@@ -142,67 +153,25 @@ export default function Navbar() {
                           onMouseLeave={() =>
                             !isMobile && setHoveredItem(null)
                           }>
-                            <Link
-                              href={item.href}
-                              className="relative block w-full px-4 py-2 text-center sm:py-4"
-                              onClick={() => isMobile && setIsMenuOpen(false)}>
-                              <motion.div
-                                className="relative z-50 w-full sm:z-10"
-                                animate={{
-                                  color:
-                                    !isMobile && hoveredItem === item.name
-                                      ? "#000"
-                                      : "#fff"
-                                }}
-                                transition={{
-                                  duration: 0.5,
-                                  ease: [0.77, 0, 0.175, 1]
-                                }}>
-                                {item.name}
-                              </motion.div>
-                            </Link>
-                          {/* {item.name === "Resume" ? (
-                            <button
-                              onClick={handleDownload}
-                              className="relative block w-full cursor-pointer appearance-none px-4 py-2 text-center sm:py-4"
-                              disabled={isDownloading}
-                              role="link">
-                              <motion.div
-                                className="relative z-50 w-full sm:z-10"
-                                animate={{
-                                  color:
-                                    !isMobile && hoveredItem === item.name
-                                      ? "#000"
-                                      : "#fff"
-                                }}
-                                transition={{
-                                  duration: 0.5,
-                                  ease: [0.77, 0, 0.175, 1]
-                                }}>
-                                {item.name}
-                              </motion.div>
-                            </button>
-                          ) : (
-                            <Link
-                              href={item.href}
-                              className="relative block w-full px-4 py-2 text-center sm:py-4"
-                              onClick={() => isMobile && setIsMenuOpen(false)}>
-                              <motion.div
-                                className="relative z-50 w-full sm:z-10"
-                                animate={{
-                                  color:
-                                    !isMobile && hoveredItem === item.name
-                                      ? "#000"
-                                      : "#fff"
-                                }}
-                                transition={{
-                                  duration: 0.5,
-                                  ease: [0.77, 0, 0.175, 1]
-                                }}>
-                                {item.name}
-                              </motion.div>
-                            </Link>
-                          )} */}
+                          <Link
+                            href={item.href}
+                            className="relative block w-full px-4 py-2 text-center sm:py-4"
+                            onClick={() => isMobile && setIsMenuOpen(false)}>
+                            <motion.div
+                              className="relative z-50 w-full sm:z-10"
+                              animate={{
+                                color:
+                                  !isMobile && hoveredItem === item.name
+                                    ? "#000"
+                                    : "#fff"
+                              }}
+                              transition={{
+                                duration: 0.5,
+                                ease: [0.77, 0, 0.175, 1]
+                              }}>
+                              {item.name}
+                            </motion.div>
+                          </Link>
                           <AnimatePresence>
                             {!isMobile && hoveredItem === item.name && (
                               <motion.div
@@ -227,16 +196,16 @@ export default function Navbar() {
             <AnimatePresence>
               {isMobile && isMenuOpen && (
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.5, ease: [0.77, 0, 0.175, 1] }}
-                  className="bg-background/50 fixed inset-0 z-40 h-full py-2 backdrop-blur-sm sm:hidden"
+                initial={{opacity: 0}}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ staggerChildren: 0.2, duration: 0.2, ease: [0.77, 0, 0.175, 1] }}
+                  className="bg-background/50 will-change-[opacity,filter] fixed inset-0 z-40 h-full py-2 backdrop-blur-sm sm:hidden"
                   onClick={() => setIsMenuOpen(false)}>
-                  <div className="absolute top-4 right-4">
+                  <div className="absolute top-2 right-2 z-[100] p-2.5">
                     <button
                       onClick={closeMenu}
-                      className="text-foreground bg-background/20 hover:bg-background/30 rounded-full p-2 transition-colors">
+                      className="text-foreground bg-background/20 hover:bg-background/30 rounded-full transition-colors">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
