@@ -17,9 +17,20 @@ import {
 // Simple in-memory cache to track visited routes
 const visitedRoutes = new Set<string>();
 
+const elevatorAudio = {
+  full: "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/audio/elevator-full.mp3",
+  secondLongest:
+    "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/audio/elevator-second-longest.mp3",
+  secondShortest:
+    "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/audio/elevator-second-shortest.mp3",
+  shortest:
+    "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/audio/elevator-shortest.mp3"
+};
+
 function LoadingAnimation({ children }: { children: React.ReactNode }) {
   const progress = useMockLoading();
   const [isLoaded, setIsLoaded] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const leftEdge = useMotionValue("calc(50% - 2px)");
   const rightEdge = useMotionValue("calc(50% + 2px)");
@@ -37,7 +48,34 @@ function LoadingAnimation({ children }: { children: React.ReactNode }) {
       ${leftEdge} ${topEdge}, ${leftEdge} 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%
     )`;
 
+  // Initialize audio on component mount
+  useEffect(() => {
+    // Create audio element
+    audioRef.current = new Audio(elevatorAudio.shortest);
+    audioRef.current.volume = 0.5;
+
+    // Clean up on unmount
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
   useMotionValueEvent(progress, "change", latest => {
+    // When progress reaches 80%, play the elevator sound
+    if (latest >= 0.8 && !isLoaded && audioRef.current) {
+      // Try to play the audio (may be blocked by browser autoplay policy)
+      const playPromise = audioRef.current.play();
+
+      // Handle potential autoplay restrictions
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.log("Audio playback was prevented by the browser:", error);
+        });
+      }
+    }
     if (latest >= 1 && !isLoaded) {
       setIsLoaded(true);
     }
@@ -71,7 +109,7 @@ function LoadingAnimation({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function Transition({ children }: { children: React.ReactNode }) {
+export function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentUrl = pathname + searchParams.toString();
@@ -91,19 +129,27 @@ export function Transition({ children }: { children: React.ReactNode }) {
   if (!shouldAnimate) {
     return (
       <Suspense>
-        <motion.div
+        {children}
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}>
           {children}
-        </motion.div>
+        </motion.div> */}
       </Suspense>
     );
   }
 
   // Otherwise, show the loading animation
   return (
-    <Suspense>
+    <Suspense
+      fallback={
+        <div className="mx-auto flex min-h-[100dvh] max-w-[96rem] flex-col overflow-x-hidden! sm:px-6 lg:px-8">
+          <div className="bg-background dark:bg-background h-16 w-full animate-pulse" />
+          <div className="bg-background flex-grow" />
+          <div className="bg-background dark:bg-background h-32 w-full animate-pulse" />
+        </div>
+      }>
       <LoadingAnimation>{children}</LoadingAnimation>
     </Suspense>
   );

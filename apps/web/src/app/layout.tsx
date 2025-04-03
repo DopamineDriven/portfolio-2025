@@ -23,6 +23,7 @@ import {
 } from "@/lib/fonts";
 import { getSiteUrl } from "@/lib/site-url";
 import { cn } from "@/lib/utils";
+import { PageTransition } from "@/ui/transition";
 import * as gAnalytics from "@/utils/analytics";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -135,12 +136,15 @@ export default function RootLayout({
       <body className="font-basis-grotesque-pro-regular overflow-x-hidden!">
         <AnimationContextProvider>
           <ThemeProvider>
-            {/* <LoadingAnimation /> */}
-            <div className="mx-auto flex min-h-[100dvh] max-w-[96rem] flex-col overflow-x-hidden! sm:px-6 lg:px-8">
-              <Navbar />
-              <main className="theme-transition min-h-screen">{children}</main>
-              <Footer />
-            </div>
+            <PageTransition>
+              <div className="mx-auto flex min-h-[100dvh] max-w-[96rem] flex-col overflow-x-hidden! sm:px-6 lg:px-8">
+                <Navbar />
+                <main className="theme-transition min-h-screen">
+                  {children}
+                </main>
+                <Footer />
+              </div>
+            </PageTransition>
           </ThemeProvider>
         </AnimationContextProvider>
         <SpeedInsights />
