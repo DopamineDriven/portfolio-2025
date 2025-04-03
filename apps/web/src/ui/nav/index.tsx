@@ -1,16 +1,17 @@
 "use client";
 
 import type { FC, SVGAttributes } from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
+import type {Transition} from "motion-dom";
 import { cn } from "@/lib/utils";
 
 const ArLogo: FC<
   Omit<SVGAttributes<SVGSVGElement>, "viewBox" | "fill" | "role" | "xmlns">
 > = ({ className, ...svg }) => (
   <svg
-    className={cn(className, "theme-transition")}
+    className={cn(className)}
     viewBox="0 0 512 512"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -65,6 +66,17 @@ export default function Navbar() {
     };
   }, [isMobile, isMenuOpen]);
 
+  const _viewportEasing = useMemo(
+    () => (!isMobile ? {
+      duration: 0.5,
+      ease: [0.77, 0, 0.175, 1]
+    } : {
+      duration: 0.5,
+      ease: [0.4, 0.0, 0.2, 1]
+    }) satisfies Transition,
+    [isMobile]
+  );
+
   useEffect(() => {
     setIsHovered(false);
     setHoveredItem(null);
@@ -115,13 +127,13 @@ export default function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5, ease: [0.77, 0, 0.175, 1] }}
-                  className="2xl:max-w-8xl mx-auto grid w-screen grid-cols-5 justify-between px-4 py-2 text-center sm:px-10 sm:py-4">
+                  className="2xl:max-w-8xl mx-auto grid w-screen grid-cols-5 justify-between px-4 py-2 text-center md:px-10 md:py-4">
                   <Link
                     href="/"
                     className="mx-0 block justify-start text-left text-[#f5f5f5]">
-                    <ArLogo className="size-5 sm:size-7" />
+                    <ArLogo className="size-5 md:size-7" />
                   </Link>
-                  <span className="col-start-5 block text-right sm:text-right">
+                  <span className="col-start-5 block text-right md:text-right">
                     Menu
                   </span>
                 </motion.span>
@@ -134,7 +146,7 @@ export default function Navbar() {
                   transition={{ duration: 0.5, ease: [0.77, 0, 0.175, 1] }}
                   className="w-full">
                   <AnimatePresence>
-                    <motion.div className="grid w-full grid-cols-1 grid-rows-5 sm:grid-cols-5 sm:grid-rows-1">
+                    <motion.div className="grid w-full grid-cols-1 grid-rows-5 md:grid-cols-5 md:grid-rows-1">
                       {menuItems.map((item, index) => (
                         <motion.div
                           key={item.name}
@@ -155,10 +167,10 @@ export default function Navbar() {
                           }>
                           <Link
                             href={item.href}
-                            className="relative block w-full px-4 py-2 text-center sm:py-4"
+                            className="relative block w-full px-4 py-2 text-center md:py-4"
                             onClick={() => isMobile && setIsMenuOpen(false)}>
                             <motion.div
-                              className="relative z-50 w-full sm:z-10"
+                              className="relative z-50 w-full md:z-10"
                               animate={{
                                 color:
                                   !isMobile && hoveredItem === item.name
@@ -167,7 +179,9 @@ export default function Navbar() {
                               }}
                               transition={{
                                 duration: 0.5,
-                                ease: [0.77, 0, 0.175, 1]
+                                ease: !isMobile
+                                  ? [0.77, 0, 0.175, 1]
+                                  : undefined
                               }}>
                               {item.name}
                             </motion.div>
@@ -196,11 +210,15 @@ export default function Navbar() {
             <AnimatePresence>
               {isMobile && isMenuOpen && (
                 <motion.div
-                initial={{opacity: 0}}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ staggerChildren: 0.2, duration: 0.2, ease: [0.77, 0, 0.175, 1] }}
-                  className="bg-background/50 will-change-[opacity,filter] fixed inset-0 z-40 h-full py-2 backdrop-blur-sm sm:hidden"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{
+                    staggerChildren: 0.2,
+                    duration: 0.2,
+                    ease: [0.77, 0, 0.175, 1]
+                  }}
+                  className="bg-background/50 fixed inset-0 z-40 h-full py-2 backdrop-blur-sm will-change-[opacity,filter] md:hidden"
                   onClick={() => setIsMenuOpen(false)}>
                   <div className="absolute top-2 right-2 z-[100] p-2.5">
                     <button

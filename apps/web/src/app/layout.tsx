@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import React from "react";
 import { Poppins as _Poppins, Inter } from "next/font/google";
 import { Footer } from "@/ui/footer";
-import { default as Navbar } from "@/ui/nav";
+import { default as Navbar } from "@/ui/nav/temp";
 import { ThemeProvider } from "@/ui/providers/theme-provider";
 import "./global.css";
 import Script from "next/script";
@@ -138,9 +138,7 @@ export default function RootLayout({
             {/* <LoadingAnimation /> */}
             <div className="mx-auto flex min-h-[100dvh] max-w-[96rem] flex-col overflow-x-hidden! sm:px-6 lg:px-8">
               <Navbar />
-              <main className="theme-transition min-h-screen">
-                {children}
-              </main>
+              <main className="theme-transition min-h-screen">{children}</main>
               <Footer />
             </div>
           </ThemeProvider>
