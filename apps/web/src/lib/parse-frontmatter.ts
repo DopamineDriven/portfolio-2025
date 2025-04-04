@@ -8,7 +8,7 @@ export const omitFrontMatter = <const T extends string>(frontMatter: T) => {
 
 export function getMdxPaths<const T extends "posts" | "projects">(target: T) {
   const fs = new Fs(process.cwd());
-  return fs.readDir(`src/content/${target}`);
+  return fs.readDir(`src/content/${target}`).filter((path) => /\.map$/.test(path) === false);
 }
 
 export function readMdxFile<
