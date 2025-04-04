@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { Suspense } from "react";
-import { PageTransition as Transition } from "@/ui/transition";
+import { PageTransition as Transition } from "@/ui/transition/temp";
 
 export default function Template({
   children
