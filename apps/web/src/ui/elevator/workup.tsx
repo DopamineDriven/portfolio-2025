@@ -245,7 +245,7 @@ export function ElevatorExperienceWorkup() {
             const destination = pathOfIntentRef.current ?? "/";
             console.log("[CLIENT] Navigating to:", destination);
             router.push(decodeURIComponent(destination));
-            router.refresh();
+            // router.refresh();
           }, 2000); // Extended slightly to allow transition sound to play
         }, 3000);
       }, 1500);
