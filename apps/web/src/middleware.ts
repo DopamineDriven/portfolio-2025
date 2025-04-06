@@ -61,13 +61,13 @@ export function middleware(request: NextRequest) {
     rewriteUrl.pathname = "/elevator";
     const response = NextResponse.rewrite(rewriteUrl);
     // IMPORTANT: Use consistent cookie parameters
-    const cookieOptions = {
-      path: "/",
-      httpOnly: false, // Allow JavaScript access
-      maxAge: 60 * 60 * 24, // 1 day in seconds
-      sameSite: "lax" as const,
-      secure: process.env.NODE_ENV !== "development" // Only use secure in production
-    };
+    // const cookieOptions = {
+    //   path: "/",
+    //   httpOnly: false, // Allow JavaScript access
+    //   maxAge: 60 * 60 * 24, // 1 day in seconds
+    //   sameSite: "lax" as const,
+    //   secure: process.env.NODE_ENV !== "development" // Only use secure in production
+    // };
 
     // Only set the POI cookie if it doesn't already exist AND it's not a development file
     if (
@@ -75,14 +75,14 @@ export function middleware(request: NextRequest) {
       !DEV_INDICATOR_FILES.some(file => pathname.includes(file))
     ) {
       // Store the original path the user was trying to access
-      response.cookies.set("poi", pathname, cookieOptions);
+      response.cookies.set("poi", decodeURIComponent(pathname));
       console.log("[SERVER] Middleware setting POI cookie to:", pathname);
     } else {
       console.log("[SERVER] Middleware preserving existing POI cookie");
     }
 
     // Set the has-visited cookie with the same consistent options
-    response.cookies.set("has-visited", "true", cookieOptions);
+    response.cookies.set("has-visited", "true");
     console.log("[SERVER] Middleware setting has-visited cookie");
 
     return response;
@@ -97,5 +97,5 @@ export function middleware(request: NextRequest) {
 export const config = {
   // This matcher ensures we run middleware on all routes
   // except the explicitly excluded static paths (/_next/static, /_next/image, etc.).
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"]
+  matcher: ["/", "/elevator", "/posts/:path", "/projects/:path", "/resume", "/elevator"]
 };
