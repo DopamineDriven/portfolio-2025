@@ -9,6 +9,7 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AnimationContextProvider } from "@/context/animation-context";
+import { CookieProvider } from "@/context/cookie-context";
 import {
   BasisGrotesqueProBlack,
   BasisGrotesqueProBlackItalic,
@@ -23,7 +24,6 @@ import {
 } from "@/lib/fonts";
 import { getSiteUrl } from "@/lib/site-url";
 import { cn } from "@/lib/utils";
-import { CookieCheck } from "@/ui/cookie-check";
 import * as gAnalytics from "@/utils/analytics";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -136,12 +136,15 @@ export default function RootLayout({
       <body className="font-basis-grotesque-pro-regular overflow-x-hidden!">
         <AnimationContextProvider>
           <ThemeProvider>
-            <CookieCheck />
-            <div className="mx-auto flex min-h-[100dvh] max-w-[96rem] flex-col overflow-x-hidden! sm:px-6 lg:px-8">
-              <Navbar />
-              <main className="theme-transition min-h-screen">{children}</main>
-              <Footer />
-            </div>
+            <CookieProvider>
+              <div className="mx-auto flex min-h-[100dvh] max-w-[96rem] flex-col overflow-x-hidden! sm:px-6 lg:px-8">
+                <Navbar />
+                <main className="theme-transition min-h-screen">
+                  {children}
+                </main>
+                <Footer />
+              </div>
+            </CookieProvider>
           </ThemeProvider>
         </AnimationContextProvider>
         <SpeedInsights />

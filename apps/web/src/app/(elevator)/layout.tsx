@@ -7,6 +7,7 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AnimationContextProvider } from "@/context/animation-context";
+import { CookieProvider } from "@/context/cookie-context";
 import {
   BasisGrotesqueProBlack,
   BasisGrotesqueProBlackItalic,
@@ -132,7 +133,9 @@ export default function RootLayout({
       )}>
       <body className="font-basis-grotesque-pro-regular overflow-x-hidden!">
         <AnimationContextProvider>
-          <ThemeProvider>{children}</ThemeProvider>
+          <ThemeProvider>
+            <CookieProvider>{children}</CookieProvider>
+          </ThemeProvider>
         </AnimationContextProvider>
         <SpeedInsights />
         <Analytics />

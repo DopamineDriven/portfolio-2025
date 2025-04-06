@@ -14,7 +14,7 @@ import {
   useTransform
 } from "motion/react";
 
-// Simple in-memory cache to track visited routes
+
 const visitedRoutes = new Set<string>();
 
 const elevatorAudio = {
@@ -50,15 +50,12 @@ function LoadingAnimation({ children }: { children: React.ReactNode }) {
       ${leftEdge} ${topEdge}, ${leftEdge} 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%
     )`;
 
-  // Initialize audio on component mount
   useEffect(() => {
-    // Create audio element
     audioRef.current = new Audio(elevatorAudio.shortest);
     audioRef.current.volume = 0.5;
     audioRef.current.preload = "auto";
     audioRef.current.autoplay = true;
 
-    // Clean up on unmount
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -128,20 +125,15 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     visitedRoutes.add(currentUrl);
   }, [currentUrl]);
-
-  // If we shouldn't animate, just return children
-  if (!shouldAnimate) {
-    return (
-      <Suspense>
-        {children}
-        {/* <motion.div
+  /* <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}>
           {children}
-        </motion.div> */}
-      </Suspense>
-    );
+        </motion.div> */
+  // If we shouldn't animate, just return children
+  if (!shouldAnimate) {
+    return <Suspense>{children}</Suspense>;
   }
 
   // Otherwise, show the loading animation

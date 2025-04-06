@@ -1,112 +1,98 @@
-import { NextResponse, userAgent } from "next/server"
-import type { NextRequest } from "next/server"
+import type { NextRequest } from "next/server";
+import { NextResponse, userAgent } from "next/server";
 
 // You can adjust these for your needs:
 const EXCLUDED_PATHS = [
   "/_next",
   "/api",
   "/favicon.ico",
-  "/elevator", // So you don't rewrite /elevator to itself
-]
+  "/elevator" // So you don't rewrite /elevator to itself
+];
+
+// Development indicator files that should be excluded from POI
+const DEV_INDICATOR_FILES = [
+  "/injection-tss-mv3.js",
+  "/injection-tss-mv3.js.map",
+  "/_vercel/insights",
+  "/_vercel/speed-insights"
+];
 
 export function middleware(request: NextRequest) {
   // 1) If it's a bot/crawler, do not rewrite (avoid SEO issues).
-  const { isBot } = userAgent(request)
+  const { isBot } = userAgent(request);
   if (isBot) {
-    return NextResponse.next()
+    return NextResponse.next();
   }
 
   // 2) If this path is excluded or is a static asset, skip rewriting.
-  const { pathname } = request.nextUrl
+  const { pathname } = request.nextUrl;
   if (
-    EXCLUDED_PATHS.some((excluded) => pathname.startsWith(excluded)) ||
+    EXCLUDED_PATHS.some(excluded => pathname.startsWith(excluded)) ||
     // Skip known static file types
-    // eslint-disable-next-line
-    pathname.match(/\.(jpg|jpeg|png|gif|svg|ico|webp|css|js|wasm|json|txt|xml)$/)
+    pathname.match(
+      /\.(jpg|jpeg|png|gif|svg|ico|webp|css|js|wasm|json|txt|xml)$/
+    ) ||
+    // Skip Vercel development indicator files
+    DEV_INDICATOR_FILES.some(file => pathname.includes(file))
   ) {
-    return NextResponse.next()
+    return NextResponse.next();
   }
 
-  // 3) Check if the request is from an external referrer using precise hostname comparison
-  const referer = request.headers.get("referer") || ""
-  console.log(referer);
-  let isExternalReferer = false
+  // 3) Check if user has visited before (i.e. "has-visited" cookie).
+  const hasVisitedCookie = (request.cookies.get("has-visited")?.value ?? "false") as "true" | "false";
 
-  if (referer) {
-    try {
-      // Parse the referer URL and compare hostnames
-      const refererUrl = new URL(referer)
-      const currentHostname = request.nextUrl.hostname
+  // Log the cookie state and headers for debugging
+  console.log("[SERVER] Cookie check:", {
+    hasVisitedCookie: hasVisitedCookie,
+    path: pathname,
+    cookieHeader: request.headers.get("cookie")
+  });
 
-      // Check if the hostnames match exactly
-      isExternalReferer = refererUrl.hostname !== currentHostname
+  const hasVisited = hasVisitedCookie === "true" ? true : false;
 
-      console.log(
-        `Referer check: ${refererUrl.hostname} vs ${currentHostname} = ${isExternalReferer ? "external" : "internal"}`,
-      )
-    } catch (error) {
-      // If referer URL is invalid, treat as external
-      console.error("Invalid referer URL:", referer, error);
-      isExternalReferer = true
-    }
-  } else {
-    // No referer means it's likely a direct navigation (typing URL)
-    // You can decide if this should count as "external" based on your needs
-    isExternalReferer = true
-  }
+  // 4) If user is new, send them to /elevator.
+  // REMOVED external referer check for now to simplify testing
+  if (!hasVisited) {
+    const rewriteUrl = request.nextUrl.clone();
+    rewriteUrl.pathname = "/elevator";
+    const response = NextResponse.rewrite(rewriteUrl);
 
-  // 4) Check if user has visited before (i.e. "has-visited" cookie).
-  const hasVisitedCookie = request.cookies.get("has-visited")
-  const hasVisited = Boolean(hasVisitedCookie?.value)
-
-  // 5) If user is new or coming from an external site, send them to /elevator.
-  if (!hasVisited || isExternalReferer) {
-    const rewriteUrl = request.nextUrl.clone()
-    rewriteUrl.pathname = "/elevator"
-    const response = NextResponse.rewrite(rewriteUrl)
-
-    // Only set the POI cookie if it doesn't already exist
-    // This preserves any POI set by the client-side code
-    if (!request.cookies.has("poi")) {
-      response.cookies.set("poi", pathname, {
-        path: "/",
-        httpOnly: false,
-        maxAge: 60 * 60 * 24, // 1 day in seconds
-      })
-      console.log("Middleware setting POI cookie to:", pathname)
-    } else {
-      console.log("Middleware preserving existing POI cookie")
-    }
-
-    // Set the has-visited cookie
-    response.cookies.set("has-visited", "true", {
+    // IMPORTANT: Use consistent cookie parameters
+    const cookieOptions = {
       path: "/",
-      httpOnly: false,
-      maxAge: 60 * 60 * 24, // 1 day
-    })
+      httpOnly: false, // Allow JavaScript access
+      maxAge: 60 * 60 * 24, // 1 day in seconds
+      sameSite: "lax" as const,
+      secure: process.env.NODE_ENV !== "development" // Only use secure in production
+    };
 
-    console.log("Middleware redirecting to elevator")
-    return response
+    // Only set the POI cookie if it doesn't already exist AND it's not a development file
+    if (
+      !request.cookies.has("poi") &&
+      !DEV_INDICATOR_FILES.some(file => pathname.includes(file))
+    ) {
+      // Store the original path the user was trying to access
+      response.cookies.set("poi", pathname, cookieOptions);
+      console.log("[SERVER] Middleware setting POI cookie to:", pathname);
+    } else {
+      console.log("[SERVER] Middleware preserving existing POI cookie");
+    }
+
+    // Set the has-visited cookie with the same consistent options
+    response.cookies.set("has-visited", "true", cookieOptions);
+    console.log("[SERVER] Middleware setting has-visited cookie");
+
+    return response;
   }
 
-  // Otherwise, they've already visited and aren't from an external referrer,
-  // so let them continue on to their requested page.
-  return NextResponse.next()
+  // Otherwise, they've already visited, so let them continue on to their requested page.
+  console.log("[SERVER] User has visited before, continuing to:", pathname);
+  return NextResponse.next();
 }
 
-// 6) Matcher configuration
+// 5) Matcher configuration
 export const config = {
   // This matcher ensures we run middleware on all routes
   // except the explicitly excluded static paths (/_next/static, /_next/image, etc.).
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
-}
-
-
-/**
- *     const host = request.nextUrl.host;
-    const baseUrl =
-      /(?:(localhost:)[0-9]{3,4}$)/g.test(host) === true
-        ? `http://${host}`
-        : `https://${host}`;
-    const response = NextResponse.rewrite(new URL("/elevator", baseUrl));
- */
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"]
+};
