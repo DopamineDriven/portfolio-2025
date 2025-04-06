@@ -386,10 +386,18 @@ export default class Fs {
 
   /* end url */
 
+  public get cjsVal() {
+    return (["application/node", "text/javascript"] as const).reduce(union => union);
+  }
+
   public get gzVal() {
     return (["application/x-gzip", "application/gzip"] as const).reduce(
       union => union
     );
+  }
+
+  public get jsVal(){
+    return (["application/node", "text/javascript"] as const).reduce(union => union);
   }
 
   public get objVal() {
@@ -420,8 +428,10 @@ export default class Fs {
     return {
       aac: "audio/aac",
       abw: "application/x-abiword",
+      aces: "image/aces",
       apng: "image/apng",
       arc: "application/x-freearc",
+      avci: "image/avci",
       avif: "image/avif",
       avi: "video/x-msvideo",
       azw: "application/vnd.amazon.ebook",
@@ -430,26 +440,31 @@ export default class Fs {
       bz: "application/x-bzip",
       bz2: "application/x-bzip2",
       cda: "application/x-cdf",
-      cjs: "application/javascript",
+      cjs: this.cjsVal,
       csh: "application/x-csh",
       css: "text/css",
       csv: "text/csv",
       doc: "application/msword",
       docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      dpx: "image/dpx",
+      emf: "image/emf",
       eot: "application/vnd.ms-fontobject",
       epub: "application/epub+zip",
       gif: "image/gif",
       glb: "model/gltf-binary",
       gltf: "model/gltf+json",
       gz: this.gzVal,
+      hjif: "haptics/hjif",
+      hmpg: "haptics/hmpg",
       htm: "text/html",
       html: "text/html",
       ico: "image/vnd.microsoft.icon",
       ics: "text/calendar",
+      ivs: "haptics/ivs",
       jar: "application/java-archive",
       jpeg: "image/jpeg",
       jpg: "image/jpeg",
-      js: "text/javascript",
+      js: this.jsVal,
       json: "application/json",
       jsonld: "application/ld+json",
       m3u8: "application/vnd.apple.mpegurl",
@@ -486,13 +501,16 @@ export default class Fs {
       rar: "application/vnd.rar",
       rtf: "application/rtf",
       sh: "application/x-sh",
+      sql: "application/sql",
       svg: "image/svg+xml",
       tar: "application/x-tar",
       tif: "image/tiff",
       tiff: "image/tiff",
+      toml: "application/toml",
       ts: this.tsVal,
       ttf: this.ttfVal,
       txt: "text/plain",
+      usdz: "model/vnd.usdz+zip",
       vsd: "application/vnd.visio",
       vtt: "text/vtt",
       wasm: "application/wasm",
@@ -506,6 +524,8 @@ export default class Fs {
       xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       xml: "application/xml",
       xul: "application/vnd.mozilla.xul+xml",
+      yaml: "application/yaml",
+      yml: "application/yaml",
       zip: this.zipVal,
       "3gp": "video/3gpp",
       "3g2": "video/3gpp2",
@@ -683,11 +703,19 @@ export default class Fs {
 
   public cleanDataUrl<const C extends string>(props: C) {
     return props.replace(
-      /^data:(image|application|video|text|font|model|audio)\/[A-Za-z0-9+-.]+;base64,/,
+      /^data:(?:image|application|haptics|video|text|font|model|audio|multipart)\/[A-Za-z0-9+-.]+(?:;[^,]+)*;base64,/i,
       ""
     );
   }
+/**
+ * public cleanDataUrl<const C extends string>(props: C) {
+  return props.replace(
+    /^data:(?:image|application|video|text|font|model|audio|haptics|multipart)\/[A-Za-z0-9+-.]+(?:;[^,]+)*;base64,/i,
+    ""
+  );
+}
 
+ */
   /**
    *
    * @param inputUrl remote url to fetch data from
@@ -712,7 +740,7 @@ export default class Fs {
         : outputPath;
       if (/\./g.test(formattedPath) === false) {
         throw new Error(
-          "either add false as the third argument in `fetchRemoteWriteLocal` (input, output, use-detected-file-extension)"
+          "either add false as the third argument in `fetchRemoteWriteLocal` (input, output, use-detected-file-extension) or provide an output path without a file extension"
         );
       }
       this.withWs(formattedPath, Buffer.from(cleanData, "base64"));

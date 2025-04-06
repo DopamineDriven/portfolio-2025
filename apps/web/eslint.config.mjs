@@ -11,7 +11,10 @@ export default [
     ignores: [".next/**", "!.next/types/**/*"],
     rules: {
       "@typescript-eslint/consistent-type-assertions": "off",
+      "@typescript-eslint/prefer-string-starts-ends-with": "off",
       "@typescript-eslint/require-await": "off",
+      "@typescript-eslint/prefer-regexp-exec": "off",
+      "@typescript-eslint/prefer-find": "off",
       "@typescript-eslint/no-floating-promises": "off",
       "import/consistent-type-specifier-style": "off",
       "@typescript-eslint/prefer-nullish-coalescing": "off",

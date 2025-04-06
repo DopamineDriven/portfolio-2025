@@ -85,10 +85,22 @@ background ~= #020817
   --spacing-9xl: 120rem;
   --spacing-10xl: 173.75rem;
 
+  --perspective-1000: 1000px;
+
   --text-sxs: 0.625rem;
   --text-sxs--line-height: calc(0.875 / 0.625);
   --text-xxs: 0.5rem;
   --text-xxs--line-height: calc(0.75 / 0.5);
+
+  --animate-brushed-metal: brushed-metal-shift 8s linear infinite alternate;
+  @keyframes brushed-metal-shift {
+    0% {
+      background-position: 0% center;
+    }
+    100% {
+      background-position: 100% center;
+    }
+  }
 
   --animate-cursor-blink: cursor-blink 0.7s step-end infinite;
   @keyframes cursor-blink {

@@ -24,10 +24,10 @@ function AnimatedListItem({
     <motion.li
       ref={ref}
       initial={initial}
-      
+
       animate={animate}
       transition={transition}
-      className={cn("mb-4", className)}
+      className={cn("mb-4 scale", className)}
       {...props}>
       {children}
     </motion.li>

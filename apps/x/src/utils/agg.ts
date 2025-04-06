@@ -1,4 +1,4 @@
-import type { TweetV2 } from "twitter-api-v2";
+import type { TweetV2, UserV2 } from "twitter-api-v2";
 import { Fs } from "@d0paminedriven/fs";
 
 type JSONDATA =
@@ -108,9 +108,9 @@ function consolidate(tweetData: TweetV2[][]) {
           username: "Dopamine_Driven",
           description: "JAMstack Development Lead at Takeda | TypeScript is 💙",
           name: "Andrew Ross"
-        },
+        } satisfies UserV2,
         tweets: flatten
-      },
+      } satisfies {profile: UserV2; tweets: TweetV2[]},
       null,
       2
     )

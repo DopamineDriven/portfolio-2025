@@ -14,9 +14,10 @@ import {
   useTransform
 } from "motion/react";
 
-
+// Simple in-memory cache to track visited routes
 const visitedRoutes = new Set<string>();
 
+// Audio URLs
 const elevatorAudio = {
   full: "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/audio/elevator-full.mp3",
   secondLongest:
@@ -24,15 +25,15 @@ const elevatorAudio = {
   secondShortest:
     "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/audio/elevator-second-shortest.mp3",
   shortest:
-    "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/audio/elevator-shortest.mp3",
-  outieToInnieTransition:
-    "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/audio/elevator-outie-to-innie-switch.mp3"
+    "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/audio/elevator-shortest.mp3"
 };
 
 function LoadingAnimation({ children }: { children: React.ReactNode }) {
   const progress = useMockLoading();
   const [isLoaded, setIsLoaded] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const hasPlayedAudio = useRef(false);
+  const [showPlayButton, setShowPlayButton] = useState(false);
 
   const leftEdge = useMotionValue("calc(50% - 2px)");
   const rightEdge = useMotionValue("calc(50% + 2px)");
@@ -50,12 +51,43 @@ function LoadingAnimation({ children }: { children: React.ReactNode }) {
       ${leftEdge} ${topEdge}, ${leftEdge} 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%
     )`;
 
-  useEffect(() => {
-    audioRef.current = new Audio(elevatorAudio.shortest);
-    audioRef.current.volume = 0.5;
-    audioRef.current.preload = "auto";
-    audioRef.current.autoplay = true;
+  // Function to play audio with error handling
+  const playAudio = () => {
+    if (audioRef.current && !hasPlayedAudio.current) {
+      const playPromise = audioRef.current.play();
 
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            hasPlayedAudio.current = true;
+            setShowPlayButton(false);
+          })
+          .catch(error => {
+            console.log("Audio playback was prevented by the browser:", error);
+            // Show play button if autoplay fails
+            setShowPlayButton(true);
+          });
+      }
+    }
+  };
+
+  // Initialize audio on component mount
+  useEffect(() => {
+    // Create audio element
+    audioRef.current = new Audio(elevatorAudio.shortest);
+    audioRef.current.crossOrigin = "anonymous"; // Add this line for CORS support
+    audioRef.current.volume = 0.4; // Set volume to 40% for subtlety
+    audioRef.current.preload = "auto";
+
+    // Set up event handlers for the audio element
+    if (audioRef.current) {
+      audioRef.current.oncanplaythrough = () => {
+        // Audio is ready to play
+        console.log("Audio is ready to play");
+      };
+    }
+
+    // Clean up on unmount
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -64,19 +96,31 @@ function LoadingAnimation({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  useMotionValueEvent(progress, "change", latest => {
-    // When progress reaches 80%, play the elevator sound
-    if (latest >= 0.8 && !isLoaded && audioRef.current) {
-      // Try to play the audio (may be blocked by browser autoplay policy)
-      const playPromise = audioRef.current.play();
+  // Set up user interaction listeners
+  useEffect(() => {
+    // Create a one-time interaction listener
+    const handleInteraction = () => {
+      playAudio();
+    };
 
-      // Handle potential autoplay restrictions
-      if (playPromise !== undefined) {
-        playPromise.catch(error => {
-          console.log("Audio playback was prevented by the browser:", error);
-        });
-      }
+    // Add listeners for common user interactions
+    document.addEventListener("click", handleInteraction, { once: true });
+    document.addEventListener("keydown", handleInteraction, { once: true });
+    document.addEventListener("touchstart", handleInteraction, { once: true });
+
+    return () => {
+      document.removeEventListener("click", handleInteraction);
+      document.removeEventListener("keydown", handleInteraction);
+      document.removeEventListener("touchstart", handleInteraction);
+    };
+  }, []);
+
+  useMotionValueEvent(progress, "change", latest => {
+    // When progress reaches 80%, try to play the elevator sound
+    if (latest >= 0.8 && !isLoaded && !hasPlayedAudio.current) {
+      playAudio();
     }
+
     if (latest >= 1 && !isLoaded) {
       setIsLoaded(true);
     }
@@ -95,17 +139,32 @@ function LoadingAnimation({ children }: { children: React.ReactNode }) {
     animate(rightEdge, "calc(100% + 0px)", transition);
   }, [isLoaded, leftEdge, rightEdge]);
 
+  // Handle manual play button click
+  const handlePlayButtonClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    playAudio();
+  };
+
   return (
     <div className="relative h-full w-full overflow-hidden">
       {children}
       <motion.div
-        className="bg-foreground pointer-events-none fixed inset-0 z-[10000000000]"
+        className="pointer-events-none fixed inset-0 z-[10000000000] bg-[#f8fafc]"
         animate={{ opacity: isLoaded ? 0 : 1 }}
       />
       <motion.div
-        className="bg-background pointer-events-none fixed inset-0 z-[10000000001] will-change-[clip-path]"
+        className="pointer-events-none fixed inset-0 z-[10000000001] bg-[#020817] will-change-[clip-path]"
         style={{ clipPath }}
       />
+
+      {/* Play button that appears if autoplay fails */}
+      {showPlayButton && !isLoaded && (
+        <button
+          onClick={handlePlayButtonClick}
+          className="fixed right-4 bottom-4 z-[10000000002] rounded-md bg-[#f8fafc]/10 px-4 py-2 text-[#f8fafc] transition-colors hover:bg-[#f8fafc]/20">
+          Play Elevator Sound
+        </button>
+      )}
     </div>
   );
 }
@@ -125,12 +184,7 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     visitedRoutes.add(currentUrl);
   }, [currentUrl]);
-  /* <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}>
-          {children}
-        </motion.div> */
+
   // If we shouldn't animate, just return children
   if (!shouldAnimate) {
     return <Suspense>{children}</Suspense>;
@@ -141,9 +195,11 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
     <Suspense
       fallback={
         <div className="mx-auto flex min-h-[100dvh] max-w-[96rem] flex-col overflow-x-hidden! sm:px-6 lg:px-8">
-          <div className="bg-background dark:bg-background h-16 w-full animate-pulse" />
-          <div className="bg-background flex-grow" />
-          <div className="bg-background dark:bg-background h-32 w-full animate-pulse" />
+          <div className="h-16 w-full animate-pulse bg-[#020817] dark:bg-[#020817]" />{" "}
+          {/* Navbar placeholder */}
+          <div className="flex-grow bg-[#020817]" /> {/* Content placeholder */}
+          <div className="h-32 w-full animate-pulse bg-[#020817] dark:bg-[#020817]" />{" "}
+          {/* Footer placeholder */}
         </div>
       }>
       <LoadingAnimation>{children}</LoadingAnimation>

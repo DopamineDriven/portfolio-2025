@@ -46,3 +46,4 @@ stock.md
 
 misc/*
 apps/x/src/utils/__out__
+packages/fs/public/*
