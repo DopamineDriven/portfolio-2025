@@ -5,8 +5,7 @@ import { NextResponse, userAgent } from "next/server";
 const EXCLUDED_PATHS = [
   "/_next",
   "/api",
-  "/favicon.ico",
-  "/elevator" // So you don't rewrite /elevator to itself
+  "/favicon.ico"
 ];
 
 // Development indicator files that should be excluded from POI
@@ -37,6 +36,10 @@ export function middleware(request: NextRequest) {
   ) {
     return NextResponse.next();
   }
+  // if (request.cookies.has("has-visited") === false) {
+  //     request.nextUrl.pathname  = "/elevator"
+  //   return NextResponse.rewrite(request.nextUrl);
+  // }
 
   // 3) Check if user has visited before (i.e. "has-visited" cookie).
   const hasVisitedCookie = (request.cookies.get("has-visited")?.value ?? "false") as "true" | "false";
@@ -56,7 +59,6 @@ export function middleware(request: NextRequest) {
     const rewriteUrl = request.nextUrl.clone();
     rewriteUrl.pathname = "/elevator";
     const response = NextResponse.rewrite(rewriteUrl);
-
     // IMPORTANT: Use consistent cookie parameters
     const cookieOptions = {
       path: "/",
