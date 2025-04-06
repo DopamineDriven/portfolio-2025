@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import React from "react";
 import { Poppins as _Poppins, Inter } from "next/font/google";
 import { ThemeProvider } from "@/ui/providers/theme-provider";
-import "../global.css";
+import "./global.css";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -134,7 +134,9 @@ export default function RootLayout({
       <body className="font-basis-grotesque-pro-regular overflow-x-hidden!">
         <AnimationContextProvider>
           <ThemeProvider>
-            <CookieProvider>{children}</CookieProvider>
+            <CookieProvider>
+                {children}
+            </CookieProvider>
           </ThemeProvider>
         </AnimationContextProvider>
         <SpeedInsights />

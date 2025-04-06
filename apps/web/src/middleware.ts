@@ -12,6 +12,7 @@ const EXCLUDED_PATHS = [
 const DEV_INDICATOR_FILES = [
   "/injection-tss-mv3.js",
   "/injection-tss-mv3.js.map",
+  "/installHook.js.map",
   "/_vercel/insights",
   "/_vercel/speed-insights"
 ];
@@ -42,7 +43,7 @@ export function middleware(request: NextRequest) {
   // }
 
   // 3) Check if user has visited before (i.e. "has-visited" cookie).
-  const hasVisitedCookie = (request.cookies.get("has-visited")?.value ?? "false") as "true" | "false";
+  const hasVisitedCookie = JSON.parse(request.cookies.get("has-visited")?.value ?? "false") as boolean;
 
   // Log the cookie state and headers for debugging
   console.log("[SERVER] Cookie check:", {
@@ -51,7 +52,7 @@ export function middleware(request: NextRequest) {
     cookieHeader: request.headers.get("cookie")
   });
 
-  const hasVisited = hasVisitedCookie === "true" ? true : false;
+  const hasVisited = hasVisitedCookie
 
   // 4) If user is new, send them to /elevator.
   // REMOVED external referer check for now to simplify testing
