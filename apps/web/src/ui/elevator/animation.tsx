@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import Cookies from "js-cookie";
 import { ElevatorExperienceWorkup } from "@/ui/elevator/workup";
+import { getCookieDomain } from "@/lib/site-domain";
 
 export default function ElevatorExperience() {
+  const memoizedCookieDomain = useMemo(() => getCookieDomain(), [])
   useEffect(() => {
     // Security script handling
     window.postMessage({ type: "exclude", nonce: "nonce" }, "*");
@@ -20,13 +22,12 @@ export default function ElevatorExperience() {
         path: "/",
         expires: 1, // 1 day
         sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
-        domain:
-          window.location.hostname === "localhost" ? "localhost" : undefined
+        secure: process.env.NODE_ENV !== "development",
+        domain: memoizedCookieDomain
       });
       console.log("[CLIENT] Initialized pending has-visited cookie");
     }
-  }, []);
+  }, [memoizedCookieDomain]);
 
   return <ElevatorExperienceWorkup />;
 }

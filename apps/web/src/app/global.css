@@ -92,6 +92,19 @@ background ~= #020817
   --text-xxs: 0.5rem;
   --text-xxs--line-height: calc(0.75 / 0.5);
 
+  --animate-shimmer: shimmer 3s cubic-bezier(0.4, 0.7, 0.6, 1) infinite;
+  @keyframes shimmer {
+    0% {
+      opacity: 0.5;
+    } /* Start with a semi-transparent state */
+    50% {
+      opacity: 1;
+    } /* Become fully visible */
+    100% {
+      opacity: 0.5;
+    } /* Return to semi-transparent */
+  }
+
   --animate-brushed-metal: brushed-metal-shift 8s linear infinite alternate;
   @keyframes brushed-metal-shift {
     0% {
