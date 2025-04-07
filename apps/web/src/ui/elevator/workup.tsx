@@ -19,10 +19,14 @@ import { cn } from "@/lib/utils";
 
 // Audio URLs
 const elevatorAudio = {
-  shortest: "/audio/elevator-shortest.mp3",
-  elevatorDoorOpen: "/audio/elevator-door-open.mp3",
-  elevatorButtonSound: "/audio/elevator-button-sound.mp3",
-  outieToInnieTransition: "/audio/elevator-outie-to-innie-switch.mp3"
+  shortest:
+    "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/audio/elevator-shortest.mp3",
+  elevatorDoorOpen:
+    "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/audio/elevator-door-open.mp3",
+  elevatorButtonSound:
+    "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/audio/elevator-button-sound.mp3",
+  outieToInnieTransition:
+    "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/audio/elevator-outie-to-innie-switch.mp3"
 };
 
 export function ElevatorExperienceWorkup() {
@@ -42,7 +46,7 @@ export function ElevatorExperienceWorkup() {
   const doorAudioRef = useRef<HTMLAudioElement | null>(null);
   const buttonAudioRef = useRef<HTMLAudioElement | null>(null);
   const transitionAudioRef = useRef<HTMLAudioElement | null>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   // Refs for measuring elements
   const elevatorRef = useRef<HTMLDivElement>(null);
   const hallwayRef = useRef<HTMLDivElement>(null);
@@ -103,12 +107,9 @@ export function ElevatorExperienceWorkup() {
 
     // Add event listener for window resize
     window.addEventListener("resize", checkMobile);
-    window.addEventListener("orientationchange", checkMobile);
+
     // Cleanup
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-      window.addEventListener("orientationchange", checkMobile);
-    };
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   // Update floor height when elevator dimensions change
@@ -144,18 +145,15 @@ export function ElevatorExperienceWorkup() {
     transitionAudioRef.current = new Audio(
       elevatorAudio.outieToInnieTransition
     );
-    transitionAudioRef.current.volume = 0.5;
+    transitionAudioRef.current.volume = 0.6;
     transitionAudioRef.current.preload = "auto";
     transitionAudioRef.current.crossOrigin = "anonymous";
-    const timeRef = timeoutRef.current;
+
     return () => {
       if (audioRef.current) audioRef.current.pause();
       if (doorAudioRef.current) doorAudioRef.current.pause();
       if (buttonAudioRef.current) buttonAudioRef.current.pause();
       if (transitionAudioRef.current) transitionAudioRef.current.pause();
-      if (timeRef) {
-        clearTimeout(timeRef);
-      }
     };
   }, []);
 
@@ -243,11 +241,11 @@ export function ElevatorExperienceWorkup() {
           }
 
           // Redirect to the original destination after animation
-          timeoutRef.current = setTimeout(() => {
+          setTimeout(() => {
             const destination = pathOfIntentRef.current ?? "/";
             console.log("[CLIENT] Navigating to:", destination);
             router.push(decodeURIComponent(destination));
-            // router.refresh();
+            router.refresh();
           }, 2000); // Extended slightly to allow transition sound to play
         }, 3000);
       }, 1500);
@@ -413,8 +411,7 @@ export function ElevatorExperienceWorkup() {
                   disabled={stage !== "initial"}
                   className={cn(
                     `relative flex items-center justify-center overflow-hidden rounded-sm bg-[#222] focus:outline-none`,
-                    isMobile ? "size-[3.9dvw]" : "size-[2.6dvw]",
-                    stage === "initial" ? "animate-pulse" : ""
+                    isMobile ? "size-[3.9dvw]" : "size-[2.6dvw]", stage ==="initial" ? "animate-pulse" : ""
                   )}
                   aria-label="Call elevator">
                   <motion.div
