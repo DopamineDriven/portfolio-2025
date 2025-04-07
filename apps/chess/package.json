@@ -28,7 +28,7 @@
     "react-dom": "^19.1.0",
     "stockfish": "^16.0.0",
     "suspend-react": "^0.1.3",
-    "tailwind-merge": "^3.1.0"
+    "tailwind-merge": "^3.2.0"
   },
   "devDependencies": {
     "@edge-runtime/cookies": "^6.0.0",
@@ -36,7 +36,7 @@
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
     "@portfolio/tsconfig": "workspace:*",
-    "@tailwindcss/postcss": "^4.1.1",
+    "@tailwindcss/postcss": "^4.1.3",
     "@types/gtag.js": "^0.0.20",
     "@types/lodash": "^4.17.16",
     "@types/node": "^22.14.0",
@@ -51,8 +51,8 @@
     "eslint": "latest",
     "postcss": "^8.5.3",
     "prettier": "latest",
-    "sharp": "^0.33.5",
-    "tailwindcss": "^4.1.1",
+    "sharp": "^0.34.0",
+    "tailwindcss": "^4.1.3",
     "tailwindcss-motion": "^1.1.0",
     "tslib": "latest",
     "tsx": "latest",

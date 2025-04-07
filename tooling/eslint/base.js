@@ -13,41 +13,15 @@ export default tseslint.config(
   includeIgnoreFile(join(import.meta.dirname, "../../.gitignore")),
   {
     // Globally ignored files
-    ignores: [
-      "**/*.config.js",
-      "**/*.config.mjs",
-      "**/*.config.cjs",
-      "tailwind.config.ts",
-      "tsup.config.ts",
-      "public/**/*.js",
-      "**/*.presets.cjs"
-    ]
+    ignores: ["**/*.config.*", "public/**/*.js"]
   },
   {
-    files: [
-      "**/*.js",
-      "**/*.mjs",
-      "**/*.cjs",
-      "**/*.ts",
-      "**/*.tsx",
-      "**/*.jsx",
-      "**/*.mts",
-      "**/*.cts"
-    ],
+    files: ["**/*.js", "**/*.ts", "**/*.tsx"],
     plugins: {
       import: importPlugin,
       turbo: turboPlugin
     },
-    ignores: [
-      "tailwind.config.ts",
-      "tsup.config.ts",
-      "stockfish.js",
-      "**/*.config.mjs",
-      "**/*.config.js",
-      "public/**/*.js",
-      "**/*.config.cjs",
-      "**/*.presets.cjs"
-    ],
+    ignores: ["stockfish.js", "**/*.config.*", "public/**/*.js"],
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommended,
