@@ -1,6 +1,5 @@
 import { Fs } from "@d0paminedriven/fs";
 
-const fs = new Fs(process.cwd());
 const helper = (file: string) => {
   const splitDashes = file?.split(/\./g)?.[0]?.split(/(-|_)/g) ?? [""];
   if (splitDashes.length > 1) {
@@ -15,16 +14,28 @@ const helper = (file: string) => {
   } else return file;
 };
 
-const files = Object.fromEntries(fs.readDir("public/textures/brushed-metal").map(file => {
+const files = (target: string) =>{
+  const fs = new Fs(process.cwd());
+  return Object.fromEntries(fs.readDir(`public/textures/${target}`).map(file => {
   return [
     helper(file),
-    `https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/smooth-stucco/${file}`
+    `https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/${target}/${file}`
   ] as const;
-}));
+}));}
 
-console.log(files);
+console.log(files(process.argv[3] ??""));
 
+const whiteMarble = {
+  whiteMarbleAlbedo: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/white-marble/white-marble-albedo.png',
+  whiteMarbleAo: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/white-marble/white-marble-ao.png',
+  whiteMarbleHeight: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/white-marble/white-marble-height.png',
+  whiteMarbleMetallic: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/white-marble/white-marble-metallic.png',
+  whiteMarbleNormalOgl: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/white-marble/white-marble-normal-ogl.png',
+  whiteMarblePreview: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/white-marble/white-marble-preview.jpg',
+  whiteMarbleRoughness: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/white-marble/white-marble-roughness.png'
+} as const;
 
+const _getWhiteMarble= <const T extends keyof typeof whiteMarble>(target: T) => whiteMarble[target];
 
 const brushedMetal = {
   brushedMetalAlbedo: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/brushed-metal/brushed-metal-albedo.png',
