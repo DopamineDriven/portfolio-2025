@@ -39,10 +39,24 @@ export const AnimationContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const animationState = useAnimationState();
-
+  const {
+    animationRefs,
+    animationStates,
+    resetAnimations,
+    resetLoadingAnimation,
+    resetTypewriterAnimation,
+    setAnimationComplete
+  } = useAnimationState();
   return (
-    <AnimationContext.Provider value={animationState}>
+    <AnimationContext.Provider
+      value={{
+        animationRefs: animationRefs.current,
+        animationStates,
+        resetAnimations,
+        resetLoadingAnimation,
+        resetTypewriterAnimation,
+        setAnimationComplete
+      }}>
       {children}
     </AnimationContext.Provider>
   );

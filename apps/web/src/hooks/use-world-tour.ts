@@ -69,8 +69,12 @@ export function useWorldTour({
   const [height, setHeight] = useState(337.5);
 
   const [currentVisitors, setCurrentVisitors] = useState<number>(
-    dataRef.current.reduce((sum, [, count]) => sum + count, 0)
+    visitorData.reduce((sum, [, count]) => sum + count, 0)
   );
+
+  useEffect(() => {
+    setCurrentVisitors(visitorData.reduce((sum, [, count]) => sum + count, 0));
+  }, [visitorData]);
   const isInView = useInView(containerRef, { once: false, amount: "some" });
   // Keep dataRef updated but don't trigger big animations on every minor change
 
@@ -361,7 +365,7 @@ export function useWorldTour({
 
                   // Update terminator with current time
                   const newTerminatorFeature = buildTerminatorGeoJSON(
-                    new Date()
+                    new Date(Date.now())
                   );
                   gRef.current
                     .selectAll("path.terminator")

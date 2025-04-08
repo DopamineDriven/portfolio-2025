@@ -87,6 +87,6 @@ export const useAnimationState = () => {
     resetAnimations,
     resetTypewriterAnimation,
     resetLoadingAnimation,
-    animationRefs: animationRefs.current
+    animationRefs: animationRefs
   };
 };

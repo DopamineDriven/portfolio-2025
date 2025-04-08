@@ -146,7 +146,6 @@ export type ToCamelCase<S extends string> = string extends S
 
 /* Case helper types END  */
 
-
 /* Helper functions BEGIN */
 
 export function whAdjust<O extends string, T extends number>(
@@ -210,4 +209,3 @@ export type ComputeRange<
 export type Computed<T extends readonly unknown[] | unknown[]> = [
   ...ComputeRange<T["length"]>
 ]["length"];
-

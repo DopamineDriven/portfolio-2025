@@ -14,8 +14,7 @@
     "**/*.preset.ts",
     "postcss.config.mjs",
     "index.d.ts",
-    "tsup.config.ts",
-    "../../reset.d.ts"
+    "tsup.config.ts"
   ],
   "exclude": ["dist"]
 }

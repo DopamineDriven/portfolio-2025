@@ -23,8 +23,7 @@
     "**/*.tsx",
     "**/*.ts",
     "**/*.mdx",
-    ".next/types/**/*.ts",
-    "../../reset.d.ts"
+    ".next/types/**/*.ts"
   ],
   "exclude": ["public/**/*.js"]
 }

@@ -57,15 +57,15 @@
   },
   "dependencies": {
     "dotenv": "^16.4.7",
-    "sharp": "^0.33.5"
+    "sharp": "^0.34.0"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "^7.52.2",
+    "@microsoft/api-extractor": "^7.52.3",
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
     "@portfolio/tsconfig": "workspace:*",
-    "@swc/core": "^1.11.16",
-    "@swc/wasm": "^1.11.16",
+    "@swc/core": "^1.11.18",
+    "@swc/wasm": "^1.11.18",
     "@types/node": "^22.14.0",
     "chokidar": "^4.0.3",
     "dotenv": "^16.4.7",

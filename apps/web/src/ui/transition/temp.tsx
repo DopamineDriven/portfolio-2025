@@ -172,13 +172,11 @@ function LoadingAnimation({ children }: { children: React.ReactNode }) {
 export function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const currentUrl = pathname + searchParams.toString();
-
-  // Check if this route has been visited before
-  const isRouteVisited = useRef(visitedRoutes.has(currentUrl));
+  const queryStr = searchParams.toString();
+  const currentUrl = queryStr ? `${pathname}?${queryStr}` : pathname;
 
   // Skip animation if route is already visited
-  const shouldAnimate = !isRouteVisited.current;
+  const shouldAnimate = !visitedRoutes.has(currentUrl);
 
   // Add current route to visited routes
   useEffect(() => {
@@ -187,7 +185,16 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
 
   // If we shouldn't animate, just return children
   if (!shouldAnimate) {
-    return <Suspense>{children}</Suspense>;
+    return (
+      <Suspense fallback={<></>}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}>
+          {children}
+        </motion.div>
+      </Suspense>
+    );
   }
 
   // Otherwise, show the loading animation

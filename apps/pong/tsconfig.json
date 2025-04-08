@@ -22,8 +22,7 @@
     "tailwind.config.ts",
     "**/*.tsx",
     "**/*.ts",
-    ".next/types/**/*.ts",
-    "../../reset.d.ts"
+    ".next/types/**/*.ts"
   ],
   "exclude": ["public/**/*.js"]
 }
