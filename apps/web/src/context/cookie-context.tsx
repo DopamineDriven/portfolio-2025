@@ -52,7 +52,7 @@ export function CookieProvider({ children }: { children: ReactNode }) {
         });
 
         setHasVisited(!!hasVisitedValue || !!jsHasVisited);
-        setPathOfIntent(poiValue || jsPoi || null);
+        setPathOfIntent(poiValue ?? jsPoi ?? null);
       } catch (error) {
         console.error("[CLIENT] Error reading cookies:", error);
       }

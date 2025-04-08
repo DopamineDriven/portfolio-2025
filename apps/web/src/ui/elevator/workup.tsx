@@ -17,16 +17,19 @@ import { useWindowSize } from "@/hooks/use-window-size";
 import { getCookieDomain } from "@/lib/site-domain";
 import { cn } from "@/lib/utils";
 
+// how to get the audio file duration in seconds using ffprobe
+// ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 public/audio/elevator-door-open.mp3
+
 // Audio URLs
 const elevatorAudio = {
   shortest:
     "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/audio/elevator-shortest.mp3",
   elevatorDoorOpen:
-    "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/audio/elevator-door-open.mp3",
+    "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/audio/elevator-door-open.mp3",
   elevatorButtonSound:
-    "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/audio/elevator-button-sound.mp3",
+    "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/audio/elevator-button-sound.mp3",
   outieToInnieTransition:
-    "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/audio/elevator-outie-to-innie-switch.mp3"
+    "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/audio/elevator-outie-to-innie-switch.mp3"
 };
 
 export function ElevatorExperienceWorkup() {
@@ -126,26 +129,29 @@ export function ElevatorExperienceWorkup() {
 
   // Initialize audio - using the approach from your working version
   useEffect(() => {
+    // 1.619592
     audioRef.current = new Audio(elevatorAudio.shortest);
     audioRef.current.volume = 0.5;
     audioRef.current.preload = "auto";
     audioRef.current.crossOrigin = "anonymous";
 
+    // 1.848000
     doorAudioRef.current = new Audio(elevatorAudio.elevatorDoorOpen);
     doorAudioRef.current.volume = 0.5;
     doorAudioRef.current.preload = "auto";
     doorAudioRef.current.crossOrigin = "anonymous";
 
+    // 0.391813
     buttonAudioRef.current = new Audio(elevatorAudio.elevatorButtonSound);
     buttonAudioRef.current.volume = 0.5;
     buttonAudioRef.current.preload = "auto";
     buttonAudioRef.current.crossOrigin = "anonymous";
 
-    // Initialize the transition sound effect
+    // 2.768980
     transitionAudioRef.current = new Audio(
       elevatorAudio.outieToInnieTransition
     );
-    transitionAudioRef.current.volume = 0.6;
+    transitionAudioRef.current.volume = 0.5;
     transitionAudioRef.current.preload = "auto";
     transitionAudioRef.current.crossOrigin = "anonymous";
 
@@ -239,14 +245,19 @@ export function ElevatorExperienceWorkup() {
               console.log("Transition audio playback failed:", err);
             });
           }
+          // transitionAudioRef.current?.onended = () => {
+          //   const destination = pathOfIntentRef.current ?? "/";
+          //   console.log("[CLIENT] Navigating to:", destination);
+          //   router.push(decodeURIComponent(destination));
+          //   router.refresh();
+          // };
 
-          // Redirect to the original destination after animation
           setTimeout(() => {
             const destination = pathOfIntentRef.current ?? "/";
             console.log("[CLIENT] Navigating to:", destination);
             router.push(decodeURIComponent(destination));
             router.refresh();
-          }, 2000); // Extended slightly to allow transition sound to play
+          }, 3268.980); // Extended slightly to allow transition sound to play
         }, 3000);
       }, 1500);
     }, 800);
@@ -411,7 +422,8 @@ export function ElevatorExperienceWorkup() {
                   disabled={stage !== "initial"}
                   className={cn(
                     `relative flex items-center justify-center overflow-hidden rounded-sm bg-[#222] focus:outline-none`,
-                    isMobile ? "size-[3.9dvw]" : "size-[2.6dvw]", stage ==="initial" ? "animate-pulse" : ""
+                    isMobile ? "size-[3.9dvw]" : "size-[2.6dvw]",
+                    stage === "initial" ? "animate-pulse" : ""
                   )}
                   aria-label="Call elevator">
                   <motion.div
