@@ -185,7 +185,16 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
 
   // If we shouldn't animate, just return children
   if (!shouldAnimate) {
-    return <Suspense>{children}</Suspense>;
+    return (
+      <Suspense fallback={<></>}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}>
+          {children}
+        </motion.div>
+      </Suspense>
+    );
   }
 
   // Otherwise, show the loading animation
