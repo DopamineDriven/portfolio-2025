@@ -1,12 +1,37 @@
 import type { NextRequest } from "next/server";
 import { NextResponse, userAgent } from "next/server";
 
+function detectDeviceAndSetCookies(
+  request: NextRequest,
+  response: NextResponse
+) {
+  const { device, ua } = userAgent(request);
+
+  // Clean up existing cookies
+  if (request.cookies.has("viewport")) {
+    response.cookies.delete("viewport");
+  }
+
+  if (request.cookies.has("ios")) {
+    response.cookies.delete("ios");
+  }
+
+  const isIOS = /(ios|iphone|ipad|iwatch)/i.test(ua);
+
+  const ios = `${isIOS}` as const;
+
+  // Set viewport type
+  const viewport = device?.type === "mobile" ? "mobile" : "desktop";
+
+  // Set cookies
+  response.cookies.set("viewport", viewport);
+  response.cookies.set("ios", ios);
+
+  return response;
+}
+
 // You can adjust these for your needs:
-const EXCLUDED_PATHS = [
-  "/_next",
-  "/api",
-  "/favicon.ico"
-];
+const EXCLUDED_PATHS = ["/_next", "/api", "/favicon.ico"];
 
 // Development indicator files that should be excluded from POI
 const DEV_INDICATOR_FILES = [
@@ -35,7 +60,8 @@ export function middleware(request: NextRequest) {
     // Skip Vercel development indicator files
     DEV_INDICATOR_FILES.some(file => pathname.includes(file))
   ) {
-    return NextResponse.next();
+    const res = NextResponse.next();
+    return detectDeviceAndSetCookies(request, res);
   }
   // if (request.cookies.has("has-visited") === false) {
   //     request.nextUrl.pathname  = "/elevator"
@@ -43,7 +69,9 @@ export function middleware(request: NextRequest) {
   // }
 
   // 3) Check if user has visited before (i.e. "has-visited" cookie).
-  const hasVisitedCookie = JSON.parse(request.cookies.get("has-visited")?.value ?? "false") as boolean;
+  const hasVisitedCookie = JSON.parse(
+    request.cookies.get("has-visited")?.value ?? "false"
+  ) as boolean;
 
   // Log the cookie state and headers for debugging
   console.log("[SERVER] Cookie check:", {
@@ -52,7 +80,7 @@ export function middleware(request: NextRequest) {
     cookieHeader: request.headers.get("cookie")
   });
 
-  const hasVisited = hasVisitedCookie
+  const hasVisited = hasVisitedCookie;
 
   // 4) If user is new, send them to /elevator.
   // REMOVED external referer check for now to simplify testing
@@ -85,17 +113,25 @@ export function middleware(request: NextRequest) {
     response.cookies.set("has-visited", "true");
     console.log("[SERVER] Middleware setting has-visited cookie");
 
-    return response;
+    return detectDeviceAndSetCookies(request, response);
   }
 
   // Otherwise, they've already visited, so let them continue on to their requested page.
   console.log("[SERVER] User has visited before, continuing to:", pathname);
-  return NextResponse.next();
+  const res = NextResponse.next();
+  return detectDeviceAndSetCookies(request, res);
 }
 
 // 5) Matcher configuration
 export const config = {
   // This matcher ensures we run middleware on all routes
   // except the explicitly excluded static paths (/_next/static, /_next/image, etc.).
-  matcher: ["/", "/elevator", "/posts/:path", "/projects/:path", "/resume", "/elevator"]
+  matcher: [
+    "/",
+    "/elevator",
+    "/posts/:path",
+    "/projects/:path",
+    "/resume",
+    "/elevator"
+  ]
 };
