@@ -15,8 +15,8 @@
     "watch": "node public/scripts/stockfish-16.1.cjs -s ASSERTIONS=1 --watch"
   },
   "dependencies": {
-    "@radix-ui/react-slot": "^1.1.2",
-    "@radix-ui/react-toast": "^1.2.6",
+    "@radix-ui/react-slot": "^1.2.0",
+    "@radix-ui/react-toast": "^1.2.7",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "focus-visible": "^5.2.1",
@@ -51,7 +51,7 @@
     "eslint": "latest",
     "postcss": "^8.5.3",
     "prettier": "latest",
-    "sharp": "^0.34.0",
+    "sharp": "^0.34.1",
     "tailwindcss": "^4.1.3",
     "tailwindcss-motion": "^1.1.0",
     "tslib": "latest",
