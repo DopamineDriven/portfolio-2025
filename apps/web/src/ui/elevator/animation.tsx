@@ -23,7 +23,6 @@ export default function ElevatorExperience() {
     if (!hasVisitedCookie) {
       Cookies.set("has-visited", "true", {
         path: "/",
-        expires: 1, // 1 day
         sameSite: "lax",
         secure: isSecure,
         domain: memoizedCookieDomain

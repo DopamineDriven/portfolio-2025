@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import {
@@ -14,6 +14,7 @@ import {
 import { useCookies } from "@/context/cookie-context";
 import { useResizeObs as useResizeObserver } from "@/hooks/use-resize-obs";
 import { useWindowSize } from "@/hooks/use-window-size";
+import { getCookieDomain } from "@/lib/site-domain";
 import { cn } from "@/lib/utils";
 
 // how to get the audio file duration in seconds using ffprobe
@@ -40,7 +41,8 @@ export function ElevatorExperienceWorkup() {
   const [isPulsing, setIsPulsing] = useState(true);
   const pathOfIntentRef = useRef<string>("/"); // Default to home page
   const [isMobile, setIsMobile] = useState(false);
-
+  const memoizedCookieDomain = useMemo(() => getCookieDomain(), []);
+  const isSecure = useMemo(() => process.env.NODE_ENV !== "development", []);
   // Audio refs - using direct refs like in your working version
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const doorAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -210,14 +212,16 @@ export function ElevatorExperienceWorkup() {
 
         // IMPORTANT: Make sure we have the has-visited cookie set
         // This ensures we don't get redirected back to elevator after navigation
-        const hasVisited = Cookies.get("has-visited");
-        if (!hasVisited) {
-          Cookies.set("has-visited", "true");
-          console.log(
-            "[CLIENT] Ensuring has-visited cookie is set with domain:",
-            window.location.hostname === "localhost" ? "localhost" : undefined
-          );
-        }
+        Cookies.set("has-visited", "true", {
+          path: "/",
+          sameSite: "lax",
+          secure: isSecure,
+          domain: memoizedCookieDomain
+        });
+        console.log(
+          "[CLIENT] Ensuring has-visited cookie is set with domain:",
+          window.location.hostname === "localhost" ? "localhost" : undefined
+        );
 
         // Clear the path of intent cookie as it's no longer needed
         // But we've already stored it in our ref
@@ -239,21 +243,20 @@ export function ElevatorExperienceWorkup() {
               console.log("Transition audio playback failed:", err);
             });
 
-            transitionAudioRef.current.onended = () => {
-              const destination = pathOfIntentRef.current ?? "/";
-              console.log("[CLIENT] Navigating to:", destination);
-              router.push(decodeURIComponent(destination));
-              router.refresh();
-            };
+            // transitionAudioRef.current.onended = () => {
+            //   const destination = pathOfIntentRef.current ?? "/";
+            //   console.log("[CLIENT] Navigating to:", destination);
+            //   router.push(decodeURIComponent(destination));
+            //   router.refresh();
+            // };
           }
 
-
-          // setTimeout(() => {
-          //   const destination = pathOfIntentRef.current ?? "/";
-          //   console.log("[CLIENT] Navigating to:", destination);
-          //   router.push(decodeURIComponent(destination));
-          //   router.refresh();
-          // }, 3268.98); // Extended slightly to allow transition sound to play
+         setTimeout(() => {
+            const destination = pathOfIntentRef.current ?? "/";
+            console.log("[CLIENT] Navigating to:", destination);
+            router.push(decodeURIComponent(destination));
+            router.refresh();
+          }, 3269); // Extended slightly to allow transition sound to play
         }, 3000);
       }, 1500);
     }, 800);
