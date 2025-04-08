@@ -7,13 +7,9 @@
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
     "baseUrl": "./",
     "rootDir": "./src",
-"outDir": "dist"
+    "outDir": "dist"
   },
 
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "../../reset.d.ts"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["dist"]
 }

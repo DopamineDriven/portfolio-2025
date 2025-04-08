@@ -27,12 +27,12 @@ console.log(files);
 
 
 const brushedMetal = {
-  brushedMetalAlbedo: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/smooth-stucco/brushed-metal-albedo.png',
-  brushedMetalAo: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/smooth-stucco/brushed-metal-ao.png',
-  brushedMetalMetallic: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/smooth-stucco/brushed-metal-metallic.png',
-  brushedMetalNormalOgl: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/smooth-stucco/brushed-metal-normal-ogl.png',
-  brushedMetalPreview: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/smooth-stucco/brushed-metal-preview.jpg',
-  brushedMetalRoughness: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/smooth-stucco/brushed-metal-roughness.png'
+  brushedMetalAlbedo: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/brushed-metal/brushed-metal-albedo.png',
+  brushedMetalAo: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/brushed-metal/brushed-metal-ao.png',
+  brushedMetalMetallic: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/brushed-metal/brushed-metal-metallic.png',
+  brushedMetalNormalOgl: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/brushed-metal/brushed-metal-normal-ogl.png',
+  brushedMetalPreview: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/brushed-metal/brushed-metal-preview.jpg',
+  brushedMetalRoughness: 'https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/development/apps/web/public/textures/brushed-metal/brushed-metal-roughness.png'
 } as const;
 
 const _getBrushedMetal = <const T extends keyof typeof brushedMetal>(target: T) => brushedMetal[target];
