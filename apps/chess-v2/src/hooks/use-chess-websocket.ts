@@ -10,12 +10,9 @@ export function useChessWebSocket() {
   const [isConnected, setIsConnected] = useState(false);
 
   // Memoize a single instance of the WebSocket client
-  const chessClientRef = useRef<ChessWebSocketClient | null>(null);
-
-  // Initialize once
-  if (!chessClientRef.current) {
-    chessClientRef.current = new ChessWebSocketClient("wss://chess-api.com/v1");
-  }
+  const chessClientRef = useRef<ChessWebSocketClient | null>(
+    new ChessWebSocketClient("wss://chess-api.com/v1")
+  );
 
   const [chessApiEvaluation, setChessApiEvaluation] =
     useState<ChessApiMessage | null>(null);

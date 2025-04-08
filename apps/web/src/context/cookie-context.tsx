@@ -73,20 +73,23 @@ export function CookieProvider({ children }: { children: ReactNode }) {
     return () => clearInterval(intervalId);
   }, []);
 
+  useEffect(() => {
+    if (pathOfIntent === null) {
+      try {
+        Cookies.remove("poi", { path: "/" });
+        document.cookie =
+          "poi=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        console.log("[CLIENT] POI cookie cleared via effect");
+      } catch (error) {
+        console.error("[CLIENT] Error clearing POI cookie:", error);
+      }
+    }
+  }, [pathOfIntent]);
+
   // Clear path of intent cookie
   const clearPathOfIntent = () => {
-    console.log("[CLIENT] Clearing POI cookie");
-    try {
-      // Try multiple approaches to ensure the cookie is cleared
-      Cookies.remove("poi", { path: "/" });
-
-      // Also try setting an expired cookie as a fallback
-      document.cookie = "poi=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-      setPathOfIntent(null);
-    } catch (error) {
-      console.error("[CLIENT] Error clearing POI cookie:", error);
-    }
+    console.log("[CLIENT] Clearing POI cookie state");
+    setPathOfIntent(null);
   };
 
   const value = {

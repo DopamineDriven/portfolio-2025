@@ -4,12 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
-/**
- * This example shows how to use the `motion.dialog`
- * component.
- */
-
-export default function Modal({text}: {text: string;}) {
+export default function Modal({ text }: { text: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -39,10 +34,11 @@ function Dialog({ close }: { close: () => void }) {
    * and maintains the dialog's natural accessibility behaviour.
    */
   useEffect(() => {
-    if (!ref.current) return;
-    ref.current.showModal();
-// eslint-disable-next-line react-hooks/exhaustive-deps
-    return () => ref.current?.close();
+    const dialogRef = ref.current;
+    if (!dialogRef) return;
+    dialogRef.showModal();
+
+    return () => dialogRef.close();
   }, [ref]);
 
   useClickOutside(ref, close);
@@ -157,8 +153,7 @@ function useClickOutside(
         handleClickOutside as unknown as (this: Document, ev: MouseEvent) => any
       );
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ref]);
+  }, [ref, close]);
 }
 
 function checkClickOutside(

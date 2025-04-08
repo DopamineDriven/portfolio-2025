@@ -172,13 +172,11 @@ function LoadingAnimation({ children }: { children: React.ReactNode }) {
 export function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const currentUrl = pathname + searchParams.toString();
-
-  // Check if this route has been visited before
-  const isRouteVisited = useRef(visitedRoutes.has(currentUrl));
+  const queryStr = searchParams.toString();
+  const currentUrl = queryStr ? `${pathname}?${queryStr}` : pathname;
 
   // Skip animation if route is already visited
-  const shouldAnimate = !isRouteVisited.current;
+  const shouldAnimate = !visitedRoutes.has(currentUrl);
 
   // Add current route to visited routes
   useEffect(() => {
