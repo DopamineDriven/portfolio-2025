@@ -13,7 +13,14 @@ export default tseslint.config(
   includeIgnoreFile(join(import.meta.dirname, "../../.gitignore")),
   {
     // Globally ignored files
-    ignores: ["**/*.config.*", "public/**/*.js"]
+    ignores: [
+      "**/*.config.*",
+      "public/**/*.js",
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/build/**",
+      "**/.next/cache/**"
+    ]
   },
   {
     files: ["**/*.js", "**/*.ts", "**/*.tsx"],
