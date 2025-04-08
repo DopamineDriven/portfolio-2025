@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import {
@@ -14,7 +14,6 @@ import {
 import { useCookies } from "@/context/cookie-context";
 import { useResizeObs as useResizeObserver } from "@/hooks/use-resize-obs";
 import { useWindowSize } from "@/hooks/use-window-size";
-import { getCookieDomain } from "@/lib/site-domain";
 import { cn } from "@/lib/utils";
 
 // how to get the audio file duration in seconds using ffprobe
@@ -33,8 +32,6 @@ const elevatorAudio = {
 };
 
 export function ElevatorExperienceWorkup() {
-  const memoizedCookieDomain = useMemo(() => getCookieDomain(), []);
-  const isSecure = useMemo(() => process.env.NODE_ENV !== "development", []);
   const router = useRouter();
   const { pathOfIntent, clearPathOfIntent } = useCookies();
   const [stage, setStage] = useState<
@@ -213,17 +210,14 @@ export function ElevatorExperienceWorkup() {
 
         // IMPORTANT: Make sure we have the has-visited cookie set
         // This ensures we don't get redirected back to elevator after navigation
-        Cookies.set("has-visited", "true", {
-          path: "/",
-          expires: 1,
-          sameSite: "lax",
-          secure: isSecure,
-          domain: memoizedCookieDomain
-        });
-        console.log(
-          "[CLIENT] Ensuring has-visited cookie is set with domain:",
-          window.location.hostname === "localhost" ? "localhost" : undefined
-        );
+        const hasVisited = Cookies.get("has-visited");
+        if (!hasVisited) {
+          Cookies.set("has-visited", "true");
+          console.log(
+            "[CLIENT] Ensuring has-visited cookie is set with domain:",
+            window.location.hostname === "localhost" ? "localhost" : undefined
+          );
+        }
 
         // Clear the path of intent cookie as it's no longer needed
         // But we've already stored it in our ref
@@ -244,20 +238,22 @@ export function ElevatorExperienceWorkup() {
             transitionAudioRef.current.play().catch(err => {
               console.log("Transition audio playback failed:", err);
             });
+
+            transitionAudioRef.current.onended = () => {
+              const destination = pathOfIntentRef.current ?? "/";
+              console.log("[CLIENT] Navigating to:", destination);
+              router.push(decodeURIComponent(destination));
+              router.refresh();
+            };
           }
-          // transitionAudioRef.current?.onended = () => {
+
+
+          // setTimeout(() => {
           //   const destination = pathOfIntentRef.current ?? "/";
           //   console.log("[CLIENT] Navigating to:", destination);
           //   router.push(decodeURIComponent(destination));
           //   router.refresh();
-          // };
-
-          setTimeout(() => {
-            const destination = pathOfIntentRef.current ?? "/";
-            console.log("[CLIENT] Navigating to:", destination);
-            router.push(decodeURIComponent(destination));
-            router.refresh();
-          }, 3268.980); // Extended slightly to allow transition sound to play
+          // }, 3268.98); // Extended slightly to allow transition sound to play
         }, 3000);
       }, 1500);
     }, 800);
