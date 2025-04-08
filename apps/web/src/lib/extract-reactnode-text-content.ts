@@ -7,7 +7,7 @@ export function extractTextContent(node: ReactNode): string {
   }
 
   if (typeof node === "number") {
-    return node.toString();
+    return node.toString(10);
   }
 
   if (Array.isArray(node)) {
@@ -18,8 +18,8 @@ export function extractTextContent(node: ReactNode): string {
     const children = (
       node?.props as { children?: ReactNode; [record: string]: unknown }
     ).children;
-    return children ? (extractTextContent(children) as string) : "";
+    return children ? (extractTextContent(children) as string) : "" as string;
   }
 
-  return "";
+  return "" as string;
 }
