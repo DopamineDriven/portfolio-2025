@@ -69,7 +69,6 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "rehype-pretty-code": "patches/rehype-pretty-code.patch",
       "tailwindcss": "patches/tailwindcss.patch",
       "unified@11.0.5": "patches/unified@11.0.5.patch"
     }
