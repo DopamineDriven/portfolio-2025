@@ -129,6 +129,7 @@ export const config = {
   matcher: [
     "/",
     "/elevator",
+    "/elevator/test",
     "/posts/:path",
     "/projects/:path",
     "/resume",

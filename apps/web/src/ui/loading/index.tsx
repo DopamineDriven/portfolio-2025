@@ -14,6 +14,7 @@ export default function UseAnimationFrame() {
     const y = (1 + Math.sin(t / 1000)) * -50;
     ref.current.style.transform = `translateY(${y}px) rotateX(${rotate}deg) rotateY(${rotate}deg)`;
   });
+
   const baseVariant = {
     side: "absolute w-full h-full bg-[#ff0000]/60 ",
     front: "[transform:rotateY(0deg)_translateZ(100px)] bg-[#ff008844]",
@@ -23,6 +24,7 @@ export default function UseAnimationFrame() {
     top: "[transform:rotateX(90deg)_translateZ(100px)] bg-[#0cdcf744]",
     bottom: "[transform:rotateX(-90deg)_translateZ(100px)] bg-[#8df0cc44]"
   } as const;
+
   function s<const T extends keyof typeof baseVariant>(props: T) {
     return baseVariant[props];
   }
