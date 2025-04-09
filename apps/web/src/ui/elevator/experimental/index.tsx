@@ -1,13 +1,7 @@
 "use client";
 
-import {
-  Suspense,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from "react";
-import { redirect, RedirectType } from "next/navigation";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { redirect } from "next/navigation";
 import {
   ContactShadows,
   PerspectiveCamera,
@@ -595,7 +589,7 @@ function ElevatorScene() {
 export default function ElevatorApp() {
   const [loading, setLoading] = useState(true);
   const [fadeOpacity, setFadeOpacity] = useState(0);
-  const { pathOfIntent, clearPathOfIntent } = useCookies();
+  const { pathOfIntent } = useCookies();
   const pathOfIntentRef = useRef<string>("/");
   const memoizedCookieDomain = useMemo(() => getCookieDomain(), []);
   const isSecure = useMemo(() => process.env.NODE_ENV !== "development", []);
@@ -650,7 +644,7 @@ export default function ElevatorApp() {
       if (e.detail.progress >= 0.95 && !navigationTriggeredRef.current) {
         navigationTriggeredRef.current = true;
 
-        // // Set the has-visited cookie
+        // Set the has-visited cookie
         Cookies.set("has-visited", "true", {
           path: "/",
           sameSite: "lax",
@@ -658,17 +652,15 @@ export default function ElevatorApp() {
           domain: memoizedCookieDomain
         });
 
-        // Navigate after a delay to allow for fade to black
+        // Navigate immediately at 95% transition
         const destination = pathOfIntentRef.current ?? "/";
-        // setPreservedPoi(destination);
-        setTimeout(() => {
-          console.log("[CLIENT] Navigating to:", destination);
-          if (clearPathOfIntent) {
-            clearPathOfIntent();
-          }
-          redirect(decodeURIComponent(destination), RedirectType.push);
-          // Clear the path of intent if you have that function
-        }, 100); // Extended slightly to allow transition sound to play
+        console.log("[CLIENT] Navigating to:", destination);
+        // if (clearPathOfIntent) {
+        //   clearPathOfIntent();
+        // }
+
+        // Direct redirect without setTimeout
+        redirect(decodeURIComponent(destination));
       }
     };
 
@@ -683,7 +675,7 @@ export default function ElevatorApp() {
         handleTransition as EventListener
       );
     };
-  }, [clearPathOfIntent, isSecure, memoizedCookieDomain]);
+  }, [isSecure, memoizedCookieDomain]);
 
   return (
     <div className="relative h-screen w-full bg-gray-900">
