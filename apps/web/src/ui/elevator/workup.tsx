@@ -90,10 +90,6 @@ export function ElevatorExperienceWorkup() {
       const poiCookie = Cookies.get("poi");
       if (poiCookie) {
         pathOfIntentRef.current = poiCookie;
-        console.log(
-          "[CLIENT] Path of intent from direct cookie read:",
-          poiCookie
-        );
       }
     }
   }, [pathOfIntent]);
@@ -256,7 +252,7 @@ export function ElevatorExperienceWorkup() {
             console.log("[CLIENT] Navigating to:", destination);
             router.push(decodeURIComponent(destination));
             router.refresh();
-          }, 3269); // Extended slightly to allow transition sound to play
+          }, 3500); // Extended slightly to allow transition sound to play
         }, 3000);
       }, 1500);
     }, 800);

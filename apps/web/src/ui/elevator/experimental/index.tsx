@@ -1,10 +1,35 @@
 "use client";
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { ContactShadows, Environment, useTexture } from "@react-three/drei";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useRouter } from "next/navigation";
+import {
+  ContactShadows,
+  PerspectiveCamera,
+  useTexture
+} from "@react-three/drei";
+import { Canvas, extend, useFrame, useThree } from "@react-three/fiber";
+import Cookies from "js-cookie";
 import { animate, useSpring } from "motion/react";
 import * as THREE from "three";
+import type { ThreeElement } from "@react-three/fiber";
+import { useCookies } from "@/context/cookie-context";
+import { getCookieDomain } from "@/lib/site-domain";
+import { AudioController } from "./audio-controller";
+import {
+  dispatchElevatorTransition,
+  ElevatorTransitionEventDetail
+} from "./custom-event";
+import { TriangleGeometry } from "./triangle-geometry";
+
+// Extend the TriangleGeometry so R3F knows about it
+extend({ TriangleGeometry });
+
+// Add types to ThreeElements so TypeScript understands triangleGeometry
+declare module "@react-three/fiber" {
+  interface ThreeElements {
+    triangleGeometry: ThreeElement<typeof TriangleGeometry>;
+  }
+}
 
 type PBRTextureSet = {
   albedo: string;
@@ -14,13 +39,42 @@ type PBRTextureSet = {
   roughness: string;
 };
 
-// Memoized material component to prevent unnecessary re-renders
-function ElevatorMaterial({
+// Texture definitions
+const TEXTURES = {
+  stuccoWall: {
+    albedo:
+      "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/textures/smooth-stucco/smooth-stucco-albedo.png",
+    ao: "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/textures/smooth-stucco/smooth-stucco-ao.png",
+    metalness:
+      "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/textures/smooth-stucco/smooth-stucco-Metallic.png",
+    normal:
+      "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/textures/smooth-stucco/smooth-stucco-Normal-ogl.png",
+    roughness:
+      "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/textures/smooth-stucco/smooth-stucco-Roughness.png"
+  } as const satisfies PBRTextureSet
+};
+
+// in ms
+const ANIMATION_TIMING = {
+  BUTTON_PRESS: 391.813,
+  DOOR_OPEN: 1848,
+  ELEVATOR_SOUND: 1619.592,
+  TRANSITION: 2768.98
+};
+
+// Memoized material component
+function PBRMaterial({
   textures,
-  repeat = [1, 1]
+  repeat = [1, 1],
+  color = "#ffffff",
+  metalness = 0.5,
+  roughness = 0.5
 }: {
   textures: PBRTextureSet;
   repeat?: [number, number];
+  color?: string;
+  metalness?: number;
+  roughness?: number;
 }) {
   // Load all textures in one call for better performance
   const textureProps = useTexture({
@@ -31,7 +85,7 @@ function ElevatorMaterial({
     roughnessMap: textures.roughness
   });
 
-  // Configure texture properties so they tile correctly
+  // Configure texture properties
   useEffect(() => {
     Object.values(textureProps).forEach(tex => {
       if (tex) {
@@ -41,7 +95,7 @@ function ElevatorMaterial({
       }
     });
 
-    // Cleanup function to dispose textures when component unmounts
+    // Cleanup function
     return () => {
       Object.values(textureProps).forEach(tex => {
         if (tex) tex.dispose();
@@ -49,25 +103,17 @@ function ElevatorMaterial({
     };
   }, [textureProps, repeat]);
 
-  return <meshStandardMaterial {...textureProps} metalness={1} roughness={1} />;
+  return (
+    <meshStandardMaterial
+      {...textureProps}
+      color={color}
+      metalness={metalness}
+      roughness={roughness}
+    />
+  );
 }
 
-// Texture definitions - moved to a separate constant
-const TEXTURES = {
-  brushedMetal: {
-    albedo:
-      "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/textures/brushed-metal/brushed-metal-albedo.png",
-    ao: "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/textures/brushed-metal/brushed-metal-ao.png",
-    metalness:
-      "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/textures/brushed-metal/brushed-metal-metallic.png",
-    normal:
-      "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/textures/brushed-metal/brushed-metal-normal-ogl.png",
-    roughness:
-      "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/textures/brushed-metal/brushed-metal-roughness.png"
-  } as const satisfies PBRTextureSet
-};
-
-// Memoized elevator door component to improve performance
+// Elevator door component
 const ElevatorDoor = ({
   position,
   isLeft,
@@ -78,8 +124,17 @@ const ElevatorDoor = ({
   activated: boolean;
 }) => {
   const doorRef = useRef<THREE.Mesh>(null);
-  const targetX = isLeft ? (activated ? -1 : -0.5) : activated ? 1 : 0.5;
-  const doorX = useSpring(isLeft ? -0.5 : 0.5, { stiffness: 80, damping: 20 });
+  const targetX = isLeft
+    ? activated
+      ? -0.55
+      : -0.025
+    : activated
+      ? 0.55
+      : 0.025;
+  const doorX = useSpring(isLeft ? -0.025 : 0.025, {
+    stiffness: 80,
+    damping: 20
+  });
 
   useEffect(() => {
     animate(doorX, targetX, { stiffness: 80, damping: 20 });
@@ -90,157 +145,363 @@ const ElevatorDoor = ({
   });
 
   return (
-    <mesh ref={doorRef} position={[isLeft ? -0.5 : 0.5, 0, position]}>
-      <planeGeometry args={[1, 2.5]} />
-      <ElevatorMaterial textures={TEXTURES.brushedMetal} repeat={[2, 2]} />
+    <mesh
+      ref={doorRef}
+      position={[isLeft ? -0.025 : 0.025, 0, position]}
+      castShadow
+      receiveShadow>
+      <boxGeometry args={[0.5, 2.5, 0.05]} />
+      <meshStandardMaterial color="#8c9399" metalness={0.6} roughness={0.3} />
     </mesh>
   );
 };
 
-// Memoized light component
-const ElevatorLight = ({
-  type,
-  activated
+// Floor indicator component with triangle
+const FloorIndicator = ({ activated }: { activated: boolean }) => {
+  return (
+    <group position={[0, 1.4, 0.06]}>
+      <mesh position={[0, 0, 0]} castShadow>
+        <boxGeometry args={[0.5, 0.2, 0.05]} />
+        <meshStandardMaterial color="#333" metalness={0.7} roughness={0.3} />
+      </mesh>
+      <mesh position={[0, 0, 0.026]} rotation={[0, 0, Math.PI]}>
+        <triangleGeometry args={[0.08, 0.08]} />
+        <meshStandardMaterial
+          color="#000"
+          emissive="#ff6e00"
+          emissiveIntensity={activated ? 1 : 0.5}
+          transparent
+          opacity={1}
+        />
+      </mesh>
+    </group>
+  );
+};
+
+// Call button component with diamond
+const CallButton = ({
+  activated,
+  onClick
 }: {
-  type: "ceiling" | "seam";
   activated: boolean;
+  onClick: () => void;
 }) => {
-  const materialRef = useRef<THREE.MeshStandardMaterial>(null);
-  const isSeam = type === "seam";
-  const initialIntensity = isSeam ? 0.1 : 0.4;
-  const targetIntensity = isSeam
-    ? activated
-      ? 1
-      : 0.1
-    : activated
-      ? 1.5
-      : 0.4;
-  const intensity = useSpring(initialIntensity, {
-    stiffness: isSeam ? 100 : 80,
-    damping: isSeam ? 30 : 25
-  });
+  return (
+    <group position={[0.9, 0, 0.1]}>
+      <mesh position={[0, 0, 0]} castShadow onClick={onClick}>
+        <boxGeometry args={[0.15, 0.4, 0.05]} />
+        <meshStandardMaterial color="#333" metalness={0.7} roughness={0.3} />
+      </mesh>
+      <mesh position={[0, 0, 0.026]} rotation={[0, 0, Math.PI / 4]}>
+        <planeGeometry args={[0.06, 0.06]} />
+        <meshStandardMaterial
+          color="#000"
+          emissive="#ff6e00"
+          emissiveIntensity={activated ? 1 : 0.5}
+        />
+      </mesh>
+    </group>
+  );
+};
+
+// Elevator frame component
+const ElevatorFrame = () => {
+  return (
+    <group>
+      {/* Outer frame */}
+      <mesh position={[0, 0, 0.05]} castShadow receiveShadow>
+        <boxGeometry args={[1.2, 3, 0.1]} />
+        <meshStandardMaterial color="#444" metalness={0.6} roughness={0.4} />
+      </mesh>
+
+      {/* Inner frame */}
+      <mesh position={[0, 0, 0.06]} castShadow receiveShadow>
+        <boxGeometry args={[1, 2.6, 0.1]} />
+        <meshStandardMaterial color="#555" metalness={0.6} roughness={0.4} />
+      </mesh>
+
+      {/* Top header */}
+      <mesh position={[0, 1.4, 0.07]} castShadow receiveShadow>
+        <boxGeometry args={[1, 0.2, 0.1]} />
+        <meshStandardMaterial color="#444" metalness={0.6} roughness={0.4} />
+      </mesh>
+    </group>
+  );
+};
+
+// Ceiling light component
+const CeilingLight = () => {
+  return (
+    <group position={[0, 3, 3]}>
+      {/* Light fixture */}
+      <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.5, 0.5, 0.1, 32]} />
+        <meshStandardMaterial color="#222" metalness={0.7} roughness={0.3} />
+      </mesh>
+
+      {/* Light source */}
+      <spotLight
+        position={[0, 0, 0]}
+        angle={0.5}
+        penumbra={0.5}
+        intensity={1.5}
+        castShadow
+        shadow-mapSize={[1024, 1024]}
+        target-position={[0, 0, 0]}
+      />
+    </group>
+  );
+};
+
+// Fluorescent light fixture component
+const FluorescentLight = ({ intensity = 1 }: { intensity?: number }) => {
+  const lightRef = useRef<THREE.MeshStandardMaterial>(null);
 
   useEffect(() => {
-    animate(intensity, targetIntensity, {
-      stiffness: isSeam ? 100 : 80,
-      damping: isSeam ? 30 : 25
-    });
-  }, [activated, intensity, targetIntensity, isSeam]);
+    if (lightRef.current) {
+      lightRef.current.emissiveIntensity = intensity;
+    }
+  }, [intensity]);
 
+  return (
+    <group>
+      {/* Light fixture frame */}
+      <mesh position={[0, 0, 0]}>
+        <boxGeometry args={[0.9, 0.05, 0.4]} />
+        <meshStandardMaterial color="#333" metalness={0.7} roughness={0.3} />
+      </mesh>
+
+      {/* Light panel */}
+      <mesh position={[0, -0.01, 0]}>
+        <boxGeometry args={[0.8, 0.02, 0.3]} />
+        <meshStandardMaterial
+          ref={lightRef}
+          color="#fff"
+          emissive="#fff"
+          emissiveIntensity={intensity}
+          toneMapped={false}
+        />
+      </mesh>
+    </group>
+  );
+};
+
+// Elevator interior component with ceiling light
+const ElevatorInterior = ({ activated }: { activated: boolean }) => {
+  // Light intensity animation
+  const lightIntensity = useSpring(0, { stiffness: 100, damping: 15 });
+  const primaryLightRef = useRef<THREE.PointLight>(null);
+  const secondaryLightRef = useRef<THREE.PointLight>(null);
+  useEffect(() => {
+    animate(lightIntensity, activated ? 1.5 : 0, {
+      stiffness: 100,
+      damping: 15,
+      // Slight delay for light to turn on after doors start opening
+      delay: activated ? 300 : 0
+    });
+  }, [activated, lightIntensity]);
+
+  // update light intensity on each frame
   useFrame(() => {
-    if (materialRef.current) {
-      materialRef.current.emissiveIntensity = intensity.get();
+    const currentIntensity = lightIntensity.get();
+    if (primaryLightRef.current) {
+      primaryLightRef.current.intensity = currentIntensity * 0.8;
+    }
+    if (secondaryLightRef.current) {
+      secondaryLightRef.current.intensity = currentIntensity * 0.4;
     }
   });
 
-  if (isSeam) {
-    return (
-      <mesh position={[0, 0, 1.01]}>
-        <planeGeometry args={[0.025, 2.5]} />
-        <meshStandardMaterial
-          ref={materialRef}
-          emissive="#fff"
-          emissiveIntensity={initialIntensity}
-          color="#fff"
-          toneMapped={false}
-          transparent
-        />
-      </mesh>
-    );
-  }
-
   return (
-    <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 1.25, 0]} receiveShadow>
-      <planeGeometry args={[2, 2]} />
-      <meshStandardMaterial
-        ref={materialRef}
-        emissive="#fff"
-        emissiveIntensity={initialIntensity}
-        color="#ccc"
+    <group position={[0, 0, 0]} visible={true}>
+      {/* Back wall */}
+      <mesh position={[0, 0, -0.05]} receiveShadow>
+        <boxGeometry args={[1, 2.5, 0.05]} />
+        <meshStandardMaterial color="#777" metalness={0.4} roughness={0.6} />
+      </mesh>
+
+      {/* Side walls */}
+      <mesh
+        position={[-0.5, 0, -0.025]}
+        rotation={[0, Math.PI / 2, 0]}
+        receiveShadow>
+        <boxGeometry args={[0.05, 2.5, 0.05]} />
+        <meshStandardMaterial color="#777" metalness={0.4} roughness={0.6} />
+      </mesh>
+      <mesh
+        position={[0.5, 0, -0.025]}
+        rotation={[0, -Math.PI / 2, 0]}
+        receiveShadow>
+        <boxGeometry args={[0.05, 2.5, 0.05]} />
+        <meshStandardMaterial color="#777" metalness={0.4} roughness={0.6} />
+      </mesh>
+
+      {/* Ceiling with fluorescent light fixture */}
+      <group position={[0, 1.25, -0.025]}>
+        {/* Ceiling panel */}
+        <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+          <planeGeometry args={[1, 0.5]} />
+          <meshStandardMaterial color="#666" roughness={0.9} metalness={0.1} />
+        </mesh>
+
+        {/* Fluorescent light fixture */}
+        <group position={[0, -0.02, 0.2]} rotation={[-Math.PI / 2, 0, 0]}>
+          <FluorescentLight intensity={lightIntensity.get()} />
+        </group>
+      </group>
+
+      {/* Floor */}
+      <mesh
+        position={[0, -1.25, -0.025]}
+        rotation={[Math.PI / 2, 0, 0]}
+        receiveShadow>
+        <planeGeometry args={[1, 0.5]} />
+        <meshStandardMaterial color="#333" roughness={0.9} metalness={0.1} />
+      </mesh>
+
+      {/* Interior lights */}
+      <pointLight
+        ref={primaryLightRef}
+        position={[0, 1.2, 0.1]}
+        intensity={0}
+        distance={3}
+        decay={2}
+        color="#f0f0ff" // Slightly blue tint for fluorescent light
       />
+
+      {/* Secondary fill light to better illuminate the interior */}
+      <pointLight
+        ref={secondaryLightRef}
+        position={[0, 0, 0.1]}
+        intensity={0}
+        distance={2}
+        decay={2}
+        color="#f0f0ff"
+      />
+    </group>
+  );
+};
+
+// Baseboard component
+const Baseboard = () => {
+  return (
+    <mesh position={[0, -1.5, 0]} receiveShadow>
+      <boxGeometry args={[8, 0.2, 0.3]} />
+      <meshStandardMaterial color="#111" metalness={0.3} roughness={0.7} />
     </mesh>
   );
 };
 
-function ElevatorInterior({ activated }: { activated: boolean }) {
-  const groupRef = useRef<THREE.Group>(null);
-  const { camera } = useThree();
-
-  // Camera animation springs
-  const camZ = useSpring(4, { stiffness: 60, damping: 25 });
-  const camY = useSpring(1.5, { stiffness: 60, damping: 25 });
-
-  // Update camera position when activation state changes
-  useEffect(() => {
-    animate(camZ, activated ? 2.5 : 4, { stiffness: 60, damping: 25 });
-    animate(camY, activated ? 1.8 : 1.5, { stiffness: 60, damping: 25 });
-  }, [activated, camZ, camY]);
-
-  // Update camera position in animation frame
-  useFrame(() => {
-    camera.position.set(0, camY.get(), camZ.get());
-    camera.lookAt(0, 1.25, 0);
-  });
-
-  // Memoize the elevator components to prevent unnecessary re-renders
-  const elevatorWalls = useMemo(
-    () => (
-      <>
-        {/* Back wall */}
-        <mesh position={[0, 0, -1]} receiveShadow>
-          <planeGeometry args={[2, 2.5]} />
-          <ElevatorMaterial textures={TEXTURES.brushedMetal} repeat={[2, 2]} />
-        </mesh>
-
-        {/* Floor */}
-        <mesh
-          rotation={[-Math.PI / 2, 0, 0]}
-          position={[0, -1.25, 0]}
-          receiveShadow>
-          <planeGeometry args={[2, 2]} />
-          <ElevatorMaterial textures={TEXTURES.brushedMetal} repeat={[2, 2]} />
-        </mesh>
-
-        {/* Side walls */}
-        <mesh
-          rotation={[0, Math.PI / 2, 0]}
-          position={[-1, 0, 0]}
-          receiveShadow>
-          <planeGeometry args={[2, 2.5]} />
-          <ElevatorMaterial textures={TEXTURES.brushedMetal} repeat={[2, 2]} />
-        </mesh>
-        <mesh
-          rotation={[0, -Math.PI / 2, 0]}
-          position={[1, 0, 0]}
-          receiveShadow>
-          <planeGeometry args={[2, 2.5]} />
-          <ElevatorMaterial textures={TEXTURES.brushedMetal} repeat={[2, 2]} />
-        </mesh>
-      </>
-    ),
-    []
-  );
-
+// Main wall component
+const Wall = () => {
   return (
-    <group ref={groupRef} position={[0, 1.25, 0]}>
-      {elevatorWalls}
+    <group>
+      {/* Main wall */}
+      <mesh position={[0, 0, -0.1]} receiveShadow>
+        <boxGeometry args={[8, 4, 0.2]} />
+        <PBRMaterial
+          textures={TEXTURES.stuccoWall}
+          repeat={[8, 4]}
+          color="#b8b8b8"
+          metalness={0.1}
+          roughness={0.9}
+        />
+      </mesh>
 
-      {/* Ceiling light */}
-      <ElevatorLight type="ceiling" activated={activated} />
+      {/* Floor */}
+      <mesh
+        position={[0, -2, 0.5]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        receiveShadow>
+        <planeGeometry args={[8, 2]} />
+        <meshStandardMaterial color="#222" roughness={0.9} metalness={0.1} />
+      </mesh>
 
-      {/* Elevator doors */}
-      <ElevatorDoor position={1} isLeft={true} activated={activated} />
-      <ElevatorDoor position={1} isLeft={false} activated={activated} />
-
-      {/* Seam light */}
-      <ElevatorLight type="seam" activated={activated} />
+      {/* Baseboard */}
+      <Baseboard />
     </group>
   );
-}
+};
 
-export default function ElevatorScene() {
+// Camera controller for smooth transitions
+const CameraController = ({
+  isTransitioning,
+  transitionProgress
+}: {
+  isTransitioning: boolean;
+  transitionProgress: number;
+}) => {
+  const { camera } = useThree();
+  const cameraRef = useRef<
+    | ((THREE.OrthographicCamera | THREE.PerspectiveCamera) & {
+        manual?: boolean;
+      })
+    | null
+  >(null);
+
+  // Store camera reference on first render
+  useEffect(() => {
+    cameraRef.current = camera;
+  }, [camera]);
+  // Initial camera position
+  const initialPosition = new THREE.Vector3(0, 0, 6);
+
+  // Target position - slightly closer but still keeping elevator in view
+  const targetPosition = new THREE.Vector3(0, 0, 4.5);
+
+  useFrame(() => {
+    if (!cameraRef.current) return;
+    if (isTransitioning) {
+      // Interpolate camera position
+      camera.position.lerpVectors(
+        initialPosition,
+        targetPosition,
+        transitionProgress
+      );
+
+      // Check if camera is a PerspectiveCamera before adjusting FOV
+      if (cameraRef.current instanceof THREE.PerspectiveCamera) {
+        // Slightly adjust FOV for a subtle zoom effect
+        cameraRef.current.fov = 30 - transitionProgress * 2;
+        cameraRef.current.updateProjectionMatrix();
+      }
+      // Dispatch transition progress event for fade effect
+      dispatchElevatorTransition(transitionProgress);
+    } else {
+      // Reset camera
+      cameraRef.current.position.copy(initialPosition);
+
+      // Check if camera is a PerspectiveCamera before resetting FOV
+      if (cameraRef.current instanceof THREE.PerspectiveCamera) {
+        cameraRef.current.fov = 30;
+        cameraRef.current.updateProjectionMatrix();
+      }
+      // Reset transition progress
+      dispatchElevatorTransition(0);
+    }
+  });
+
+  return null;
+};
+
+// Main scene component
+function ElevatorScene() {
   const [activated, setActivated] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [transitionProgress, setTransitionProgress] = useState(0);
+  const [_loading, setLoading] = useState(true);
+  const audioControllerRef = useRef<AudioController | null>(null);
+
+  // Initialize audio controller
+  useEffect(() => {
+    audioControllerRef.current = new AudioController();
+
+    return () => {
+      if (audioControllerRef.current) {
+        audioControllerRef.current.stopAll();
+      }
+    };
+  }, []);
 
   // Add a loading state handler
   useEffect(() => {
@@ -248,36 +509,183 @@ export default function ElevatorScene() {
     return () => clearTimeout(timer);
   }, []);
 
+  const handleClick = () => {
+    if (activated || isTransitioning) return;
+
+    // Start the sequence
+    setActivated(true);
+
+    // Play audio sequence
+    if (audioControllerRef.current) {
+      audioControllerRef.current.playSequence();
+    }
+
+    // Start transition after door open and elevator sounds
+    const transitionDelay =
+      ANIMATION_TIMING.BUTTON_PRESS +
+      ANIMATION_TIMING.DOOR_OPEN +
+      ANIMATION_TIMING.ELEVATOR_SOUND;
+
+    setTimeout(() => {
+      setIsTransitioning(true);
+
+      // Animate transition progress
+      const startTime = Date.now();
+      const duration = ANIMATION_TIMING.TRANSITION;
+
+      const updateTransition = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        setTransitionProgress(progress);
+
+        if (progress < 1) {
+          requestAnimationFrame(updateTransition);
+        } else {
+          // Reset after transition completes
+          setTimeout(() => {
+            setActivated(false);
+            setIsTransitioning(false);
+            setTransitionProgress(0);
+          }, 1000);
+        }
+      };
+
+      requestAnimationFrame(updateTransition);
+    }, transitionDelay);
+  };
+
   return (
-    <div className="relative h-screen w-full">
+    <group>
+      <Wall />
+      <ElevatorFrame />
+      <FloorIndicator activated={activated} />
+      <CallButton activated={activated} onClick={handleClick} />
+
+      {/* Elevator doors */}
+      <ElevatorDoor position={0} isLeft={true} activated={activated} />
+      <ElevatorDoor position={0} isLeft={false} activated={activated} />
+
+      {/* Interior visible when doors open */}
+      <ElevatorInterior activated={activated} />
+
+      {/* Ceiling lights */}
+      <CeilingLight />
+
+      {/* Camera controller */}
+      <CameraController
+        isTransitioning={isTransitioning}
+        transitionProgress={transitionProgress}
+      />
+
+      {/* Ambient light for base illumination */}
+      <ambientLight intensity={0.2} />
+    </group>
+  );
+}
+
+// Main component
+export default function ElevatorApp() {
+  const [loading, setLoading] = useState(true);
+  const [fadeOpacity, setFadeOpacity] = useState(0);
+  const router = useRouter();
+  const { pathOfIntent, clearPathOfIntent } = useCookies();
+  const pathOfIntentRef = useRef<string>("/");
+  const memoizedCookieDomain = useMemo(() => getCookieDomain(), []);
+  const isSecure = useMemo(() => process.env.NODE_ENV !== "development", []);
+  const navigationTriggeredRef = useRef(false);
+
+  useEffect(() => {
+    if (pathOfIntent) {
+      pathOfIntentRef.current = pathOfIntent;
+      console.log("[CLIENT] Path of intent from context:", pathOfIntent);
+    } else {
+      // Fallback: Try to read directly from cookies if context doesn't have it
+      const poiCookie = Cookies.get("poi");
+      if (poiCookie) {
+        pathOfIntentRef.current = poiCookie;
+      }
+    }
+  }, [pathOfIntent]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Listen for transition events from the scene
+  useEffect(() => {
+    const handleTransition = (
+      e: CustomEvent<ElevatorTransitionEventDetail>
+    ) => {
+      setFadeOpacity(e.detail.progress);
+      if (e.detail.progress >= 0.95 && !navigationTriggeredRef.current) {
+        navigationTriggeredRef.current = true;
+
+        // Set the has-visited cookie
+        Cookies.set("has-visited", "true", {
+          path: "/",
+          sameSite: "lax",
+          secure: isSecure,
+          domain: memoizedCookieDomain
+        });
+
+        // Navigate after a delay to allow for fade to black
+        setTimeout(() => {
+          const destination = pathOfIntentRef.current ?? "/";
+          console.log("[CLIENT] Navigating to:", destination);
+          router.push(decodeURIComponent(destination));
+          router.refresh();
+
+          // Clear the path of intent if you have that function
+          if (clearPathOfIntent) {
+            clearPathOfIntent();
+          }
+        }, 3500); // Extended slightly to allow transition sound to play
+      }
+    };
+
+    window.addEventListener(
+      "elevator-transition",
+      handleTransition as EventListener
+    );
+
+    return () => {
+      window.removeEventListener(
+        "elevator-transition",
+        handleTransition as EventListener
+      );
+    };
+  }, [router, isSecure, memoizedCookieDomain, clearPathOfIntent]);
+
+  return (
+    <div className="relative h-screen w-full bg-gray-900">
       {loading && (
         <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/80">
           <div className="text-xl text-white">Loading Elevator...</div>
         </div>
       )}
 
-      <Canvas shadows camera={{ position: [0, 1.5, 4], fov: 60 }}>
+      {/* Fade overlay */}
+      <div
+        className="pointer-events-none absolute inset-0 z-10 bg-black transition-opacity duration-500"
+        style={{ opacity: fadeOpacity }}
+      />
+
+      <Canvas shadows>
         <Suspense fallback={null}>
-          <ambientLight intensity={0.4} />
-          <spotLight
-            position={[0, 2.5, 1]}
-            angle={0.6}
-            penumbra={0.6}
-            intensity={1.1}
-            castShadow
-            shadow-mapSize={[1024, 1024]}
+          {/* Fixed camera position with wider field of view */}
+          <PerspectiveCamera
+            makeDefault
+            position={[0, 0, 6]}
+            fov={30}
+            near={0.1}
+            far={100}
           />
-
-          <ElevatorInterior activated={activated} />
-
-          <Environment
-            files="https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/master/apps/web/public/hdris/studio_small_08_2k.hdr"
-            background={false}
-            ground={{ height: 0, radius: 50, scale: 100 }}
-          />
+          <ElevatorScene />
           <ContactShadows
-            position={[0, -1.25, 0]}
-            opacity={0.3}
+            position={[0, -2, 0]}
+            opacity={0.5}
             scale={10}
             blur={2}
             far={4}
@@ -285,14 +693,6 @@ export default function ElevatorScene() {
           />
         </Suspense>
       </Canvas>
-
-      <div className="absolute top-4 left-4 z-10">
-        <button
-          onClick={() => setActivated(prev => !prev)}
-          className="rounded bg-orange-500 px-4 py-2 text-white shadow transition-colors hover:bg-orange-600">
-          {activated ? "Close Doors" : "Call Elevator"}
-        </button>
-      </div>
     </div>
   );
 }

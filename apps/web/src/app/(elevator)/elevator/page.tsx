@@ -1,9 +1,8 @@
-import { ElevatorClientWrapper } from "@/ui/elevator";
+import ElevatorScene from "@/ui/elevator/experimental/client";
 
-export default function ElevatorPage() {
-  return (
-    <div className="fixed inset-0 overflow-hidden bg-[#2a2a2a]">
-      <ElevatorClientWrapper />
-    </div>
-  );
+export default function ElevatorExperiencePage() {
+  return <ElevatorScene />;
+  // <div className="fixed inset-0 overflow-hidden">
+  //   <ElevatorScene />
+  // </div>
 }
