@@ -1,7 +1,13 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import {
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from "react";
+import { redirect, RedirectType } from "next/navigation";
 import {
   ContactShadows,
   PerspectiveCamera,
@@ -12,6 +18,7 @@ import Cookies from "js-cookie";
 import { animate, useSpring } from "motion/react";
 import * as THREE from "three";
 import type { ThreeElement } from "@react-three/fiber";
+// import { handleElevatorToHomeTransition } from "@/app/(elevator)/elevator/actions";
 import { useCookies } from "@/context/cookie-context";
 import { getCookieDomain } from "@/lib/site-domain";
 import { AudioController } from "./audio-controller";
@@ -588,7 +595,6 @@ function ElevatorScene() {
 export default function ElevatorApp() {
   const [loading, setLoading] = useState(true);
   const [fadeOpacity, setFadeOpacity] = useState(0);
-  const router = useRouter();
   const { pathOfIntent, clearPathOfIntent } = useCookies();
   const pathOfIntentRef = useRef<string>("/");
   const memoizedCookieDomain = useMemo(() => getCookieDomain(), []);
@@ -613,6 +619,28 @@ export default function ElevatorApp() {
     return () => clearTimeout(timer);
   }, []);
 
+  // const reCb = useCallback(async () => {
+  //   const poi = pathOfIntentRef.current;
+  //   if (poi) {
+  //     return await handleElevatorToHomeTransition({
+  //       poi: decodeURIComponent(poi)
+  //     });
+  //   } else {
+  //     return await handleElevatorToHomeTransition({
+  //       poi: decodeURIComponent(preservedPoi)
+  //     });
+  //   }
+  // }, [preservedPoi]);
+
+  // useEffect(() => {
+  //   const r = async () => {
+  //     if (triggerRedirect === true) {
+  //       return await handleElevatorToHomeTransition({ poi: preservedPoi });
+  //     } else return () => {};
+  //   };
+  //   r();
+  // }, [preservedPoi, triggerRedirect]);
+
   // Listen for transition events from the scene
   useEffect(() => {
     const handleTransition = (
@@ -622,7 +650,7 @@ export default function ElevatorApp() {
       if (e.detail.progress >= 0.95 && !navigationTriggeredRef.current) {
         navigationTriggeredRef.current = true;
 
-        // Set the has-visited cookie
+        // // Set the has-visited cookie
         Cookies.set("has-visited", "true", {
           path: "/",
           sameSite: "lax",
@@ -631,17 +659,16 @@ export default function ElevatorApp() {
         });
 
         // Navigate after a delay to allow for fade to black
+        const destination = pathOfIntentRef.current ?? "/";
+        // setPreservedPoi(destination);
         setTimeout(() => {
-          const destination = pathOfIntentRef.current ?? "/";
           console.log("[CLIENT] Navigating to:", destination);
-          router.push(decodeURIComponent(destination));
-          router.refresh();
-
-          // Clear the path of intent if you have that function
           if (clearPathOfIntent) {
             clearPathOfIntent();
           }
-        }, 3500); // Extended slightly to allow transition sound to play
+          redirect(decodeURIComponent(destination), RedirectType.push);
+          // Clear the path of intent if you have that function
+        }, 100); // Extended slightly to allow transition sound to play
       }
     };
 
@@ -656,7 +683,7 @@ export default function ElevatorApp() {
         handleTransition as EventListener
       );
     };
-  }, [router, isSecure, memoizedCookieDomain, clearPathOfIntent]);
+  }, [clearPathOfIntent, isSecure, memoizedCookieDomain]);
 
   return (
     <div className="relative h-screen w-full bg-gray-900">
