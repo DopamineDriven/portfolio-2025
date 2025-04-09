@@ -691,9 +691,6 @@ importers:
       tailwind-merge:
         specifier: ^3.2.0
         version: 3.2.0
-      three:
-        specifier: ^0.175.0
-        version: 0.175.0
       topojson-client:
         specifier: ^3.1.0
         version: 3.1.0

@@ -1,25 +1,22 @@
 "use client";
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   ContactShadows,
   PerspectiveCamera,
   useTexture
 } from "@react-three/drei";
-import { Canvas, extend, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, extend, useFrame } from "@react-three/fiber";
 import Cookies from "js-cookie";
 import { animate, useSpring } from "motion/react";
 import * as THREE from "three";
 import type { ThreeElement } from "@react-three/fiber";
-// import { handleElevatorToHomeTransition } from "@/app/(elevator)/elevator/actions";
 import { useCookies } from "@/context/cookie-context";
 import { getCookieDomain } from "@/lib/site-domain";
 import { AudioController } from "./audio-controller";
-import {
-  dispatchElevatorTransition,
-  ElevatorTransitionEventDetail
-} from "./custom-event";
+import { CombinedCameraController } from "./combined-camera-controller";
+import { ElevatorTransitionEventDetail } from "./custom-event";
 import { TriangleGeometry } from "./triangle-geometry";
 
 // Extend the TriangleGeometry so R3F knows about it
@@ -424,67 +421,6 @@ const Wall = () => {
   );
 };
 
-// Camera controller for smooth transitions
-const CameraController = ({
-  isTransitioning,
-  transitionProgress
-}: {
-  isTransitioning: boolean;
-  transitionProgress: number;
-}) => {
-  const { camera } = useThree();
-  const cameraRef = useRef<
-    | ((THREE.OrthographicCamera | THREE.PerspectiveCamera) & {
-        manual?: boolean;
-      })
-    | null
-  >(null);
-
-  // Store camera reference on first render
-  useEffect(() => {
-    cameraRef.current = camera;
-  }, [camera]);
-  // Initial camera position
-  const initialPosition = new THREE.Vector3(0, 0, 6);
-
-  // Target position - slightly closer but still keeping elevator in view
-  const targetPosition = new THREE.Vector3(0, 0, 4.5);
-
-  useFrame(() => {
-    if (!cameraRef.current) return;
-    if (isTransitioning) {
-      // Interpolate camera position
-      camera.position.lerpVectors(
-        initialPosition,
-        targetPosition,
-        transitionProgress
-      );
-
-      // Check if camera is a PerspectiveCamera before adjusting FOV
-      if (cameraRef.current instanceof THREE.PerspectiveCamera) {
-        // Slightly adjust FOV for a subtle zoom effect
-        cameraRef.current.fov = 30 - transitionProgress * 2;
-        cameraRef.current.updateProjectionMatrix();
-      }
-      // Dispatch transition progress event for fade effect
-      dispatchElevatorTransition(transitionProgress);
-    } else {
-      // Reset camera
-      cameraRef.current.position.copy(initialPosition);
-
-      // Check if camera is a PerspectiveCamera before resetting FOV
-      if (cameraRef.current instanceof THREE.PerspectiveCamera) {
-        cameraRef.current.fov = 30;
-        cameraRef.current.updateProjectionMatrix();
-      }
-      // Reset transition progress
-      dispatchElevatorTransition(0);
-    }
-  });
-
-  return null;
-};
-
 // Main scene component
 function ElevatorScene() {
   const [activated, setActivated] = useState(false);
@@ -574,7 +510,7 @@ function ElevatorScene() {
       <CeilingLight />
 
       {/* Camera controller */}
-      <CameraController
+      <CombinedCameraController
         isTransitioning={isTransitioning}
         transitionProgress={transitionProgress}
       />
@@ -589,7 +525,7 @@ function ElevatorScene() {
 export default function ElevatorApp() {
   const [loading, setLoading] = useState(true);
   const [fadeOpacity, setFadeOpacity] = useState(0);
-  const { pathOfIntent } = useCookies();
+  const { pathOfIntent, clearPathOfIntent } = useCookies();
   const pathOfIntentRef = useRef<string>("/");
   const memoizedCookieDomain = useMemo(() => getCookieDomain(), []);
   const isSecure = useMemo(() => process.env.NODE_ENV !== "development", []);
@@ -612,28 +548,7 @@ export default function ElevatorApp() {
     const timer = setTimeout(() => setLoading(false), 1000);
     return () => clearTimeout(timer);
   }, []);
-
-  // const reCb = useCallback(async () => {
-  //   const poi = pathOfIntentRef.current;
-  //   if (poi) {
-  //     return await handleElevatorToHomeTransition({
-  //       poi: decodeURIComponent(poi)
-  //     });
-  //   } else {
-  //     return await handleElevatorToHomeTransition({
-  //       poi: decodeURIComponent(preservedPoi)
-  //     });
-  //   }
-  // }, [preservedPoi]);
-
-  // useEffect(() => {
-  //   const r = async () => {
-  //     if (triggerRedirect === true) {
-  //       return await handleElevatorToHomeTransition({ poi: preservedPoi });
-  //     } else return () => {};
-  //   };
-  //   r();
-  // }, [preservedPoi, triggerRedirect]);
+  const router = useRouter();
 
   // Listen for transition events from the scene
   useEffect(() => {
@@ -651,16 +566,15 @@ export default function ElevatorApp() {
           secure: isSecure,
           domain: memoizedCookieDomain
         });
-
-        // Navigate immediately at 95% transition
         const destination = pathOfIntentRef.current ?? "/";
-        console.log("[CLIENT] Navigating to:", destination);
-        // if (clearPathOfIntent) {
-        //   clearPathOfIntent();
-        // }
-
-        // Direct redirect without setTimeout
-        redirect(decodeURIComponent(destination));
+        if (clearPathOfIntent) {
+          clearPathOfIntent();
+        }
+        setTimeout(() => {
+          console.log("[CLIENT] router.push event to: ", destination);
+          router.push(decodeURIComponent(destination));
+          router.refresh();
+        }, 1000);
       }
     };
 
@@ -675,10 +589,9 @@ export default function ElevatorApp() {
         handleTransition as EventListener
       );
     };
-  }, [isSecure, memoizedCookieDomain]);
-
+  }, [isSecure, memoizedCookieDomain, router, clearPathOfIntent]);
   return (
-    <div className="relative h-screen w-full bg-gray-900">
+    <>
       {loading && (
         <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/80">
           <div className="text-xl text-white">Loading Elevator...</div>
@@ -691,9 +604,11 @@ export default function ElevatorApp() {
         style={{ opacity: fadeOpacity }}
       />
 
-      <Canvas shadows>
+      <Canvas
+        className="absolute left-0 min-h-[100dvh] min-w-screen top-0 z-20 items-center justify-center bg-black/80"
+        shadows
+        camera={{ fov: 60, near: 0.1, far: 1000, position: [0, 1.6, 5] }}>
         <Suspense fallback={null}>
-          {/* Fixed camera position with wider field of view */}
           <PerspectiveCamera
             makeDefault
             position={[0, 0, 6]}
@@ -712,6 +627,75 @@ export default function ElevatorApp() {
           />
         </Suspense>
       </Canvas>
-    </div>
+    </>
   );
 }
+// // Camera controller for smooth transitions
+// const CameraController = ({
+//   isTransitioning,
+//   transitionProgress,
+//   defaultZ
+// }: {
+//   isTransitioning: boolean;
+//   transitionProgress: number;
+//   defaultZ: number;
+// }) => {
+//   const { camera } = useThree();
+
+//   const cameraRef = useRef<
+//     | ((THREE.OrthographicCamera | THREE.PerspectiveCamera) & {
+//         manual?: boolean;
+//       })
+//     | null
+//   >(null);
+//   const initialPosition = useMemo(
+//     () => new THREE.Vector3(0, 0, defaultZ),
+//     [defaultZ]
+//   );
+
+//   // Similarly, derive the target position relative to defaultZ.
+//   // For example, you might want to move the camera slightly closer.
+//   const targetPosition = useMemo(
+//     () => new THREE.Vector3(0, 0, defaultZ - 1.5),
+//     [defaultZ]
+//   );
+//   // Store camera reference on first render
+//   useEffect(() => {
+//     cameraRef.current = camera;
+//   }, [camera]);
+//   // Initial camera position
+
+//   useFrame(() => {
+//     if (!cameraRef.current) return;
+//     if (isTransitioning) {
+//       // Interpolate camera position
+//       cameraRef.current.position.lerpVectors(
+//         initialPosition,
+//         targetPosition,
+//         transitionProgress
+//       );
+
+//       // Check if camera is a PerspectiveCamera before adjusting FOV
+//       if (cameraRef.current instanceof THREE.PerspectiveCamera) {
+//         // Slightly adjust FOV for a subtle zoom effect
+//         cameraRef.current.fov = 30 - transitionProgress * 2;
+//         cameraRef.current.updateProjectionMatrix();
+//       }
+//       // Dispatch transition progress event for fade effect
+//       dispatchElevatorTransition(transitionProgress);
+//     } else {
+//       // Reset camera
+//       cameraRef.current.position.copy(initialPosition);
+
+//       // Check if camera is a PerspectiveCamera before resetting FOV
+//       if (cameraRef.current instanceof THREE.PerspectiveCamera) {
+//         cameraRef.current.fov = 30;
+//         cameraRef.current.updateProjectionMatrix();
+//       }
+//       // Reset transition progress
+//       dispatchElevatorTransition(0);
+//     }
+//   });
+
+//   return null;
+// };

@@ -26,20 +26,26 @@ export class AudioController {
   private loadAudio(id: string, url: string): void {
     const audio = new Audio(url);
     audio.preload = "auto";
+    audio.crossOrigin = "anonymous";
+    audio.volume = 0.5;
     this.audioElements.set(id, audio);
   }
 
-  public playSequence(): Promise<void> {
-    if (this.isPlaying) return Promise.resolve();
+  public async playSequence(): Promise<void> {
+    if (this.isPlaying) return;
     this.isPlaying = true;
-
-    return this.playButtonSound()
-      .then(() => this.playDoorOpenSound())
-      .then(() => this.playElevatorSound())
-      .then(() => this.playTransitionSound())
-      .finally(() => {
-        this.isPlaying = false;
-      });
+    try {
+      await this.playButtonSound();
+      await this.playDoorOpenSound();
+      await this.playElevatorSound();
+      await this.playTransitionSound();
+    } catch (err) {
+      if (err instanceof Error) {
+        throw new Error("error, " + err.message + `, name: ${err.name}`);
+      }
+    } finally {
+      this.isPlaying = false;
+    }
   }
 
   private playButtonSound(): Promise<void> {
