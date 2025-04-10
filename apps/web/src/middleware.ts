@@ -131,7 +131,6 @@ export const config = {
     "/elevator",
     "/posts/:path",
     "/projects/:path",
-    "/resume",
-    "/elevator"
+    "/resume"
   ]
 };
