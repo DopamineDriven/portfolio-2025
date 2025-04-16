@@ -343,22 +343,6 @@ html {
   scrollbar-color: #f8fafc #020817;
 }
 
-
-@layer utilities {
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-  }
-
-  input,
-  button,
-  textarea,
-  select {
-    font: inherit;
-  }
-}
-
 @layer base {
   * {
     border-color: var(--color-border);
@@ -605,3 +589,15 @@ pre[class*="language-"] {
 }
 
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}

@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import React from "react";
 import { Poppins as _Poppins, Inter } from "next/font/google";
 import { ThemeProvider } from "@/ui/providers/theme-provider";
@@ -24,16 +24,7 @@ import { getSiteUrl } from "@/lib/site-url";
 import { cn } from "@/lib/utils";
 import * as gAnalytics from "@/utils/analytics";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-export const viewport = {
-  colorScheme: "normal",
-  userScalable: true,
-  themeColor: "#020817",
-  viewportFit: "auto",
-  initialScale: 1,
-  width: "device-width"
-} satisfies Viewport;
-
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 export const metadata = {
   metadataBase: new URL(getSiteUrl(process.env.NODE_ENV)),
   title: {
@@ -131,7 +122,7 @@ export default function RootLayout({
         BasisGrotesqueProBoldItalic.variable,
         inter.variable
       )}>
-      <body className="font-basis-grotesque-pro-regular overflow-x-hidden!">
+      <body className="font-basis-grotesque-pro antialiased overflow-x-hidden!">
         <AnimationContextProvider>
           <ThemeProvider>
             <CookieProvider>{children}</CookieProvider>

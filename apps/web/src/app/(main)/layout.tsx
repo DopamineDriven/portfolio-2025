@@ -1,6 +1,16 @@
 import React from "react";
 import { Footer } from "@/ui/footer";
 import { default as Navbar } from "@/ui/nav/temp";
+import type { Viewport } from "next";
+
+export const viewport = {
+  colorScheme: "normal",
+  userScalable: true,
+  themeColor: "#020817",
+  viewportFit: "auto",
+  initialScale: 1,
+  width: "device-width"
+} satisfies Viewport;
 
 export default function MainLayout({
   children
