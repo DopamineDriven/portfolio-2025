@@ -1,5 +1,5 @@
-import { ElevatorLoading } from "@/ui/elevator/loading";
+import { LoadingSpinner } from "@/ui/loading-spinner";
 
 export default function Loading() {
-  return <ElevatorLoading />;
+  return <LoadingSpinner />;
 }

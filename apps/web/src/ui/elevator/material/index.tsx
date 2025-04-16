@@ -20,7 +20,7 @@ export function ElevatorMaterial({
   textures: PBRTextureSet;
   repeat?: [number, number];
 }) {
-  const [map, aoMap, metalnessMap, normalMap, roughnessMap] = useTexture([
+  const maps = useTexture([
     textures.albedo,
     textures.ao,
     textures.metalness,
@@ -29,7 +29,6 @@ export function ElevatorMaterial({
   ] as const);
 
   useEffect(() => {
-    const maps = [map, aoMap, metalnessMap, normalMap, roughnessMap] as const;
     maps.forEach(tex => {
       if (tex) {
         tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
@@ -37,7 +36,8 @@ export function ElevatorMaterial({
         tex.flipY = false;
       }
     });
-  }, [map, aoMap, metalnessMap, normalMap, roughnessMap, repeat]);
+  }, [maps, repeat]);
+  const [map, aoMap, metalnessMap, normalMap, roughnessMap] = maps;
 
   return (
     <meshStandardMaterial

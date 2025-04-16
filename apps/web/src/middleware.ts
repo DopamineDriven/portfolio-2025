@@ -7,7 +7,12 @@ function detectDeviceAndSetCookies(
 ) {
   const { device, ua } = userAgent(request);
 
-  // Clean up existing cookies
+  const {hostname} = request.nextUrl;
+
+  if (request.cookies.has("hostname")) {
+    response.cookies.delete("hostname");
+  }
+
   if (request.cookies.has("viewport")) {
     response.cookies.delete("viewport");
   }
@@ -24,6 +29,7 @@ function detectDeviceAndSetCookies(
   const viewport = device?.type === "mobile" ? "mobile" : "desktop";
 
   // Set cookies
+  response.cookies.set("hostname", hostname);
   response.cookies.set("viewport", viewport);
   response.cookies.set("ios", ios);
 
@@ -55,7 +61,7 @@ export function middleware(request: NextRequest) {
     EXCLUDED_PATHS.some(excluded => pathname.startsWith(excluded)) ||
     // Skip known static file types
     pathname.match(
-      /\.(jpg|jpeg|png|gif|svg|ico|webp|css|js|wasm|json|txt|xml)$/
+      /\.(jpg|jpeg|png|gif|svg|ico|webp|css|js|wasm|json|txt|xml|woff2|hdr|ai|py)$/
     ) ||
     // Skip Vercel development indicator files
     DEV_INDICATOR_FILES.some(file => pathname.includes(file))
@@ -121,7 +127,6 @@ export function middleware(request: NextRequest) {
   const res = NextResponse.next();
   return detectDeviceAndSetCookies(request, res);
 }
-
 // 5) Matcher configuration
 export const config = {
   // This matcher ensures we run middleware on all routes
@@ -131,7 +136,6 @@ export const config = {
     "/elevator",
     "/posts/:path",
     "/projects/:path",
-    "/resume",
-    "/elevator"
+    "/resume"
   ]
 };

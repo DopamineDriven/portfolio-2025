@@ -75,19 +75,21 @@ export default function ArLogoParticles() {
       // const scatteredColor = "#00DCFF"; // Cyan color for scattered particles
 
       // Draw each path
-      AR_LOGO_PATHS.forEach((pathData, index) => {
+      AR_LOGO_PATHS.forEach((pathData, _index) => {
         const path = new Path2D(pathData.d);
 
-        if (index === 2) {
-          // Circle border path
-          ctx.strokeStyle = logoColor;
-          ctx.lineWidth = pathData.strokeWidth ?? 12;
-          ctx.stroke(path);
-        } else {
-          // Letter paths
-          ctx.fillStyle = logoColor;
-          ctx.fill(path);
-        }
+        // if (index === 2) {
+        //   // Circle border path
+        //   ctx.strokeStyle = logoColor;
+        //   ctx.lineWidth = pathData.strokeWidth ?? 12;
+        //   ctx.stroke(path);
+        // } else {
+        //   // Letter paths
+        //   ctx.fillStyle = logoColor;
+        //   ctx.fill(path);
+        // }
+        ctx.fillStyle = logoColor;
+        ctx.fill(path);
       });
 
       ctx.restore();

@@ -25,5 +25,5 @@
     "**/*.mdx",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["public/**/*.js"]
+  "exclude": ["public/**/*.js", "node_modules"]
 }

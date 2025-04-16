@@ -11,14 +11,10 @@ export const AR_LOGO_PATHS = [
   },
   {
     // Circle border path
-    d: "M6 256C6 118.156 118.156 6 256 6C393.844 6 506 118.156 506 256C506 393.844 393.844 506 256 506C118.156 506 6 393.844 6 256Z",
-    fill: "none", // This is a stroke path
-    stroke: "#000000", // Default color, will be overridden
-    strokeWidth: 12
+    d: "M256 512C394.144 512 512 394.144 512 256C512 117.856 394.144 0 256 0C117.856 0 0 117.856 0 256C0 394.144 117.856 512 256 512ZM256 500C124.935 500 12 387.065 12 256C12 124.935 124.935 12 256 12C387.065 12 500 124.935 500 256C500 387.065 387.065 500 256 500Z",
+    fill: "#000000"
   }
 ] satisfies {
   d: string;
   fill: string;
-  stroke?: string;
-  strokeWidth?: number;
 }[];

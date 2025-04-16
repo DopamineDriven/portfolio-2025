@@ -149,19 +149,20 @@ export default function ArLogoParticles({
       ctx.scale(scale, scale);
 
       // Draw each path
-      AR_LOGO_PATHS.forEach((pathData, index) => {
+      AR_LOGO_PATHS.forEach((pathData, _index) => {
         const path = new Path2D(pathData.d);
-
-        if (index === 2) {
-          // Circle border path
-          ctx.strokeStyle = colors.logo;
-          ctx.lineWidth = pathData.strokeWidth ?? 12;
-          ctx.stroke(path);
-        } else {
-          // Letter paths
-          ctx.fillStyle = colors.logo;
-          ctx.fill(path);
-        }
+        ctx.fillStyle = colors.logo;
+        ctx.fill(path);
+        // if (index === 2) {
+        //   // Circle border path
+        //   ctx.strokeStyle = colors.logo;
+        //   ctx.lineWidth = pathData.strokeWidth ?? 12;
+        //   ctx.stroke(path);
+        // } else {
+        //   // Letter paths
+        //   ctx.fillStyle = colors.logo;
+        //   ctx.fill(path);
+        // }
       });
 
       ctx.restore();

@@ -72,5 +72,11 @@
   "workbench.editor.autoLockGroups": {
     "default": true
   },
-  "eslint.debug": true
+  "eslint.debug": true,
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  }
 }

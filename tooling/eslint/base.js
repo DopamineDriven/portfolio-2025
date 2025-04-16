@@ -15,7 +15,7 @@ export default tseslint.config(
     // Globally ignored files
     ignores: [
       "**/*.config.*",
-      "public/**/*.js",
+      "**/public/**",
       "**/node_modules/**",
       "**/dist/**",
       "**/build/**",
