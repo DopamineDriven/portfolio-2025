@@ -6,15 +6,10 @@
     },
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
     "baseUrl": "./",
+    "rootDir": "./src",
+    "outDir": "dist",
     "emitDeclarationOnly": true
   },
-  "include": [
-    "**/*.ts",
-    "src/**/*.tsx",
-    "**/*.mjs",
-    "**/*.preset.ts",
-    "index.d.ts",
-    "tsup.config.ts"
-  ],
+  "include": ["src/**/*.ts"],
   "exclude": ["dist"]
 }

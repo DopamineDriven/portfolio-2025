@@ -1,7 +1,7 @@
 import { execSync } from "child_process";
 import fsSync from "fs";
 import fsAsync from "fs/promises";
-import { relative } from "path";
+import { join, relative, resolve } from "path";
 import * as dotenv from "dotenv";
 import expand from "dotenv-expand";
 import sharp from "sharp";
@@ -123,6 +123,7 @@ export default class Fs {
   }
 
   public exists<const T extends string>(target: T) {
+    if (!(/\//gm.test(target))) return fsSync.existsSync(resolve(join(this.cwd, target)));
     return fsSync.existsSync(relative(this.cwd ?? process.cwd(), target));
   }
 
@@ -185,8 +186,18 @@ export default class Fs {
     );
   }
 
+
+  public isRootPathTargeted<const T extends string>(path: T) {
+    if (/^(?:\.\/|\.|\/|root|\.\.\/|~\/\.?|cwd|\.\/\.)$/g.test(path)) {
+      return true
+    } else return false;
+  }
+
   public readDir<const T extends string>(path: T, options?: ReadDirOptions) {
-    return this.handleBuffStrArrUnion(
+    if (this.isRootPathTargeted(path)) {
+      return this.handleBuffStrArrUnion(fsSync.readdirSync(resolve(join(this.cwd, "./")), options))
+    }
+    else return this.handleBuffStrArrUnion(
       fsSync.readdirSync(
         relative((this.cwd ??= process.cwd()), path),
         options
@@ -198,7 +209,7 @@ export default class Fs {
     command,
     ...options
   }: ExecuteCommandProps<T>) =>
-    Buffer.from(
+    (
       Buffer.from(execSync(command, { ...options }).toJSON().data)
     ).toString("utf-8");
 
@@ -219,6 +230,7 @@ export default class Fs {
   }
 
   public existsSync<const T extends string>(path: T) {
+    if (!(/\//gm.test(path))) return fsSync.existsSync(resolve(join(this.cwd, path)));
     return fsSync.existsSync(relative(this.cwd ?? process.cwd(), path));
   }
 
@@ -319,10 +331,8 @@ export default class Fs {
 
   public fileToBuffer = <const T extends string>(path: T) =>
     Buffer.from(
-      Buffer.from(
-        fsSync.readFileSync(relative(this.cwd ?? process.cwd(), path)).toJSON()
-          .data
-      )
+      fsSync.readFileSync(relative(this.cwd ?? process.cwd(), path)).toJSON()
+        .data
     );
 
   public dirContainsDir<const From extends string, const To extends string>(
@@ -334,13 +344,6 @@ export default class Fs {
       .filter(t => t.split(".").length === 1)
       .includes(targetDir);
   }
-
-  public parseJsonBuffer(p: Buffer) {
-    return JSON.parse(
-      Buffer.from(Buffer.from(p).toJSON().data).toString("utf-8")
-    );
-  }
-
   /* begin url */
 
   public isServerSide() {
@@ -387,7 +390,9 @@ export default class Fs {
   /* end url */
 
   public get cjsVal() {
-    return (["application/node", "text/javascript"] as const).reduce(union => union);
+    return (["application/node", "text/javascript"] as const).reduce(
+      union => union
+    );
   }
 
   public get gzVal() {
@@ -396,8 +401,10 @@ export default class Fs {
     );
   }
 
-  public get jsVal(){
-    return (["application/node", "text/javascript"] as const).reduce(union => union);
+  public get jsVal() {
+    return (["application/node", "text/javascript"] as const).reduce(
+      union => union
+    );
   }
 
   public get objVal() {
@@ -570,7 +577,7 @@ export default class Fs {
       p.pathname.split(/\//g).reverse()[0] ?? ""
     );
     if (doesUrlPathContainFileExtension === false)
-      console.warn(`no file extension detected in input url ${path}`);
+      console.warn(`no file extension detected in input url ${path}, attempting fetch`);
     const response = await fetch(path);
     if (!response.ok) {
       throw new Error(`Failed to fetch asset: ${response.statusText}`);
@@ -668,7 +675,7 @@ export default class Fs {
       const sliceSize = 512;
       // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
       const typeMatch = b64Data.match(
-        /^data:(image|application|video|text|model|font)\/[A-Za-z0-9+-.]+;base64,/
+        /^data:(?:image|application|haptics|video|text|font|model|audio|multipart)\/[A-Za-z0-9+-.]+(?:;[^,]+)*;base64,/i
       );
       const type = typeMatch?.[1];
 
@@ -707,7 +714,7 @@ export default class Fs {
       ""
     );
   }
-/**
+  /**
  * public cleanDataUrl<const C extends string>(props: C) {
   return props.replace(
     /^data:(?:image|application|video|text|font|model|audio|haptics|multipart)\/[A-Za-z0-9+-.]+(?:;[^,]+)*;base64,/i,

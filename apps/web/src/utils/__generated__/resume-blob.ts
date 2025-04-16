@@ -1,17 +1,17 @@
-export const resumeData = {
-  resumeBlob: {
-    id: "Resume-March-2025",
-    url: "https://ypuktmwmnilhirdf.public.blob.vercel-storage.com/Resume-March-2025.pdf",
-    downloadUrl:
-      "https://ypuktmwmnilhirdf.public.blob.vercel-storage.com/Resume-March-2025.pdf?download=1",
-    pathname: "Resume-March-2025.pdf",
-    size: 75129,
-    uploadedAt: "2025-03-19T22:10:07.000Z"
-  }
-};
-
 // import { list } from "@vercel/blob";
 // import * as dotenv from "dotenv";
+
+export const resumeData = {
+  resumeBlob: {
+    id: "Updated Resume 2025",
+    url: "https://ypuktmwmnilhirdf.public.blob.vercel-storage.com/updated-resume-2025-XYD3dweasSJn7sCmjY9Ofj38F41tES",
+    downloadUrl:
+      "https://ypuktmwmnilhirdf.public.blob.vercel-storage.com/updated-resume-2025-XYD3dweasSJn7sCmjY9Ofj38F41tES?download=1",
+    pathname: "updated-resume-2025",
+    size: 76789,
+    uploadedAt: "2025-04-16T18:13:42.000Z"
+  }
+};
 
 // dotenv.config();
 // const getAll = async () =>
