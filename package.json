@@ -69,8 +69,8 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "tailwindcss": "/home/dopaminedriven/personal/portfolio-2025/patches/tailwindcss.patch",
-      "unified@11.0.5": "/home/dopaminedriven/personal/portfolio-2025/patches/unified@11.0.5.patch",
+      "tailwindcss": "patches/tailwindcss.patch",
+      "unified@11.0.5": "patches/unified@11.0.5.patch",
       "leva": "patches/leva.patch"
     }
   }
