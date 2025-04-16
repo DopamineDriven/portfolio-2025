@@ -1,10 +1,16 @@
 "use client";
 
-import { useMobile } from "@/hooks/use-mobile";
-import { dispatchElevatorTransition } from "@/ui/elevator/r3f/custom-event";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState
+} from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { useMobile } from "@/hooks/use-mobile";
+import { dispatchElevatorTransition } from "@/ui/elevator/r3f/custom-event";
 
 export function CombinedCameraController({
   isTransitioning,
@@ -78,7 +84,11 @@ export function CombinedCameraController({
   }, [defaultZ]);
 
   const targetPosition = useCallback(() => {
-    return new THREE.Vector3(0, cameraRef.current?.position.y ?? 0, defaultZ - 1.5);
+    return new THREE.Vector3(
+      0,
+      cameraRef.current?.position.y ?? 0,
+      defaultZ - 1.5
+    );
   }, [defaultZ]);
 
   useFrame(() => {
@@ -86,7 +96,11 @@ export function CombinedCameraController({
     if (!cam) return;
 
     if (isTransitioning) {
-      cam.position.lerpVectors(initialPosition(), targetPosition(), transitionProgress);
+      cam.position.lerpVectors(
+        initialPosition(),
+        targetPosition(),
+        transitionProgress
+      );
       cam.fov = cam.fov - transitionProgress * 2;
       cam.updateProjectionMatrix();
       dispatchElevatorTransition(transitionProgress);
@@ -97,7 +111,9 @@ export function CombinedCameraController({
     }
   });
 
-  return (
-    <primitive object={defaultCamera} ref={assignCamera} />
-  );
+  useEffect(() => {
+    assignCamera(defaultCamera); // or set in useEffect directly
+  }, [defaultCamera, assignCamera]);
+
+  return null;
 }
