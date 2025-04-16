@@ -28,7 +28,7 @@ export function InteractiveResume() {
   const tabs = ["Experience", "Skills", "Education", "Testimonials"];
 
   return (
-    <section className="font-basis-grotesque-pro font-normal container mx-auto px-4 py-8 md:px-6 lg:py-12">
+    <section className="font-basis-grotesque-pro container mx-auto px-4 py-8 font-normal md:px-6 lg:py-12">
       <div className="mb-8">
         <Button
           variant="ghost"
@@ -87,10 +87,11 @@ export function InteractiveResume() {
       </div>
 
       <p className="mb-8 max-w-3xl text-lg">
-        Lead Software Engineer with 5+ years' experience delivering
-        high-performance web and XR solutions. Skilled in React, TypeScript,
-        Node.js, and Package Development. Passionate about driving innovation
-        and cross-functional collaboration to scale products globally.
+        Staff-Level Software Engineer with 5+ years’ experience delivering
+        high-performance UI/UX, full-stack, and XR solutions. Skilled in React,
+        TypeScript, Node.js, Next.js, and Package Development. Passionate about
+        driving innovation and cross-functional collaboration to scale products
+        globally.
       </p>
 
       <AnimatedTabs tabs={tabs} onTabChange={setActiveTab} />
@@ -149,13 +150,21 @@ export function InteractiveResume() {
                             <Badge className="bg-primary/90">
                               Node.js (Expert)
                             </Badge>
-                            <Badge>Tailwindcss</Badge>
+                            <Badge className="bg-primary/90">
+                              Tailwindcss (Expert)
+                            </Badge>
+                            <Badge>React Three Fiber (R3F)</Badge>
+                            <Badge>d3</Badge>
+                            <Badge>Redis</Badge>
+                            <Badge>Nest.js</Badge>
                             <Badge>GraphQL</Badge>
                             <Badge>REST</Badge>
                             <Badge>Prisma</Badge>
                             <Badge>Postgres</Badge>
                             <Badge>SQL Server</Badge>
-                            <Badge>d3</Badge>
+                            <Badge>Jest</Badge>
+                            <Badge>Playwright</Badge>
+                            <Badge>Cypress</Badge>
                           </div>
                         </div>
 
@@ -164,15 +173,18 @@ export function InteractiveResume() {
                             Platforms & Services
                           </h3>
                           <div className="flex flex-wrap gap-2">
+                            <Badge>AWS</Badge>
                             <Badge>Azure</Badge>
                             <Badge>GCP</Badge>
-                            <Badge>AWS</Badge>
+                            <Badge>Datadog</Badge>
+                            <Badge>Cloudinary</Badge>
+                            <Badge>Algolia</Badge>
                             <Badge>Vercel</Badge>
-                            <Badge>Heroku</Badge>
                             <Badge>Docker</Badge>
                             <Badge>JFrog</Badge>
                             <Badge>WordPress</Badge>
                             <Badge>Sanity</Badge>
+                            <Badge>Contentful</Badge>
                           </div>
                         </div>
 
@@ -181,14 +193,16 @@ export function InteractiveResume() {
                           <div className="flex flex-wrap gap-2">
                             <Badge>Git</Badge>
                             <Badge>Figma</Badge>
+                            <Badge>ffmpeg</Badge>
+                            <Badge>3dvista Pro</Badge>
+                            <Badge>Blender</Badge>
+                            <Badge>Movavi</Badge>
                             <Badge>Photoshop</Badge>
                             <Badge>Illustrator</Badge>
                             <Badge>Word</Badge>
                             <Badge>PowerPoint</Badge>
                             <Badge>Excel</Badge>
                             <Badge>Adobe Acrobat</Badge>
-                            <Badge>3dvista Pro</Badge>
-                            <Badge>Movavi</Badge>
                           </div>
                         </div>
                       </div>
@@ -257,9 +271,6 @@ export function InteractiveResume() {
                 <Card>
                   <CardHeader>
                     <CardTitle>Testimonials</CardTitle>
-                    <CardDescription>
-                      Feedback from Takeda colleagues
-                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <motion.ul className="space-y-6">
@@ -279,12 +290,13 @@ export function InteractiveResume() {
 
                       <AnimatedListItem index={0}>
                         <blockquote className="border-l-4 pl-4 italic">
-                          "With your performance optimization of our
-                          experiences, you were able to single handedly improve
-                          performance of the website 3x, which is a metric that
-                          led Intelligent Workplace KPIs during Q2 review."
+                          "With your performance optimization of our experiences
+                          (via the @takeda-digital/xr package), you were able to
+                          single handedly improve performance of the website 3x,
+                          which is a metric that led Intelligent Workplace KPIs
+                          during Q2 review"
                           <footer className="text-muted-foreground mt-2 text-sm">
-                            – Matthew M.
+                            – Matthew M., Extended Reality Platform Head, Takeda
                           </footer>
                         </blockquote>
                       </AnimatedListItem>
@@ -295,7 +307,8 @@ export function InteractiveResume() {
                           always willing to help out and go the extra mile when
                           needed."
                           <footer className="text-muted-foreground mt-2 text-sm">
-                            – Daniel K.
+                            – Daniel K., Extended Reality Platform Member,
+                            Takeda
                           </footer>
                         </blockquote>
                       </AnimatedListItem>
@@ -308,7 +321,7 @@ export function InteractiveResume() {
                           experiences, we will effectively reach thousands of
                           potential donors."
                           <footer className="text-muted-foreground mt-2 text-sm">
-                            – Matthew M.
+                            – Matthew M., Extended Reality Platform Head, Takeda
                           </footer>
                         </blockquote>
                       </AnimatedListItem>

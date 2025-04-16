@@ -56,7 +56,7 @@
     "fix": "npm pkg fix"
   },
   "dependencies": {
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.5.0"
   },
   "devDependencies": {
     "@d0paminedriven/fs": "^1.0.0",
@@ -64,9 +64,8 @@
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
     "@portfolio/tsconfig": "workspace:*",
-    "@types/node": "^22.14.0",
+    "@types/node": "^22.14.1",
     "chokidar": "^4.0.3",
-    "dotenv": "^16.4.7",
     "dotenv-cli": "^8.0.0",
     "dotenv-expand": "^12.0.1",
     "eslint": "latest",

@@ -1,6 +1,6 @@
 {
   "name": "@portfolio/fs",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "convenient fs helpers",
   "publishConfig": {
     "access": "public",
@@ -56,7 +56,7 @@
     "fix": "npm pkg fix"
   },
   "dependencies": {
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.5.0",
     "sharp": "^0.34.1"
   },
   "devDependencies": {
@@ -64,11 +64,10 @@
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
     "@portfolio/tsconfig": "workspace:*",
-    "@swc/core": "^1.11.18",
-    "@swc/wasm": "^1.11.18",
-    "@types/node": "^22.14.0",
+    "@swc/core": "^1.11.21",
+    "@swc/wasm": "^1.11.21",
+    "@types/node": "^22.14.1",
     "chokidar": "^4.0.3",
-    "dotenv": "^16.4.7",
     "dotenv-cli": "^8.0.0",
     "dotenv-expand": "^12.0.1",
     "eslint": "latest",

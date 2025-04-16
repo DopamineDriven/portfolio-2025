@@ -1,4 +1,4 @@
-{
+{ 
   "extends": "@portfolio/tsconfig/react-library.json",
   "compilerOptions": {
     "paths": {

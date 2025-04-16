@@ -47,3 +47,5 @@ stock.md
 misc/*
 apps/x/src/utils/__out__
 packages/fs/public/*
+packages/fs/src/test/__gen__/*
+packages/fs/src/test/*.ts

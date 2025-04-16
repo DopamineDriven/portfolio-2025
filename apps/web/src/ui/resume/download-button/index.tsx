@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Download } from "lucide-react";
 import { motion } from "motion/react";
+import { cn } from "@/lib/utils";
 import { Button } from "@/ui/atoms/button";
 import { resumeData } from "@/utils/__generated__/resume-blob";
 
@@ -18,7 +19,7 @@ export function DownloadResumeButton() {
       const link = document.createElement("a");
       link.href = resumeData.resumeBlob.downloadUrl;
       link.target = "_blank";
-      link.download = "andrew-ross-resume.pdf"; // This will be the suggested filename
+      link.download = "andrew-ross-resume"; // This will be the suggested filename
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -45,10 +46,9 @@ export function DownloadResumeButton() {
         disabled={isDownloading}
         className="relative">
         <Download
-          className={`mr-2 h-4 w-4 ${isDownloading ? "animate-spin" : ""}`}
+          className={cn(`mr-2 size-4`, isDownloading ? "animate-spin" : "")}
         />
         {isDownloading ? "Downloading..." : "Download Resume"}
-
         {isHovered && (
           <motion.div
             className="bg-primary/10 absolute inset-0 -z-10 rounded-md"
