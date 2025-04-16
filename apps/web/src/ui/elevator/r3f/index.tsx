@@ -141,7 +141,7 @@ export default function ElevatorApp() {
           />
         </Suspense>
       </Canvas>
-      {getHostname?.includes("r3f-elevator.vercel.app") ? (
+      {getHostname?.includes("www.asross.com") ? (
         <></>
       ) : (
         <Leva isRoot={true} collapsed />
