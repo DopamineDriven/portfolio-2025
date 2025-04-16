@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
-import { PBRTextureSet } from "../types";
+import type { PBRTextureSet } from "@/ui/elevator/r3f/types";
 
 export function PBRMaterial({
   textures,
@@ -18,7 +18,7 @@ export function PBRMaterial({
   metalness?: number;
   roughness?: number;
 }) {
-  // TODO utilize onload callback (second optional arg in useTexture)
+  // TODO utilize onload callback (second optional arg in useTexture...maybe?)
   const textureProps = useTexture({
     map: textures.albedo,
     aoMap: textures.ao,

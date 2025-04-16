@@ -11,6 +11,7 @@ import { ElevatorFrame } from "@/ui/elevator/r3f/elevator-frame";
 import { ElevatorInterior } from "@/ui/elevator/r3f/elevator-interior";
 import { FloorIndicator } from "@/ui/elevator/r3f/floor-indicator";
 import { Wall } from "@/ui/elevator/r3f/wall";
+import { SoftWallLight } from "../soft-wall-light";
 
 export function ElevatorScene() {
   const [activated, setActivated] = useState(false);
@@ -83,20 +84,59 @@ export function ElevatorScene() {
   };
 
   return (
-    <group>
+    <group position={[0, -0.5, 0]}>
       <Wall />
       <ElevatorFrame />
-      <FloorIndicator activated={activated} />
-      <ElevatorButton activated={activated} onClickAction={handleClick} />
       <ElevatorDoor position={0} isLeft={true} activated={activated} />
       <ElevatorDoor position={0} isLeft={false} activated={activated} />
       <ElevatorInterior activated={activated} />
+      <FloorIndicator activated={activated} />
+      <ElevatorButton activated={activated} onClickAction={handleClick} />
       <CeilingLight />
+      <pointLight
+        position={[2, 1, 3]}
+        intensity={0.7}
+        distance={7}
+        decay={2}
+        color="#ffffff"
+      />
+      <pointLight
+        position={[-2, 1, 3]}
+        intensity={0.7}
+        distance={7}
+        decay={2}
+        color="#ffffff"
+      />
+      <ambientLight intensity={0.7} color="#1e222c" />
+      <pointLight
+        position={[2, 1, 3]}
+        intensity={0.7}
+        distance={7}
+        decay={2}
+        color="#ffffff"
+        castShadow={false}
+      />
+      <pointLight
+        position={[-2, 1, 3]}
+        intensity={0.7}
+        distance={7}
+        decay={2}
+        color="#ffffff"
+        castShadow={false}
+      />
+      <spotLight
+        position={[0, 2, -2.5]}
+        angle={0.5}
+        intensity={0.5}
+        penumbra={0.3}
+        color="#eeeeee"
+        castShadow={false}
+      />
+      <SoftWallLight />
       <CombinedCameraController
         isTransitioning={isTransitioning}
         transitionProgress={transitionProgress}
       />
-      <ambientLight intensity={0.2} />
     </group>
   );
 }

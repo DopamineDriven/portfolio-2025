@@ -35,10 +35,18 @@ export class AudioController {
     if (this.isPlaying) return;
     this.isPlaying = true;
     try {
-      await this.playButtonSound();
-      await this.playDoorOpenSound();
-      await this.playElevatorSound();
-      await this.playTransitionSound();
+      this.playButtonSound()
+        .then(() => this.playDoorOpenSound())
+        .then(() => this.playElevatorSound())
+        .then(() => this.playTransitionSound())
+        .catch(err => {
+          if (err instanceof Error) {
+            throw new Error("error, " + err.message + `, name: ${err.name}`);
+          } else
+            throw new Error(
+              typeof err === "string" ? err : JSON.stringify(err, null, 2)
+            );
+        });
     } catch (err) {
       if (err instanceof Error) {
         throw new Error("error, " + err.message + `, name: ${err.name}`);

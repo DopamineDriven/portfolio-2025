@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import ElevatorScene from "@/ui/elevator/experimental/client";
+import { ElevatorClientWrapper } from "@/ui/elevator";
 
 export const metadata = {
   title: "Elevator Scene"
 } satisfies Metadata;
 
 export default function ElevatorExperiencePage() {
-  return <ElevatorScene />;
+  return <ElevatorClientWrapper />;
 }

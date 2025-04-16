@@ -25,7 +25,7 @@
       "cache": false
     }
   },
-  "ui": "stream",
+  "ui": "tui",
   "globalEnv": [
     "__NEXT_PROCESSED_ENV",
     "AUTH_TOKEN",
@@ -36,6 +36,7 @@
     "AUTH_URL",
     "BLOB_READ_WRITE_TOKEN",
     "CI_ENV",
+    "CODE_SANDBOX_TOKEN",
     "COREPACK_ENABLE_STRICT",
     "DATABASE_URL",
     "DATABASE_URL_UNPOOLED",
@@ -43,6 +44,7 @@
     "GA_PROTOCOL_SECRET",
     "GA_STREAM_ID",
     "GITHUB_PAT",
+    "MEASUREMENT_PROTOCOL_SECRET",
     "MY_GITHUB_PAT",
     "NEXTAUTH_SECRET",
     "NEXT_PUBLIC_GA_MEASUREMENT_ID",

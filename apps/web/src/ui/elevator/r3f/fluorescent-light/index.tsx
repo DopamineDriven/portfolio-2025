@@ -1,7 +1,7 @@
 "use client";
 
+import type * as THREE from "three";
 import { useEffect, useRef } from "react";
-import * as THREE from "three";
 
 export const FluorescentLight = ({ intensity = 1 }: { intensity?: number }) => {
   const lightRef = useRef<THREE.MeshStandardMaterial>(null);

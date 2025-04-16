@@ -1,25 +1,30 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ContactShadows, PerspectiveCamera } from "@react-three/drei";
 import { Canvas, extend } from "@react-three/fiber";
 import Cookies from "js-cookie";
+import { Leva } from "leva";
 import type { ElevatorTransitionEventDetail } from "@/ui/elevator/r3f/custom-event";
 import type { ThreeElement } from "@react-three/fiber";
 import { useCookies } from "@/context/cookie-context";
+import { useHostname } from "@/hooks/use-hostname";
 import { getCookieDomain } from "@/lib/site-domain";
+import { DownTriangleGeometry } from "@/ui/elevator/r3f/down-triangle-geometry";
 import { ElevatorScene } from "@/ui/elevator/r3f/scene";
+import { SoftWallLight } from "@/ui/elevator/r3f/soft-wall-light/instance";
 import { TriangleGeometry } from "@/ui/elevator/r3f/triangle-geometry";
 
-extend({ TriangleGeometry });
-
-// Add types to ThreeElements so TypeScript understands triangleGeometry
+extend({ DownTriangleGeometry, SoftWallLight, TriangleGeometry });
 declare module "@react-three/fiber" {
   interface ThreeElements {
     triangleGeometry: ThreeElement<typeof TriangleGeometry>;
+    downTriangleGeometry: ThreeElement<typeof DownTriangleGeometry>;
+    softWallLight: ThreeElement<typeof SoftWallLight>;
   }
 }
+
 export default function ElevatorApp() {
   const [loading, setLoading] = useState(true);
 
@@ -34,7 +39,7 @@ export default function ElevatorApp() {
   const isSecure = useMemo(() => process.env.NODE_ENV !== "development", []);
 
   const navigationTriggeredRef = useRef(false);
-
+  const getHostname = useHostname();
   useEffect(() => {
     if (pathOfIntent) {
       pathOfIntentRef.current = pathOfIntent;
@@ -47,6 +52,14 @@ export default function ElevatorApp() {
       }
     }
   }, [pathOfIntent]);
+
+  useEffect(() => {
+    // must initialize Uniforms Lib once for RectAreaLight effect to have any impact on PBR texture for the wall
+    (async () =>
+      (
+        await import("three/examples/jsm/lights/RectAreaLightUniformsLib.js")
+      ).RectAreaLightUniformsLib.init())().catch(v => console.error(v));
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1000);
@@ -78,7 +91,7 @@ export default function ElevatorApp() {
           console.log("[CLIENT] router.push event to: ", destination);
           router.push(decodeURIComponent(destination));
           router.refresh();
-        }, 1000);
+        }, 10);
       }
     };
 
@@ -94,7 +107,6 @@ export default function ElevatorApp() {
       );
     };
   }, [isSecure, memoizedCookieDomain, router, clearPathOfIntent]);
-
   return (
     <>
       {loading && (
@@ -102,36 +114,38 @@ export default function ElevatorApp() {
           <div className="text-xl text-white">Loading Elevator...</div>
         </div>
       )}
-
-      {/* Fade overlay */}
       <div
         className="pointer-events-none absolute inset-0 z-10 bg-black transition-opacity duration-500"
         style={{ opacity: fadeOpacity }}
       />
-
       <Canvas
         className="absolute top-0 left-0 z-20 min-h-[100dvh] min-w-screen items-center justify-center bg-black/80"
         shadows
-        camera={{ fov: 60, near: 0.1, far: 1000, position: [0, 1.6, 5] }}>
+        camera={{ fov: 40, near: 0.1, far: 1000, position: [0, 0, 6] }}>
         <Suspense fallback={null}>
           <PerspectiveCamera
             makeDefault
             position={[0, 0, 6]}
-            fov={30}
+            fov={40}
             near={0.1}
             far={100}
           />
           <ElevatorScene />
           <ContactShadows
             position={[0, -2, 0]}
-            opacity={0.5}
+            opacity={0.65}
             scale={10}
-            blur={2}
-            far={4}
+            blur={4}
+            far={10}
             resolution={256}
           />
         </Suspense>
       </Canvas>
+      {getHostname?.includes("r3f-elevator.vercel.app") ? (
+        <></>
+      ) : (
+        <Leva isRoot={true} collapsed />
+      )}
     </>
   );
 }
