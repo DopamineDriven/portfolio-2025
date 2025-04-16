@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import React from "react";
-import { Poppins as _Poppins, Inter } from "next/font/google";
 import { ThemeProvider } from "@/ui/providers/theme-provider";
 import "./global.css";
 import Script from "next/script";
@@ -8,23 +7,9 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AnimationContextProvider } from "@/context/animation-context";
 import { CookieProvider } from "@/context/cookie-context";
-import {
-  BasisGrotesqueProBlack,
-  BasisGrotesqueProBlackItalic,
-  BasisGrotesqueProBold,
-  BasisGrotesqueProBoldItalic,
-  BasisGrotesqueProItalic,
-  BasisGrotesqueProLight,
-  BasisGrotesqueProLightItalic,
-  BasisGrotesqueProMedium,
-  BasisGrotesqueProMediumItalic,
-  BasisGrotesqueProRegular
-} from "@/lib/fonts";
 import { getSiteUrl } from "@/lib/site-url";
-import { cn } from "@/lib/utils";
 import * as gAnalytics from "@/utils/analytics";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 export const metadata = {
   metadataBase: new URL(getSiteUrl(process.env.NODE_ENV)),
   title: {
@@ -108,20 +93,7 @@ export default function RootLayout({
   return (
     <html
       suppressHydrationWarning
-      lang="en"
-      className={cn(
-        BasisGrotesqueProLight.variable,
-        BasisGrotesqueProMedium.variable,
-        BasisGrotesqueProMediumItalic.variable,
-        BasisGrotesqueProRegular.variable,
-        BasisGrotesqueProItalic.variable,
-        BasisGrotesqueProLightItalic.variable,
-        BasisGrotesqueProBold.variable,
-        BasisGrotesqueProBlack.variable,
-        BasisGrotesqueProBlackItalic.variable,
-        BasisGrotesqueProBoldItalic.variable,
-        inter.variable
-      )}>
+      lang="en">
       <body className="font-basis-grotesque-pro antialiased overflow-x-hidden!">
         <AnimationContextProvider>
           <ThemeProvider>

@@ -28,7 +28,7 @@ export function InteractiveResume() {
   const tabs = ["Experience", "Skills", "Education", "Testimonials"];
 
   return (
-    <section className="font-basis-grotesque-pro-regular container mx-auto px-4 py-8 md:px-6 lg:py-12">
+    <section className="font-basis-grotesque-pro font-normal container mx-auto px-4 py-8 md:px-6 lg:py-12">
       <div className="mb-8">
         <Button
           variant="ghost"

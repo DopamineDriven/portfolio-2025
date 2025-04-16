@@ -367,7 +367,7 @@ export default function ArLogoParticles() {
       <div className="absolute bottom-8 z-10 hidden flex-col items-center gap-4 text-center">
         <p
           className={cn(
-            `font-basis-grotesque-pro-regular text-sm`,
+            `font-basis-grotesque-pro text-sm`,
             isDarkMode ? "text-foreground" : "text-background"
           )}>
           Interactive Particle Animation

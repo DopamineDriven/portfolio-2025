@@ -33,7 +33,7 @@ export function PostTemplate({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="bg-background text-foreground container mx-auto px-2 py-16 md:py-24 text-sm sm:text-base font-basis-grotesque-pro-regular">
+      className="bg-background text-foreground container mx-auto px-2 py-16 md:py-24 text-sm sm:text-base font-basis-grotesque-pro font-normal">
       <div className="mx-auto max-w-[1280px]">
         <BreakoutWrapper>
           <div className="mb-4 md:mx-auto md:max-w-[50%]">
@@ -67,11 +67,11 @@ export function PostTemplate({
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.6 }}>
-            <h1 className="font-basis-grotesque-pro-bold mb-4 text-4xl md:text-5xl">
+            <h1 className="font-basis-grotesque-pro font-bold mb-4 text-4xl md:text-5xl">
               {title}
             </h1>
             {description && (
-              <p className="font-basis-grotesque-pro-regular text-muted-foreground mb-6 text-xl md:text-2xl">
+              <p className="font-basis-grotesque-pro font-normal text-muted-foreground mb-6 text-xl md:text-2xl">
                 {description}
               </p>
             )}
