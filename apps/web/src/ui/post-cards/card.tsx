@@ -34,19 +34,19 @@ export function PostCard({ post }: { post: PostDetails }) {
                 <CalendarIcon className="text-muted-foreground/80 size-4" />
                 <time
                   dateTime={post.date}
-                  className="font-basis-grotesque-pro-light text-muted-foreground/80 text-xs">
+                  className="font-basis-grotesque-pro font-light text-muted-foreground/80 text-xs">
                   {post.date}
                 </time>
               </div>
               <motion.h2
-                className="font-basis-grotesque-pro-medium text-base tracking-wider sm:text-2xl"
+                className="font-basis-grotesque-pro font-medium text-base tracking-wider sm:text-2xl"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}>
                 {post.title}
               </motion.h2>
               <motion.p
-                className="font-basis-grotesque-pro-regular text-muted-foreground mt-2 line-clamp-2 text-sm tracking-wider"
+                className="font-basis-grotesque-pro font-normal text-muted-foreground mt-2 line-clamp-2 text-sm tracking-wider"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}>

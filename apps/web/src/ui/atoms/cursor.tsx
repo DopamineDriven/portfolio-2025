@@ -63,7 +63,7 @@ function CustomCursor({
             variants={{ exit: { opacity: 0 } }}>
             <div
               className={cn(
-                "font-basis-grotesque-pro-medium m-0 p-[0.9375rem] text-lg tracking-tight text-[#f5f5f5]",
+                "font-basis-grotesque-pro font-medium m-0 p-[0.9375rem] text-lg tracking-tight text-[#f5f5f5]",
                 tooltipClassName
               )}>
               {tooltipContent}

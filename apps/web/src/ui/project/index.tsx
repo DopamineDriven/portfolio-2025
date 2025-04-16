@@ -57,15 +57,15 @@ export function Project({
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}>
-            <h1 className="font-basis-grotesque-pro-bold mb-2 text-3xl">
+            <h1 className="font-basis-grotesque-pro font-bold mb-2 text-3xl">
               {title}
             </h1>
-            <p className="font-basis-grotesque-pro-regular text-muted-foreground mb-4 text-lg">
+            <p className="font-basis-grotesque-pro font-normal text-muted-foreground mb-4 text-lg">
               {description}
             </p>
             {children}
             <div className="my-4">
-              <h2 className="font-basis-grotesque-pro-bold my-2 text-xl">
+              <h2 className="font-basis-grotesque-pro font-bold my-2 text-xl">
                 Technologies
               </h2>
               <ul className="flex cursor-pointer flex-wrap gap-2">

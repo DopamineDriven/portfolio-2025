@@ -33,14 +33,14 @@ export function ProjectCard({ project }: { project: ProjectDetail }) {
         </div>
         <div className="text-foreground absolute right-0 bottom-0 left-0 p-6">
           <motion.h2
-            className="font-basis-grotesque-pro-bold text-base tracking-wider sm:text-2xl"
+            className="font-basis-grotesque-pro font-bold text-base tracking-wider sm:text-2xl"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}>
             {project.title}
           </motion.h2>
           <motion.p
-            className="font-basis-grotesque-pro-regular text-muted-foreground mt-2 text-sm tracking-wider"
+            className="font-basis-grotesque-pro font-normal text-muted-foreground mt-2 text-sm tracking-wider"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}>
