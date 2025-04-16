@@ -134,13 +134,11 @@ export default function RootLayout({
       <body className="font-basis-grotesque-pro-regular overflow-x-hidden!">
         <AnimationContextProvider>
           <ThemeProvider>
-            <CookieProvider>
-                {children}
-            </CookieProvider>
+            <CookieProvider>{children}</CookieProvider>
           </ThemeProvider>
         </AnimationContextProvider>
-        <SpeedInsights />
-        <Analytics />
+        <SpeedInsights  debug={true} />
+        <Analytics mode="production" />
       </body>
       <Script
         async
