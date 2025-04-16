@@ -1,7 +1,7 @@
 import type { Config as TailwindConfig } from "tailwindcss";
 
 export default {
-  content: ["src/**/*.{js,ts,jsx,tsx,md,mdx}"],
+  content: ["src/**/*.{js,ts,jsx,tsx,mdx}"],
   darkMode: "selector",
   future: { hoverOnlyWhenSupported: true },
   theme: {
