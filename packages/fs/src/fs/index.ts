@@ -755,6 +755,61 @@ export default class Fs {
       return console.error(err);
     }
   }
+
+  public async fetchRemoteWriteLocalLargeFiles<
+    const I extends string,
+    const O extends string
+  >(inputUrl: I, outputPath: O, useDetectedExtension = true) {
+    const MAX_SAFE_IN_MEMORY_MB = 100;
+
+    try {
+      const head = await fetch(inputUrl, { method: "HEAD" });
+      const contentLength = head.headers.get("content-length");
+      const fileSizeMb = contentLength
+        ? parseInt(contentLength, 10) / (1024 * 1024)
+        : null;
+
+      const formattedPath = useDetectedExtension
+        ? `${outputPath}.${this.assetType(inputUrl)}`
+        : outputPath;
+
+      this.generateDirIfDNE(this.pathHandler(formattedPath), {
+        recursive: true
+      });
+
+      // For large files, stream directly to disk
+      if (fileSizeMb !== null && fileSizeMb > MAX_SAFE_IN_MEMORY_MB) {
+        const res = await fetch(inputUrl);
+        if (!res.ok || !res.body) {
+          throw new Error(`Failed to fetch asset: ${res.statusText}`);
+        }
+
+        const writeStream = fsSync.createWriteStream(
+          relative(this.cwd ?? process.cwd(), formattedPath)
+        );
+        const reader = res.body.getReader();
+
+        const pump = async () => {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            writeStream.write(value);
+          }
+          writeStream.end();
+        };
+
+        await pump();
+        return;
+      }
+
+      // For smaller files, use original base64 → buffer method
+      const result = await this.assetToBufferView(inputUrl);
+      const cleanData = this.cleanDataUrl(result.b64encodedData);
+      this.withWs(formattedPath, Buffer.from(cleanData, "base64"));
+    } catch (err) {
+      console.error(`[fetchRemoteWriteLocal error]:`, err);
+    }
+  }
   // USE fluent-ffmpeg for video/animated image transforms (apng, etc)
   // https://www.npmjs.com/package/fluent-ffmpeg
   // https://www.npmjs.com/package/@types/fluent-ffmpeg
