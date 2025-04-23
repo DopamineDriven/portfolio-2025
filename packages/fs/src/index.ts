@@ -14,6 +14,8 @@ export type {
   Dict,
   Equal,
   ExcludeFieldEnumerable,
+  RmDirOptions,
+  RmDirProps,
   ExecSyncOptions,
   ExecSyncOptionsWithBufferEncoding,
   ExecSyncOptionsWithStringEncoding,

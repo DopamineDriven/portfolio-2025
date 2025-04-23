@@ -11,6 +11,7 @@ import type {
   ParsedUrlInfo,
   ReadDirOptions,
   RemoveFields,
+  RmDirOptions,
   Unenumerate,
   WriteFileAsyncDataUnion,
   WriteFileAsyncOptions,
@@ -123,7 +124,8 @@ export default class Fs {
   }
 
   public exists<const T extends string>(target: T) {
-    if (!(/\//gm.test(target))) return fsSync.existsSync(resolve(join(this.cwd, target)));
+    if (!/\//gm.test(target))
+      return fsSync.existsSync(resolve(join(this.cwd, target)));
     return fsSync.existsSync(relative(this.cwd ?? process.cwd(), target));
   }
 
@@ -186,32 +188,33 @@ export default class Fs {
     );
   }
 
-
   public isRootPathTargeted<const T extends string>(path: T) {
     if (/^(?:\.\/|\.|\/|root|\.\.\/|~\/\.?|cwd|\.\/\.)$/g.test(path)) {
-      return true
+      return true;
     } else return false;
   }
 
   public readDir<const T extends string>(path: T, options?: ReadDirOptions) {
     if (this.isRootPathTargeted(path)) {
-      return this.handleBuffStrArrUnion(fsSync.readdirSync(resolve(join(this.cwd, "./")), options))
-    }
-    else return this.handleBuffStrArrUnion(
-      fsSync.readdirSync(
-        relative((this.cwd ??= process.cwd()), path),
-        options
-      ) satisfies (string | Buffer)[]
-    );
+      return this.handleBuffStrArrUnion(
+        fsSync.readdirSync(resolve(join(this.cwd, "./")), options)
+      );
+    } else
+      return this.handleBuffStrArrUnion(
+        fsSync.readdirSync(
+          relative((this.cwd ??= process.cwd()), path),
+          options
+        ) satisfies (string | Buffer)[]
+      );
   }
 
   public executeCommand = <const T extends string>({
     command,
     ...options
   }: ExecuteCommandProps<T>) =>
-    (
-      Buffer.from(execSync(command, { ...options }).toJSON().data)
-    ).toString("utf-8");
+    Buffer.from(execSync(command, { ...options }).toJSON().data).toString(
+      "utf-8"
+    );
 
   public fileGenTimestamp<
     T extends InstanceType<typeof Date> = InstanceType<typeof Date>
@@ -230,7 +233,8 @@ export default class Fs {
   }
 
   public existsSync<const T extends string>(path: T) {
-    if (!(/\//gm.test(path))) return fsSync.existsSync(resolve(join(this.cwd, path)));
+    if (!/\//gm.test(path))
+      return fsSync.existsSync(resolve(join(this.cwd, path)));
     return fsSync.existsSync(relative(this.cwd ?? process.cwd(), path));
   }
 
@@ -329,6 +333,46 @@ export default class Fs {
     }
   };
 
+  public dirExists<const T extends string>(dir: T) {
+    const resolved = relative(this.cwd, dir);
+    try {
+      return fsSync.statSync(resolved).isDirectory();
+    } catch {
+      return false;
+    }
+  }
+
+  public async unlink<const P extends string>(path: P) {
+    if (this.existsSync(path)) {
+      return await fsAsync.unlink(relative(this.cwd, path));
+    } else {
+      throw new Error(`input path ${path} does not exist`);
+    }
+  }
+
+  public async rmdir<const D extends string>(dir: D, options?: RmDirOptions) {
+    const resolved = relative(this.cwd, dir);
+
+    if (this.dirExists(dir)) {
+      return fsAsync.rmdir(relative(this.cwd, dir), options);
+    } else {
+      // Either doesn't exist or is not a directory
+      throw new Error(`directory ${resolved} does not exist`);
+    }
+  }
+
+  public rm<const D extends string>(dir: D) {
+    const resolved = resolve(this.cwd, dir);
+    if (this.dirExists(dir)) {
+      return fsSync.rm(resolved, { force: true, recursive: true }, err => {
+        if (err?.message) {
+          console.error(err?.message);
+        }
+      });
+    } else {
+      throw new Error(`directory ${resolved} does not exist`);
+    }
+  }
   public fileToBuffer = <const T extends string>(path: T) =>
     Buffer.from(
       fsSync.readFileSync(relative(this.cwd ?? process.cwd(), path)).toJSON()
@@ -474,6 +518,8 @@ export default class Fs {
       js: this.jsVal,
       json: "application/json",
       jsonld: "application/ld+json",
+      ktx: "image/ktx",
+      ktx2: "image/ktx2",
       m3u8: "application/vnd.apple.mpegurl",
       m4a: "audio/mp4",
       m4v: "video/mp4",
@@ -577,7 +623,9 @@ export default class Fs {
       p.pathname.split(/\//g).reverse()[0] ?? ""
     );
     if (doesUrlPathContainFileExtension === false)
-      console.warn(`no file extension detected in input url ${path}, attempting fetch`);
+      console.warn(
+        `no file extension detected in input url ${path}, attempting fetch`
+      );
     const response = await fetch(path);
     if (!response.ok) {
       throw new Error(`Failed to fetch asset: ${response.statusText}`);
