@@ -1,3 +1,4 @@
+// import type {Property} from "csstype"
 /**
  * helper workup for use in XOR type below
  * makes properties from U optional and undefined in T, and vice versa
@@ -10,6 +11,8 @@ export type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 export type XOR<T, U> = T | U extends object
   ? (Without<T, U> & U) | (Without<U, T> & T)
   : T | U;
+
+// type WidthValue<TLength = (string & {}) | 0> = Property.MaxWidth<TLength>
 
 /**
  * valid width values
@@ -100,10 +103,11 @@ export type TextElementTagUnion =
   | "del"
   | "figure"
   | "li"
+  | "ol"
+  | "ul"
   | "i"
   | "kbd"
   | "summary";
-
 
 /**
    * Type Multiplication

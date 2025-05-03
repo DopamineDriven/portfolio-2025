@@ -145,7 +145,7 @@ export const CustomCursor = ({ tooltipContent, consumerClassName }: CustomCursor
 
 import { useState, useEffect } from "react"
 import { ComposableMap, Geographies, Geography } from "react-simple-maps"
-import { scaleLinear } from "d3-scale"
+import { scaleLinear } from "d3"
 import useSWR from "swr"
 
 // You'll need to download this file and place it in your public directory

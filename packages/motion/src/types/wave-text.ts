@@ -11,7 +11,9 @@ import type { CSSWidthValue, TextElementTagUnion } from "./helpers";
 export type BaseWavyTextProps = {
   /** content to be split and animated */
   content: string;
+  /** content preceding content to be split and animated */
   contentBefore?: string;
+  /** content following content to be split and animated */
   contentAfter?: string;
   /** optional container className */
   className?: string;

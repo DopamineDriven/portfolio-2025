@@ -10,6 +10,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { animate, stagger } from "motion";
 import { splitText } from "motion-plus";
 import type { UseGentleTextEffect } from "@/types/hooks";
+
 /**
  * Custom hook to handle the gentle text animation effect
  */

@@ -1,9 +1,10 @@
 import type {
   AnimationOptions,
   DOMKeyframesDefinition,
-  Easing,
+  AnimationGeneratorType,
   ElementOrSelector
 } from "motion-dom";
+import type { Easing } from "motion-utils";
 import type { CSSWidthValue, TextElementTagUnion, XOR } from "./helpers";
 
 /** Stagger config */
@@ -25,7 +26,7 @@ export type BaseAnimationOptions = Omit<
   AnimationOptions,
   "type" | "duration" | "bounce" | "delay"
 > & {
-  type?: "decay" | "spring" | "keyframes" | "tween" | "inertia";
+  type?: AnimationGeneratorType;
   duration?: number;
   bounce?: number;
 };

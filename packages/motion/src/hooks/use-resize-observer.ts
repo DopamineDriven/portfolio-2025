@@ -11,7 +11,6 @@ export function useResizeObserver<const T extends HTMLDivElement | null>(
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver(mutations => {
-
       setWidth(mutations[0]?.contentRect?.width ?? 0);
       setHeight(mutations[0]?.contentRect?.height ?? 0);
     });

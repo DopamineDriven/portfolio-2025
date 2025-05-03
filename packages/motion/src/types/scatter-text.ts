@@ -14,8 +14,7 @@ export type BaseScatterTextProps = {
   containerId?: string;
   /** Heading element id */
   headingId?: string;
-  /** Text content to anim
-  /** content to be split and animated */
+  /** content to be scattered */
   content: string;
   /** optional container className */
   containerClassName?: string;
