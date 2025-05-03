@@ -1,6 +1,6 @@
 {
-  "name": "@portfolio/fs",
-  "version": "4.0.0",
+  "name": "@d0paminedriven/fs",
+  "version": "4.1.0",
   "description": "convenient fs helpers",
   "publishConfig": {
     "access": "public",
@@ -60,16 +60,16 @@
     "sharp": "^0.34.1"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "^7.52.3",
+    "@microsoft/api-extractor": "^7.52.7",
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
     "@portfolio/tsconfig": "workspace:*",
-    "@swc/core": "^1.11.21",
-    "@swc/wasm": "^1.11.21",
-    "@types/node": "^22.14.1",
+    "@swc/core": "^1.11.24",
+    "@swc/wasm": "^1.11.24",
+    "@types/node": "^22.15.3",
     "chokidar": "^4.0.3",
     "dotenv-cli": "^8.0.0",
-    "dotenv-expand": "^12.0.1",
+    "dotenv-expand": "^12.0.2",
     "eslint": "latest",
     "jiti": "^2.4.2",
     "prettier": "latest",
