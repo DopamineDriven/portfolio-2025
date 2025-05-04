@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { GentleText } from "@d0paminedriven/motion";
 import { motion } from "motion/react";
 import type { PostDetails } from "@/types/posts";
 import { shimmer } from "@/lib/shimmer";
@@ -33,7 +34,7 @@ export function PostTemplate({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="bg-background text-foreground container mx-auto px-2 py-16 md:py-24 text-sm sm:text-base font-basis-grotesque-pro font-normal">
+      className="bg-background text-foreground font-basis-grotesque-pro container mx-auto px-2 py-16 text-sm font-normal sm:text-base md:py-24">
       <div className="mx-auto max-w-[1280px]">
         <BreakoutWrapper>
           <div className="mb-4 md:mx-auto md:max-w-[50%]">
@@ -48,7 +49,7 @@ export function PostTemplate({
                 height={630}
                 placeholder="blur"
                 blurDataURL={shimmer([1200, 630])}
-                className="w-full md:max-h-[50vh] object-cover sm:rounded-lg"
+                className="w-full object-cover sm:rounded-lg md:max-h-[50vh]"
                 priority
               />
             </motion.div>
@@ -67,11 +68,29 @@ export function PostTemplate({
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.6 }}>
-            <h1 className="font-basis-grotesque-pro font-bold mb-4 text-4xl md:text-5xl">
-              {title}
-            </h1>
+            <GentleText
+              content={title}
+              textClassName={
+                "font-basis-grotesque-pro font-bold mb-4 text-4xl md:text-5xl"
+              }
+              maxWidth="fit"
+              containerClassName={"mx-auto"}
+              animateOnlyInView={true}
+              autoPlay
+              allowOverflow
+              keyframes={{
+                opacity: [0, 1],
+                y: [-10, 10],
+                scale: [0.5, 1],
+                rotate: [-10, 0],
+                color: ["#83e6f7", "#f8fafc"]
+              }}
+              duration={0.3}
+              as="h1"
+              animateTarget="chars"
+            />
             {description && (
-              <p className="font-basis-grotesque-pro font-normal text-muted-foreground mb-6 text-xl md:text-2xl">
+              <p className="font-basis-grotesque-pro text-muted-foreground mb-6 text-xl font-normal md:text-2xl">
                 {description}
               </p>
             )}
@@ -91,9 +110,11 @@ export function PostTemplate({
             <p className="text-muted-foreground text-center text-sm">
               Published {date}
             </p>
-            <div className="flex flex-col gap-2 items-center">
+            <div className="flex flex-col items-center gap-2">
               <Link href={`/#${slug}`} className="w-full sm:w-auto">
-                <Button variant="outline" className="w-full sm:w-auto cursor-pointer">
+                <Button
+                  variant="outline"
+                  className="w-full cursor-pointer sm:w-auto">
                   Back to Posts
                 </Button>
               </Link>
