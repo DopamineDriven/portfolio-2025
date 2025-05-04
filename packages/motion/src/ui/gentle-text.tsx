@@ -5,6 +5,7 @@ import type { CSSProperties } from "react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { AnimatePresence, useInView } from "motion/react";
 import type { GentleTextProps } from "@/types/gentle-text";
+import type { UseGentleTextEffectProps } from "@/types/hooks";
 import { useGentleTextEffect } from "@/hooks/use-gentle-text-effect";
 import { useResizeObserver } from "@/hooks/use-resize-observer";
 
@@ -25,8 +26,8 @@ export default function GentleText({
   animateTarget = "chars",
   maxWidth = "full",
   debug = false,
-  duration = 1,
-  staggerDelay = 0.04,
+  duration = 1.5,
+  withStagger,
   yOffset = 10,
   initialScale = 0.9,
   blurAmount = 4,
@@ -62,7 +63,7 @@ export default function GentleText({
   });
 
   const elementRef = useRef<HTMLElement | null>(null);
-  
+
   const textRef = useCallback(
     (node: HTMLElement | null) => {
       if (node && !initialElement) {
@@ -72,20 +73,62 @@ export default function GentleText({
     [initialElement]
   );
 
-  // Use inView hook to detect when the element is in the viewport
   const inViewRef = useRef<HTMLDivElement | null>(null);
 
   const isInView = useInView(inViewRef, {
     amount: inViewThreshold,
     margin: inViewMargin,
-    once: !(animationOptions?.repeat ?? 0) // Only trigger once if not repeating
+    once: !(animationOptions?.repeat ?? 0) // trigger once if not repeating
   } satisfies UseInViewOptions);
 
-  // Determine if we should animate based on inView status
   const shouldAnimate = useMemo(
     () => (animateOnlyInView ? isInView : true),
     [animateOnlyInView, isInView]
   );
+  const isStaggerMode = withStagger != null;
+
+  const hookArgsMemo = useMemo(() => {
+    const base = {
+      elementRef,
+      animateTarget,
+      duration,
+      yOffset,
+      initialScale,
+      blurAmount,
+      autoPlay,
+      keyframes,
+      inView: shouldAnimate,
+      onAnimationStart,
+      onAnimationComplete
+    } satisfies Partial<UseGentleTextEffectProps>;
+    if (isStaggerMode) {
+      return {
+        ...base,
+        withStagger,
+        animationOptions
+      } satisfies UseGentleTextEffectProps;
+    } else {
+      return {
+        ...base,
+        animationOptions: animationOptions ?? { delay: 0 }
+      } satisfies UseGentleTextEffectProps;
+    }
+  }, [
+    elementRef,
+    animateTarget,
+    duration,
+    yOffset,
+    initialScale,
+    blurAmount,
+    autoPlay,
+    keyframes,
+    shouldAnimate,
+    onAnimationStart,
+    onAnimationComplete,
+    isStaggerMode,
+    withStagger,
+    animationOptions
+  ]);
 
   const {
     playAnimation,
@@ -94,23 +137,8 @@ export default function GentleText({
     resetAnimation,
     pauseAnimation,
     resumeAnimation,
-    stopAnimation,
-    getAnimationControls: _getAnimationControls
-  } = useGentleTextEffect({
-    elementRef,
-    animateTarget,
-    duration,
-    staggerDelay,
-    yOffset,
-    initialScale,
-    blurAmount,
-    autoPlay,
-    animationOptions,
-    keyframes,
-    inView: shouldAnimate,
-    onAnimationStart,
-    onAnimationComplete
-  });
+    stopAnimation
+  } = useGentleTextEffect(hookArgsMemo);
 
   // Handle manual replay
   const handleReplay = useCallback(() => {
@@ -118,7 +146,7 @@ export default function GentleText({
       resetAnimation();
       setTimeout(() => {
         playAnimation();
-      }, 10); // Small delay to ensure state updates
+      }, 10);
     }
   }, [isPlaying, resetAnimation, playAnimation]);
 
@@ -213,13 +241,19 @@ export default function GentleText({
           {isInView ? " In view" : " Not in view"} |
           {hasPlayed ? " Has played" : " Not played"} |
           {isPlaying ? " Playing" : " Not playing"} |
-          <button onClick={handleReplay} className="ml-1 underline">
+          <button
+            onClick={handleReplay}
+            style={{ marginLeft: "0.125rem", textDecorationLine: "underline" }}>
             Replay
           </button>
-          <button onClick={handlePauseResume} className="ml-1 underline">
+          <button
+            onClick={handlePauseResume}
+            style={{ marginLeft: "0.125rem", textDecorationLine: "underline" }}>
             {isPlaying ? "Pause" : "Resume"}
           </button>
-          <button onClick={stopAnimation} className="ml-1 underline">
+          <button
+            onClick={stopAnimation}
+            style={{ marginLeft: "0.125rem", textDecorationLine: "underline" }}>
             Stop
           </button>
         </div>
