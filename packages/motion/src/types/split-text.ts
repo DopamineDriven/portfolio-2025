@@ -1,7 +1,7 @@
 import type {
+  AnimationGeneratorType,
   AnimationOptions,
   DOMKeyframesDefinition,
-  AnimationGeneratorType,
   ElementOrSelector
 } from "motion-dom";
 import type { Easing } from "motion-utils";

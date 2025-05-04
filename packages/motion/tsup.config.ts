@@ -16,7 +16,9 @@ const tsupConfig = (options: Options) =>
       "src/types/wave-text.ts",
       "src/ui/gentle-text.tsx",
       "src/ui/scatter-text.tsx",
-      "!src/services/postbuild.ts"
+      "!src/services/postbuild.ts",
+      "!src/services/output-md.ts",
+      "!src/services/**/*.md"
     ],
     // esbuildOptions: (options, _) => {
     //   options.keepNames = true;
@@ -25,7 +27,7 @@ const tsupConfig = (options: Options) =>
     // minifyIdentifiers: false,
     // banner: { js: '"use client"' },
     dts: true,
-external: ["react"],
+    external: ["react"],
     watch: process.env.NODE_ENV === "development",
     keepNames: true,
     format: ["cjs", "esm"],
