@@ -1,30 +1,34 @@
-"use client"
+"use client";
 
-import type { EmblaOptionsType } from "embla-carousel"
-import useEmblaCarousel from "embla-carousel-react"
-import AutoScroll from "embla-carousel-auto-scroll"
-import { cn } from "@/lib/utils"
+import type { EmblaOptionsType } from "embla-carousel";
+import AutoScroll from "embla-carousel-auto-scroll";
+import useEmblaCarousel from "embla-carousel-react";
+import { cn } from "@/lib/utils";
 
 interface TechnologiesCarouselProps {
-  technologies: string[]
+  technologies: string[];
+  withHashtag?: boolean;
 }
 
-export function TechnologiesCarousel({ technologies }: TechnologiesCarouselProps) {
+export function TechnologiesCarousel({
+  technologies,
+  withHashtag = true
+}: TechnologiesCarouselProps) {
   const [emblaRef] = useEmblaCarousel(
     {
       loop: true,
       align: "start",
-      skipSnaps: false,
+      skipSnaps: false
     } satisfies EmblaOptionsType,
     [
       AutoScroll({
         playOnInit: true,
         stopOnInteraction: false,
         startDelay: 0,
-        speed: 1,
-      }),
-    ],
-  )
+        speed: 1
+      })
+    ]
+  );
 
   return (
     <div className="w-full overflow-hidden px-0.5 select-none">
@@ -36,16 +40,22 @@ export function TechnologiesCarousel({ technologies }: TechnologiesCarouselProps
                 key={`${tech}-${index}`}
                 className={cn(
                   "embla__slide__posts",
-                  index === 0 ? "ml-0.5" : index === technologies.length - 1 ? "mr-0.5" : "",
-                )}
-              >
+                  index === 0
+                    ? "ml-0.5"
+                    : index === technologies.length - 1
+                      ? "mr-0.5"
+                      : ""
+                )}>
                 <div
                   className={cn(
                     "bg-secondary text-secondary-foreground flex h-full items-center justify-center rounded-full px-3 py-1 text-sm whitespace-nowrap backdrop-blur-sm transition-colors",
-                    index === 0 ? "mr-2" : index === technologies.length - 1 ? "mr-3 ml-2" : "mx-2",
-                  )}
-                >
-                  {"#" + tech}
+                    index === 0
+                      ? "mr-2"
+                      : index === technologies.length - 1
+                        ? "mr-3 ml-2"
+                        : "mx-2"
+                  )}>
+                  {withHashtag === true ? "#" + tech : tech}
                 </div>
               </div>
             ))}
@@ -53,6 +63,5 @@ export function TechnologiesCarousel({ technologies }: TechnologiesCarouselProps
         </div>
       </div>
     </div>
-  )
+  );
 }
-
