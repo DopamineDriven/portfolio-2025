@@ -9,7 +9,7 @@ import type {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { animate, stagger } from "motion";
 import { splitText } from "motion-plus";
-import type { UseGentleTextEffect } from "@/types/hooks";
+import type { UseGentleTextEffectProps } from "@/types/hooks";
 
 /**
  * Custom hook to handle the gentle text animation effect
@@ -17,8 +17,8 @@ import type { UseGentleTextEffect } from "@/types/hooks";
 export function useGentleTextEffect({
   elementRef,
   animateTarget = "chars",
-  duration = 1,
-  staggerDelay = 0.04,
+  duration = 1.5,
+  withStagger,
   yOffset = 10,
   initialScale = 0.9,
   blurAmount = 4,
@@ -28,7 +28,7 @@ export function useGentleTextEffect({
   inView = true,
   onAnimationStart,
   onAnimationComplete
-}: UseGentleTextEffect) {
+}: UseGentleTextEffectProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [hasPlayed, setHasPlayed] = useState(false);
@@ -83,37 +83,42 @@ export function useGentleTextEffect({
   }, [keyframes, yOffset, initialScale, blurAmount]);
 
   const getMergedAnimationOptions = useCallback(() => {
-    const defaultAnimateOptions = {
-      duration,
-      delay: stagger(staggerDelay),
-      ease: "easeOut",
-      onComplete: () => {
-        setIsPlaying(false);
-        setHasPlayed(true);
-        onAnimationComplete?.();
-      }
-    } satisfies AnimationOptions;
+    const onCompleteWrapper = () => {
+      setIsPlaying(false);
+      setHasPlayed(true);
+      onAnimationComplete?.();
+      animationOptions?.onComplete?.();
+    };
 
-    if (animationOptions) {
+    if (withStagger) {
+      // STAGGER MODE
+      const {
+        duration: stagDur,
+        startDelay,
+        from,
+        ease: stagEase
+      } = withStagger;
+
       return {
-        duration: animationOptions?.duration ?? duration,
-        delay: animationOptions?.delay
-          ? typeof animationOptions.delay === "number"
-            ? stagger(animationOptions.delay)
-            : animationOptions.delay
-          : stagger(staggerDelay),
-        ease: animationOptions?.ease ?? "easeOut",
         ...animationOptions,
-        onComplete: () => {
-          setIsPlaying(false);
-          setHasPlayed(true);
-          onAnimationComplete?.();
-          // Call the original onComplete if provided
-          animationOptions?.onComplete?.();
-        }
+        duration: animationOptions?.duration ?? duration,
+        delay: stagger(stagDur, { startDelay, from, ease: stagEase }),
+        ease: animationOptions?.ease ?? stagEase ?? "easeOut",
+        onComplete: onCompleteWrapper
       } satisfies AnimationOptions;
-    } else return defaultAnimateOptions;
-  }, [animationOptions, duration, onAnimationComplete, staggerDelay]);
+    } else {
+      // DELAY MODE
+      const { delay, ...base } = animationOptions;
+
+      return {
+        ...base,
+        duration: base.duration ?? duration,
+        delay,
+        onComplete: onCompleteWrapper,
+        ease: base.ease ?? "easeOut"
+      } satisfies AnimationOptions;
+    }
+  }, [animationOptions, duration, onAnimationComplete, withStagger]);
 
   // Play animation function
   const playAnimation = useCallback(() => {

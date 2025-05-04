@@ -1,16 +1,18 @@
-import type {
-  AnimationOptions,
-  DOMKeyframesDefinition,
-  ElementOrSelector
-} from "motion-dom";
+import type { DOMKeyframesDefinition, ElementOrSelector } from "motion-dom";
 import type { UseInViewOptions } from "motion/react";
 import type { CSSProperties } from "react";
-import type { CSSWidthValue, TextElementTagUnion } from "@/types/helpers";
+import type {
+  CSSWidthValue,
+  StaggerOrDelayXOR,
+  TextElementTagUnion
+} from "@/types/helpers";
 
 /**
  * GentleText props
+ *
+ * You must choose either stagger-mode _or_ delay-mode.
  */
-export type GentleTextProps = {
+export type GentleTextProps = StaggerOrDelayXOR<{
   /** Container element id */
   containerId?: string;
   /** Text element id */
@@ -39,8 +41,6 @@ export type GentleTextProps = {
   debug?: boolean;
   /** Animation duration in seconds */
   duration?: number;
-  /** Animation stagger delay in seconds */
-  staggerDelay?: number;
   /** Initial y offset in pixels */
   yOffset?: number;
   /** Initial scale value */
@@ -51,8 +51,6 @@ export type GentleTextProps = {
   autoPlay?: boolean;
   /** Allow overflow */
   allowOverflow?: boolean;
-  /** Animation options for the motion library */
-  animationOptions?: Omit<AnimationOptions, "duration" | "delay">;
   /** Only animate when in view */
   animateOnlyInView?: boolean;
   /** Amount of element that needs to be in view before animating (0-1) */
@@ -63,4 +61,4 @@ export type GentleTextProps = {
   onAnimationStart?: () => void;
   /** Callback when animation completes */
   onAnimationComplete?: () => void;
-};
+}>;

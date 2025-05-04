@@ -1,6 +1,6 @@
 {
   "name": "@portfolio/motion",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "a text-animation-based react library built on motion",
   "files": [
     "dist/**/*.{js,mjs,cjs,d.mts,d.ts,d.cts,css,svg}"
