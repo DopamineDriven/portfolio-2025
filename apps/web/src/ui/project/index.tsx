@@ -74,7 +74,7 @@ export function Project({
                 "font-basis-grotesque-pro font-bold mb-4 text-4xl md:text-5xl"
               }
               maxWidth="fit"
-              containerClassName={"mx-auto"}
+              containerClassName={"mx-auto text-left"}
               animateOnlyInView={true}
               autoPlay
               allowOverflow
