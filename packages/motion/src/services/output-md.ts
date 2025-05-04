@@ -115,7 +115,7 @@ class OutputMd extends Fs {
     try {
       return this.getTargetedPaths(target).map(file => {
         const handleInjectedTarget =
-          target === "root" ? file : `${target}/${file}`;
+          target === "root" ? file : target === "src/index" ? `src/${file}` : `${target}/${file}`;
         const fileExtension = this.fileExt(file);
         const fileContent =
           this.fileToBuffer(handleInjectedTarget).toString("utf-8");
