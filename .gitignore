@@ -49,3 +49,4 @@ apps/x/src/utils/__out__
 packages/fs/public/*
 packages/fs/src/test/__gen__/*
 packages/fs/src/test/*.ts
+packages/fs/src/test/__temp__/*.ts

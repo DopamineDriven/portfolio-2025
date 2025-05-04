@@ -1,9 +1,9 @@
 import type {
   AnimationOptions,
   DOMKeyframesDefinition,
-  Easing,
   ElementOrSelector
 } from "motion-dom";
+import type { Easing } from "motion-utils";
 import type { CSSWidthValue, TextElementTagUnion, XOR } from "./helpers";
 
 /** Stagger config */

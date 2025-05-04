@@ -46,6 +46,7 @@ export default function ScatterText({
     () => containerClassName,
     [containerClassName]
   );
+
   const headingClassNameMemo = useMemo(
     () => headingClassName,
     [headingClassName]

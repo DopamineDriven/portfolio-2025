@@ -1,48 +1,35 @@
-import type {
-  RedisClientOptions,
-  RedisClientType,
-  RedisFunctions,
-  RedisModules,
-  RedisScripts
-} from "redis";
-import { createClient } from "redis";
+import { createClient } from "@redis/client";
+import type { RedisClientOptions, RedisClientType } from "@redis/client";
 import { EnvHandler } from "./env.ts";
 
-export default class RedisClientWrapper<
-  const M extends RedisModules,
-  const F extends RedisFunctions,
-  const S extends RedisScripts
-> extends EnvHandler {
-  private client: RedisClientType<M, F, S>;
+export default class RedisClientWrapper extends EnvHandler {
+  private client: RedisClientType;
 
   constructor(
     public override cwd: string,
-    public options: RedisClientOptions<M, F, S> = {}
+    public options: Omit<RedisClientOptions, "url"> = {}
   ) {
     super((cwd ??= process.cwd()));
+
     this.client = createClient({
       url: this.redisEnv.REDIS_URL,
-      ...options
-    });
+      ...(this.options as Omit<RedisClientOptions, "url">) // ← assert explicitly
+    }) as RedisClientType; // ← final assertion to suppress conflict
 
     this.client.on("error", err => console.error("Redis Client Error", err));
     this.client.on("connect", () => console.log("Redis Client Connected"));
   }
 
   public async connect() {
-    if (!this.client.isOpen) {
-      await this.client.connect();
-    }
+    if (!this.client.isOpen) await this.client.connect();
   }
 
   public async disconnect() {
-    if (this.client.isOpen) {
-      await this.client.quit();
-    }
+    if (this.client.isOpen) await this.client.quit();
   }
 
   public async withClient<T>(
-    operation: (client: RedisClientType<M, F, S>) => Promise<T>
+    operation: (client: RedisClientType) => Promise<T>
   ): Promise<T> {
     await this.connect();
     try {

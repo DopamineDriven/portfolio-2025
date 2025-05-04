@@ -24,14 +24,3 @@ export type { BaseWavyTextProps, WavyTextProps } from "@/types/wave-text";
 export { default as ScatterText } from "@/ui/scatter-text";
 export { default as GentleText } from "@/ui/gentle-text";
 
-// declare module "react" {
-//   // eslint-disable-next-line @typescript-eslint/no-namespace
-//   namespace JSX {
-//     interface IntrinsicElements {
-//       scattertext: ScatterTextProps;
-//       gentletext: GentleTextProps;
-//     }
-//   }
-// }
-
-// export {};

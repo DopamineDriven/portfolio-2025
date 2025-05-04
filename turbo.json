@@ -25,7 +25,7 @@
       "cache": false
     }
   },
-  "ui": "tui",
+  "ui": "stream",
   "globalEnv": [
     "__NEXT_PROCESSED_ENV",
     "AUTH_TOKEN",

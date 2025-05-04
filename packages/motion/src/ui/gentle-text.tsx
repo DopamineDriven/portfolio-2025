@@ -43,6 +43,7 @@ export default function GentleText({
     () => containerClassName,
     [containerClassName]
   );
+
   const textClassNameMemo = useMemo(() => textClassName, [textClassName]);
 
   const containerIdMemo = useMemo(() => containerId, [containerId]);
@@ -51,6 +52,7 @@ export default function GentleText({
 
   const [containerElement, setContainerElement] =
     useState<HTMLDivElement | null>(null);
+
   const containerRef = useCallback((node: HTMLDivElement | null) => {
     setContainerElement(node);
   }, []);
@@ -60,6 +62,7 @@ export default function GentleText({
   });
 
   const elementRef = useRef<HTMLElement | null>(null);
+  
   const textRef = useCallback(
     (node: HTMLElement | null) => {
       if (node && !initialElement) {
