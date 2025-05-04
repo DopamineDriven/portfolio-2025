@@ -4,10 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  redis: ^5.0.0
-  '@redis/client': ^5.0.0
-
 patchedDependencies:
   leva:
     hash: 3aa887e3e14d9dd5a7e6c12a733f1cbe90376e63f119795dcbc4b2d3ccb30642

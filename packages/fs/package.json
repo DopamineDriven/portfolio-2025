@@ -1,5 +1,5 @@
 {
-  "name": "@d0paminedriven/fs",
+  "name": "@portfolio/fs",
   "version": "4.1.0",
   "description": "convenient fs helpers",
   "publishConfig": {

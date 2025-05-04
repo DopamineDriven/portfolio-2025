@@ -66,10 +66,6 @@
     "pnpm": ">=9"
   },
   "pnpm": {
-    "overrides": {
-      "redis": "^5.0.0",
-      "@redis/client": "^5.0.0"
-    },
     "patchedDependencies": {
       "tailwindcss": "patches/tailwindcss.patch",
       "unified@11.0.5": "patches/unified@11.0.5.patch",
