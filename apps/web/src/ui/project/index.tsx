@@ -63,7 +63,13 @@ export function Project({
             <p className="font-basis-grotesque-pro font-normal text-muted-foreground mb-4 text-lg">
               {description}
             </p>
+            <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+            className="prose-sm sm:prose dark:prose-invert [&>p]:prose-p:text-pretty max-w-none [&>p]:mb-4 lg:[&>p]:mb-8">
             {children}
+          </motion.div>
             <div className="my-4">
               <h2 className="font-basis-grotesque-pro font-bold my-2 text-xl">
                 Technologies
