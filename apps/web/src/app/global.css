@@ -396,6 +396,7 @@ pre > code {
 
 code {
   counter-reset: line;
+  line-height: 1.25;
 }
 
 code > [data-line] {
