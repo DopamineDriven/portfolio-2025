@@ -59,12 +59,12 @@
     "dotenv": "^16.5.0"
   },
   "devDependencies": {
-    "@d0paminedriven/fs": "^4.0.0",
+    "@d0paminedriven/fs": "^4.1.0",
     "@microsoft/api-extractor": "^7.52.7",
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
     "@portfolio/tsconfig": "workspace:*",
-    "@types/node": "^22.15.3",
+    "@types/node": "^22.15.12",
     "chokidar": "^4.0.3",
     "dotenv-cli": "^8.0.0",
     "dotenv-expand": "^12.0.2",

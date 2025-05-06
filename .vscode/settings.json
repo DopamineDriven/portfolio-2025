@@ -74,13 +74,14 @@
   "typescript.implementationsCodeLens.enabled": true,
   "typescript.implementationsCodeLens.showOnInterfaceMethods": true,
   "typescript.locale": "en",
+  "typescript.tsserver.web.projectWideIntellisense.enabled": true,
   "typescript.referencesCodeLens.enabled": true,
   "typescript.referencesCodeLens.showOnAllFunctions": true,
   "typescript.tsdk": "node_modules/typescript/lib",
   "yaml.hover": true,
   "yaml.validate": true,
   "workbench.editor.autoLockGroups": {
-    "default": true
+    "default": false
   },
   "github.copilot.enable": {
     "*": false,

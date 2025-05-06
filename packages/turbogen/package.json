@@ -1,7 +1,7 @@
 {
-  "name": "@portfolio/fs",
-  "version": "4.1.0",
-  "description": "convenient fs helpers",
+  "name": "@portfolio/turbogen",
+  "version": "1.0.0",
+  "description": "rapidly generate a turbo-powered pnpm workspace via the cli",
   "publishConfig": {
     "access": "public",
     "typesVersions": {
@@ -10,8 +10,11 @@
           "dist/*.d.ts",
           "dist/*/index.d.ts"
         ],
-        "fs": [
-          "dist/fs/index.d.ts"
+        "bin": [
+          "dist/bin/init.d.ts"
+        ],
+        "config": [
+          "dist/config/index.d.ts"
         ],
         "types": [
           "dist/types/index.d.ts"
@@ -21,14 +24,20 @@
   },
   "license": "MIT",
   "source": "src/index.ts",
+  "bin": {
+    "ddturbogen": "dist/bin/init.js"
+  },
   "typesVersions": {
     "*": {
       "*": [
         "dist/*.d.ts",
         "dist/*/index.d.ts"
       ],
-      "fs": [
-        "dist/fs/index.d.ts"
+      "bin": [
+        "dist/bin/init.d.ts"
+      ],
+      "config": [
+        "dist/config/index.d.ts"
       ],
       "types": [
         "dist/types/index.d.ts"
@@ -40,12 +49,13 @@
   "types": "./dist/index.d.ts",
   "sideEffects": true,
   "files": [
-    "dist/**/*.{js,cjs,d.ts,d.cts,css}"
+    "dist/**/*.{js,cjs,mjs,d.ts,d.cts,d.mts}"
   ],
   "exports": {
     ".": "./dist/index.js",
     "./*": "./dist/*.js",
-    "./fs": "./dist/fs/index.js",
+    "./bin": "./dist/bin/init.js",
+    "./config": "./dist/config/index.js",
     "./types": "./dist/types/index.js"
   },
   "scripts": {
@@ -56,16 +66,21 @@
     "fix": "npm pkg fix"
   },
   "dependencies": {
+    "@d0paminedriven/fs": "^4.1.0",
+    "@inquirer/core": "^10.1.10",
+    "@inquirer/prompts": "^7.5.0",
     "dotenv": "^16.5.0",
-    "sharp": "^0.34.1"
+    "gradient-string": "^3.0.0"
   },
   "devDependencies": {
+    "@inquirer/type": "^3.0.6",
     "@microsoft/api-extractor": "^7.52.7",
+    "@swc/core": "^1.11.24",
+    "@swc/wasm": "^1.11.24",
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
     "@portfolio/tsconfig": "workspace:*",
-    "@swc/core": "^1.11.24",
-    "@swc/wasm": "^1.11.24",
+    "@types/gradient-string": "^1.1.6",
     "@types/node": "^22.15.12",
     "chokidar": "^4.0.3",
     "dotenv-cli": "^8.0.0",
@@ -80,5 +95,5 @@
     "typescript": "latest",
     "typescript-eslint": "latest"
   },
-  "prettier": "@portfolio/prettier-config"
+  "prettier": "@turbogen/prettier-config"
 }
