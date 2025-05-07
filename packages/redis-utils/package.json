@@ -68,7 +68,7 @@
     "@swc/core": "^1.11.24",
     "@swc/wasm": "^1.11.24",
     "@types/jest": "^29.5.14",
-    "@types/node": "^22.15.12",
+    "@types/node": "^22.15.15",
     "chokidar": "^4.0.3",
     "dotenv": "^16.5.0",
     "dotenv-cli": "^8.0.0",
