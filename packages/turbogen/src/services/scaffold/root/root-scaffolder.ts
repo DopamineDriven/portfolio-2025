@@ -26,6 +26,11 @@ export class RootScaffolder extends ConfigHandler {
         };
   }
 
+  private readmeMinimal() {
+    // prettier-ignore
+    return `### 👋 Welcome to the ${this.toTitleCase(this.workspace)} workspace`
+  }
+
   private pkgJsonRepo() {
     return this.resolveRootPkgJson().repository;
   }
@@ -49,7 +54,7 @@ export class RootScaffolder extends ConfigHandler {
   "scripts": {
     "build:web": "turbo build --filter=@${this.workspace}/web",
     "changeset": "changeset",
-    "clean": "git clean -xdf node_modules",
+    "clean": "git clean -xdf node_modules pnpm-lock.yaml",
     "dev": "turbo dev --parallel --continue",
     "format": "prettier --write \\"**/*.{ts,tsx,cts,mts,js,jsx,mjs,cjs,json,yaml,yml,css,html,md,mdx}\\" --ignore-unknown --cache",
     "lint": "turbo lint",
@@ -60,7 +65,6 @@ export class RootScaffolder extends ConfigHandler {
     "generate:base64": "openssl rand -base64 64",
     "generate:hex": "openssl rand -hex 64",
     "run:web": "turbo dev --filter=@${this.workspace}/web",
-    "sync:time": "sudo ntpdate time.windows.com",
     "latest:pnpm": "corepack use pnpm@latest",
     "update:pnpm": "curl -fsSL https://get.pnpm.io/install.sh | sh -"
   },
@@ -72,8 +76,6 @@ export class RootScaffolder extends ConfigHandler {
     "@d0paminedriven/turbogen": "latest",
     "@types/node": "latest",
     "dotenv": "latest",
-    "dotenv-cli": "latest",
-    "dotenv-expand": "latest",
     "eslint": "latest",
     "husky": "latest",
     "jiti": "latest",
@@ -123,8 +125,6 @@ export class RootScaffolder extends ConfigHandler {
     "@d0paminedriven/turbogen": "latest",
     "@types/node": "latest",
     "dotenv": "latest",
-    "dotenv-cli": "latest",
-    "dotenv-expand": "latest",
     "eslint": "latest",
     "husky": "latest",
     "prettier": "latest",
@@ -358,31 +358,8 @@ max_line_length = 40
   },
   "ui": "stream",
   "globalEnv": [
-    "__NEXT_PROCESSED_ENV",
-    "AUTH_TOKEN",
-    "CI_ENV",
     "COREPACK_ENABLE_STRICT",
-    "GA_MEASUREMENT_ID",
-    "GA_PROTOCOL_SECRET",
-    "GA_STREAM_ID",
-    "GITHUB_PAT",
-    "MY_GITHUB_PAT",
-    "NEXTAUTH_SECRET",
-    "NEXT_PUBLIC_GA_MEASUREMENT_ID",
-    "NEXT_PUBLIC_MEASUREMENT_PROTOCOL_SECRET",
-    "NEXT_PUBLIC_GA_PROTOCOL_SECRET",
-    "NEXT_PUBLIC_GA_STREAM_ID",
-    "NPM_RC",
-    "npm_config_user_agent",
-    "NO_COLOR",
-    "NODE_ENV",
-    "NPM_TOKEN",
-    "PORT",
-    "VERCEL_ENV",
-    "VERCEL_GIT_PROVIDER",
-    "VERCEL_GIT_REPO_OWNER",
-    "VERCEL_GIT_REPO_SLUG",
-    "VERCEL_URL"
+    "NODE_ENV"
   ]
 }
 ` as const;
