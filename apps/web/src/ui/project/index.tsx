@@ -4,7 +4,6 @@ import type { PropsWithChildren } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { GentleText } from "@d0paminedriven/motion";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "motion/react";
 import type { ProjectDetail } from "@/types/projects";
@@ -68,27 +67,9 @@ export function Project({
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.6 }}>
-            <GentleText
-              content={title}
-              textClassName={
-                "font-basis-grotesque-pro font-bold mb-4 text-4xl md:text-5xl"
-              }
-              maxWidth="fit"
-              containerClassName={"mx-auto text-left"}
-              animateOnlyInView={true}
-              autoPlay
-              allowOverflow
-              keyframes={{
-                opacity: [0, 1],
-                y: [-10, 10],
-                scale: [0.5, 1],
-                rotate: [-10, 0],
-                color: ["#83e6f7", "#f8fafc"]
-              }}
-              duration={0.3}
-              as="h1"
-              animateTarget="chars"
-            />
+            <h1 className="font-basis-grotesque-pro mb-4 text-4xl font-bold md:text-5xl">
+              {title}
+            </h1>
             {description && (
               <p className="font-basis-grotesque-pro text-muted-foreground mb-6 text-xl font-normal md:text-2xl">
                 {description}
