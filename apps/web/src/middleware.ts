@@ -5,20 +5,13 @@ function detectDeviceAndSetCookies(
   request: NextRequest,
   response: NextResponse
 ) {
-  const { device, ua } = userAgent(request);
+  const { device, ua, os, browser } = userAgent(request);
 
-  const {hostname} = request.nextUrl;
-
-  if (request.cookies.has("hostname")) {
-    response.cookies.delete("hostname");
-  }
-
-  if (request.cookies.has("viewport")) {
-    response.cookies.delete("viewport");
-  }
-
-  if (request.cookies.has("ios")) {
-    response.cookies.delete("ios");
+  const { hostname } = request.nextUrl;
+  for (const name of ["hostname", "viewport", "ios", "supports-webgl"]) {
+    if (request.cookies.has(name)) {
+      response.cookies.delete(name);
+    }
   }
 
   const isIOS = /(ios|iphone|ipad|iwatch)/i.test(ua);
@@ -28,11 +21,29 @@ function detectDeviceAndSetCookies(
   // Set viewport type
   const viewport = device?.type === "mobile" ? "mobile" : "desktop";
 
+  let supportsWebGL = true;
+  if (browser?.name && /(ie)/i.test(browser?.name)) {
+    supportsWebGL = false;
+  } else if (
+    os.name &&
+    os.version &&
+    /(iOS)/i.test(os?.name) &&
+    Number.parseInt(os.version.split(".")?.[0] ?? "0", 10) < 14
+  ) {
+    supportsWebGL = false;
+  } else if (
+    os.name &&
+    os.version &&
+    os.name === "Android" &&
+    Number.parseInt(os.version.split(".")?.[0] ?? "0", 10) < 6
+  ) {
+    supportsWebGL = false;
+  }
   // Set cookies
   response.cookies.set("hostname", hostname);
   response.cookies.set("viewport", viewport);
   response.cookies.set("ios", ios);
-
+  response.cookies.set("supports-webgl", `${supportsWebGL}`);
   return response;
 }
 
@@ -69,11 +80,6 @@ export function middleware(request: NextRequest) {
     const res = NextResponse.next();
     return detectDeviceAndSetCookies(request, res);
   }
-  // if (request.cookies.has("has-visited") === false) {
-  //     request.nextUrl.pathname  = "/elevator"
-  //   return NextResponse.rewrite(request.nextUrl);
-  // }
-
   // 3) Check if user has visited before (i.e. "has-visited" cookie).
   const hasVisitedCookie = JSON.parse(
     request.cookies.get("has-visited")?.value ?? "false"
@@ -94,14 +100,6 @@ export function middleware(request: NextRequest) {
     const rewriteUrl = request.nextUrl.clone();
     rewriteUrl.pathname = "/elevator";
     const response = NextResponse.rewrite(rewriteUrl);
-    // IMPORTANT: Use consistent cookie parameters
-    // const cookieOptions = {
-    //   path: "/",
-    //   httpOnly: false, // Allow JavaScript access
-    //   maxAge: 60 * 60 * 24, // 1 day in seconds
-    //   sameSite: "lax" as const,
-    //   secure: process.env.NODE_ENV !== "development" // Only use secure in production
-    // };
 
     // Only set the POI cookie if it doesn't already exist AND it's not a development file
     if (
@@ -131,11 +129,5 @@ export function middleware(request: NextRequest) {
 export const config = {
   // This matcher ensures we run middleware on all routes
   // except the explicitly excluded static paths (/_next/static, /_next/image, etc.).
-  matcher: [
-    "/",
-    "/elevator",
-    "/posts/:path",
-    "/projects/:path",
-    "/resume"
-  ]
+  matcher: ["/", "/elevator", "/posts/:path", "/projects/:path", "/resume"]
 };
