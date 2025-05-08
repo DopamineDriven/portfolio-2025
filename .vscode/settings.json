@@ -49,14 +49,8 @@
   "javascript.referencesCodeLens.showOnAllFunctions": true,
   "openInDefaultBrowser.run.openWithLocalHttpServer": false,
   "tailwindCSS.experimental.classRegex": [
-    [
-      "cva\\(([^)]*)\\)",
-      "[\"'`]([^\"'`]*).*?[\"'`]"
-    ],
-    [
-      "cx\\(([^)]*)\\)",
-      "(?:'|\"|`)([^']*)(?:'|\"|`)"
-    ]
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
   ],
   "tailwindCSS.classAttributes": [
     "class",

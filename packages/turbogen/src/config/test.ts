@@ -7,4 +7,4 @@ function getPackageManager() {
 }
 
 console.log(getPackageManager());
-console.log(getProcess)
+console.log(getProcess);
