@@ -45,7 +45,7 @@
     "wsl2:version": "lsb_release -d"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.29.3",
+    "@changesets/cli": "^2.29.4",
     "@d0paminedriven/turbogen": "^0.6.0",
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
