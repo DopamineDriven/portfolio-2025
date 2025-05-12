@@ -97,9 +97,11 @@ export function middleware(request: NextRequest) {
   // 4) If user is new, send them to /elevator.
   // REMOVED external referer check for now to simplify testing
   if (!hasVisited) {
-    const rewriteUrl = request.nextUrl.clone();
-    rewriteUrl.pathname = "/elevator";
-    const response = NextResponse.rewrite(rewriteUrl);
+    // temporarily remove redirect to elevator
+    // const rewriteUrl = request.nextUrl.clone();
+    // rewriteUrl.pathname = "/elevator";
+    //   const response = NextResponse.rewrite(rewriteUrl);
+    const response = NextResponse.next();
 
     // Only set the POI cookie if it doesn't already exist AND it's not a development file
     if (

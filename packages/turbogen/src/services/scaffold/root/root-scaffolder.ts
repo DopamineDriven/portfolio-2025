@@ -26,6 +26,11 @@ export class RootScaffolder extends ConfigHandler {
         };
   }
 
+  private readmeMinimal() {
+    // prettier-ignore
+    return `### 👋 Welcome to the ${this.toTitleCase(this.workspace)} workspace`
+  }
+
   private pkgJsonRepo() {
     return this.resolveRootPkgJson().repository;
   }
@@ -49,7 +54,7 @@ export class RootScaffolder extends ConfigHandler {
   "scripts": {
     "build:web": "turbo build --filter=@${this.workspace}/web",
     "changeset": "changeset",
-    "clean": "git clean -xdf node_modules",
+    "clean": "git clean -xdf node_modules pnpm-lock.yaml",
     "dev": "turbo dev --parallel --continue",
     "format": "prettier --write \\"**/*.{ts,tsx,cts,mts,js,jsx,mjs,cjs,json,yaml,yml,css,html,md,mdx}\\" --ignore-unknown --cache",
     "lint": "turbo lint",
@@ -60,7 +65,6 @@ export class RootScaffolder extends ConfigHandler {
     "generate:base64": "openssl rand -base64 64",
     "generate:hex": "openssl rand -hex 64",
     "run:web": "turbo dev --filter=@${this.workspace}/web",
-    "sync:time": "sudo ntpdate time.windows.com",
     "latest:pnpm": "corepack use pnpm@latest",
     "update:pnpm": "curl -fsSL https://get.pnpm.io/install.sh | sh -"
   },
@@ -70,11 +74,8 @@ export class RootScaffolder extends ConfigHandler {
     "@${this.workspace}/prettier-config": "workspace:*",
     "@${this.workspace}/tsconfig": "workspace:*",
     "@d0paminedriven/turbogen": "latest",
-    "@total-typescript/ts-reset": "latest",
     "@types/node": "latest",
     "dotenv": "latest",
-    "dotenv-cli": "latest",
-    "dotenv-expand": "latest",
     "eslint": "latest",
     "husky": "latest",
     "jiti": "latest",
@@ -113,7 +114,6 @@ export class RootScaffolder extends ConfigHandler {
     "generate:hex": "openssl rand -hex 64",
     "npm:registry": "npm set registry https://registry.npmjs.org",
     "run:web": "turbo dev --filter=@${this.workspace}/web",
-    "sync:time": "sudo ntpdate time.windows.com",
     "latest:pnpm": "corepack use pnpm@latest",
     "update:pnpm": "curl -fsSL https://get.pnpm.io/install.sh | sh -"
   },
@@ -123,23 +123,18 @@ export class RootScaffolder extends ConfigHandler {
     "@${this.workspace}/prettier-config": "workspace:*",
     "@${this.workspace}/tsconfig": "workspace:*",
     "@d0paminedriven/turbogen": "latest",
-    "@total-typescript/ts-reset": "latest",
     "@types/node": "latest",
     "dotenv": "latest",
-    "dotenv-cli": "latest",
-    "dotenv-expand": "latest",
     "eslint": "latest",
     "husky": "latest",
-    "jiti": "latest",
     "prettier": "latest",
     "tsx": "latest",
     "turbo": "latest",
-    "typescript": "latest",
-    "vercel": "latest"
+    "typescript": "latest"
   },
   "prettier": "@${this.workspace}/prettier-config",
   "engines": {
-    "node": ">=20",
+    "node": ">=22",
     "npm": ">=10",
     "pnpm": ">=9"
   }
@@ -192,15 +187,17 @@ export default [
     "hilleer.yaml-plus-json",
     "ipatalas.vscode-postfix-ts",
     "meganrogge.template-string-converter",
+    "meouwu.css-var-color-decorator",
     "ms-vscode.vscode-typescript-next",
     "pascalreitermann93.vscode-yaml-sort",
-    "pflannery.vscode-versionlens",
     "redhat.vscode-yaml",
+    "redis.redis-for-vscode",
     "rvest.vs-code-prettier-eslint",
     "visualstudioexptteam.intellicode-api-usage-examples",
     "visualstudioexptteam.vscodeintellicode",
     "xshrim.txt-syntax",
-    "yoavbls.pretty-ts-errors"
+    "yoavbls.pretty-ts-errors",
+    "yutengjing.vscode-versionlens-plus"
   ],
   "unwantedRecommendations": []
 }` as const;
@@ -228,6 +225,9 @@ export default [
   "css.hover.documentation": true,
   "css.hover.references": true,
   "editor.bracketPairColorization.enabled": false,
+  "svg.preview.autoShow": false,
+  "svg.preview.disable": true,
+  "svg.preview.mode": "svg",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.suggest.showStatusBar": true,
   "eslint.enable": true,
@@ -239,9 +239,6 @@ export default [
     }
   ],
   "eslint.workingDirectories": [
-    {
-      "mode": "auto"
-    },
     {
       "pattern": "apps/*/"
     },
@@ -255,6 +252,17 @@ export default [
   "files.autoSave": "afterDelay",
   "javascript.referencesCodeLens.showOnAllFunctions": true,
   "openInDefaultBrowser.run.openWithLocalHttpServer": false,
+   "openInDefaultBrowser.run.openWithLocalHttpServer": false,
+  "tailwindCSS.experimental.classRegex": [
+    [
+      "cva\\(([^)]*)\\)",
+      "[\\"'\`]([^\\"'\`]*).*?[\\"'\`]"
+    ],
+    [
+      "cx\\(([^)]*)\\)",
+      "(?:'|\\"|\`)([^']*)(?:'|\\"|\`)"
+    ]
+  ],
   "tailwindCSS.classAttributes": [
     "class",
     "className",
@@ -274,7 +282,16 @@ export default [
   "typescript.referencesCodeLens.showOnAllFunctions": true,
   "typescript.tsdk": "node_modules/typescript/lib",
   "yaml.hover": true,
-  "yaml.validate": true
+  "yaml.validate": true,
+  "workbench.editor.autoLockGroups": {
+    "default": false
+  },
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  }
 }` as const;
   }
 
@@ -341,31 +358,8 @@ max_line_length = 40
   },
   "ui": "stream",
   "globalEnv": [
-    "__NEXT_PROCESSED_ENV",
-    "AUTH_TOKEN",
-    "CI_ENV",
     "COREPACK_ENABLE_STRICT",
-    "GA_MEASUREMENT_ID",
-    "GA_PROTOCOL_SECRET",
-    "GA_STREAM_ID",
-    "GITHUB_PAT",
-    "MY_GITHUB_PAT",
-    "NEXTAUTH_SECRET",
-    "NEXT_PUBLIC_GA_MEASUREMENT_ID",
-    "NEXT_PUBLIC_MEASUREMENT_PROTOCOL_SECRET",
-    "NEXT_PUBLIC_GA_PROTOCOL_SECRET",
-    "NEXT_PUBLIC_GA_STREAM_ID",
-    "NPM_RC",
-    "npm_config_user_agent",
-    "NO_COLOR",
-    "NODE_ENV",
-    "NPM_TOKEN",
-    "PORT",
-    "VERCEL_ENV",
-    "VERCEL_GIT_PROVIDER",
-    "VERCEL_GIT_REPO_OWNER",
-    "VERCEL_GIT_REPO_SLUG",
-    "VERCEL_URL"
+    "NODE_ENV"
   ]
 }
 ` as const;
@@ -435,11 +429,6 @@ pnpm-lock.yaml
 ` as const;
   }
 
-  private get resetDtsTemplate() {
-    // prettier-ignore
-    return `import "@total-typescript/ts-reset";` as const;
-  }
-
   private getPaths() {
     return {
       editorConfig: `.editorconfig`,
@@ -448,7 +437,6 @@ pnpm-lock.yaml
       packageJson: "package.json",
       pnpmWorkspaceYaml: "pnpm-workspace.yaml",
       prettierignore: ".prettierignore",
-      resetdts: "reset.d.ts",
       tsconfig: `tsconfig.json`,
       turboJson: `turbo.json`,
       vscodeExtensions: ".vscode/extensions.json",
@@ -483,7 +471,6 @@ pnpm-lock.yaml
       this.writeTarget("eslint.config.mjs", this.eslintTemplate),
       this.writeTarget("package.json", this.pkgJsonTemplate),
       this.writeTarget("pnpm-workspace.yaml", this.pnpmWorkspaceYamlTemplate),
-      this.writeTarget("reset.d.ts", this.resetDtsTemplate),
       this.writeTarget("tsconfig.json", this.tsconfigTemplate),
       this.writeTarget("turbo.json", this.turboJsonTemplate)
     ]);

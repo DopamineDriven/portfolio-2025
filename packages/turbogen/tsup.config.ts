@@ -18,6 +18,7 @@ const tsupConfig = (options: Options) =>
       "src/services/scaffold/tooling/prettier-scaffold.ts",
       "src/services/scaffold/tooling/ts-scaffold.ts",
       "src/services/scaffold/index.ts",
+      "!src/test/**/*",
       "!src/generated/**/*",
       "!src/config/test.ts",
       "!src/__generated__/**/*",
@@ -34,7 +35,6 @@ const tsupConfig = (options: Options) =>
     tsconfig: relative(process.cwd(), "tsconfig.json"),
     clean: true,
     outDir: "dist",
-    // onSuccess: process.env.NODE_ENV === "development" ? "node dist/index.js" : undefined,
     ...options
   }) satisfies Options;
 
