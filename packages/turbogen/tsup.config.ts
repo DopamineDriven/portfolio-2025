@@ -19,10 +19,6 @@ const tsupConfig = (options: Options) =>
       "src/services/scaffold/tooling/ts-scaffold.ts",
       "src/services/scaffold/index.ts",
       "!src/test/**/*",
-      "!src/generated/**/*",
-      "!src/config/test.ts",
-      "!src/__generated__/**/*",
-      "!src/test/**/*",
       "!public/**/*"
     ],
     target: ["esnext"],

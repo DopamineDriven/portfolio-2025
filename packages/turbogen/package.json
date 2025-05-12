@@ -1,7 +1,7 @@
 {
   "name": "@portfolio/turbogen",
   "version": "2.0.0",
-  "description": "rapidly generate a turbo-powered pnpm workspace via the cli",
+  "description": "rapidly generate a turbo-powered pnpm workspace",
   "publishConfig": {
     "access": "public",
     "typesVersions": {
@@ -15,6 +15,19 @@
         ],
         "config": [
           "dist/config/index.d.ts"
+        ],
+        "services/cli": [
+          "dist/services/cli/inquirer.d.ts",
+          "dist/services/cli/index.d.ts"
+        ],
+        "services/scaffold": [
+          "dist/services/scaffold/tooling/ts-scaffold.d.ts",
+          "dist/services/scaffold/tooling/prettier-scaffold.d.ts",
+          "dist/services/scaffold/tooling/jest-scaffold.d.ts",
+          "dist/services/scaffold/tooling/eslint-scaffold.d.ts",
+          "dist/services/scaffold/root/root-scaffolder.d.ts",
+          "dist/services/scaffold/apps/generic-scaffold.d.ts",
+          "dist/services/scaffold/index.d.ts"
         ],
         "types": [
           "dist/types/index.d.ts"
@@ -38,6 +51,19 @@
       ],
       "config": [
         "dist/config/index.d.ts"
+      ],
+      "services/cli": [
+        "dist/services/cli/inquirer.d.ts",
+        "dist/services/cli/index.d.ts"
+      ],
+      "services/scaffold": [
+        "dist/services/scaffold/tooling/ts-scaffold.d.ts",
+        "dist/services/scaffold/tooling/prettier-scaffold.d.ts",
+        "dist/services/scaffold/tooling/jest-scaffold.d.ts",
+        "dist/services/scaffold/tooling/eslint-scaffold.d.ts",
+        "dist/services/scaffold/root/root-scaffolder.d.ts",
+        "dist/services/scaffold/apps/generic-scaffold.d.ts",
+        "dist/services/scaffold/index.d.ts"
       ],
       "types": [
         "dist/types/index.d.ts"
