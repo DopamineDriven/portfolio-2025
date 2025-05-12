@@ -56,6 +56,15 @@
     "./*": "./dist/*.js",
     "./bin": "./dist/bin/init.js",
     "./config": "./dist/config/index.js",
+    "./services/cli": "./dist/services/cli/index.js",
+    "./services/cli/inquirer": "./dist/services/cli/inquirer.js",
+    "./services/scaffold": "./dist/services/scaffold/index.js",
+    "./services/scaffold/generic-scaffold": "./dist/services/scaffold/apps/generic-scaffold.js",
+    "./services/scaffold/root-scaffold": "./dist/services/scaffold/root/root-scaffolder.js",
+    "./services/scaffold/tooling/eslint": "./dist/services/scaffold/tooling/eslint-scaffold.js",
+    "./services/scaffold/tooling/jest": "./dist/services/scaffold/tooling/jest-scaffold.js",
+    "./services/scaffold/tooling/prettier": "./dist/services/scaffold/tooling/prettier-scaffold.js",
+    "./services/scaffold/tooling/ts": "./dist/services/scaffold/tooling/ts-scaffold.js",
     "./types": "./dist/types/index.js"
   },
   "scripts": {

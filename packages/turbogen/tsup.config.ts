@@ -18,6 +18,7 @@ const tsupConfig = (options: Options) =>
       "src/services/scaffold/tooling/prettier-scaffold.ts",
       "src/services/scaffold/tooling/ts-scaffold.ts",
       "src/services/scaffold/index.ts",
+      "!src/test/**/*",
       "!src/generated/**/*",
       "!src/config/test.ts",
       "!src/__generated__/**/*",
