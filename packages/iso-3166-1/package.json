@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "@d0paminedriven/fs": "^4.1.0",
-    "@microsoft/api-extractor": "^7.52.7",
+    "@microsoft/api-extractor": "^7.52.8",
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
     "@portfolio/tsconfig": "workspace:*",
@@ -71,7 +71,7 @@
     "eslint": "latest",
     "jiti": "^2.4.2",
     "prettier": "latest",
-    "terser": "^5.39.0",
+    "terser": "^5.39.1",
     "tslib": "latest",
     "tsup": "latest",
     "tsx": "latest",

@@ -60,7 +60,7 @@
     "redis": "^5.0.1"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "^7.52.7",
+    "@microsoft/api-extractor": "^7.52.8",
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/jest-presets": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
@@ -78,7 +78,7 @@
     "jiti": "^2.4.2",
     "prettier": "latest",
     "redis": "^5.0.1",
-    "terser": "^5.39.0",
+    "terser": "^5.39.1",
     "ts-jest": "^29.3.2",
     "tslib": "latest",
     "tsup": "latest",
