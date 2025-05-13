@@ -1,7 +1,8 @@
 import { Fs } from "@d0paminedriven/fs";
 
+const fs = new Fs(process.cwd());
+
 const distJsFileArr = () => {
-  const fs = new Fs(process.cwd());
   return fs
     .readDir("dist", { recursive: true })
     .filter(p => /(\.)/g.test(p))
@@ -23,7 +24,6 @@ function isFlagged<const F extends string>(file: F) {
 }
 
 function readFile(filePath: string) {
-  const fs = new Fs(process.cwd());
   return fs.fileToBuffer(filePath).toString("utf-8");
 }
 
@@ -80,7 +80,6 @@ function prependClient(fileContent: string) {
 }
 
 function handleUseClientInjectionOfRelevantChunks(files: string[]) {
-  const fs = new Fs(process.cwd());
   return files.map(file => {
     const fileContent = readFile(file);
     fs.withWs(file, prependClient(fileContent));
