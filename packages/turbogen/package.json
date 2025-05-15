@@ -1,5 +1,5 @@
 {
-  "name": "@d0paminedriven/turbogen",
+  "name": "@portfolio/turbogen",
   "version": "2.1.0",
   "description": "rapidly generate a turbo-powered pnpm workspace",
   "publishConfig": {
