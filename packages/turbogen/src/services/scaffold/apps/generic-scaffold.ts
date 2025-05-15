@@ -94,15 +94,12 @@ export default [
 ];` as const;
   }
 
-  private get postcssConfigCjs() {
+  private get postcssConfigMjs() {
     // prettier-ignore
-    return `module.exports = {
+    return `/** @type {import('postcss-load-config').Config} */
+export default {
   plugins: {
-    "postcss-import": {},
-    "tailwindcss/nesting": {},
-    tailwindcss: {},
-    "postcss-focus-visible": { replaceWith: "[data-focus-visible-added]" },
-    autoprefixer: {}
+    "@tailwindcss/postcss": {}
   }
 };` as const;
   }
@@ -134,16 +131,13 @@ export default [
   },
   "include": [
     ".",
-    "index.d.ts",
-    "global.d.ts",
     "next-env.d.ts",
     "next.config.ts",
-    "postcss.config.cjs",
+    "postcss.config.mjs",
     "tailwind.config.ts",
     "src/**/*.tsx",
     "src/**/*.ts",
-    ".next/types/**/*.ts",
-    "../../reset.d.ts"
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules", "public/**/*.js"]
 }` as const;
@@ -159,60 +153,38 @@ export default [
   "license": "MIT",
   "prettier": "@${this.workspace}/prettier-config",
   "scripts": {
-    "dev": "next dev -p ${this.port}",
+    "dev": "next dev -p ${this.port} --turbo",
     "build": "next build",
     "format": "prettier --write \\"**/*.{ts,tsx,cts,mts,js,jsx,mjs,cjs,json,yaml,yml,css,html,md,mdx,graphql,gql}\\" --ignore-unknown --cache",
-    "postbuild": "next-sitemap --config next-sitemap.mjs",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
-    "@ducanh2912/next-pwa": "latest",
-    "@headlessui/tailwindcss": "latest",
     "@radix-ui/react-slot": "latest",
     "class-variance-authority": "latest",
     "clsx": "latest",
-    "embla-carousel": "latest",
-    "embla-carousel-class-names": "latest",
-    "embla-carousel-react": "latest",
-    "focus-trap-react": "latest",
-    "focus-visible": "latest",
-    "framer-motion": "latest",
-    "intersection-observer": "latest",
-    "intl-segmenter-polyfill": "latest",
-    "lodash.throttle": "latest",
     "lucide-react": "latest",
+    "motion": "latest",
     "nanoid": "latest",
     "next": "latest",
-    "next-sitemap": "latest",
-    "next-themes": "latest",
-    "next-view-transitions": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "react-hot-toast": "latest",
-    "react-intersection-observer": "latest",
     "react-wrap-balancer": "latest",
     "suspend-react": "latest",
-    "swr": "latest"
+    "swr": "latest",
+    "tailwind-merge": "latest"
   },
   "devDependencies": {
     "@edge-runtime/cookies": "latest",
     "@edge-runtime/types": "latest",
+    "@playwright/test": "latest",
     "@${this.workspace}/eslint-config": "workspace:*",
     "@${this.workspace}/prettier-config": "workspace:*",
     "@${this.workspace}/tsconfig": "workspace:*",
-    "@tailwindcss/forms": "latest",
-    "@tailwindcss/typography": "latest",
-    "@types/google.analytics": "latest",
-    "@types/gtag.js": "latest",
-    "@types/lodash": "latest",
-    "@types/lodash.throttle": "latest",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@vercel/functions": "latest",
-    "@vercel/speed-insights": "latest",
-    "@xpd/tailwind-3dtransforms": "latest",
     "autoprefixer": "latest",
     "csstype": "latest",
     "dotenv": "latest",
@@ -220,16 +192,17 @@ export default [
     "dotenv-expand": "latest",
     "eslint": "latest",
     "eslint-config-next": "latest",
+    "motion-dom": "latest",
+    "motion-utils": "latest",
     "postcss": "latest",
-    "postcss-focus-visible": "latest",
-    "postcss-import": "latest",
     "prettier": "latest",
     "sharp": "latest",
-    "tailwind-merge": "latest",
     "tailwindcss": "latest",
     "tailwindcss-animate": "latest",
+    "tailwindcss-motion": "latest",
     "tslib": "latest",
     "tsx": "latest",
+    "tw-animate-css": "latest",
     "typescript": "latest",
     "urlpattern-polyfill": "latest",
     "webpack": "latest"
@@ -241,9 +214,8 @@ export default [
   private get nextConfigTemplate() {
     // prettier-ignore
     return `import type { NextConfig } from "next";
-import withPWAInit from "@ducanh2912/next-pwa";
 
-export default withPWAInit({ dest: "public", register: true, scope: "/app" })({
+export default {
   reactStrictMode: true,
   eslint: { ignoreDuringBuilds: false },
   typescript: { ignoreBuildErrors: false, tsconfigPath: "./tsconfig.json" },
@@ -261,7 +233,7 @@ export default withPWAInit({ dest: "public", register: true, scope: "/app" })({
     ]
   },
   productionBrowserSourceMaps: true
-} satisfies NextConfig);` as const;
+} satisfies NextConfig;` as const;
   }
 
   private get tailwindTemplate() {
@@ -272,65 +244,235 @@ import typography from "@tailwindcss/typography";
 
 export default {
   content: ["src/**/*.{js,ts,jsx,tsx}"],
-  darkMode: ["class", 'html[class~="dark"]'],
-  future: { hoverOnlyWhenSupported: true },
-  /* customize your theme -> https://tailwindcss.com/docs/theme */
-  theme: {
-    extend: {
-      fontFamily: {
-        "geist-sans": ["var(--font-geist-sans)"],
-        "geist-mono": ["var(--font-geist-mono)"]
-      },
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-      }
-    }
-  },
-  plugins: [
-    require("tailwindcss-animate"),
-    forms,
-    require("@headlessui/tailwindcss"),
-    typography,
-    require("@xpd/tailwind-3dtransforms")
-  ]
+  future: { hoverOnlyWhenSupported: true }
 } satisfies TailwindConfig;` as const;
   }
 
   private get globalCss() {
     // prettier-ignore
-    return `@tailwind base;
-@tailwind components;
-@tailwind utilities;
+    return `@import "tailwindcss";
+@import "tw-animate-css";
 
-*, *::before, *::after {
-  box-sizing: border-box;
+@config "../../tailwind.config.ts";
+@plugin "tailwindcss-motion";
+
+/*
+  https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually
+
+  Uncomment the following to use a CSS Selector instead of the \`prefers-color-scheme\` media-query
+
+  @custom-variant dark (&:where(.dark, .dark *));
+*/
+
+/*
+  https://tailwindcss.com/docs/dark-mode#using-a-data-attribute
+
+  Uncomment the following to use a data-attribute instead of a dark theme selector
+
+  @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+*/
+
+@font-face {
+  font-family: "CalSans";
+  src: url("/fonts/CalSans-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
 }
 
-html, body {
-  height: 100%;
-}
 
-input, button, textarea, select {
-  font: inherit;
-}
+@theme {
+  --font-cal-sans-semi-bold: CalSans, sans-serif;
+  --color-background: oklch(1 0 0);
+  --color-foreground: oklch(0.14 0.0044 285.82);
+  --color-card: oklch(1 0 0);
+  --color-card-foreground: oklch(0.14 0.0044 285.82);
+  --color-popover: oklch(1 0 0);
+  --color-popover-foreground: oklch(0.14 0.0044 285.82);
+  --color-primary: oklch(0.21 0.0059 285.88);
+  --color-primary-foreground: oklch(0.98 0 0);
+  --color-secondary: oklch(0.97 0.0013 286.38);
+  --color-secondary-foreground: oklch(0.21 0.0059 285.88);
+  --color-muted: oklch(0.97 0.0013 286.38);
+  --color-muted-foreground: oklch(0.55 0.0137 285.94);
+  --color-accent: oklch(0.97 0.0013 286.38);
+  --color-accent-foreground: oklch(0.21 0.0059 285.88);
+  --color-destructive: oklch(0.64 0.2078 25.33);
+  --color-destructive-foreground: oklch(0.98 0 0);
+  --color-border: oklch(0.92 0.004 286.32);
+  --color-input: oklch(0.92 0.004 286.32);
+  --color-ring: oklch(0.21 0.0059 285.88);
+  --color-chart-1: oklch(0.546 0.2153 262.87);
+  --color-chart-2: oklch(0.5409 0.2468 292.95);
+  --color-chart-3: oklch(0.6624 0.2895 320.92);
+  --color-chart-4: oklch(0.6924 0.1426 165.69);
+  --color-chart-5: oklch(0.8372 0.1644 84.53);
+  --color-hue-0: oklch(0.9434 0.199 105.96);
+  --color-hue-1: oklch(0.6477 0.263 359.98);
+  --color-hue-2: oklch(0.6404 0.300 324.36);
+  --color-hue-3: oklch(0.5636 0.292 301.63);
+  --color-hue-4: oklch(0.5898 0.211 259.36);
+  --color-hue-5: oklch(0.8203 0.141 210.49);
+  --color-hue-6: oklch(0.8842 0.107 168.47);
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  --radius-sm: 0.25rem;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --container-8xl: 96rem;
+  --container-9xl: 120rem;
+  --container-10xl: 173.75rem;
+
+  --spacing-8xl: 96rem;
+  --spacing-9xl: 120rem;
+  --spacing-10xl: 173.75rem;
+
+  --perspective-1000: 1000px;
+
+  --text-sxs: 0.625rem;
+  --text-sxs--line-height: calc(0.875 / 0.625);
+  --text-xxs: 0.5rem;
+  --text-xxs--line-height: calc(0.75 / 0.5);
+
+  --animate-shimmer: shimmer 3s cubic-bezier(0.4, 0.7, 0.6, 1) infinite;
+  @keyframes shimmer {
+    0% {
+      opacity: 0.5;
+    } /* Start with a semi-transparent state */
+    50% {
+      opacity: 1;
+    } /* Become fully visible */
+    100% {
+      opacity: 0.5;
+    } /* Return to semi-transparent */
+  }
+
+  --animate-brushed-metal: brushed-metal-shift 8s linear infinite alternate;
+  @keyframes brushed-metal-shift {
+    0% {
+      background-position: 0% center;
+    }
+    100% {
+      background-position: 100% center;
+    }
+  }
+
+  --animate-cursor-blink: cursor-blink 0.7s step-end infinite;
+  @keyframes cursor-blink {
+    0%,
+    100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  --animate-twinkle: twinkle 5s infinite;
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.2;
+    }
+  }
+
+  --animate-cursor-advance: cursor-advance 0.1s linear;
+  @keyframes cursor-advance {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  --animate-carousel: carousel-scroll 60s linear infinite;
+  @keyframes carousel-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer theme {
+  .dark {
+    --color-background: oklch(0.14 0.0044 285.82);
+    --color-foreground: oklch(0.98 0 0);
+    --color-card: oklch(0.14 0.0044 285.82);
+    --color-card-foreground: oklch(0.98 0 0);
+    --color-popover: oklch(0.14 0.0044 285.82);
+    --color-popover-foreground: oklch(0.98 0 0);
+    --color-primary: oklch(0.98 0 0);
+    --color-primary-foreground: oklch(0.21 0.0059 285.88);
+    --color-secondary: oklch(0.27 0.0055 286.03);
+    --color-secondary-foreground: oklch(0.98 0 0);
+    --color-muted: oklch(0.27 0.0055 286.03);
+    --color-muted-foreground: oklch(0.71 0.0129 286.07);
+    --color-accent: oklch(0.27 0.0055 286.03);
+    --color-accent-foreground: oklch(0.98 0 0);
+    --color-destructive: oklch(0.4 0.1331 25.72);
+    --color-destructive-foreground: oklch(0.98 0 0);
+    --color-border: oklch(0.27 0.0055 286.03);
+    --color-input: oklch(0.27 0.0055 286.03);
+    --color-ring: oklch(0.87 0.0055 286.29);
+    --color-chart-1: oklch(0.546 0.2153 262.87);
+    --color-chart-2: oklch(0.5409 0.2468 292.95);
+    --color-chart-3: oklch(0.6624 0.2895 320.92);
+    --color-chart-4: oklch(0.6924 0.1426 165.69);
+    --color-chart-5: oklch(0.8372 0.1644 84.53);
+    --color-hue-0: oklch(0.9434 0.199 105.96);
+    --color-hue-1: oklch(0.6477 0.263 359.98);
+    --color-hue-2: oklch(0.6404 0.300 324.36);
+    --color-hue-3: oklch(0.5636 0.292 301.63);
+    --color-hue-4: oklch(0.5898 0.211 259.36);
+    --color-hue-5: oklch(0.8203 0.141 210.49);
+    --color-hue-6: oklch(0.8842 0.107 168.47);
+  }
+}
+
+
+/*
+  The default border color has changed to \`currentColor\` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+
+:root {
+  --radius: 0.5rem;
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+}
+
+@supports not (backdrop-filter: blur(4px)) {
+  .backdrop-blur-sm {
+    background-color: color-mix(
+      in oklab,
+      var(--color-background) 90%,
+      transparent
+    );
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -339,9 +481,23 @@ body {
   }
 }
 
-#__next {
-  isolation: isolate;
-}` as const;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+body {
+  overflow-x: hidden;
+}
+` as const;
   }
 
   private get globalErrorTsx() {
@@ -374,23 +530,22 @@ export default function GlobalError({
   }
 
   private get rootLayoutTsx() {
-    // prettier-ignore
-    return `import type { Metadata, Viewport } from "next";
+    try {
+      this.calSansFont();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      // prettier-ignore
+      return `import type { Metadata, Viewport } from "next";
 import React from "react";
-import { ViewTransitions } from "next-view-transitions";
-import "./global.css";
-import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+import { Inter } from "next/font/google";
 /* populate relevant values in src/lib/site-url.ts and uncomment for url injetion */
 // import { getSiteUrl } from "@/lib/site-url";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin", "latin-ext"]
 });
 
 export const viewport = {
@@ -419,17 +574,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ViewTransitions>
       <html
         suppressHydrationWarning
-        lang='en'>
-        <body className={\`antialiased \${geistSans.variable} \${geistMono.variable}\`}>
+        lang='en' className={inter.variable}>
+        <body className={"antialiased"}>
           {children}
         </body>
       </html>
-    </ViewTransitions>
   );
 }` as const;
+    }
   }
 
   private get libCnTs() {
@@ -552,41 +706,24 @@ export function shimmer<
 
   private get typeNextTs() {
     // prettier-ignore
-    return `import type { Unenumerate } from "@/types/helpers";
-/**
- * RT->ReturnType
- *
- * P->Parameters
- *
- * B->Both->{ readonly params: P; readonly returnType: RT; }
- */
-
-export type InferIt<T, V extends "RT" | "P" | "B"> = T extends (
-  ...args: infer P
-) => infer RT | Promise<infer RT> | PromiseLike<infer RT> | Awaited<infer RT>
-  ? V extends "B"
-    ? { readonly params: P; readonly returnType: RT }
-    : V extends "RT"
-      ? RT
-      : V extends "P"
-        ? P
-        : T
-  : T;
+    return `export type InferGSPRTWorkup<T> =
+  T extends Promise<readonly (infer U)[] | (infer U)[]> ? U : T;
 
 /**
- * usage with dynamic page routes in nextjs app directory
+ * usage with dynamic page routes in nextjs app directory for a [slug] route
  *
  * \`\`\`tsx
   export default async function DynamicPage({
     params
   }: InferGSPRT<typeof generateStaticParams>) {
+    const { slug } = await params;
     // your code here
   }
   \`\`\`
 */
 
 export type InferGSPRT<V extends (...args: any) => any> = {
-  params: Promise<Unenumerate<InferIt<V, "RT">>>;
+  params: Promise<InferGSPRTWorkup<ReturnType<V>>>;
 };` as const;
   }
 
@@ -655,38 +792,6 @@ export type FilterOptionalOrRequired<
 /* General Helper Types END */
 
 
-/* React Helper Types BEGIN */
-
-
-export type InferReactForwardRefExoticComponentProps<T> =
-  T extends React.ForwardRefExoticComponent<infer U> ? U : T;
-
-export type InferTsxTargeted<T> =
-  T extends React.DetailedHTMLProps<infer U, Element> ? U : T;
-
-export type TsxTargeted<T extends keyof React.JSX.IntrinsicElements> = {
-  [P in T]: InferTsxTargeted<React.JSX.IntrinsicElements[P]>;
-}[T];
-
-export type TsxExclude<
-  T extends keyof React.JSX.IntrinsicElements,
-  J extends keyof TsxTargeted<T>
-> = RemoveFields<TsxTargeted<T>, J>;
-
-export type TsxInclude<
-  T extends keyof React.JSX.IntrinsicElements,
-  J extends keyof TsxTargeted<T>
-> = RemoveFields<TsxTargeted<T>, Exclude<keyof TsxTargeted<T>, J>>;
-
-export type EventHandler<E extends React.SyntheticEvent<any>> = {
-  bivarianceHack(event: E): void;
-}["bivarianceHack"];
-
-
-/* React Helper Types END */
-
-
-
 /* Case helper types BEGIN  */
 
 
@@ -708,52 +813,6 @@ export type ToCamelCase<S extends string> = string extends S
 /* Case helper types END  */
 
 
-
-/* Experimental React Type Helpers BEGIN */
-
-
-export type InferTsxTargetedFlexi<T> =
-  T extends React.DetailedHTMLProps<infer U, infer E> ? readonly [U, E] : T;
-
-export type Selector<
-  T,
-  K extends "attribute" | "element" | "tuple"
-> = T extends readonly [infer A, infer B]
-  ? K extends "attribute"
-    ? A
-    : K extends "element"
-      ? B
-      : readonly [A, B]
-  : T;
-
-export type FlexiKeys = Unenumerate<readonly ["attribute", "element", "tuple"]>;
-
-export type TsxTargetedExp<
-  T extends keyof React.JSX.IntrinsicElements,
-  K extends FlexiKeys
-> = {
-  readonly [P in T]: Selector<
-    InferTsxTargetedFlexi<React.JSX.IntrinsicElements[P]>,
-    K
-  >;
-}[T];
-
-export type TsxExcludeExp<
-  I extends FlexiKeys,
-  K extends keyof React.JSX.IntrinsicElements,
-  J extends keyof TsxTargetedExp<K, I>
-> = RemoveFields<TsxTargetedExp<K, I>, J>;
-
-export type TsxIncludeExp<
-  I extends FlexiKeys,
-  K extends keyof React.JSX.IntrinsicElements,
-  J extends keyof TsxTargetedExp<K, I>
-> = RemoveFields<TsxTargetedExp<K, I>, Exclude<keyof TsxTargetedExp<K, I>, J>>;
-
-
-/* Experimental React Type Helpers END */
-
-
 /* Helper functions BEGIN */
 
 export function whAdjust<O extends string, T extends number>(
@@ -766,23 +825,6 @@ export function whAdjust<O extends string, T extends number>(
       ? Number.parseInt(widthOrHeight, 10) * relAdjust
       : widthOrHeight * relAdjust
     : ogVal;
-}
-
-export function omitFields<
-  const Target extends { [record: string | symbol | number]: unknown },
-  const Key extends keyof Target
->(target: Target, keys: Key[]): RemoveFields<Target, Unenumerate<Key>> {
-  /* eslint-disable-next-line */
-  let obj = target;
-  keys.forEach(t => {
-    if (t in obj) {
-      delete obj[t];
-      return obj;
-    } else {
-      return obj;
-    }
-  });
-  return obj;
 }
 
 /* Helper functions END */
@@ -971,14 +1013,13 @@ export default function Home() {
       index: this.appPath("turbo.json"),
       packageJson: this.appPath("package.json"),
       eslint: this.appPath("eslint.config.mjs"),
-      postcss: this.appPath("postcss.config.cjs"),
+      postcss: this.appPath("postcss.config.mjs"),
       nextconfig: this.appPath("next.config.ts"),
       tailwind: this.appPath("tailwind.config.ts"),
       tsconfig: this.appPath("tsconfig.json"),
       nextenvdts: this.appPath("next-env.d.ts"),
-      indexdts: this.appPath("index.d.ts"),
       globaldts: this.appPath("global.d.ts"),
-      globalCss: this.appPath("src/app/global.css"),
+      globalCss: this.appPath("src/app/globals.css"),
       rootlayout: this.appPath("src/app/layout.tsx"),
       rootpage: this.appPath("src/app/page.tsx"),
       globalerror: this.appPath("src/app/global-error.tsx"),
@@ -1017,14 +1058,13 @@ export default function Home() {
       this.writeTarget("apps/web/tsconfig.json", this.tsconfigJson),
       this.writeTarget("apps/web/global.d.ts", this.globalDts),
       this.writeTarget("apps/web/next-env.d.ts", this.nextEnvDts),
-      this.writeTarget("apps/web/index.d.ts", this.indexDts),
       this.writeTarget("apps/web/eslint.config.mjs", this.eslintConfigMjs),
-      this.writeTarget("apps/web/postcss.config.cjs", this.postcssConfigCjs),
+      this.writeTarget("apps/web/postcss.config.mjs", this.postcssConfigMjs),
       this.writeTarget(
         "apps/web/src/app/global-error.tsx",
         this.globalErrorTsx
       ),
-      this.writeTarget("apps/web/src/app/global.css", this.globalCss),
+      this.writeTarget("apps/web/src/app/globals.css", this.globalCss),
       this.writeTarget("apps/web/src/app/layout.tsx", this.rootLayoutTsx),
       this.writeTarget("apps/web/src/lib/utils.ts", this.libCnTs),
       this.writeTarget("apps/web/src/lib/site-url.ts", this.libSiteUrlTs),

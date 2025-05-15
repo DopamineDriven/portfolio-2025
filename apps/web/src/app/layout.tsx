@@ -10,6 +10,7 @@ import { CookieProvider } from "@/context/cookie-context";
 import { getSiteUrl } from "@/lib/site-url";
 import * as gAnalytics from "@/utils/analytics";
 
+
 export const metadata = {
   metadataBase: new URL(getSiteUrl(process.env.NODE_ENV)),
   title: {
