@@ -70,7 +70,7 @@ export default config;
   "version": "0.1.0",
   "type": "module",
   "exports": {
-    ".": "./index.js"
+    ".": "./index.mjs"
   },
   "scripts": {
     "clean": "git clean -xdf .turbo node_modules",
@@ -109,7 +109,7 @@ export default config;
 
   private get getPaths() {
     return {
-      index: this.prettierPath("index.js"),
+      index: this.prettierPath("index.mjs"),
       packageJson: this.prettierPath("package.json"),
       tsconfig: this.prettierPath("tsconfig.json")
     } as const;
@@ -130,7 +130,7 @@ export default config;
 
   public exePrettier() {
     return Promise.all([
-      this.writeTarget("tooling/prettier/index.js", this.indexTemplate),
+      this.writeTarget("tooling/prettier/index.mjs", this.indexTemplate),
       this.writeTarget("tooling/prettier/package.json", this.pkgJsonTemplate),
       this.writeTarget("tooling/prettier/tsconfig.json", this.tsconfigTemplate)
     ]);

@@ -29,7 +29,7 @@ export default tseslint.config(
       import: importPlugin,
       turbo: turboPlugin
     },
-    ignores: ["stockfish.js", "**/*.config.*", "public/**/*.js", "**/node_modules/**",       ".vscode/**/*.json"],
+    ignores: ["stockfish.js", "**/*.config.*", "public/**/*.js", "**/node_modules/**", ".vscode/**/*.json"],
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommended,

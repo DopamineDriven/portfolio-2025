@@ -31,37 +31,22 @@ export default tseslint.config(
   {
     // Globally ignored files
     ignores: [
-      "**/*.config.js",
-      "**/*.config.mjs",
-      "**/*.config.cjs",
-      "tailwind.config.ts",
-      "tsup.config.ts",
-      "**/*.presets.cjs"
+      "**/*.config.*",
+      "**/public/**",
+      ".vscode/**/*.json",
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/build/**",
+      "**/.next/cache/**"
     ]
   },
   {
-    files: [
-      "**/*.js",
-      "**/*.mjs",
-      "**/*.cjs",
-      "**/*.ts",
-      "**/*.tsx",
-      "**/*.jsx",
-      "**/*.mts",
-      "**/*.cts"
-    ],
+    files: ["**/*.js", "**/*.mjs", "**/*.ts", "**/*.tsx"],
     plugins: {
       import: importPlugin,
       turbo: turboPlugin
     },
-    ignores: [
-      "tailwind.config.ts",
-      "tsup.config.ts",
-      "**/*.config.mjs",
-      "**/*.config.js",
-      "**/*.config.cjs",
-      "**/*.presets.cjs"
-    ],
+    ignores: ["**/*.config.*", "public/**/*.js", "**/node_modules/**", ".vscode/**/*.json"],
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommended,
@@ -127,6 +112,7 @@ export default [
   private get reactScaffold() {
     // prettier-ignore
     return `import reactPlugin from "eslint-plugin-react";
+import compilerPlugin from "eslint-plugin-react-compiler";
 import hooksPlugin from "eslint-plugin-react-hooks";
 
 /** @type {Awaited<import('typescript-eslint').Config>} */
@@ -135,11 +121,13 @@ export default [
     files: ["**/*.ts", "**/*.tsx"],
     plugins: {
       react: reactPlugin,
+      "react-compiler": compilerPlugin,
       "react-hooks": hooksPlugin
     },
     rules: {
       ...reactPlugin.configs["jsx-runtime"].rules,
-      ...hooksPlugin.configs.recommended.rules
+      ...hooksPlugin.configs.recommended.rules,
+      "react-compiler/react-compiler": "error"
     },
     languageOptions: {
       globals: {
@@ -156,12 +144,12 @@ export default [
     return `{
   "name": "@${this.workspace}/eslint-config",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.1.0",
   "type": "module",
   "exports": {
-    "./base": "./base.js",
-    "./next": "./next.js",
-    "./react": "./react.js"
+    "./base": "./base.mjs",
+    "./next": "./next.mjs",
+    "./react": "./react.mjs"
   },
   "license": "MIT",
   "scripts": {
@@ -170,14 +158,17 @@ export default [
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@eslint/compat": "^1.1.1",
+    "@eslint/compat": "^1.2.9",
+    "@eslint/js": "^9.26.0",
     "@next/eslint-plugin-next": "latest",
     "eslint-config-turbo": "latest",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-react": "^7.37.2",
-    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-compiler": "^19.1.0-rc.2",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-turbo": "latest",
+    "jiti": "^2.4.2",
     "typescript-eslint": "latest"
   },
   "devDependencies": {
@@ -198,23 +189,14 @@ export default [
   "compilerOptions": {
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
-  "include": ["**/*"],
+  "include": ["."],
   "exclude": ["node_modules"]
 }`as const;
   }
 
   private get dtsScaffold() {
     // prettier-ignore
-    return `declare module "@eslint/js" {
-  import type { Linter } from "eslint";
-
-  export const configs: {
-    readonly recommended: { readonly rules: Readonly<Linter.RulesRecord> };
-    readonly all: { readonly rules: Readonly<Linter.RulesRecord> };
-  };
-}
-
-declare module "eslint-plugin-import" {
+    return `declare module "eslint-plugin-import" {
   import type { Linter, Rule } from "eslint";
 
   export const configs: {
@@ -233,6 +215,8 @@ declare module "eslint-plugin-react" {
   };
   export const rules: Record<string, Rule.RuleModule>;
 }
+
+declare module "eslint-plugin-react-compiler" {}
 
 declare module "eslint-plugin-react-hooks" {
   import type { Linter, Rule } from "eslint";
@@ -275,18 +259,16 @@ declare module "eslint-plugin-turbo" {
 
   private get getPaths() {
     return {
-      base: this.eslintPath("base.js"),
-      next: this.eslintPath("next.js"),
+      base: this.eslintPath("base.mjs"),
+      next: this.eslintPath("next.mjs"),
       packageJson: this.eslintPath("package.json"),
-      react: this.eslintPath("react.js"),
+      react: this.eslintPath("react.mjs"),
       tsconfig: this.eslintPath("tsconfig.json"),
       types: this.eslintPath("types.d.ts")
     } as const;
   }
 
-  private eslintTarget<const V extends keyof typeof this.getPaths>(
-    target: V
-  ) {
+  private eslintTarget<const V extends keyof typeof this.getPaths>(target: V) {
     return this.getPaths[target];
   }
 
@@ -299,10 +281,10 @@ declare module "eslint-plugin-turbo" {
 
   public exeEslint() {
     return Promise.all([
-      this.writeTarget("tooling/eslint/base.js", this.baseScaffold),
-      this.writeTarget("tooling/eslint/next.js", this.nextScaffold),
+      this.writeTarget("tooling/eslint/base.mjs", this.baseScaffold),
+      this.writeTarget("tooling/eslint/next.mjs", this.nextScaffold),
       this.writeTarget("tooling/eslint/package.json", this.pkgJsonScaffold),
-      this.writeTarget("tooling/eslint/react.js", this.reactScaffold),
+      this.writeTarget("tooling/eslint/react.mjs", this.reactScaffold),
       this.writeTarget("tooling/eslint/tsconfig.json", this.tsconfigScaffold),
       this.writeTarget("tooling/eslint/types.d.ts", this.dtsScaffold)
     ]);

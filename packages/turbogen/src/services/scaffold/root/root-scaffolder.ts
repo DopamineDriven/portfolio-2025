@@ -26,9 +26,9 @@ export class RootScaffolder extends ConfigHandler {
         };
   }
 
-  private readmeMinimal() {
+  private get readmeMinimal() {
     // prettier-ignore
-    return `### 👋 Welcome to the ${this.toTitleCase(this.workspace)} workspace`
+    return `### 👋 Welcome to the ${this.toTitleCase(this.workspace)} workspace` as const
   }
 
   private pkgJsonRepo() {
@@ -439,6 +439,7 @@ pnpm-lock.yaml
       prettierignore: ".prettierignore",
       tsconfig: `tsconfig.json`,
       turboJson: `turbo.json`,
+      readme: "README.md",
       vscodeExtensions: ".vscode/extensions.json",
       vscodeSettings: `.vscode/settings.json`
     } as const;
@@ -472,7 +473,8 @@ pnpm-lock.yaml
       this.writeTarget("package.json", this.pkgJsonTemplate),
       this.writeTarget("pnpm-workspace.yaml", this.pnpmWorkspaceYamlTemplate),
       this.writeTarget("tsconfig.json", this.tsconfigTemplate),
-      this.writeTarget("turbo.json", this.turboJsonTemplate)
+      this.writeTarget("turbo.json", this.turboJsonTemplate),
+      this.writeTarget("README.md", this.readmeMinimal)
     ]);
   }
 }
