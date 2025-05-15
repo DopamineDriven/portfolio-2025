@@ -41,7 +41,7 @@
     "sync:time": "sudo ntpdate time.windows.com",
     "latest:pnpm": "corepack use pnpm@latest",
     "update:pnpm": "curl -fsSL https://get.pnpm.io/install.sh | sh -",
-    "restore:git": "java -jar ../../bfg.jar --delete-files 'Rubber001_8K-JPG_NormalGL.jpg'",
+    "restore:git": "java -jar ~/bfg.jar --delete-files 'Rubber001_8K-JPG_NormalGL.jpg'",
     "wsl2:version": "lsb_release -d"
   },
   "devDependencies": {
@@ -50,7 +50,7 @@
     "@portfolio/eslint-config": "workspace:*",
     "@portfolio/prettier-config": "workspace:*",
     "@portfolio/tsconfig": "workspace:*",
-    "@types/node": "^22.15.17",
+    "@types/node": "^22.15.18",
     "dotenv": "^16.5.0",
     "dotenv-cli": "^8.0.0",
     "dotenv-expand": "^12.0.2",

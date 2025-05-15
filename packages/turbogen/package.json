@@ -116,7 +116,7 @@
     "@swc/core": "^1.11.24",
     "@swc/wasm": "^1.11.24",
     "@types/gradient-string": "^1.1.6",
-    "@types/node": "^22.15.17",
+    "@types/node": "^22.15.18",
     "chokidar": "^4.0.3",
     "dotenv-cli": "^8.0.0",
     "dotenv-expand": "^12.0.2",

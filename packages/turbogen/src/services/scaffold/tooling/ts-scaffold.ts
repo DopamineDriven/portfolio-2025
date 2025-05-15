@@ -18,26 +18,27 @@ export class TsScaffolder extends ConfigHandler {
     return `{
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "target": "ES2022",
-    "lib": ["ES2022", "ScriptHost"],
     "allowJs": true,
-    "declaration": true,
-    "resolveJsonModule": true,
-    "moduleDetection": "force",
-    "isolatedModules": true,
+    "checkJs": false,
+    "disableSourceOfProjectReferenceRedirect": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "incremental": true,
-    "disableSourceOfProjectReferenceRedirect": true,
+    "isolatedModules": true,
+    "lib": ["ES2022", "ScriptHost"],
+    "module": "Preserve",
+    "moduleDetection": "auto",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "noUncheckedIndexedAccess": true,
+    "preserveWatchOutput": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": true,
-    "noUncheckedIndexedAccess": true,
-    "checkJs": true,
-    "module": "Preserve",
-    "moduleResolution": "Bundler",
-    "noEmit": true
+    "target": "ES2022"
   },
-  "exclude": ["node_modules", "build", "dist", ".next/cache"]
+  "exclude": ["node_modules", "build", "dist", ".next"]
 }
 ` as const;
   }
@@ -55,7 +56,6 @@ export class TsScaffolder extends ConfigHandler {
     "incremental": true,
     "sourceMap": true,
     "useDefineForClassFields": true,
-    "disableSourceOfProjectReferenceRedirect": false,
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "declarationMap": true,
@@ -87,18 +87,19 @@ export class TsScaffolder extends ConfigHandler {
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "./base.json",
   "compilerOptions": {
-    "alwaysStrict": true,
-    "module": "Node16",
-    "moduleResolution": "NodeNext",
-    "target": "ESNext",
-    "incremental": true,
-    "sourceMap": true,
-    "useDefineForClassFields": true,
-    "disableSourceOfProjectReferenceRedirect": false,
+    "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
+    "alwaysStrict": true,
     "declaration": true,
     "declarationMap": true,
-    "importHelpers": false
+    "importHelpers": false,
+    "incremental": true,
+    "module": "Node16",
+    "moduleResolution": "NodeNext",
+    "noEmit": true,
+    "sourceMap": true,
+    "target": "ESNext",
+    "useDefineForClassFields": true
   }
 }
 ` as const;
@@ -116,12 +117,10 @@ export class TsScaffolder extends ConfigHandler {
     "incremental": true,
     "sourceMap": true,
     "useDefineForClassFields": true,
-    "disableSourceOfProjectReferenceRedirect": false,
     "allowSyntheticDefaultImports": true,
-    "declaration": true,
-    "declarationMap": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "moduleResolution": "bundler",
     "importHelpers": false,
     "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"]
   }
@@ -137,19 +136,35 @@ export class TsScaffolder extends ConfigHandler {
     "alwaysStrict": true,
     "jsx": "react-jsx",
     "lib": ["DOM", "DOM.Iterable", "ESNext", "ScriptHost"],
-    "jsxImportSource": "react",
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "target": "ESNext",
     "incremental": false,
     "sourceMap": true,
     "useDefineForClassFields": true,
-    "disableSourceOfProjectReferenceRedirect": false,
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "declarationMap": true,
+    "emitDeclarationOnly": true,
     "importHelpers": false,
-    "noEmit": true
+    "noEmit": false
+  }
+}
+` as const;
+  }
+
+  private get reactNativeTemplate() {
+    // prettier-ignore
+    return `{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "jsx": "react",
+    "lib": ["DOM", "ESNext"],
+    "target": "ESNext",
+    "noEmit": true,
+    "incremental": true,
+    "alwaysStrict": true
   }
 }
 ` as const;
@@ -169,12 +184,12 @@ export class TsScaffolder extends ConfigHandler {
     "incremental": false,
     "sourceMap": true,
     "useDefineForClassFields": true,
-    "disableSourceOfProjectReferenceRedirect": false,
     "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
     "declaration": true,
     "declarationMap": true,
     "importHelpers": false,
-    "baseUrl": "./",
     "noEmit": true
   }
 }
@@ -207,6 +222,7 @@ export class TsScaffolder extends ConfigHandler {
       nodePkg: this.tsPath("node-pkg.json"),
       packageJson: this.tsPath("package.json"),
       reactLib: this.tsPath("react-library.json"),
+      reactNative: this.tsPath("react-native.json"),
       cliPkg: this.tsPath("cli-pkg.json")
     } as const;
   }
@@ -242,6 +258,10 @@ export class TsScaffolder extends ConfigHandler {
       this.writeTarget(
         "tooling/typescript/react-library.json",
         this.reactLibTemplate
+      ),
+      this.writeTarget(
+        "tooling/typescript/react-native.json",
+        this.reactNativeTemplate
       )
     ]);
   }
