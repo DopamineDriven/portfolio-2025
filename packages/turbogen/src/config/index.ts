@@ -96,7 +96,7 @@ auto-install-peers=true
   public calSansFont() {
     return this.fetchRemoteWriteLocalLargeFiles(
       "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/refs/heads/master/apps/web/public/fonts/CalSans-SemiBold.woff2",
-      "public/fonts/CalSans-SemiBold"
+      "apps/web/public/fonts/CalSans-SemiBold"
     );
   }
 }

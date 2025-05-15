@@ -19,6 +19,88 @@ export class WebAppScaffolder extends ConfigHandler {
     return this.baseProps.port;
   }
 
+  private get themeProvider() {
+    // prettier-ignore
+    return `"use client";
+
+import type { ThemeProviderProps } from "next-themes";
+import {
+  ThemeProvider as NextThemesProvider
+} from "next-themes";
+
+export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
+  return <NextThemesProvider {...props}>{children}</NextThemesProvider>
+}` as const;
+  }
+
+  private get uiButton() {
+    return `"use client";
+
+import type { VariantProps } from "class-variance-authority";
+import type { ComponentPropsWithRef } from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline:
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline"
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10"
+      }
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default"
+    }
+  }
+);
+
+export interface ButtonProps
+  extends ComponentPropsWithRef<"button">,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+}
+
+const Button = ({
+  className,
+  variant,
+  size,
+  asChild = false,
+  ref,
+  ...props
+}: ButtonProps) => {
+  const Comp = asChild ? Slot : "button";
+  return (
+    <Comp
+      className={cn(buttonVariants({ variant, size, className }))}
+      ref={ref}
+      {...props}
+    />
+  );
+};
+
+Button.displayName = "Button";
+
+export { Button, buttonVariants };
+` as const;
+  }
+
   private get turboJson() {
     // prettier-ignore
     return `{
@@ -45,26 +127,6 @@ declare global {
     interface ProcessEnv {
       readonly VERCEL_ENV: "development" | "production" | "preview";
     }
-  }
-}
-
-export {};
-` as const;
-  }
-
-  private get indexDts() {
-    // prettier-ignore
-    return `/// <reference types="@edge-runtime/types" />
-/// <reference types="google.analytics" />
-/// <reference types="gtag.js" />
-
-declare module "@edge-runtime/types";
-declare module "google.analytics";
-declare module "gtag.js";
-
-declare global {
-  interface Window {
-    dataLayer?: object[];
   }
 }
 
@@ -167,6 +229,7 @@ export default {
     "motion": "latest",
     "nanoid": "latest",
     "next": "latest",
+    "next-themes": "latest",
     "react": "latest",
     "react-dom": "latest",
     "react-wrap-balancer": "latest",
@@ -181,6 +244,7 @@ export default {
     "@${this.workspace}/eslint-config": "workspace:*",
     "@${this.workspace}/prettier-config": "workspace:*",
     "@${this.workspace}/tsconfig": "workspace:*",
+    "@tailwindcss/postcss": "latest",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
@@ -239,8 +303,6 @@ export default {
   private get tailwindTemplate() {
     // prettier-ignore
     return `import type { Config as TailwindConfig } from "tailwindcss";
-import forms from "@tailwindcss/forms";
-import typography from "@tailwindcss/typography";
 
 export default {
   content: ["src/**/*.{js,ts,jsx,tsx}"],
@@ -565,7 +627,7 @@ export const metadata = {
     default: "@${this.workspace}/web",
     template: "%s | @${this.workspace}/web"
   },
-  description: "@${this.workspace}/web created by @d0paminedriven/turbogen"
+  description: "@${this.workspace}/web scaffolded by @d0paminedriven/turbogen"
 } satisfies Metadata;
 
 export default function RootLayout({
@@ -577,7 +639,7 @@ export default function RootLayout({
       <html
         suppressHydrationWarning
         lang='en' className={inter.variable}>
-        <body className={"antialiased"}>
+        <body className={"bg-background font-cal-sans-semi-bold min-h-screen antialiased"}>
           {children}
         </body>
       </html>
@@ -833,116 +895,14 @@ export function whAdjust<O extends string, T extends number>(
 
   private get rootPageTsx() {
     // prettier-ignore
-    return `import Image from "next/image";
-import { shimmer } from "@/lib/shimmer";
+    return `import { Suspense } from "react";
+import { LandingPage } from "@/ui/home";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-geist-sans">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          placeholder="blur"
-          blurDataURL={shimmer([180,38])}
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-geist-mono">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              placeholder="blur"
-              blurDataURL={shimmer([20,20])}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            placeholder="blur"
-            blurDataURL={shimmer([16,16])}
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            placeholder="blur"
-            blurDataURL={shimmer([16,16])}
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            placeholder="blur"
-            blurDataURL={shimmer([16,16])}
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+    <Suspense fallback={"Loading..."}>
+      <LandingPage />
+    </Suspense>
   );
 }` as const;
   }
@@ -1004,6 +964,288 @@ export default function Home() {
 ` as const
   }
 
+  public get uiHome() {
+    // prettier-ignore
+    return `"use client";
+
+import Link from "next/link";
+import {
+  ArrowRight,
+  Code,
+  Github,
+  Layers,
+  Package,
+  Terminal,
+  Zap
+} from "lucide-react";
+import { motion } from "motion/react";
+import { Button } from "@/ui/button";
+
+export function LandingPage() {
+  return (
+    <div className="flex min-h-screen flex-col @max-9xl:mx-auto justify-center">
+      <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40 w-full border-b backdrop-blur">
+        <div className="container flex h-14 items-center">
+          <div className="mx-2 flex">
+            <Link href="/" className="mr-6 flex items-center space-x-2">
+              <Package className="size-6" />
+              <span className="font-bold">turbogen</span>
+            </Link>
+          </div>
+          <div className="flex flex-1 items-center justify-end space-x-4">
+            <nav className="flex items-center space-x-6">
+              <Link
+                href="https://github.com/DopamineDriven/d0paminedriven"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center space-x-2">
+                <Github className="size-5" />
+                <span className="sr-only">GitHub</span>
+              </Link>
+              <Link
+                href="/docs"
+                className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors">
+                Documentation
+              </Link>
+            </nav>
+          </div>
+        </div>
+      </header>
+      <main className="flex-1">
+        <section className="space-y-6 pt-6 pb-8 md:pt-10 md:pb-12 lg:py-32 mx-auto flex justify-center">
+          <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="bg-muted rounded-2xl px-4 py-1.5 text-sm font-medium">
+              Your workspace is ready
+            </motion.div>
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
+              Welcome to your{" "}
+              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Turbo
+              </span>{" "}
+              powered workspace
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-muted-foreground max-w-[42rem] leading-normal sm:text-xl sm:leading-8">
+              A high-performance monorepo with pnpm workspaces, powered by
+              Turborepo. Pre-configured with ESLint, Prettier, TypeScript, and
+              Jest.
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="space-x-4">
+              <Button asChild>
+                <Link href="/docs">
+                  Get Started <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button variant="outline" asChild>
+                <Link
+                  href="https://github.com/DopamineDriven/d0paminedriven"
+                  target="_blank"
+                  rel="noreferrer">
+                  GitHub
+                </Link>
+              </Button>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="container space-y-6 py-8 md:py-12 lg:py-24">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
+            <h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-5xl">
+              Everything you need to build at scale
+            </h2>
+            <p className="text-muted-foreground max-w-[85%] leading-normal sm:text-lg sm:leading-7">
+              Turbogen provides a solid foundation for your projects with a
+              focus on developer experience and performance.
+            </p>
+          </motion.div>
+
+          <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="bg-background relative overflow-hidden rounded-lg border p-6">
+              <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-full">
+                <Zap className="h-6 w-6 text-purple-600" />
+              </div>
+              <div className="mt-4 space-y-2">
+                <h3 className="font-bold">High Performance</h3>
+                <p className="text-muted-foreground text-sm">
+                  Turborepo's intelligent caching ensures your builds are
+                  lightning fast.
+                </p>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="bg-background relative overflow-hidden rounded-lg border p-6">
+              <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-full">
+                <Layers className="h-6 w-6 text-purple-600" />
+              </div>
+              <div className="mt-4 space-y-2">
+                <h3 className="font-bold">Monorepo Structure</h3>
+                <p className="text-muted-foreground text-sm">
+                  Organized workspace with apps and packages for maximum code
+                  reuse.
+                </p>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="bg-background relative overflow-hidden rounded-lg border p-6">
+              <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-full">
+                <Code className="h-6 w-6 text-purple-600" />
+              </div>
+              <div className="mt-4 space-y-2">
+                <h3 className="font-bold">Tooling Included</h3>
+                <p className="text-muted-foreground text-sm">
+                  Pre-configured ESLint, Prettier, TypeScript, and Jest for
+                  consistent code quality.
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="container py-8 md:py-12 lg:py-24">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="mx-auto max-w-[58rem] space-y-6 text-center">
+            <h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-5xl">
+              Ready to start building?
+            </h2>
+            <p className="text-muted-foreground leading-normal sm:text-lg sm:leading-7">
+              Your workspace is already set up. Here's how to get started:
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="bg-muted/50 mx-auto mt-12 max-w-[58rem] rounded-lg border p-6 md:p-8">
+            <div className="flex items-center">
+              <Terminal className="mr-2 h-5 w-5" />
+              <h3 className="font-bold">Start developing</h3>
+            </div>
+            <div className="mt-4 space-y-4">
+              <div className="rounded-md bg-black p-4">
+                <pre className="text-sm text-white">
+                  <code>{\`# Install dependencies
+pnpm install
+
+# Start development server
+pnpm dev\`}</code>
+                </pre>
+              </div>
+              <p className="text-muted-foreground text-sm">
+                This will start the development server for your web application.
+                You can now start building your project!
+              </p>
+            </div>
+          </motion.div>
+        </section>
+
+        <section className="container py-8 md:py-12 lg:py-24">
+          <div className="bg-background mx-auto max-w-[58rem] rounded-lg border p-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="bg-muted rounded-full p-3">
+                <Package className="h-6 w-6 text-purple-600" />
+              </div>
+              <h3 className="font-heading text-2xl leading-[1.1]">
+                Explore your workspace
+              </h3>
+              <p className="text-muted-foreground">
+                Your monorepo is organized with the following structure:
+              </p>
+              <div className="bg-muted w-full max-w-md rounded-md p-4 text-left">
+                <pre className="text-sm">
+                  <code>
+                    {\`├── apps/
+│   └── web/
+├── packages/
+│   └── ui/
+└── tooling/
+    ├── eslint/
+    ├── prettier/
+    ├── typescript/
+    └── jest/\`}
+                  </code>
+                </pre>
+              </div>
+              <Button asChild>
+                <Link href="/docs/structure">
+                  Learn more about the structure{" "}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </motion.div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="border-t py-6 md:py-0">
+        <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+          <p className="text-muted-foreground text-center text-sm leading-loose md:text-left">
+            Built with{" "}
+            <span className="font-semibold">@d0paminedriven/turbogen</span>. The
+            source code is available on{" "}
+            <Link
+              href="https://github.com/DopamineDriven/d0paminedriven"
+              target="_blank"
+              rel="noreferrer"
+              className="font-medium underline underline-offset-4">
+              GitHub
+            </Link>
+            .
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+` as const;
+  }
+
   private appPath<const F extends string>(file: F) {
     return `apps/web/${file}` as const;
   }
@@ -1034,7 +1276,10 @@ export default function Home() {
       svgGlobe: this.appPath("public/globe.svg"),
       svgNext: this.appPath("public/next.svg"),
       svgVercel: this.appPath("public/vercel.svg"),
-      svgWindow: this.appPath("public/window.svg")
+      svgWindow: this.appPath("public/window.svg"),
+      themeProvider: this.appPath("src/context/theme-provider.tsx"),
+      uiButton: this.appPath("src/ui/button/index.tsx"),
+      uiHome: this.appPath("src/ui/home/index.tsx")
     } as const;
   }
 
@@ -1078,7 +1323,13 @@ export default function Home() {
       this.writeTarget("apps/web/public/globe.svg", this.svgGlobe),
       this.writeTarget("apps/web/public/vercel.svg", this.svgVercel),
       this.writeTarget("apps/web/public/window.svg", this.svgWindow),
-      this.writeTarget("apps/web/src/app/page.tsx", this.rootPageTsx)
+      this.writeTarget("apps/web/src/app/page.tsx", this.rootPageTsx),
+      this.writeTarget(
+        "apps/web/src/context/theme-provider.tsx",
+        this.themeProvider
+      ),
+      this.writeTarget("apps/web/src/ui/button/index.tsx", this.uiButton),
+      this.writeTarget("apps/web/src/ui/home/index.tsx", this.uiHome)
     ]);
   }
 }
