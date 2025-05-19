@@ -1,9 +1,12 @@
-import type { TsxExclude19 } from "@/types/react";
-
+import type { SVGProps } from "react";
 export const GithubIcon = ({
   ...svg
-}: TsxExclude19<"svg", "xmlns" | "viewBox" | "fill">) => (
-  <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" {...svg}>
+}: Omit<SVGProps<SVGSVGElement>, "xmlns" | "viewBox" | "fill" | "role">) => (
+  <svg
+    viewBox="0 0 96 96"
+    xmlns="http://www.w3.org/2000/svg"
+    role="img"
+    {...svg}>
     <path
       fillRule="evenodd"
       clipRule="evenodd"

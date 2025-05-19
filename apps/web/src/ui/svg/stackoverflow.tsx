@@ -1,10 +1,11 @@
-import type { TsxExclude19 } from "@/types/react";
+import type { SVGProps } from "react";
 
 export const StackoverflowIcon = ({
   ...svg
-}: TsxExclude19<"svg", "xmlns" | "viewBox" | "fill">) => (
+}: Omit<SVGProps<SVGSVGElement>, "viewBox" | "fill" | "xmlns" | "role">) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
+    role="img"
     viewBox="0 0 120 120"
     fill="none"
     {...svg}>
@@ -20,4 +21,3 @@ export const StackoverflowIcon = ({
 );
 
 StackoverflowIcon.displayName = "StackoverflowIcon";
-

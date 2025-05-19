@@ -1,10 +1,10 @@
-import type { TsxExclude19 } from "@/types/react";
+import type { SVGProps } from "react";
 import { cn } from "@/lib/utils";
 
 export function VercelIcon({
   className,
   ...rest
-}: TsxExclude19<"svg", "viewBox" | "xmlns" | "fill" | "role">) {
+}: Omit<SVGProps<SVGSVGElement>, "viewBox" | "xmlns" | "fill" | "role">) {
   return (
     <svg
       fill="none"

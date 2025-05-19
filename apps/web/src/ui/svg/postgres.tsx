@@ -1,13 +1,10 @@
-import type { ComponentPropsWithRef } from "react";
+import type { SVGProps } from "react";
 import { cn } from "@/lib/utils";
 
 export const PostgresIcon = ({
   className,
   ...svg
-}: Omit<
-  ComponentPropsWithRef<"svg">,
-  "xmlns" | "viewBox" | "fill" | "role"
->) => (
+}: Omit<SVGProps<SVGSVGElement>, "viewBox" | "xmlns" | "fill" | "role">) => (
   <svg
     viewBox="0 0 24 25"
     fill="none"

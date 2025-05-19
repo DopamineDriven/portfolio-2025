@@ -1,10 +1,10 @@
-import type { TsxExclude19 } from "@/types/react";
+import type { SVGProps } from "react";
 import { cn } from "@/lib/utils";
 
 export function V0Icon({
   className,
   ...rest
-}: TsxExclude19<"svg", "fill" | "viewBox" | "role" | "xmlns">) {
+}: Omit<SVGProps<SVGSVGElement>, "viewBox" | "xmlns" | "fill" | "role">) {
   return (
     <svg
       strokeLinejoin="round"
