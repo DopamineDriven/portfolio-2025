@@ -19,17 +19,252 @@ export class WebAppScaffolder extends ConfigHandler {
     return this.baseProps.port;
   }
 
-  private get themeProvider() {
+  private get uiPageLayout() {
     // prettier-ignore
     return `"use client";
 
-import type { ThemeProviderProps } from "next-themes";
-import {
-  ThemeProvider as NextThemesProvider
-} from "next-themes";
+import type { ReactNode } from "react";
+import { Footer } from "@/ui/footer";
+import { Nav } from "@/ui/nav";
 
-export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>
+export function PageLayout({ children }: { children: ReactNode }) {
+  return (
+    <div className="@max-9xl:mx-auto flex min-h-screen flex-col justify-center">
+      <Nav />
+      <main className="flex-1">{children}</main>
+      <Footer />
+    </div>
+  );
+}
+` as const;
+  }
+
+  private get uiNav() {
+    // prettier-ignore
+    return `"use client";
+
+import { useEffect } from "react";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { Package } from "lucide-react";
+import { useTheme } from "next-themes";
+import { GithubIcon as Github } from "@/ui/icons/github";
+
+const ThemeToggle = dynamic(
+  () => import("@/ui/theme").then(d => d.ThemeToggle),
+  { ssr: false }
+);
+
+export function Nav() {
+  const { resolvedTheme } = useTheme();
+
+  useEffect(() => {
+    // Check if user prefers dark mode
+    const prefersDark =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    // Apply theme based on system preference during initial load
+    if (!resolvedTheme) {
+      if (prefersDark) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    } else {
+      // Apply theme based on resolvedTheme once it's available
+      if (resolvedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    }
+  }, [resolvedTheme]);
+  return (
+    <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 max-w-9xl sticky top-0 z-40 w-full self-center border-b backdrop-blur">
+      <div className="container flex h-14 items-center">
+        <div className="mx-2 flex">
+          <Link href="/" className="mr-6 flex items-center space-x-2">
+            <Package className="size-6" />
+            <span className="font-bold">turbogen</span>
+          </Link>
+        </div>
+        <div className="flex flex-1 items-center justify-end space-x-4">
+          <nav className="flex items-center space-x-6">
+            <Link
+              href="https://github.com/DopamineDriven/d0paminedriven"
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center space-x-2">
+              <Github className="size-5" />
+              <span className="sr-only">GitHub</span>
+            </Link>
+            <Link
+              href="/docs"
+              className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors">
+              Documentation
+            </Link>
+            <ThemeToggle />
+          </nav>
+        </div>
+      </div>
+    </header>
+  );
+}` as const;
+  }
+
+  private get uiGithubIcon() {
+    // prettier-ignore
+    return `import type { SVGProps } from "react";
+
+export function GithubIcon({
+  ...svg
+}: Omit<SVGProps<SVGSVGElement>, "xmlns" | "viewBox" | "role">) {
+  return (
+    <svg
+      viewBox="0 0 96 96"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      {...svg}>
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M48.854 0C21.839 0 0 22 0 49.217c0 21.756 13.993 40.172 33.405 46.69 2.427.49 3.316-1.059 3.316-2.362 0-1.141-.08-5.052-.08-9.127-13.59 2.934-16.42-5.867-16.42-5.867-2.184-5.704-5.42-7.17-5.42-7.17-4.448-3.015.324-3.015.324-3.015 4.934.326 7.523 5.052 7.523 5.052 4.367 7.496 11.404 5.378 14.235 4.074.404-3.178 1.699-5.378 3.074-6.6-10.839-1.141-22.243-5.378-22.243-24.283 0-5.378 1.94-9.778 5.014-13.2-.485-1.222-2.184-6.275.486-13.038 0 0 4.125-1.304 13.426 5.052a46.97 46.97 0 0 1 12.214-1.63c4.125 0 8.33.571 12.213 1.63 9.302-6.356 13.427-5.052 13.427-5.052 2.67 6.763.97 11.816.485 13.038 3.155 3.422 5.015 7.822 5.015 13.2 0 18.905-11.404 23.06-22.324 24.283 1.78 1.548 3.316 4.481 3.316 9.126 0 6.6-.08 11.897-.08 13.526 0 1.304.89 2.853 3.316 2.364 19.412-6.52 33.405-24.935 33.405-46.691C97.707 22 75.788 0 48.854 0z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+` as const;
+  }
+
+  private get uiFooter() {
+    // prettier-ignore
+    return `"use client";
+
+import Link from "next/link";
+
+export function Footer() {
+  return (
+    <footer className="max-w-9xl self-center border-t py-6 md:py-0 w-full">
+      <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+        <p className="text-muted-foreground text-center text-sm leading-loose md:text-left">
+          Scaffolded by &nbsp;
+          <span className="font-extrabold">@d0paminedriven/turbogen</span>. The
+          source code is available on&nbsp;
+          <Link
+            href="https://github.com/DopamineDriven/d0paminedriven"
+            target="_blank"
+            rel="noreferrer"
+            className="font-medium underline underline-offset-4">
+            GitHub
+          </Link>
+          .
+        </p>
+      </div>
+    </footer>
+  );
+}` as const;
+  }
+
+  private get uiTheme() {
+    // prettier-ignore
+    return `"use client";
+
+import { useEffect, useState } from "react";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { Button } from "@/ui/button";
+
+export function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Ensure component is mounted to avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Simple toggle function
+  const toggleTheme = () => {
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
+  };
+
+  // During initial load (not mounted), we'll show an icon based on a simple check
+  // of the user's preferred color scheme to avoid flickering
+  if (!mounted) {
+    // Check if user prefers dark mode
+    const prefersDark =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    return (
+      <Button
+        variant="ghost"
+        size="icon"
+        style={{
+          backgroundColor: "transparent",
+          border: "none",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "2.5rem",
+          height: "2.5rem",
+          borderRadius: "0.375rem"
+        }}>
+        {prefersDark ? <Moon size={20} /> : <Sun size={20} />}
+        <span
+          style={{
+            position: "absolute",
+            width: "1px",
+            height: "1px",
+            padding: "0",
+            margin: "-1px",
+            overflow: "hidden",
+            clip: "rect(0, 0, 0, 0)",
+            whiteSpace: "nowrap",
+            borderWidth: "0"
+          }}>
+          Toggle theme
+        </span>
+      </Button>
+    );
+  }
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={toggleTheme}
+      style={{
+        backgroundColor: "transparent",
+        border: "none",
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "2.5rem",
+        height: "2.5rem",
+        borderRadius: "0.375rem"
+      }}>
+      {resolvedTheme === "dark" ? <Moon size={20} /> : <Sun size={20} />}
+      <span
+        style={{
+          position: "absolute",
+          width: "1px",
+          height: "1px",
+          padding: "0",
+          margin: "-1px",
+          overflow: "hidden",
+          clip: "rect(0, 0, 0, 0)",
+          whiteSpace: "nowrap",
+          borderWidth: "0"
+        }}>
+        Toggle theme
+      </span>
+    </Button>
+  );
 }` as const;
   }
 
@@ -227,15 +462,12 @@ export default {
     "clsx": "latest",
     "lucide-react": "latest",
     "motion": "latest",
-    "nanoid": "latest",
     "next": "latest",
     "next-themes": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "react-wrap-balancer": "latest",
-    "suspend-react": "latest",
-    "swr": "latest",
-    "tailwind-merge": "latest"
+    "tailwind-merge": "latest",
+    "tw-animate-css": "latest"
   },
   "devDependencies": {
     "@edge-runtime/cookies": "latest",
@@ -262,11 +494,9 @@ export default {
     "prettier": "latest",
     "sharp": "latest",
     "tailwindcss": "latest",
-    "tailwindcss-animate": "latest",
     "tailwindcss-motion": "latest",
     "tslib": "latest",
     "tsx": "latest",
-    "tw-animate-css": "latest",
     "typescript": "latest",
     "urlpattern-polyfill": "latest",
     "webpack": "latest"
@@ -338,10 +568,10 @@ export default {
 /*
   https://tailwindcss.com/docs/dark-mode#using-a-data-attribute
 
-  Uncomment the following to use a data-attribute instead of a dark theme selector
+  Using a data-attribute instead of a dark theme selector
 
-  @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @font-face {
   font-family: "CalSans";
@@ -351,9 +581,17 @@ export default {
   font-display: swap;
 }
 
+@font-face {
+  font-family: "CalSans";
+  src: url("/fonts/CalSans-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 @theme {
-  --font-cal-sans-semi-bold: CalSans, sans-serif;
+  --font-cal-sans: CalSans, sans-serif;
+  --font-inter: var(--font-inter);
   --color-background: oklch(1 0 0);
   --color-foreground: oklch(0.14 0.0044 285.82);
   --color-card: oklch(1 0 0);
@@ -609,7 +847,7 @@ export default function GlobalError({
 
   private get rootLayoutTsx() {
     try {
-      this.calSansFont();
+      this.calSansFont().then(() => this.calSansRegularFont());
     } catch (err) {
       console.error(err);
     } finally {
@@ -618,6 +856,9 @@ export default function GlobalError({
 import React from "react";
 import "./globals.css";
 import { Inter } from "next/font/google";
+import { ThemeProvider } from "next-themes";
+import { cn } from "@/lib/utils";
+import { PageLayout } from "@/ui/page-layout";
 /* populate relevant values in src/lib/site-url.ts and uncomment for url injetion */
 // import { getSiteUrl } from "@/lib/site-url";
 
@@ -652,15 +893,38 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <html
-        suppressHydrationWarning
-        lang='en' className={inter.variable}>
-        <body className={"bg-background font-cal-sans-semi-bold min-h-screen antialiased"}>
-          {children}
-        </body>
-      </html>
+    <html suppressHydrationWarning lang="en">
+      <head>
+        <script
+          async={true}
+          id="prevent-flash-of-wrong-theme"
+          dangerouslySetInnerHTML={{
+            __html: \`
+              (function() {
+                try {
+                  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  if (prefersDark) {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch (e) {}
+              })();
+            \`
+          }}
+        />
+      </head>
+      <body
+        className={cn(
+          "bg-background font-cal-sans min-h-screen antialiased",
+          inter.variable
+        )}>
+        <ThemeProvider attribute={"class"} defaultTheme="system" enableSystem>
+          <PageLayout>{children}</PageLayout>
+        </ThemeProvider>
+      </body>
+    </html>
   );
-}` as const;
+}
+` as const;
     }
   }
 
@@ -985,237 +1249,200 @@ export default function HomePage() {
     return `"use client";
 
 import Link from "next/link";
-import {
-  ArrowRight,
-  Code,
-  Github,
-  Layers,
-  Package,
-  Terminal,
-  Zap
-} from "lucide-react";
+import { ArrowRight, Code, Layers, Package, Terminal, Zap } from "lucide-react";
 import { motion } from "motion/react";
 import { Button } from "@/ui/button";
 
 export function LandingPage() {
   return (
-    <div className="flex min-h-screen flex-col @max-9xl:mx-auto justify-center">
-      <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40 w-full border-b backdrop-blur">
-        <div className="container flex h-14 items-center">
-          <div className="mx-2 flex">
-            <Link href="/" className="mr-6 flex items-center space-x-2">
-              <Package className="size-6" />
-              <span className="font-bold">turbogen</span>
-            </Link>
-          </div>
-          <div className="flex flex-1 items-center justify-end space-x-4">
-            <nav className="flex items-center space-x-6">
+    <>
+      <section className="font-cal-sans mx-auto flex justify-center space-y-6 pt-6 pb-8 md:pt-10 md:pb-12 lg:py-32">
+        <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="bg-muted rounded-2xl px-4 py-1.5 text-sm font-medium">
+            Your workspace is ready
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="font-cal-sans text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
+            Welcome to your&nbsp;
+            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Turbo
+            </span>
+            &nbsp; powered workspace
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-muted-foreground max-w-[42rem] leading-normal sm:text-xl sm:leading-8">
+            A high-performance monorepo with pnpm workspaces, powered by
+            Turborepo. Pre-configured with ESLint, Prettier, TypeScript, and
+            Jest.
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="space-x-4">
+            <Button asChild>
+              <Link href="/docs">
+                Get Started <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button variant="outline" asChild>
               <Link
                 href="https://github.com/DopamineDriven/d0paminedriven"
                 target="_blank"
-                rel="noreferrer"
-                className="flex items-center space-x-2">
-                <Github className="size-5" />
-                <span className="sr-only">GitHub</span>
+                rel="noreferrer">
+                GitHub
               </Link>
-              <Link
-                href="/docs"
-                className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors">
-                Documentation
-              </Link>
-            </nav>
-          </div>
+            </Button>
+          </motion.div>
         </div>
-      </header>
-      <main className="flex-1">
-        <section className="space-y-6 pt-6 pb-8 md:pt-10 md:pb-12 lg:py-32 mx-auto flex justify-center">
-          <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="bg-muted rounded-2xl px-4 py-1.5 text-sm font-medium">
-              Your workspace is ready
-            </motion.div>
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
-              Welcome to your{" "}
-              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Turbo
-              </span>{" "}
-              powered workspace
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-muted-foreground max-w-[42rem] leading-normal sm:text-xl sm:leading-8">
-              A high-performance monorepo with pnpm workspaces, powered by
-              Turborepo. Pre-configured with ESLint, Prettier, TypeScript, and
-              Jest.
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="space-x-4">
-              <Button asChild>
-                <Link href="/docs">
-                  Get Started <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button variant="outline" asChild>
-                <Link
-                  href="https://github.com/DopamineDriven/d0paminedriven"
-                  target="_blank"
-                  rel="noreferrer">
-                  GitHub
-                </Link>
-              </Button>
-            </motion.div>
-          </div>
-        </section>
+      </section>
 
-        <section className="container space-y-6 py-8 md:py-12 lg:py-24">
+      <section className="container space-y-6 py-8 md:py-12 lg:py-24">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
+          <h2 className="font-cal-sans text-3xl leading-[1.1] sm:text-3xl md:text-5xl">
+            Everything you need to build at scale
+          </h2>
+          <p className="text-muted-foreground max-w-[85%] leading-normal sm:text-lg sm:leading-7">
+            Turbogen provides a solid foundation for your projects with a focus
+            on developer experience and performance.
+          </p>
+        </motion.div>
+        <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
             viewport={{ once: true }}
-            className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
-            <h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-5xl">
-              Everything you need to build at scale
-            </h2>
-            <p className="text-muted-foreground max-w-[85%] leading-normal sm:text-lg sm:leading-7">
-              Turbogen provides a solid foundation for your projects with a
-              focus on developer experience and performance.
-            </p>
-          </motion.div>
-
-          <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              viewport={{ once: true }}
-              className="bg-background relative overflow-hidden rounded-lg border p-6">
-              <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-full">
-                <Zap className="h-6 w-6 text-purple-600" />
-              </div>
-              <div className="mt-4 space-y-2">
-                <h3 className="font-bold">High Performance</h3>
-                <p className="text-muted-foreground text-sm">
-                  Turborepo's intelligent caching ensures your builds are
-                  lightning fast.
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="bg-background relative overflow-hidden rounded-lg border p-6">
-              <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-full">
-                <Layers className="h-6 w-6 text-purple-600" />
-              </div>
-              <div className="mt-4 space-y-2">
-                <h3 className="font-bold">Monorepo Structure</h3>
-                <p className="text-muted-foreground text-sm">
-                  Organized workspace with apps and packages for maximum code
-                  reuse.
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              viewport={{ once: true }}
-              className="bg-background relative overflow-hidden rounded-lg border p-6">
-              <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-full">
-                <Code className="h-6 w-6 text-purple-600" />
-              </div>
-              <div className="mt-4 space-y-2">
-                <h3 className="font-bold">Tooling Included</h3>
-                <p className="text-muted-foreground text-sm">
-                  Pre-configured ESLint, Prettier, TypeScript, and Jest for
-                  consistent code quality.
-                </p>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        <section className="container py-8 md:py-12 lg:py-24">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="mx-auto max-w-[58rem] space-y-6 text-center">
-            <h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-5xl">
-              Ready to start building?
-            </h2>
-            <p className="text-muted-foreground leading-normal sm:text-lg sm:leading-7">
-              Your workspace is already set up. Here's how to get started:
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="bg-muted/50 mx-auto mt-12 max-w-[58rem] rounded-lg border p-6 md:p-8">
-            <div className="flex items-center">
-              <Terminal className="mr-2 h-5 w-5" />
-              <h3 className="font-bold">Start developing</h3>
+            className="bg-background relative overflow-hidden rounded-lg border p-6">
+            <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-full">
+              <Zap className="size-6 text-purple-600" />
             </div>
-            <div className="mt-4 space-y-4">
-              <div className="rounded-md bg-black p-4">
-                <pre className="text-sm text-white">
-                  <code>{\`# Install dependencies
+            <div className="mt-4 space-y-2">
+              <h3 className="font-bold">High Performance</h3>
+              <p className="text-muted-foreground text-sm">
+                Turborepo's intelligent caching ensures your builds are
+                lightning fast.
+              </p>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="bg-background relative overflow-hidden rounded-lg border p-6">
+            <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-full">
+              <Layers className="size-6 text-purple-600" />
+            </div>
+            <div className="mt-4 space-y-2">
+              <h3 className="font-bold">Monorepo Structure</h3>
+              <p className="text-muted-foreground text-sm">
+                Organized workspace with apps and packages for maximum code
+                reuse.
+              </p>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="bg-background relative overflow-hidden rounded-lg border p-6">
+            <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-full">
+              <Code className="size-6 text-purple-600" />
+            </div>
+            <div className="mt-4 space-y-2">
+              <h3 className="font-bold">Tooling Included</h3>
+              <p className="text-muted-foreground text-sm">
+                Pre-configured ESLint, Prettier, TypeScript, and Jest for
+                consistent code quality.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="container py-8 md:py-12 lg:py-24">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="mx-auto max-w-[58rem] space-y-6 text-center">
+          <h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-5xl">
+            Ready to start building?
+          </h2>
+          <p className="text-muted-foreground leading-normal sm:text-lg sm:leading-7">
+            Your workspace is already set up. Here's how to get started:
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="bg-muted/50 mx-auto mt-12 max-w-[58rem] rounded-lg border p-6 md:p-8">
+          <div className="flex items-center">
+            <Terminal className="mr-2 size-5" />
+            <h3 className="font-bold">Start developing</h3>
+          </div>
+          <div className="mt-4 space-y-4">
+            <div className="rounded-md bg-black p-4">
+              <pre className="text-sm text-white">
+                <code>{\`# Install dependencies
 pnpm install
 
 # Start development server
 pnpm dev\`}</code>
-                </pre>
-              </div>
-              <p className="text-muted-foreground text-sm">
-                This will start the development server for your web application.
-                You can now start building your project!
-              </p>
+              </pre>
             </div>
-          </motion.div>
-        </section>
+            <p className="text-muted-foreground text-sm">
+              This will start the development server for your web application.
+              You can now start building your project!
+            </p>
+          </div>
+        </motion.div>
+      </section>
 
-        <section className="container py-8 md:py-12 lg:py-24">
-          <div className="bg-background mx-auto max-w-[58rem] rounded-lg border p-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="bg-muted rounded-full p-3">
-                <Package className="h-6 w-6 text-purple-600" />
-              </div>
-              <h3 className="font-heading text-2xl leading-[1.1]">
-                Explore your workspace
-              </h3>
-              <p className="text-muted-foreground">
-                Your monorepo is organized with the following structure:
-              </p>
-              <div className="bg-muted w-full max-w-md rounded-md p-4 text-left">
-                <pre className="text-sm">
-                  <code>
-                    {\`├── apps/
+      <section className="container py-8 md:py-12 lg:py-24">
+        <div className="bg-background mx-auto max-w-[58rem] rounded-lg border p-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center justify-center space-y-4 text-center">
+            <div className="bg-muted rounded-full p-3">
+              <Package className="h-6 w-6 text-purple-600" />
+            </div>
+            <h3 className="font-heading text-2xl leading-[1.1]">
+              Explore your workspace
+            </h3>
+            <p className="text-muted-foreground">
+              Your monorepo is organized with the following structure:
+            </p>
+            <div className="bg-muted w-full max-w-md rounded-md p-4 text-left">
+              <pre className="text-sm">
+                <code>
+                  {\`├── apps/
 │   └── web/
 ├── packages/
 │   └── ui/
@@ -1224,40 +1451,22 @@ pnpm dev\`}</code>
     ├── prettier/
     ├── typescript/
     └── jest/\`}
-                  </code>
-                </pre>
-              </div>
-              <Button asChild>
-                <Link href="/docs/structure">
-                  Learn more about the structure{" "}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </motion.div>
-          </div>
-        </section>
-      </main>
-
-      <footer className="border-t py-6 md:py-0">
-        <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-          <p className="text-muted-foreground text-center text-sm leading-loose md:text-left">
-            Built with{" "}
-            <span className="font-semibold">@d0paminedriven/turbogen</span>. The
-            source code is available on{" "}
-            <Link
-              href="https://github.com/DopamineDriven/d0paminedriven"
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium underline underline-offset-4">
-              GitHub
-            </Link>
-            .
-          </p>
+                </code>
+              </pre>
+            </div>
+            <Button asChild>
+              <Link href="/docs/structure">
+                Learn more about the structure&nbsp;
+                <ArrowRight className="ml-2 size-4" />
+              </Link>
+            </Button>
+          </motion.div>
         </div>
-      </footer>
-    </div>
+      </section>
+    </>
   );
 }
+
 
 ` as const;
   }
@@ -1293,9 +1502,13 @@ pnpm dev\`}</code>
       svgNext: this.appPath("public/next.svg"),
       svgVercel: this.appPath("public/vercel.svg"),
       svgWindow: this.appPath("public/window.svg"),
-      themeProvider: this.appPath("src/context/theme-provider.tsx"),
       uiButton: this.appPath("src/ui/button/index.tsx"),
-      uiHome: this.appPath("src/ui/home/index.tsx")
+      uiHome: this.appPath("src/ui/home/index.tsx"),
+      uiTheme: this.appPath("src/ui/theme/index.tsx"),
+      uiNav: this.appPath("src/ui/nav/index.tsx"),
+      uiFooter: this.appPath("src/ui/footer/index.tsx"),
+      uiGithubIcon: this.appPath("src/ui/icons/github.tsx"),
+      uiPageLayout: this.appPath("src/ui/page-layout/index.tsx")
     } as const;
   }
 
@@ -1340,12 +1553,16 @@ pnpm dev\`}</code>
       this.writeTarget("apps/web/public/vercel.svg", this.svgVercel),
       this.writeTarget("apps/web/public/window.svg", this.svgWindow),
       this.writeTarget("apps/web/src/app/page.tsx", this.rootPageTsx),
-      this.writeTarget(
-        "apps/web/src/context/theme-provider.tsx",
-        this.themeProvider
-      ),
       this.writeTarget("apps/web/src/ui/button/index.tsx", this.uiButton),
-      this.writeTarget("apps/web/src/ui/home/index.tsx", this.uiHome)
+      this.writeTarget("apps/web/src/ui/home/index.tsx", this.uiHome),
+      this.writeTarget("apps/web/src/ui/theme/index.tsx", this.uiTheme),
+      this.writeTarget("apps/web/src/ui/footer/index.tsx", this.uiFooter),
+      this.writeTarget("apps/web/src/ui/icons/github.tsx", this.uiGithubIcon),
+      this.writeTarget("apps/web/src/ui/nav/index.tsx", this.uiNav),
+      this.writeTarget(
+        "apps/web/src/ui/page-layout/index.tsx",
+        this.uiPageLayout
+      )
     ]);
   }
 }
