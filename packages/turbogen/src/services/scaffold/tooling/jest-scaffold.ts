@@ -79,7 +79,7 @@ module.exports = {
     "clean": "git clean -xdf node_modules"
   },
   "peerDependencies": {
-    "jest": "latest"
+    "jest": ">=29"
   },
   "dependencies": {
     "ts-jest": "latest"

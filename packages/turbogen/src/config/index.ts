@@ -92,4 +92,11 @@ auto-install-peers=true
   public toTitleCase<const T extends string>(value: T) {
     return this.kebabToCapital(value);
   }
+
+  public calSansFont() {
+    return this.fetchRemoteWriteLocalLargeFiles(
+      "https://raw.githubusercontent.com/DopamineDriven/portfolio-2025/refs/heads/master/apps/web/public/fonts/CalSans-SemiBold.woff2",
+      "apps/web/public/fonts/CalSans-SemiBold"
+    );
+  }
 }

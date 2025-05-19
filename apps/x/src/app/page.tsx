@@ -1,10 +1,10 @@
 import { Suspense } from "react";
-import Home from "@/ui/home";
+import { LandingPage } from "@/ui/landing";
 
 export default function HomePage() {
   return (
     <Suspense fallback={"Loading..."}>
-      <Home data={undefined} />
+      <LandingPage />
     </Suspense>
   );
 }

@@ -25,21 +25,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={cn(
-        BasisGrotesqueProLight.variable,
-        BasisGrotesqueProMedium.variable,
-        BasisGrotesqueProMediumItalic.variable,
-        BasisGrotesqueProRegular.variable,
-        BasisGrotesqueProItalic.variable,
-        BasisGrotesqueProLightItalic.variable,
-        BasisGrotesqueProBold.variable,
-        BasisGrotesqueProBlack.variable,
-        BasisGrotesqueProBlackItalic.variable,
-        BasisGrotesqueProBoldItalic.variable
-      )}>
-      <body>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={cn(
+          "bg-background font-basis-grotesque-pro-regular min-h-screen antialiased",
+          BasisGrotesqueProLight.variable,
+          BasisGrotesqueProMedium.variable,
+          BasisGrotesqueProMediumItalic.variable,
+          BasisGrotesqueProRegular.variable,
+          BasisGrotesqueProItalic.variable,
+          BasisGrotesqueProLightItalic.variable,
+          BasisGrotesqueProBold.variable,
+          BasisGrotesqueProBlack.variable,
+          BasisGrotesqueProBlackItalic.variable,
+          BasisGrotesqueProBoldItalic.variable
+        )}>
         {children}
       </body>
     </html>

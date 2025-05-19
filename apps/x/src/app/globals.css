@@ -25,7 +25,6 @@
   }
 }
 
-
 /*
 background ~= #020817
 #030816ff (p3)
@@ -182,6 +181,12 @@ background ~= #020817
   }
 }
 
+@layer components {
+  .container {
+    margin-inline: auto;
+    @apply [padding-inline:1rem] sm:[padding-inline:2rem] lg:[padding-inline:3rem];
+  }
+}
 
 /* Global scrollbar styling */
 * {
@@ -232,7 +237,6 @@ html {
   scrollbar-width: thin;
   scrollbar-color: #f8fafc #020817;
 }
-
 
 @layer utilities {
   .text-balance {
