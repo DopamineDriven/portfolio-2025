@@ -306,7 +306,16 @@ export default {
 
 export default {
   content: ["src/**/*.{js,ts,jsx,tsx}"],
-  future: { hoverOnlyWhenSupported: true }
+  future: { hoverOnlyWhenSupported: true },
+  theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px"
+      }
+    }
+  }
 } satisfies TailwindConfig;` as const;
   }
 
@@ -540,6 +549,13 @@ export default {
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .container {
+    margin-inline: auto;
+    @apply [padding-inline:1rem] sm:[padding-inline:2rem] lg:[padding-inline:3rem];
   }
 }
 
