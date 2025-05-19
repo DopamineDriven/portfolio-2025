@@ -1,8 +1,8 @@
-import type { FC, SVGAttributes } from "react";
+import type { FC, SVGProps } from "react";
 import { cn } from "@/lib/utils";
 
 export const ArLogo: FC<
-  Omit<SVGAttributes<SVGSVGElement>, "viewBox" | "fill" | "role" | "xmlns">
+  Omit<SVGProps<SVGSVGElement>, "viewBox" | "fill" | "role" | "xmlns">
 > = ({ className, ...svg }) => (
   <svg
     viewBox="0 0 512 512"
@@ -28,7 +28,7 @@ export const ArLogo: FC<
 );
 
 export const ArLogoOld: FC<
-  Omit<SVGAttributes<SVGSVGElement>, "viewBox" | "fill" | "role" | "xmlns">
+  Omit<SVGProps<SVGSVGElement>, "viewBox" | "fill" | "role" | "xmlns">
 > = ({ className, ...svg }) => (
   <svg
     role="img"

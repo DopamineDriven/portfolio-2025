@@ -1,9 +1,9 @@
-import type { ComponentPropsWithRef } from "react";
+import type { SVGProps } from "react";
 
 export function UsersIcon({
   ...svg
 }: Omit<
-  ComponentPropsWithRef<"svg">,
+  SVGProps<SVGSVGElement>,
   | "viewBox"
   | "xmlns"
   | "fill"

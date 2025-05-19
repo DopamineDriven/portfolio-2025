@@ -1,13 +1,10 @@
-import type { ComponentPropsWithRef } from "react";
+import type { SVGProps } from "react";
 import { cn } from "@/lib/utils";
 
 export const NestjsIcon = ({
   className,
   ...svg
-}: Omit<
-  ComponentPropsWithRef<"svg">,
-  "xmlns" | "viewBox" | "fill" | "role"
->) => (
+}: Omit<SVGProps<SVGSVGElement>, "viewBox" | "xmlns" | "fill" | "role">) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     role="img"

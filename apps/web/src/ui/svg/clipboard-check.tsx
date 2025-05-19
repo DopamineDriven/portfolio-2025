@@ -1,14 +1,11 @@
-import type { ComponentPropsWithoutRef } from "react";
+import type { SVGProps } from "react";
 import { cn } from "@/lib/utils";
 
 export function ClipboardCheck({
   stroke,
   className,
   ...svg
-}: Omit<
-  ComponentPropsWithoutRef<"svg">,
-  "viewBox" | "xmlns" | "fill" | "role"
->) {
+}: Omit<SVGProps<SVGSVGElement>, "viewBox" | "xmlns" | "fill" | "role">) {
   return (
     <svg
       className={cn("", className)}

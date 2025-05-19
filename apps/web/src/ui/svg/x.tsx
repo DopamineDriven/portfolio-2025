@@ -1,9 +1,10 @@
-import type { TsxExclude19 } from "@/types/react";
+import type { SVGProps } from "react";
 
 export const XIcon = ({
   ...svg
-}: TsxExclude19<"svg", "xmlns" | "viewBox" | "fill">) => (
+}: Omit<SVGProps<SVGSVGElement>, "viewBox" | "xmlns" | "fill" | "role">) => (
   <svg
+    role="img"
     viewBox="0 0 1200 1227"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

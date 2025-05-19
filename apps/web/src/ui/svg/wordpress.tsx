@@ -1,13 +1,10 @@
-import type { ComponentPropsWithRef } from "react";
+import type { SVGProps } from "react";
 import { cn } from "@/lib/utils";
 
 export const WordPressIcon = ({
   className,
   ...svg
-}: Omit<
-  ComponentPropsWithRef<"svg">,
-  "xmlns" | "viewBox" | "fill" | "role"
->) => (
+}: Omit<SVGProps<SVGSVGElement>, "viewBox" | "xmlns" | "fill" | "role">) => (
   <svg
     role="img"
     className={cn("size-12", className)}

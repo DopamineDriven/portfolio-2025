@@ -1,10 +1,11 @@
-import type { TsxExclude19 } from "@/types/react";
+import type { SVGProps } from "react";
 
 export const FacebookIcon = ({
   ...svg
-}: TsxExclude19<"svg", "xmlns" | "viewBox" | "fill">) => (
+}: Omit<SVGProps<SVGSVGElement>, "viewBox" | "xmlns" | "fill" | "role">) => (
   <svg
     viewBox="0 0 24 24"
+    role="img"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...svg}>
@@ -19,4 +20,3 @@ export const FacebookIcon = ({
 );
 
 FacebookIcon.displayName = "FacebookIcon" as const;
-

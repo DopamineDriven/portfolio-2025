@@ -1,13 +1,10 @@
-import type { ComponentPropsWithRef } from "react";
+import type { SVGProps } from "react";
 import { cn } from "@/lib/utils";
 
 export const DatadogIcon = ({
   className,
   ...svg
-}: Omit<
-  ComponentPropsWithRef<"svg">,
-  "xmlns" | "viewBox" | "fill" | "role"
->) => (
+}: Omit<SVGProps<SVGSVGElement>, "viewBox" | "xmlns" | "fill" | "role">) => (
   <svg
     className={cn("size-12", className)}
     viewBox="0 0 24 27"

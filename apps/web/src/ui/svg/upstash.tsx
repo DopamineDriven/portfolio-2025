@@ -1,8 +1,8 @@
-import type { FC, SVGAttributes } from "react";
+import type { FC, SVGProps } from "react";
 import { cn } from "@/lib/utils";
 
 export const UpstashIcon: FC<
-  Omit<SVGAttributes<SVGSVGElement>, "viewBox" | "xmlns" | "fill" | "role">
+  Omit<SVGProps<SVGSVGElement>, "viewBox" | "xmlns" | "fill" | "role">
 > = ({ className, ...svg }) => (
   <svg
     role="img"

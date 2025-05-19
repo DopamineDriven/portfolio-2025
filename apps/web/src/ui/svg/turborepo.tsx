@@ -1,17 +1,18 @@
-import type { TsxExclude19 } from "@/types/react";
+import type { SVGProps } from "react";
 import { cn } from "@/lib/utils";
 
 export function TurborepoIcon({
   className,
   ...rest
-}: TsxExclude19<"svg", "fill" | "role" | "viewBox" | "xmlns">) {
+}: Omit<SVGProps<SVGSVGElement>, "viewBox" | "fill" | "xmlns" | "role">) {
   return (
     <svg
       viewBox="0 0 100 100"
       fill="none"
       role="img"
       className={cn("size-12", className)}
-      xmlns="http://www.w3.org/2000/svg" {...rest}>
+      xmlns="http://www.w3.org/2000/svg"
+      {...rest}>
       <path
         d="M49.5423 17.3221C31.7763 17.3221 17.3223 31.7761 17.3223 49.5421C17.3223 67.3081 31.7763 81.7621 49.5423 81.7621C67.3083 81.7621 81.7623 67.3081 81.7623 49.5421C81.7623 31.7761 67.3083 17.3221 49.5423 17.3221ZM49.5423 66.2161C40.3323 66.2161 32.8683 58.7521 32.8683 49.5421C32.8683 40.3321 40.3323 32.8681 49.5423 32.8681C58.7523 32.8681 66.2163 40.3321 66.2163 49.5421C66.2163 58.7521 58.7523 66.2161 49.5423 66.2161Z"
         fill="white"
@@ -37,7 +38,6 @@ export function TurborepoIcon({
     </svg>
   );
 }
-
 
 TurborepoIcon.displayName = "TurborepoIcon";
 

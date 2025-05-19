@@ -1,10 +1,10 @@
-import type { TsxExclude19 } from "@/types/react";
+import type { SVGProps } from "react";
 import { cn } from "@/lib/utils";
 
 export function NextjsIcon({
   className,
   ...rest
-}: TsxExclude19<"svg", "viewBox" | "fill" | "xmlns" | "role">) {
+}: Omit<SVGProps<SVGSVGElement>, "viewBox" | "xmlns" | "fill" | "role">) {
   return (
     <svg
       viewBox="0 0 180 180"
