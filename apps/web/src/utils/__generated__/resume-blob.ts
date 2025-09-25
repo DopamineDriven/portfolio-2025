@@ -3,12 +3,12 @@
 
 export const resumeData = {
   resumeBlob: {
-    url: "https://ypuktmwmnilhirdf.public.blob.vercel-storage.com/resume-2025-lnznfkZ4hFNRr2growl6Ue1QEjTcN1.pdf",
+    url: "https://ypuktmwmnilhirdf.public.blob.vercel-storage.com/asross.pdf",
     downloadUrl:
-      "https://ypuktmwmnilhirdf.public.blob.vercel-storage.com/resume-2025-lnznfkZ4hFNRr2growl6Ue1QEjTcN1.pdf?download=1",
-    pathname: "resume-2025-lnznfkZ4hFNRr2growl6Ue1QEjTcN1.pdf",
-    size: 110363,
-    uploadedAt: "2025-05-07T19:48:50.000Z"
+      "https://ypuktmwmnilhirdf.public.blob.vercel-storage.com/asross.pdf?download=1",
+    pathname: "asross.pdf",
+    size: 216116,
+    uploadedAt: "2025-09-25T18:22:01.000Z"
   }
 };
 
