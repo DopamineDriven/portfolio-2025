@@ -10,7 +10,7 @@
     "build": "next build",
     "format": "prettier --write \"**/*.{ts,tsx,cts,mts,js,jsx,mjs,cjs,json,yaml,yml,css,html,md,mdx,graphql,gql}\" --ignore-unknown --cache",
     "start": "next start",
-    "lint": "eslint --cache --stats",
+    "lint": "eslint",
     "postbuild": "tsx src/services/postbuild.ts",
     "test:e2e": "playwright test"
   },

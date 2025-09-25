@@ -4,7 +4,6 @@ import { ThemeProvider } from "@/ui/providers/theme-provider";
 import "./global.css";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AnimationContextProvider } from "@/context/animation-context";
 import { CookieProvider } from "@/context/cookie-context";
 import { getSiteUrl } from "@/lib/site-url";
@@ -101,7 +100,6 @@ export default function RootLayout({
             <CookieProvider>{children}</CookieProvider>
           </ThemeProvider>
         </AnimationContextProvider>
-        <SpeedInsights  debug={true} />
         <Analytics mode="production" />
       </body>
       <Script
