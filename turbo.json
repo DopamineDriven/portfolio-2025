@@ -3,24 +3,23 @@
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "build": {
+      "inputs": ["$TURBO_DEFAULT$", ".env", ".env.*"],
       "dependsOn": ["^build"],
-      "cache": true
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "test": {
-      "outputs": ["coverage/**"],
-      "dependsOn": []
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/vitest.config.ts"],
+      "outputs": ["coverage.json"],
+      "dependsOn": ["transit", "@portfolio/vitest-config#build"]
     },
-    "lint": {
-      "dependsOn": ["^build"]
-    },
+    "transit": { "dependsOn": ["^transit"] },
+    "lint": {},
     "dev": {
-      "dependsOn": ["^build"],
       "cache": false,
+      "dependsOn": ["^build"],
       "persistent": true
     },
-    "typecheck": {
-      "dependsOn": ["^build"]
-    },
+    "typecheck": {},
     "clean": {
       "cache": false
     }

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ComponentPropsWithRef } from "react";
-import { AnimateNumber } from "motion-number";
+import { AnimateNumber } from "motion-plus/react";
 import { cn } from "@/lib/utils";
 
 export type CustomAnimateNumber = ComponentPropsWithRef<typeof AnimateNumber>;

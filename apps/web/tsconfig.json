@@ -1,7 +1,6 @@
 {
   "extends": "@portfolio/tsconfig/next.json",
   "compilerOptions": {
-    "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"]
     },
@@ -10,20 +9,20 @@
         "name": "next"
       }
     ],
-    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+    "types": ["*"]
   },
   "include": [
     ".",
-    "index.d.ts",
-    "global.d.ts",
     "next-env.d.ts",
-    "next.config.mjs",
+    "next.config.ts",
+    "global.d.ts",
+    "index.d.ts",
+    "audio-session.d.ts",
     "postcss.config.mjs",
-    "tailwind.config.ts",
-    "**/*.tsx",
-    "**/*.ts",
-    "**/*.mdx",
+    "src/**/*.tsx",
+    "src/**/*.ts",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["public/**/*.js", "node_modules"]
+  "exclude": ["node_modules", "public/**/*.js"]
 }

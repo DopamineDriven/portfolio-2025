@@ -1,11 +1,310 @@
 packages:
-  - apps/*
-  - docker/*
-  - packages/*
-  - tooling/*
-onlyBuiltDependencies:
-  - '@swc/core'
-  - '@vercel/speed-insights'
-  - esbuild
-  - protobufjs
-  - sharp
+  - "apps/*"
+  - "packages/*"
+  - "tooling/*"
+
+enablePrePostScripts: true
+nodeLinker: hoisted
+autoInstallPeers: true
+minimumReleaseAge: 0
+trustPolicy: "off"
+trustLockfile: true
+blockExoticSubdeps: false
+ignorePatchFailures: true
+dangerouslyAllowAllBuilds: true
+
+catalogs:
+  babel:
+    babel-plugin-react-compiler: ^1.0.0
+  biome:
+    "@biomejs/biome": ^2.5.5
+  bui:
+    "@base-ui/react": ^1.6.0
+  chess:
+    chess.js: ^1.4.0
+    chessground: ^9.2.1
+  clsx:
+    clsx: ^2.1.1
+  cmdk:
+    cmdk: ^1.1.1
+  colors:
+    "colorjs.io": ^0.7.1
+  cookies:
+    "@types/js-cookie": ^3.0.6
+    js-cookie: ^3.0.8
+  css:
+    "@csstools/postcss-oklab-function": ^5.0.7
+  csstype:
+    csstype: ^3.2.3
+  cuid2:
+    "@paralleldrive/cuid2": ^3.3.0
+  cva:
+    class-variance-authority: ^0.7.1
+  d3:
+    "@types/d3": ^7.4.3
+    "@types/d3-geo": ^3.1.0
+    "@types/d3-scale": ^4.0.9
+    "@types/d3-selection": ^3.0.11
+    d3: ^7.9.0
+    d3-geo: ^3.1.1
+    d3-scale: ^4.0.2
+  dd:
+    "@d0paminedriven/chess-icons": ^1.0.1
+    "@d0paminedriven/fs": ^11.0.0
+    "@d0paminedriven/iso-3166-1": ^1.4.0
+    "@d0paminedriven/motion": ^3.0.0
+    "@d0paminedriven/pdfdown": ^0.9.9
+    "@d0paminedriven/redis-utils": ^2.0.0
+  dotenv:
+    dotenv: ^17.4.2
+    dotenv-cli: ^11.0.0
+    dotenv-expand: ^13.0.0
+  embla:
+    embla-carousel: ^8.6.0
+    embla-carousel-auto-scroll: ^8.6.0
+    embla-carousel-react: ^8.6.0
+  eslint:
+    "@eslint/compat": ^2.1.0
+    "@eslint/config-helpers": ^0.7.0
+    "@eslint/js": ^10.0.1
+    eslint: ^10.8.0
+    eslint-plugin-import: ^2.32.0
+    eslint-plugin-import-x: ^4.17.1
+    eslint-plugin-jsx-a11y: ^6.10.2
+    eslint-plugin-react: ^7.37.5
+    eslint-plugin-react-hooks: ^7.1.1
+  fflate:
+    fflate: ^0.8.3
+  geist:
+    geist: ^1.7.2
+  glob:
+    glob: ^13.0.6
+  gtag:
+    "@types/gtag.js": ^0.0.20
+  hast:
+    hast-util-sanitize: ^5.0.2
+  iso-3166-1: 
+    iso-3166-1: ^2.1.1
+  jiti:
+    jiti: ^2.7.0
+  jose:
+    jose: ^6.2.4
+  jsdom:
+    "@types/jsdom": ^28.0.3
+    jsdom: ^29.1.1
+  katex:
+    "@types/katex": ^0.16.8
+    katex: ^0.18.1
+  leva:
+    leva: ^0.10.1
+  lightningcss:
+    unplugin-lightningcss: ^0.5.0
+  lodash:
+    "@types/lodash": ^4.17.24
+  lucide:
+    lucide-react: ^1.27.0
+  mcp:
+    "@modelcontextprotocol/sdk": ^1.29.0
+  mdast:
+    "@types/mdast": ^4.0.4
+  mdx:
+    "@types/mdx": ^2.0.14
+  motion:
+    motion: ^12.42.2
+    motion-cursor: ^1.0.5
+    motion-dom: ^12.42.2
+    motion-plus-dom: ^2.12.0
+    motion-utils: ^12.39.0
+  nanoid:
+    nanoid: ^6.0.0
+  napi:
+    "@napi-rs/canvas": ^1.0.2
+  next:
+    "@next/eslint-plugin-next": ^16.2.12
+    eslint-config-next: ^16.2.12
+    next: ^16.2.12
+    next-themes: ^0.4.6
+  node:
+    "@types/node": ^26.1.1
+    node-html-parser: ^9.0.0
+    nodemon: ^3.1.14
+  nyc:
+    nyc: ^18.0.0
+  p-limit:
+    p-limit: ^7.3.1
+  pg:
+    "@types/pg": ^8.20.0
+    pg: ^8.22.0
+  pico:
+    picocolors: ^1.1.1
+  pino:
+    pino: ^10.3.1
+    pino-abstract-transport: ^3.0.0
+    pino-pretty: ^13.1.3
+  polyfill:
+    urlpattern-polyfill: ^10.1.0
+  prettier:
+    "@ianvs/prettier-plugin-sort-imports": ^4.7.1
+    prettier: ^3.9.6
+    prettier-plugin-tailwindcss: ^0.8.1
+  pw: 
+    "@playwright/test": ^1.62.0
+  py:
+    pythonia: ^1.2.6
+  r3f:
+    "@react-three/drei": ^10.7.7
+    "@react-three/fiber": ^9.6.1
+    "@react-three/postprocessing": ^3.0.4
+    postprocessing: ^6.39.3
+  radix:
+    "@radix-ui/react-accordion": ^1.2.20
+    "@radix-ui/react-alert-dialog": ^1.1.23
+    "@radix-ui/react-aspect-ratio": ^1.1.15
+    "@radix-ui/react-avatar": ^1.2.6
+    "@radix-ui/react-checkbox": ^1.3.11
+    "@radix-ui/react-dialog": ^1.1.23
+    "@radix-ui/react-dropdown-menu": ^2.1.24
+    "@radix-ui/react-icons": ^1.3.2
+    "@radix-ui/react-label": ^2.1.15
+    "@radix-ui/react-menubar": ^1.1.24
+    "@radix-ui/react-popover": ^1.1.23
+    "@radix-ui/react-primitive": ^2.1.10
+    "@radix-ui/react-portal": ^1.1.17
+    "@radix-ui/react-progress": ^1.1.16
+    "@radix-ui/react-radio-group": ^1.4.7
+    "@radix-ui/react-scroll-area": ^1.2.18
+    "@radix-ui/react-select": ^2.3.7
+    "@radix-ui/react-separator": ^1.1.15
+    "@radix-ui/react-slider": ^1.4.7
+    "@radix-ui/react-slot": ^1.3.3
+    "@radix-ui/react-switch": ^1.3.7
+    "@radix-ui/react-tabs": ^1.1.21
+    "@radix-ui/react-toggle": ^1.1.18
+    "@radix-ui/react-toggle-group": ^1.1.19
+    "@radix-ui/react-tooltip": ^1.2.16
+  react:
+    "@testing-library/react": ^16.3.2
+    "@types/react": ^19.2.17
+    "@types/react-dom": ^19.2.3
+    "@types/react-window": ^2.0.0
+    react: ^19.2.8
+    react-dom: ^19.2.8
+    react-is: ^19.2.8
+    react-resizable-panels: ^4.12.2
+    react-window: ^2.3.0
+    vaul: ^1.1.2
+  recharts:
+    recharts: ^3.10.1
+  redis:
+    redis: ^6.1.0
+  rehype:
+    rehype-autolink-headings: ^7.1.0
+    rehype-katex: ^7.0.1
+    rehype-pretty-code: ^0.14.5
+    rehype-react: ^8.0.0
+    rehype-sanitize: ^6.0.0
+    rehype-slug: ^6.0.0
+    rehype-stringify: ^10.0.1
+  remark:
+    remark-directive: ^4.0.0
+    remark-gfm: ^4.0.1
+    remark-math: ^6.0.0
+    remark-parse: ^11.0.0
+    remark-rehype: ^11.1.2
+  rolldown:
+    rolldown: ^1.2.0
+    rolldown-plugin-dts: ^0.27.14
+    rolldown-plugin-wasm: ^0.3.2
+  sb:
+    "@storybook/react": ^10.5.4
+  sharp:
+    sharp: ^0.35.3
+  shiki:
+    "@shikijs/rehype": ^4.3.1
+    "@shikijs/transformers": ^4.3.1
+    "@shikijs/twoslash": ^4.3.1
+    shiki: ^4.3.1
+  smithy:
+    "@smithy/node-http-handler": ^4.9.11
+  store:
+    use-sync-external-store: ^1.6.0
+    "@types/use-sync-external-store": ^1.5.0
+  styles:
+    autoprefixer: ^10.5.4
+    postcss: ^8.5.23
+    postcss-import: ^16.1.1
+  swr:
+    swr: ^2.4.2
+  tanstack:
+    "@tanstack/react-virtual": ^3.14.8
+  three:
+    "@types/three": ^0.185.1
+    three: ^0.185.1
+    three-stdlib: ^2.36.1
+  topo:
+    topojson-client: ^3.1.0
+    "@types/topojson-client": ^3.1.5
+  ts:
+    typescript: ^6.0.3
+  tsdown:
+    tsdown: ^0.22.14
+    "@tsdown/css": ^0.22.14
+  tseslint:
+    typescript-eslint: ^8.65.0
+  tsgo:
+    "@typescript/native-preview": ^7.0.0-dev.20260707.2
+  tslib:
+    tslib: ^2.8.1
+  tsx:
+    tsx: ^4.23.1
+  turbo:
+    eslint-config-turbo: ^2.10.7
+    eslint-plugin-turbo: ^2.10.7
+    turbo: ^2.10.7
+  tw:
+    "@tailwindcss/forms": ^0.5.11
+    "@tailwindcss/postcss": ^4.3.3
+    "@tailwindcss/typography": ^0.5.20
+    tailwind-merge: ^3.6.0
+    tailwind-scrollbar: ^4.0.2
+    tailwindcss: ^4.3.3
+    tailwindcss-motion: ^1.1.1
+    tw-animate-css: ^1.4.0
+  unified:
+    unified: ^11.0.5
+  unist:
+    "@types/unist": ^3.0.3
+    unist-util-remove: ^4.0.0
+    unist-util-visit: ^5.1.0
+  utils:
+    "@changesets/cli": ^2.31.1
+    husky: ^9.1.7
+    wait-on: ^9.1.0
+  vercel:
+    "@vercel/analytics": ^2.0.1
+    "@vercel/blob": ^2.6.1
+    "@vercel/functions": ^3.7.6
+    "@vercel/speed-insights": ^2.0.0
+  vfile:
+    vfile: ^6.0.3
+  vite:
+    "@vitejs/plugin-react": ^6.0.4
+    vite: ^8.1.5
+  vitest:
+    "@vitest/coverage-istanbul": ^4.1.10
+    "@vitest/ui": ^4.1.10
+    vitest: ^4.1.10
+  webxr:
+    "@types/webxr": ^0.5.24
+  ws:
+    "@types/ws": ^8.18.1
+    ws: ^8.21.1
+  yaml:
+    yaml: ^2.9.0
+
+allowBuilds:
+  esbuild: true
+  protobufjs: true
+  sharp: true
+  unrs-resolver: true
+

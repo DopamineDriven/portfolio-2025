@@ -4,10 +4,24 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "next-env.d.ts"]
+      "outputs": [".next/**", "!.next/cache/**", "next-env.d.ts"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "src/**/*.tsx",
+        "src/**/*.ts",
+        "src/**/*.css",
+        "tsconfig.json",
+        "package.json",
+        "index.d.ts",
+        "global.d.ts",
+        "next-env.d.ts",
+        "eslint.config.ts",
+        "postcss.config.ts",
+        "next.config.ts"
+      ]
     },
     "dev": {
-      "persistent": true
+      "cache": false
     }
   }
 }

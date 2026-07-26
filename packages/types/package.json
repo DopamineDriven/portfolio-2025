@@ -1,0 +1,75 @@
+{
+  "name": "@portfolio/types",
+  "version": "1.1.0",
+  "description": "convenient type definitions",
+  "publishConfig": {
+    "access": "public",
+    "typesVersions": {
+      "*": {
+        "*": [
+          "dist/index.d.ts"
+        ],
+        "utils": [
+          "dist/utils.d.ts"
+        ]
+      }
+    }
+  },
+  "license": "MIT",
+  "source": "src/index.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "dist/index.d.ts"
+      ],
+      "utils": [
+        "dist/utils.d.ts"
+      ]
+    }
+  },
+  "type": "module",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist/**/*.{js,cjs,mjs,d.ts,d.cts,d.mts}"
+  ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./utils": "./dist/utils.js"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "pnpm build",
+    "lint": "eslint",
+    "format": "prettier --write \"src/**/*.{ts,cts,mts,js,mjs,cjs,json,yaml,yml}\" --ignore-unknown --cache",
+    "clean": "git clean -xdf .turbo dist node_modules",
+    "pregen:media": "tsx src/codegen/index.ts --target video",
+    "gen:media": "tsx src/codegen/index.ts --target img",
+    "pregen": "pnpm gen:media",
+    "gen": "tsx src/codegen/index.ts --target default",
+    "postgen": "pnpm format",
+    "typecheck": "tsgo --noEmit"
+  },
+  "dependencies": {
+    "@d0paminedriven/fs": "catalog:dd",
+    "dotenv": "catalog:dotenv"
+  },
+  "devDependencies": {
+    "@portfolio/eslint-config": "workspace:*",
+    "@portfolio/prettier-config": "workspace:*",
+    "@portfolio/tsconfig": "workspace:*",
+    "@types/node": "catalog:node",
+    "@typescript/native-preview": "catalog:tsgo",
+    "dotenv-expand": "catalog:dotenv",
+    "eslint": "catalog:eslint",
+    "jiti": "catalog:jiti",
+    "prettier": "catalog:prettier",
+    "tsdown": "catalog:tsdown",
+    "tslib": "catalog:tslib",
+    "tsx": "catalog:tsx",
+    "typescript": "catalog:ts",
+    "typescript-eslint": "catalog:tseslint"
+  },
+  "prettier": "@portfolio/prettier-config"
+}
