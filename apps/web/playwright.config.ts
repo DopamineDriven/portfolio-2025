@@ -8,7 +8,7 @@ import { defineConfig, devices } from "@playwright/test";
 // `pnpm run:web` with its cwd set to the monorepo root.
 const appDir = import.meta.dirname;
 const repoRoot = join(appDir, "..", "..");
-const baseURL = "http://localhost:3030";
+const baseURL = "http://localhost:3008";
 const isCI = !!process.env.CI;
 
 export default defineConfig({
@@ -37,24 +37,14 @@ export default defineConfig({
   ],
   webServer: [
     {
-      name: "web-next",
-      command: "pnpm run:web-next",
+      name: "web",
+      command: "pnpm run:web",
       cwd: repoRoot,
       url: baseURL,
       reuseExistingServer: !isCI,
       timeout: 120000,
       stdout: "ignore",
       stderr: "pipe"
-    },
-    {
-      command: "pnpm run:ws-server",
-      cwd: repoRoot,
-      timeout: 120000,
-      stdout: "ignore",
-      reuseExistingServer: true,
-      stderr: "pipe",
-      url: "ws://localhost:4000",
-      name: "ws-server"
     }
   ]
 });

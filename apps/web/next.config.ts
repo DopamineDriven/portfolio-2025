@@ -15,6 +15,7 @@ export default {
       { pathname: "/audio/**" },
       { pathname: "/fonts/**" },
       { pathname: "/hdris/**" },
+      { pathname: "/highlights/**" },
       { pathname: "/illustrator/**" },
       { pathname: "/meta/**" },
       { pathname: "/pong/**" },
@@ -55,13 +56,13 @@ export default {
       }
     ]
   },
-  async rewrites() {
-    return [
-      {
-        source: "/",
-        destination: "/chat/home"
-      }
-    ];
-  },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: "/",
+  //       destination: "/chat/home"
+  //     }
+  //   ];
+  // },
   productionBrowserSourceMaps: true
 } satisfies NextConfig;
