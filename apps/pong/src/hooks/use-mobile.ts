@@ -25,6 +25,7 @@ export function useMobile() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line
     checkIsMobile();
 
     window.addEventListener("resize", checkIsMobile);
