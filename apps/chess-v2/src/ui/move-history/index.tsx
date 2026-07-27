@@ -2,22 +2,17 @@
 
 import type { Move } from "chess.js";
 import type { LucideProps } from "lucide-react";
-import type {
-  CSSProperties,
-  FC,
-  ForwardRefExoticComponent,
-  RefAttributes
-} from "react";
-import { useEffect, useRef, useState } from "react";
+import type { FC, ForwardRefExoticComponent, RefAttributes } from "react";
+import type { RowComponentProps } from "react-window";
+import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, History, Info } from "lucide-react";
-import { FixedSizeList as List } from "react-window";
+import { List, useListRef } from "react-window";
 import { useChessWebSocketContext } from "@/contexts/chess-websocket-context";
 import { useGame } from "@/contexts/game-context";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/atoms/button";
 
 const ITEM_SIZE = 36; // Height of each move item in pixels
-const MOVE_HISTORY_WIDTH = 256; // Width of the move history panel in pixels
 
 interface Tab {
   id: "moves" | "analysis";
@@ -32,19 +27,21 @@ const tabs = [
   { id: "analysis", name: "Analysis", icon: Info }
 ] satisfies Tab[];
 
-interface MoveItemProps {
-  index: number;
-  style: CSSProperties;
-  data: {
-    moveHistory: Move[];
-    currentMoveIndex: number;
-    goToMove: (index: number) => void;
-    comments: Record<string, string>;
-  };
+interface MoveRowProps {
+  moveHistory: Move[];
+  currentMoveIndex: number;
+  goToMove: (index: number) => void;
+  comments: Record<string, string>;
 }
 
-const MoveItem: FC<MoveItemProps> = ({ index, style, data }) => {
-  const { moveHistory, currentMoveIndex, goToMove, comments } = data;
+const MoveItem = ({
+  index,
+  style,
+  moveHistory,
+  currentMoveIndex,
+  goToMove,
+  comments
+}: RowComponentProps<MoveRowProps>) => {
   const moveIndex = index * 2;
   const whiteMove = moveHistory[moveIndex];
   const blackMove = moveHistory[moveIndex + 1];
@@ -120,7 +117,7 @@ export default function MoveHistory() {
   } = useGame();
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab["id"]>("moves");
-  const listRef = useRef<List>(null);
+  const listRef = useListRef(null);
   const comments = getComments().reduce(
     (acc, comment) => {
       acc[comment.fen] = comment.comment;
@@ -129,18 +126,15 @@ export default function MoveHistory() {
     {} as Record<string, string>
   );
 
-  useEffect(() => {
-    if (listRef.current) {
-      listRef.current.scrollToItem(Math.floor(currentMoveIndex / 2), "smart");
-    }
-  }, [currentMoveIndex]);
+  const rowCount = Math.ceil(moveHistory.length / 2);
 
-  const itemData = {
-    moveHistory,
-    currentMoveIndex,
-    goToMove,
-    comments
-  };
+  useEffect(() => {
+    const rowIndex = Math.floor(currentMoveIndex / 2);
+    // v2 scrollToRow throws a RangeError on out-of-bounds indices
+    if (rowIndex >= 0 && rowIndex < rowCount) {
+      listRef.current?.scrollToRow({ index: rowIndex, align: "smart" });
+    }
+  }, [currentMoveIndex, rowCount, listRef]);
 
   return (
     <div
@@ -202,14 +196,18 @@ export default function MoveHistory() {
               </div>
               <div className="flex-1 overflow-hidden">
                 <List
-                  ref={listRef}
-                  height={window.innerHeight - 200}
-                  itemCount={Math.ceil(moveHistory.length / 2)}
-                  itemSize={ITEM_SIZE}
-                  width={MOVE_HISTORY_WIDTH - 32}
-                  itemData={itemData}>
-                  {MoveItem}
-                </List>
+                  listRef={listRef}
+                  className="h-full"
+                  rowComponent={MoveItem}
+                  rowCount={rowCount}
+                  rowHeight={ITEM_SIZE}
+                  rowProps={{
+                    moveHistory,
+                    currentMoveIndex,
+                    goToMove,
+                    comments
+                  }}
+                />
               </div>
             </div>
           )}

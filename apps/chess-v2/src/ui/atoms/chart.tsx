@@ -2,12 +2,14 @@
 
 import React from "react";
 import * as RechartsPrimitive from "recharts";
+import type { LegendPayload, TooltipContentProps } from "recharts";
 import type {
   NameType,
   Payload,
   ValueType
 } from "recharts/types/component/DefaultTooltipContent";
-import type { TsxExcludeReact19, TsxTargetedReact19 } from "@/types/react";
+import type { VerticalAlignmentType } from "recharts/types/component/DefaultLegendContent";
+import type { TsxTargetedReact19 } from "@/types/react";
 import { cn } from "@/lib/utils";
 
 // Format: { THEME_NAME: CSS_SELECTOR }
@@ -110,24 +112,21 @@ ${colorConfig
   );
 };
 
-interface ChartToolTipEntity
-  extends TsxExcludeReact19<"div", "content">,
-    React.ComponentPropsWithoutRef<
-      typeof RechartsPrimitive.Tooltip<ValueType, NameType>
-    > {
-  hideLabel?: boolean;
-  hideIndicator?: boolean;
-  indicator?: "line" | "dot" | "dashed";
-  nameKey?: string;
-  labelKey?: string;
-}
+type ChartToolTipEntity = TsxTargetedReact19<"div"> &
+  Partial<TooltipContentProps<ValueType, NameType>> & {
+    hideLabel?: boolean;
+    hideIndicator?: boolean;
+    indicator?: "line" | "dot" | "dashed";
+    nameKey?: string;
+    labelKey?: string;
+  };
 
-interface ChartLegendEntity
-  extends TsxTargetedReact19<"div">,
-    Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> {
+type ChartLegendEntity = TsxTargetedReact19<"div"> & {
+  payload?: ReadonlyArray<LegendPayload>;
+  verticalAlign?: VerticalAlignmentType;
   hideIcon?: boolean;
   nameKey?: string;
-}
+};
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
@@ -216,7 +215,12 @@ const ChartTooltipContent: React.FC<ChartToolTipEntity> = ({
 
           return (
             <div
-              key={item.dataKey}
+              key={
+                typeof item.dataKey === "string" ||
+                typeof item.dataKey === "number"
+                  ? item.dataKey
+                  : index
+              }
               className={cn(
                 "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
                 indicator === "dot" && "items-center"
