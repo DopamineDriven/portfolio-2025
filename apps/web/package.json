@@ -98,6 +98,7 @@
     "@types/d3-geo": "catalog:d3",
     "@types/d3-scale": "catalog:d3",
     "@types/d3-selection": "catalog:d3",
+    "@types/geojson": "catalog:geojson",
     "@types/gtag.js": "catalog:gtag",
     "@types/js-cookie": "catalog:cookies",
     "@types/jsdom": "catalog:jsdom",

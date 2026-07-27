@@ -78,6 +78,7 @@ catalogs:
   geist:
     geist: ^1.7.2
   geojson:
+    "@types/geojson": ^7946.0.16
     geojson: ^0.5.0
   glob:
     glob: ^13.0.6
