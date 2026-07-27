@@ -3,30 +3,50 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[postcss]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "bradlc.vscode-tailwindcss"
   },
   "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "bradlc.vscode-tailwindcss"
   },
+  "tailwindCSS.codeLens": true,
+  "tailwindCSS.lint.invalidApply": "warning",
+  "tailwindCSS.validate": true,
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "editor.quickSuggestions": {
+    "other": "on",
+    "comments": "off",
+    "strings": "on"
+  },
+  "css.lint.unknownAtRules": "ignore",
   "C_Cpp.dimInactiveRegions": false,
   "css.completion.completePropertyWithSemicolon": true,
   "css.format.enable": true,
   "css.format.newlineBetweenSelectors": true,
+  "files.associations": {
+    "*.css": "tailwindcss",
+    "*.svg": "svg",
+    "*.ndjson": "ndjson",
+    "*.jsonl": "jsonl",
+    "*.ps": "postscript"
+  },
   "css.hover.documentation": true,
   "css.hover.references": true,
   "editor.bracketPairColorization.enabled": false,
   "svg.preview.autoShow": false,
+  "js/ts.hover.maximumLength": 1000,
+  "tailwindcss-intellisense.trace.server": "messages",
   "svg.preview.disable": true,
   "svg.preview.mode": "svg",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.suggest.showStatusBar": true,
+  "eslint.enable": true,
   "eslint.useFlatConfig": true,
+  "terminal.integrated.suggest.enabled": false,
   "eslint.rules.customizations": [
     {
       "rule": "*",
@@ -44,9 +64,7 @@
       "pattern": "tooling/*/"
     }
   ],
-  "eslint.runtime": "node",
   "files.autoSave": "afterDelay",
-  "javascript.referencesCodeLens.showOnAllFunctions": true,
   "openInDefaultBrowser.run.openWithLocalHttpServer": false,
   "tailwindCSS.experimental.classRegex": [
     ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
@@ -55,7 +73,6 @@
   "tailwindCSS.classAttributes": [
     "class",
     "className",
-    "consumerClassName",
     "classNames",
     "ngClass",
     "rootClassName",
@@ -63,16 +80,36 @@
     ".*variant.*",
     ".*Styles.*"
   ],
-  "typescript.enablePromptUseWorkspaceTsdk": true,
-  "typescript.tsserver.web.typeAcquisition.enabled": true,
-  "typescript.implementationsCodeLens.enabled": true,
-  "typescript.implementationsCodeLens.showOnInterfaceMethods": true,
-  "typescript.locale": "en",
-  "typescript.tsserver.web.projectWideIntellisense.enabled": true,
-  "typescript.referencesCodeLens.enabled": true,
-  "typescript.referencesCodeLens.showOnAllFunctions": true,
-  "typescript.tsdk": "node_modules/typescript/lib",
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+  "tailwindCSS.colorDecorators": true,
+  "js/ts.tsserver.web.typeAcquisition.enabled": true,
+  // "js/ts.implementationsCodeLens.enabled": true,
+  // "js/ts.implementationsCodeLens.showOnInterfaceMethods": true,
+  "js/ts.locale": "en",
+  "js/ts.referencesCodeLens.showOnAllFunctions": true,
+  // "typescript.native-preview.trace.server": "messages",
+  "js/ts.experimental.useTsgo": true,
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "js/ts.suggest.autoImports": true,
+  "js/ts.suggest.enabled": true,
+
   "yaml.hover": true,
+  "markdown-pdf.margin.top": "0.5in",
+  "markdown-pdf.margin.bottom": "0.5in",
+  "markdown-pdf.highlight": true,
+  "markdown-pdf.margin.left": "0.25in",
+  "markdown-pdf.margin.right": "0.25in",
+  "markdown-pdf.format": "Legal",
+  "markdown-mermaid.darkModeTheme": "dark",
+  "markdown-mermaid.lightModeTheme": "dark",
+  "markdown-pdf.outputDirectoryRelativePathFile": false,
+  "markdown-pdf.footerTemplate": "<div style=\"font-size: 6px; margin: 0 auto;\"> <span class='pageNumber'></span> / <span class='totalPages'></span></div>",
+  "markdown-pdf.displayHeaderFooter": true,
+  "markdown-pdf.emoji": true,
+  "markdown-pdf.highlightStyle": "dark.css",
+  "markdown-pdf.styles": [
+    "/home/dopaminedriven/.config/config-fonts/misc/markdown-pdf.css"
+  ],
   "yaml.validate": true,
   "workbench.editor.autoLockGroups": {
     "default": false
@@ -82,5 +119,19 @@
     "plaintext": false,
     "markdown": false,
     "scminput": false
-  }
+  },
+  "prisma.trace.server": "messages",
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma-insider"
+  },
+  "python.analysis.enableColorPicker": false,
+  "prisma.pinToPrisma6": false,
+  "[sql]": {
+    "editor.defaultFormatter": "ReneSaarsoo.sql-formatter-vsc"
+  },
+  "typescript.native-preview.tsdk": "/home/personal/portfolio-2025/node_modules/@typescript/native-preview",
+  "js/ts.implicitProjectConfig.target": "ESNext",
+  "js/ts.referencesCodeLens.enabled": true,
+  "terminal.integrated.defaultLocation": "view",
+  "terminal.integrated.defaultProfile.linux": "bash"
 }

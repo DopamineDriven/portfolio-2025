@@ -198,7 +198,7 @@ export function useWorldTour({
       const countries = feature(
         worldData,
         worldData.objects.countries
-      ) satisfies FeatureCollection<Geometry, JSONDATA>;
+      ) as unknown as FeatureCollection<Geometry, JSONDATA>;
 
       const projection = geoOrthographic()
         .scale(DEFAULT_SCALE)

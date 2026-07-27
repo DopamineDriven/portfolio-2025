@@ -1,16 +1,13 @@
 "use client";
 
-import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ContactShadows, PerspectiveCamera } from "@react-three/drei";
 import { Canvas, extend } from "@react-three/fiber";
-import Cookies from "js-cookie";
 import { Leva } from "leva";
 import type { ElevatorTransitionEventDetail } from "@/ui/elevator/r3f/custom-event";
 import type { ThreeElement } from "@react-three/fiber";
-import { useCookies } from "@/context/cookie-context";
 import { useHostname } from "@/hooks/use-hostname";
-import { getCookieDomain } from "@/lib/site-domain";
 import { DownTriangleGeometry } from "@/ui/elevator/r3f/down-triangle-geometry";
 import { ElevatorScene } from "@/ui/elevator/r3f/scene";
 import { SoftWallLight } from "@/ui/elevator/r3f/soft-wall-light/instance";
@@ -30,28 +27,8 @@ export default function ElevatorApp() {
 
   const [fadeOpacity, setFadeOpacity] = useState(0);
 
-  const { pathOfIntent, clearPathOfIntent } = useCookies();
-
-  const pathOfIntentRef = useRef<string>("/");
-
-  const memoizedCookieDomain = useMemo(() => getCookieDomain(), []);
-
-  const isSecure = useMemo(() => process.env.NODE_ENV !== "development", []);
-
   const navigationTriggeredRef = useRef(false);
   const getHostname = useHostname();
-  useEffect(() => {
-    if (pathOfIntent) {
-      pathOfIntentRef.current = pathOfIntent;
-      console.log("[CLIENT] Path of intent from context:", pathOfIntent);
-    } else {
-      // Fallback: Try to read directly from cookies if context doesn't have it
-      const poiCookie = Cookies.get("poi");
-      if (poiCookie) {
-        pathOfIntentRef.current = poiCookie;
-      }
-    }
-  }, [pathOfIntent]);
 
   useEffect(() => {
     // must initialize Uniforms Lib once for RectAreaLight effect to have any impact on PBR texture for the wall
@@ -75,22 +52,8 @@ export default function ElevatorApp() {
       setFadeOpacity(e.detail.progress);
       if (e.detail.progress >= 0.95 && !navigationTriggeredRef.current) {
         navigationTriggeredRef.current = true;
-
-        // Set the has-visited cookie
-        Cookies.set("has-visited", "true", {
-          path: "/",
-          sameSite: "lax",
-          secure: isSecure,
-          domain: memoizedCookieDomain
-        });
-        const destination = pathOfIntentRef.current ?? "/";
-        if (clearPathOfIntent) {
-          clearPathOfIntent();
-        }
         setTimeout(() => {
-          console.log("[CLIENT] router.push event to: ", destination);
-          router.push(decodeURIComponent(destination));
-          router.refresh();
+          router.push("/");
         }, 10);
       }
     };
@@ -106,7 +69,7 @@ export default function ElevatorApp() {
         handleTransition as EventListener
       );
     };
-  }, [isSecure, memoizedCookieDomain, router, clearPathOfIntent]);
+  }, [router]);
   return (
     <>
       {loading && (
@@ -119,7 +82,7 @@ export default function ElevatorApp() {
         style={{ opacity: fadeOpacity }}
       />
       <Canvas
-        className="absolute top-0 left-0 z-20 min-h-[100dvh] min-w-screen items-center justify-center bg-black/80"
+        className="absolute top-0 left-0 z-20 min-h-dvh min-w-screen items-center justify-center bg-black/80"
         shadows
         camera={{ fov: 40, near: 0.1, far: 1000, position: [0, 0, 6] }}>
         <Suspense fallback={null}>

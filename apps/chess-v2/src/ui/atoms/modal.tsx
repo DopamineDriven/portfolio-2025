@@ -1,5 +1,6 @@
 "use client";
 
+import type { TargetAndTransition } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -112,7 +113,7 @@ const dialogOpenState = {
       ease: "easeOut"
     }
   }
-};
+} satisfies TargetAndTransition;
 
 const dialogInitialState = {
   opacity: 0,
@@ -125,7 +126,7 @@ const dialogInitialState = {
     duration: 0.3,
     ease: [0.67, 0.17, 0.62, 0.64]
   }
-};
+} satisfies TargetAndTransition;
 
 /**
  * ==============   Utils   ================

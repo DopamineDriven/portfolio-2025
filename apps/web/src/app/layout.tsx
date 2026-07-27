@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
-import React from "react";
+import type { ReactNode } from "react";
 import { ThemeProvider } from "@/ui/providers/theme-provider";
 import "./global.css";
 import Script from "next/script";
-import { Analytics } from "@vercel/analytics/react";
 import { AnimationContextProvider } from "@/context/animation-context";
 import { CookieProvider } from "@/context/cookie-context";
 import { getSiteUrl } from "@/lib/site-url";
-import * as gAnalytics from "@/utils/analytics";
+import * as ga from "@/utils/analytics";
+import { Analytics } from "@vercel/analytics/react";
 
+const year = new Date(Date.now()).getFullYear();
 
 export const metadata = {
   metadataBase: new URL(getSiteUrl(process.env.NODE_ENV)),
@@ -20,7 +21,7 @@ export const metadata = {
     google: "z8Aoz_qPBEI4Y9njJ-I4QFfRb0n85o27ihGExlwv4rQ",
     yandex: "d62bccbf47351725"
   },
-  description: "Portfolio 2025",
+  description: `Portfolio ${year}`,
   authors: [{ name: "Andrew Ross", url: "https://github.com/DopamineDriven" }],
   creator: "Andrew Ross",
   appleWebApp: {
@@ -30,14 +31,14 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Portfolio 2025",
+    title: `Portfolio ${year}`,
     creator: "@Dopamine_Driven",
     creatorId: "989610823105568769",
-    description: "Portfolio 2025"
+    description: `Portfolio ${year}`
   },
   openGraph: {
     title: "Andrew Ross",
-    description: "Portfolio 2025",
+    description: `Portfolio ${year}`,
     url: getSiteUrl(process.env.NODE_ENV),
     siteName: "Andrew Ross Portfolio",
     locale: "en_US",
@@ -88,17 +89,33 @@ export const metadata = {
 export default function RootLayout({
   children
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
-    <html
-      suppressHydrationWarning
-      lang="en">
-      <body className="font-basis-grotesque-pro antialiased overflow-x-hidden!">
+    <html suppressHydrationWarning lang="en">
+      <Script
+        async={true}
+        id="prevent-flash-of-wrong-theme"
+        dangerouslySetInnerHTML={{
+          __html: `
+              (function() {
+                try {
+                  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  if (prefersDark) {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch (e) {}
+              })();
+            `
+        }}
+      />
+      <body className="font-basis-grotesque-pro overflow-x-hidden! antialiased">
         <AnimationContextProvider>
-          <ThemeProvider>
-            <CookieProvider>{children}</CookieProvider>
-          </ThemeProvider>
+          <CookieProvider>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+              {children}
+            </ThemeProvider>
+          </CookieProvider>
         </AnimationContextProvider>
         <Analytics mode="production" />
       </body>
@@ -111,7 +128,7 @@ export default function RootLayout({
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', '${gAnalytics.GA_TRACKING_ID}', {
+          gtag('config', '${ga.GA_TRACKING_ID}', {
             page_path: window.location.pathname,
           });
          `
@@ -119,10 +136,10 @@ export default function RootLayout({
       />
       <Script
         async
-        id={gAnalytics.GA_TRACKING_ID}
-        data-test={gAnalytics.GA_TRACKING_ID}
+        id={ga.GA_TRACKING_ID}
+        data-test={ga.GA_TRACKING_ID}
         strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${gAnalytics.GA_TRACKING_ID}`}
+        src={`https://www.googletagmanager.com/gtag/js?id=${ga.GA_TRACKING_ID}`}
       />
     </html>
   );

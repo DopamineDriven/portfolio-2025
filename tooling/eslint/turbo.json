@@ -1,0 +1,20 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "outputs": ["dist/**"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "base.ts",
+        "next.ts",
+        "react.ts",
+        "index.ts",
+        "tsconfig.json",
+        "package.json",
+        "eslint.config.ts",
+        "tsdown.config.ts"
+      ]
+    }
+  }
+}

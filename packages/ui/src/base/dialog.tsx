@@ -1,0 +1,158 @@
+"use client";
+
+import type { ComponentPropsWithRef } from "react";
+import { BaseButton } from "@/base/button";
+import { X } from "@/icons/x";
+import { cn } from "@/lib/utils";
+import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
+
+function BaseDialog({ ...props }: DialogPrimitive.Root.Props) {
+  return <DialogPrimitive.Root data-slot="dialog" {...props} />;
+}
+
+function BaseDialogTrigger({ ...props }: DialogPrimitive.Trigger.Props) {
+  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
+}
+
+function BaseDialogPortal({ ...props }: DialogPrimitive.Portal.Props) {
+  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
+}
+
+function BaseDialogClose({ ...props }: DialogPrimitive.Close.Props) {
+  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
+}
+
+function BaseDialogOverlay({
+  className,
+  ...props
+}: DialogPrimitive.Backdrop.Props) {
+  return (
+    <DialogPrimitive.Backdrop
+      data-slot="dialog-overlay"
+      className={cn(
+        "data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 fixed inset-0 isolate z-50 bg-black/10 duration-100 supports-backdrop-filter:backdrop-blur-xs",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+function BaseDialogContent({
+  className,
+  children,
+  showCloseButton = true,
+  ...props
+}: DialogPrimitive.Popup.Props & {
+  showCloseButton?: boolean;
+}) {
+  return (
+    <BaseDialogPortal>
+      <BaseDialogOverlay />
+      <DialogPrimitive.Popup
+        data-slot="dialog-content"
+        className={cn(
+          "bg-popover text-popover-foreground ring-foreground/10 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl p-4 text-sm ring-1 duration-100 outline-none sm:max-w-sm",
+          className
+        )}
+        {...props}>
+        {children}
+        {showCloseButton && (
+          <DialogPrimitive.Close
+            data-slot="dialog-close"
+            render={
+              <BaseButton
+                variant="ghost"
+                className="absolute top-2 right-2"
+                size="icon-sm"
+              />
+            }>
+            <X />
+            <span className="sr-only">Close</span>
+          </DialogPrimitive.Close>
+        )}
+      </DialogPrimitive.Popup>
+    </BaseDialogPortal>
+  );
+}
+
+function BaseDialogHeader({
+  className,
+  ...props
+}: ComponentPropsWithRef<"div">) {
+  return (
+    <div
+      data-slot="dialog-header"
+      className={cn("flex flex-col gap-2", className)}
+      {...props}
+    />
+  );
+}
+
+function BaseDialogFooter({
+  className,
+  showCloseButton = false,
+  children,
+  ...props
+}: ComponentPropsWithRef<"div"> & {
+  showCloseButton?: boolean;
+}) {
+  return (
+    <div
+      data-slot="dialog-footer"
+      className={cn(
+        "bg-muted/50 -mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t p-4 sm:flex-row sm:justify-end",
+        className
+      )}
+      {...props}>
+      {children}
+      {showCloseButton && (
+        <DialogPrimitive.Close render={<BaseButton variant="outline" />}>
+          Close
+        </DialogPrimitive.Close>
+      )}
+    </div>
+  );
+}
+
+function BaseDialogTitle({ className, ...props }: DialogPrimitive.Title.Props) {
+  return (
+    <DialogPrimitive.Title
+      data-slot="dialog-title"
+      className={cn(
+        "font-heading text-base leading-none font-medium",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+function BaseDialogDescription({
+  className,
+  ...props
+}: DialogPrimitive.Description.Props) {
+  return (
+    <DialogPrimitive.Description
+      data-slot="dialog-description"
+      className={cn(
+        "text-muted-foreground *:[a]:hover:text-foreground text-sm *:[a]:underline *:[a]:underline-offset-3",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+export {
+  BaseDialog,
+  BaseDialogClose,
+  BaseDialogContent,
+  BaseDialogDescription,
+  BaseDialogFooter,
+  BaseDialogHeader,
+  BaseDialogOverlay,
+  BaseDialogPortal,
+  BaseDialogTitle,
+  BaseDialogTrigger
+};

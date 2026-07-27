@@ -31,7 +31,7 @@ export function Project({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       className="bg-background text-foreground font-basis-grotesque-pro container mx-auto px-2 py-16 text-sm font-normal sm:text-base md:py-24">
-      <div className="mx-auto max-w-[1280px]">
+      <div className="mx-auto max-w-7xl">
         <BreakoutWrapper>
           <div className="mb-4 md:mx-auto md:max-w-[50%]">
             <motion.div
@@ -80,7 +80,7 @@ export function Project({
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.8 }}
-            className="prose-sm sm:prose dark:prose-invert [&>p]:prose-p:text-pretty max-w-none [&>p]:mb-4 lg:[&>p]:mb-8">
+            className="prose-sm sm:prose [&>p]:prose-p:text-pretty max-w-none [&>p]:mb-4 lg:[&>p]:mb-8">
             {children}
           </motion.div>
           <p className="text-muted-foreground text-sm">Completed in {date}</p>

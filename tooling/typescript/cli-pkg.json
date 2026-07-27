@@ -4,7 +4,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "alwaysStrict": true,
-    "module": "Node16",
+    "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "target": "ESNext",
     "incremental": false,

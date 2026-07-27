@@ -1,7 +1,6 @@
 {
   "extends": "@portfolio/tsconfig/next.json",
   "compilerOptions": {
-    "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"]
     },
@@ -11,7 +10,8 @@
       }
     ],
     "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost", "WebWorker"],
-    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+    "types": ["*"]
   },
   "include": [
     ".",

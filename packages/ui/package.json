@@ -1,0 +1,167 @@
+{
+  "name": "@portfolio/ui",
+  "version": "1.1.0",
+  "description": "convenient ui helpers",
+  "files": [
+    "dist/**/*.{js,mjs,cjs,d.mts,d.ts,d.cts,css}"
+  ],
+  "license": "MIT",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "type": "module",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "dist/*.d.ts",
+        "dist/*.d.cts",
+        "dist/*/index.d.ts"
+      ],
+      "base": [
+        "dist/base/*.d.ts"
+      ],
+      "globals.css": [
+        "dist/globals.d.ts"
+      ],
+      "hooks": [
+        "dist/hooks/*.d.ts"
+      ],
+      "icons": [
+        "dist/icons/index.d.ts",
+        "dist/icons/*.d.ts"
+      ],
+      "lib": [
+        "dist/lib/*.d.ts"
+      ],
+      "ui": [
+        "dist/ui/*.d.ts"
+      ]
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "typesVersions": {
+      "*": {
+        "*": [
+          "dist/*.d.ts",
+          "dist/*.d.cts",
+          "dist/*/index.d.ts"
+        ],
+        "base": [
+          "dist/base/*.d.ts"
+        ],
+        "globals.css": [
+          "dist/globals.d.ts"
+        ],
+        "hooks": [
+          "dist/hooks/*.d.ts"
+        ],
+        "icons": [
+          "dist/icons/index.d.ts",
+          "dist/icons/*.d.ts"
+        ],
+        "lib": [
+          "dist/lib/*.d.ts"
+        ],
+        "ui": [
+          "dist/ui/*.d.ts"
+        ]
+      }
+    }
+  },
+  "source": "src/index.ts",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./icons": "./dist/icons/index.js",
+    "./base/*": "./dist/base/*.js",
+    "./globals.css": "./dist/globals.css",
+    "./hooks": "./dist/hooks/*.js",
+    "./icons/*": "./dist/icons/*.js",
+    "./lib/*": "./dist/lib/*.js",
+    "./ui/*": "./dist/ui/*.js"
+  },
+  "scripts": {
+    "lint": "eslint",
+    "dev": "pnpm build",
+    "typecheck": "tsgo --noEmit",
+    "prebuild": "rm -rf dist",
+    "postbuild": "tsx src/services/postbuild.ts flag-check",
+    "build": "tsdown",
+    "clean": "git clean -xdf dist node_modules",
+    "types": "tsc --emitDeclarationOnly"
+  },
+  "peerDependencies": {
+    "next": "catalog:next",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
+    "tailwindcss": "catalog:tw"
+  },
+  "dependencies": {
+    "@base-ui/react": "catalog:bui",
+    "@radix-ui/react-accordion": "catalog:radix",
+    "@radix-ui/react-alert-dialog": "catalog:radix",
+    "@radix-ui/react-aspect-ratio": "catalog:radix",
+    "@radix-ui/react-avatar": "catalog:radix",
+    "@radix-ui/react-checkbox": "catalog:radix",
+    "@radix-ui/react-dialog": "catalog:radix",
+    "@radix-ui/react-dropdown-menu": "catalog:radix",
+    "@radix-ui/react-label": "catalog:radix",
+    "@radix-ui/react-menubar": "catalog:radix",
+    "@radix-ui/react-popover": "catalog:radix",
+    "@radix-ui/react-progress": "catalog:radix",
+    "@radix-ui/react-radio-group": "catalog:radix",
+    "@radix-ui/react-scroll-area": "catalog:radix",
+    "@radix-ui/react-select": "catalog:radix",
+    "@radix-ui/react-separator": "catalog:radix",
+    "@radix-ui/react-slider": "catalog:radix",
+    "@radix-ui/react-slot": "catalog:radix",
+    "@radix-ui/react-switch": "catalog:radix",
+    "@radix-ui/react-tabs": "catalog:radix",
+    "@radix-ui/react-toggle": "catalog:radix",
+    "@radix-ui/react-toggle-group": "catalog:radix",
+    "@radix-ui/react-tooltip": "catalog:radix",
+    "class-variance-authority": "catalog:cva",
+    "clsx": "catalog:clsx",
+    "cmdk": "catalog:cmdk",
+    "csstype": "catalog:csstype",
+    "motion": "catalog:motion",
+    "motion-plus": "https://api.motion.dev/registry.tgz?package=motion-plus&version=2.11.3",
+    "motion-plus-dom": "catalog:motion",
+    "tailwind-merge": "catalog:tw",
+    "vaul": "catalog:react"
+  },
+  "devDependencies": {
+    "@d0paminedriven/fs": "catalog:dd",
+    "@portfolio/eslint-config": "workspace:*",
+    "@portfolio/prettier-config": "workspace:*",
+    "@portfolio/tsconfig": "workspace:*",
+    "@portfolio/types": "workspace:*",
+    "@tailwindcss/postcss": "catalog:tw",
+    "@tsdown/css": "catalog:tsdown",
+    "@types/node": "catalog:node",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "@typescript/native-preview": "catalog:tsgo",
+    "autoprefixer": "catalog:styles",
+    "eslint": "catalog:eslint",
+    "jiti": "catalog:jiti",
+    "next": "catalog:next",
+    "postcss": "catalog:styles",
+    "postcss-import": "catalog:styles",
+    "prettier": "catalog:prettier",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
+    "rolldown": "catalog:rolldown",
+    "rolldown-plugin-dts": "catalog:rolldown",
+    "tailwindcss": "catalog:tw",
+    "tsdown": "catalog:tsdown",
+    "tslib": "catalog:tslib",
+    "tsx": "catalog:tsx",
+    "typescript": "catalog:ts",
+    "typescript-eslint": "catalog:tseslint",
+    "unplugin-lightningcss": "catalog:lightningcss"
+  },
+  "prettier": "@portfolio/prettier-config"
+}

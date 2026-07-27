@@ -1,0 +1,20 @@
+{
+  "extends": "@portfolio/tsconfig/react-library.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "types": ["*"],
+    "rootDir": ".",
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+    "outDir": "dist"
+  },
+
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/globals.d.ts", "next-env.d.ts", "**/*.ts", "**/*.mjs"],
+  "exclude": ["dist"]
+}

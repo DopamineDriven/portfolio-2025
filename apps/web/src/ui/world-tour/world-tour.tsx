@@ -2,30 +2,66 @@
 
 import type { FC } from "react";
 import { useRef } from "react";
-import { AnimatePresence, motion } from "motion/react";
 import { useResizeObserver } from "@/hooks/use-resize-observer";
 import { useWorldTour } from "@/hooks/use-world-tour";
 import { cn } from "@/lib/utils";
 import { BreakoutWrapper } from "@/ui/atoms/breakout-wrapper";
 import StarFieldBackground from "@/ui/world-tour/star-field-background";
 import { WorldCountryFlagCounts } from "@/ui/world-tour/world-country-flag-counts";
+import { AnimatePresence, motion } from "motion/react";
 
 const visitorData = [
-  ["840", 132],
-  ["250", 14],
-  ["484", 11],
-  ["056", 5],
-  ["156", 5],
-  ["826", 3],
-  ["124", 2],
-  ["616", 2],
-  ["642", 2],
-  ["710", 1],
-  ["756", 1],
-  ["860", 1],
+  ["840", 432],
+  ["702", 408],
+  ["156", 174],
+  ["643", 27],
+  ["344", 21],
+  ["484", 16],
+  ["276", 11],
+  ["356", 11],
+  ["704", 7],
+  ["036", 6],
+  ["250", 6],
+  ["826", 6],
+  ["792", 6],
+  ["076", 5],
+  ["124", 5],
+  ["804", 5],
+  ["360", 4],
+  ["392", 4],
+  ["372", 3],
+  ["398", 3],
+  ["528", 3],
+  ["608", 3],
+  ["764", 3],
+  ["100", 2],
+  ["818", 2],
+  ["348", 2],
+  ["368", 2],
+  ["380", 2],
+  ["752", 2],
+  ["004", 1],
+  ["040", 1],
+  ["170", 1],
+  ["196", 1],
+  ["203", 1],
+  ["208", 1],
+  ["724", 1],
+  ["246", 1],
   ["376", 1],
-  ["788", 1],
-  ["364", 1]
+  ["388", 1],
+  ["400", 1],
+  ["438", 1],
+  ["504", 1],
+  ["458", 1],
+  ["512", 1],
+  ["586", 1],
+  ["642", 1],
+  ["688", 1],
+  ["682", 1],
+  ["158", 1],
+  ["862", 1],
+  ["710", 1]
 ] as const satisfies readonly [string, number][];
 
 const WorldTour: FC = () => {
@@ -79,11 +115,11 @@ const WorldTour: FC = () => {
               <div className="relative flex h-auto min-w-screen items-center justify-center sm:min-h-[60vh] sm:min-w-full">
                 <div
                   className={cn(
-                    "pointer-events-none absolute bottom-[10%] left-1/2 h-6 w-[60%] -translate-x-1/2 rounded-full bg-gradient-to-bl from-black/10 via-black/[0.25] to-black/30 mix-blend-soft-light blur-sm sm:bottom-[5%]"
+                    "pointer-events-none absolute bottom-[10%] left-1/2 h-6 w-[60%] -translate-x-1/2 rounded-full bg-linear-to-bl from-black/10 via-black/25 to-black/30 mix-blend-soft-light blur-sm sm:bottom-[5%]"
                   )}></div>
                 <motion.div
                   ref={containerRef}
-                  className="relative top-1/2 bottom-1/2 z-10 mx-auto flex aspect-[3/4] h-auto w-full items-center justify-center align-middle drop-shadow-sm sm:aspect-square"
+                  className="relative top-1/2 bottom-1/2 z-10 mx-auto flex aspect-3/4 h-auto w-full items-center justify-center align-middle drop-shadow-sm sm:aspect-square"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8 }}>

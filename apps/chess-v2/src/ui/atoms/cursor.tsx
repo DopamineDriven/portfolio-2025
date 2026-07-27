@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";
-import { Cursor } from "motion-cursor";
+import { Cursor } from "motion-plus/react";
 import { AnimatePresence, motion, MotionStyle } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -59,7 +59,7 @@ const CustomCursor: React.FC<React.PropsWithChildren<CustomCursorEntity>> = ({
             variants={{ exit: { opacity: 0 } }}>
             <div
               className={cn(
-                "m-0 p-[0.9375rem] font-basis-grotesque-pro-medium text-lg tracking-tight text-[#f5f5f5]",
+                "m-0 p-3.75 font-basis-grotesque-pro-medium text-lg tracking-tight text-[#f5f5f5]",
                 tooltipClassName
               )}>
               {tooltipContent}

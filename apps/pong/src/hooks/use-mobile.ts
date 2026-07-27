@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Cookies from "cookie.js";
+import { useCookiesCtx } from "@/context/cookie-context";
 
 export function useMobile() {
   const [isMobile, setIsMobile] = useState<boolean>(false);
-
+  const { get } = useCookiesCtx();
+  const viewportCookie = get("viewport");
   const checkIsMobile = () => {
-    const viewportCookie = Cookies.get("viewport");
-
     const isTouchDevice =
       "ontouchstart" in window ||
       (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) ||
@@ -26,6 +25,7 @@ export function useMobile() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line
     checkIsMobile();
 
     window.addEventListener("resize", checkIsMobile);

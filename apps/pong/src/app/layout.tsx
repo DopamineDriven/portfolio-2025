@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Analytics } from "@vercel/analytics/react";
 import {
   BasisGrotesqueProBlack,
   BasisGrotesqueProBlackItalic,
@@ -14,7 +13,9 @@ import {
 } from "@/lib/fonts";
 import { getSiteUrl } from "@/lib/site-url";
 import { cn } from "@/lib/utils";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
+import { CookieProvider } from "@/context/cookie-context";
 
 export const viewport = {
   colorScheme: "normal",
@@ -116,7 +117,7 @@ export default function RootLayout({
         BasisGrotesqueProBoldItalic.variable
       )}>
       <body>
-        {children}
+        <CookieProvider>{children}</CookieProvider>
         <Analytics />
       </body>
     </html>

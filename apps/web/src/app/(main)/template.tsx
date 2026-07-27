@@ -10,10 +10,10 @@ export default function Template({
   return (
     <Suspense
       fallback={
-        <div className="mx-auto flex min-h-[100dvh] max-w-[96rem] flex-col overflow-x-hidden! sm:px-6 lg:px-8">
-          <div className="bg-background dark:bg-background h-16 w-full animate-pulse" />
-          <div className="bg-background flex-grow" />
-          <div className="bg-background dark:bg-background h-32 w-full animate-pulse" />
+        <div className="mx-auto flex min-h-dvh max-w-8xl flex-col overflow-x-hidden! sm:px-6 lg:px-8">
+          <div className="bg-background h-16 w-full animate-pulse" />
+          <div className="bg-background grow" />
+          <div className="bg-background h-32 w-full animate-pulse" />
         </div>
       }>
       <Transition>{children}</Transition>

@@ -1,0 +1,9 @@
+{
+  "extends": "@portfolio/tsconfig/node-pkg.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+    "types": ["*"]
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
+}

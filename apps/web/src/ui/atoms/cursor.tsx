@@ -7,7 +7,7 @@ import type {
   ReactNode
 } from "react";
 import { useCallback, useMemo, useState } from "react";
-import { Cursor } from "motion-cursor";
+import { Cursor } from "motion-plus/react";
 import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -63,7 +63,7 @@ function CustomCursor({
             variants={{ exit: { opacity: 0 } }}>
             <div
               className={cn(
-                "font-basis-grotesque-pro font-medium m-0 p-[0.9375rem] text-lg tracking-tight text-[#f5f5f5]",
+                "font-basis-grotesque-pro m-0 p-3.75 text-lg font-medium tracking-tight text-[#f5f5f5]",
                 tooltipClassName
               )}>
               {tooltipContent}

@@ -6,7 +6,8 @@ export default function robots() {
     rules: [
       {
         userAgent: "*",
-        allow: ["/*"]
+        allow: ["/*"],
+        disallow: ["/api/*"]
       }
     ],
     sitemap: `${getSiteUrl(process.env.NODE_ENV)}/sitemap.xml` as const,

@@ -3,7 +3,7 @@
 
 export const resumeData = {
   resumeBlob: {
-    url: "https://ypuktmwmnilhirdf.public.blob.vercel-storage.com/asross.pdf",
+    url: "https://assets.aicoalesce.com/upload/nrr6h4r4480f6kviycyo1zhf/1784800281501-andrew-ross-resume.pdf",
     downloadUrl:
       "https://ypuktmwmnilhirdf.public.blob.vercel-storage.com/asross.pdf?download=1",
     pathname: "asross.pdf",
