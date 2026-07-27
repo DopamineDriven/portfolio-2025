@@ -441,6 +441,9 @@ catalogs:
     postcss-import:
       specifier: ^16.1.1
       version: 16.1.1
+    postcss-load-config:
+      specifier: ^6.0.1
+      version: 6.0.1
   swr:
     swr:
       specifier: ^2.4.2
@@ -797,6 +800,9 @@ importers:
       postcss:
         specifier: catalog:styles
         version: 8.5.23
+      postcss-load-config:
+        specifier: catalog:styles
+        version: 6.0.1(jiti@2.7.0)(postcss@8.5.23)(tsx@4.23.1)(yaml@2.9.0)
       prettier:
         specifier: catalog:prettier
         version: 3.9.6
@@ -975,6 +981,9 @@ importers:
       postcss:
         specifier: catalog:styles
         version: 8.5.23
+      postcss-load-config:
+        specifier: catalog:styles
+        version: 6.0.1(jiti@2.7.0)(postcss@8.5.23)(tsx@4.23.1)(yaml@2.9.0)
       prettier:
         specifier: catalog:prettier
         version: 3.9.6
@@ -1333,6 +1342,9 @@ importers:
       postcss:
         specifier: catalog:styles
         version: 8.5.23
+      postcss-load-config:
+        specifier: catalog:styles
+        version: 6.0.1(jiti@2.7.0)(postcss@8.5.23)(tsx@4.23.1)(yaml@2.9.0)
       prettier:
         specifier: catalog:prettier
         version: 3.9.6

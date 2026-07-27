@@ -83,7 +83,7 @@ catalogs:
     "@types/gtag.js": ^0.0.20
   hast:
     hast-util-sanitize: ^5.0.2
-  iso-3166-1: 
+  iso-3166-1:
     iso-3166-1: ^2.1.1
   jiti:
     jiti: ^2.7.0
@@ -147,7 +147,7 @@ catalogs:
     "@ianvs/prettier-plugin-sort-imports": ^4.7.1
     prettier: ^3.9.6
     prettier-plugin-tailwindcss: ^0.8.1
-  pw: 
+  pw:
     "@playwright/test": ^1.62.0
   py:
     pythonia: ^1.2.6
@@ -232,6 +232,7 @@ catalogs:
   styles:
     autoprefixer: ^10.5.4
     postcss: ^8.5.23
+    postcss-load-config: ^6.0.1
     postcss-import: ^16.1.1
   swr:
     swr: ^2.4.2

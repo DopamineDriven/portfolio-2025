@@ -68,6 +68,7 @@
     "eslint": "catalog:eslint",
     "jiti": "catalog:jiti",
     "postcss": "catalog:styles",
+    "postcss-load-config": "catalog:styles",
     "prettier": "catalog:prettier",
     "pythonia": "catalog:py",
     "sharp": "catalog:sharp",

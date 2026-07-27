@@ -76,6 +76,7 @@
     "eslint": "catalog:eslint",
     "jiti": "catalog:jiti",
     "postcss": "catalog:styles",
+    "postcss-load-config": "catalog:styles",
     "prettier": "catalog:prettier",
     "sharp": "catalog:sharp",
     "tailwindcss": "catalog:tw",
