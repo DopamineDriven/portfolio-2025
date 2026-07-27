@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { AlertTriangle, CuboidIcon as Cube3d, Home } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/ui/atoms/alert";
 import { Button } from "@/ui/atoms/alert-button";
 import {
@@ -14,6 +13,7 @@ import {
   CardHeader,
   CardTitle
 } from "@/ui/atoms/card";
+import { AlertTriangle, CuboidIcon as Cube3d, Home } from "lucide-react";
 
 export interface WebGLFallbackProps {
   title?: string;
@@ -35,6 +35,7 @@ export function WebGLFallback({
   const router = useRouter();
 
   useEffect(() => {
+    // eslint-disable-next-line
     setIsClient(true);
   }, []);
 
@@ -62,7 +63,7 @@ export function WebGLFallback({
 
   return (
     <div
-      className={`flex h-full min-h-[400px] w-full items-center justify-center p-4 ${className}`}>
+      className={`flex h-full min-h-100 w-full items-center justify-center p-4 ${className}`}>
       <Card className="bg-background/80 w-full max-w-md border-2 backdrop-blur-sm">
         <CardHeader>
           <div className="mb-2 flex items-center gap-2">
@@ -86,7 +87,7 @@ export function WebGLFallback({
               </AlertDescription>
             </Alert>
 
-            <div className="from-primary/20 via-secondary/20 to-muted relative h-32 w-full overflow-hidden rounded-lg bg-gradient-to-br">
+            <div className="from-primary/20 via-secondary/20 to-muted relative h-32 w-full overflow-hidden rounded-lg bg-linear-to-br">
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="grid grid-cols-3 gap-3 opacity-50">
                   {Array.from({ length: 9 }).map((_, i) => (
