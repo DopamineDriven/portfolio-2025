@@ -77,6 +77,8 @@ catalogs:
     fflate: ^0.8.3
   geist:
     geist: ^1.7.2
+  geojson:
+    geojson: ^0.5.0
   glob:
     glob: ^13.0.6
   gtag:

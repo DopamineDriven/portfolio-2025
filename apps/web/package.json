@@ -43,6 +43,7 @@
     "embla-carousel": "catalog:embla",
     "embla-carousel-auto-scroll": "catalog:embla",
     "embla-carousel-react": "catalog:embla",
+    "geojson": "catalog:geojson",
     "iso-3166-1": "catalog:iso-3166-1",
     "js-cookie": "catalog:cookies",
     "katex": "catalog:katex",

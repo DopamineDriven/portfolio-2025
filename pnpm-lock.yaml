@@ -138,6 +138,10 @@ catalogs:
     eslint-plugin-react-hooks:
       specifier: ^7.1.1
       version: 7.1.1
+  geojson:
+    geojson:
+      specifier: ^0.5.0
+      version: 0.5.0
   glob:
     glob:
       specifier: ^13.0.6
@@ -1098,6 +1102,9 @@ importers:
       embla-carousel-react:
         specifier: catalog:embla
         version: 8.6.0(react@19.2.8)
+      geojson:
+        specifier: catalog:geojson
+        version: 0.5.0
       iso-3166-1:
         specifier: catalog:iso-3166-1
         version: 2.1.1
@@ -5613,6 +5620,10 @@ packages:
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
+
+  geojson@0.5.0:
+    resolution: {integrity: sha512-/Bx5lEn+qRF4TfQ5aLu6NH+UKtvIv7Lhc487y/c8BdludrCTpiWf9wyI0RTyqg49MFefIAvFDuEi5Dfd/zgNxQ==}
+    engines: {node: '>= 0.10'}
 
   get-caller-file@2.0.5:
     resolution: {integrity: sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==}
@@ -11793,6 +11804,8 @@ snapshots:
   generator-function@2.0.1: {}
 
   gensync@1.0.0-beta.2: {}
+
+  geojson@0.5.0: {}
 
   get-caller-file@2.0.5: {}
 
