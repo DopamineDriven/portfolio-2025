@@ -82,7 +82,7 @@ export default async function Image() {
             textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
             zIndex: 1
           }}>
-          Portfolio {new Date(Date.now()).getFullYear()}
+          {`Portfolio ${new Date(Date.now()).getFullYear()}`}
         </div>
 
         {/* Footer “Andrew Ross” */}
