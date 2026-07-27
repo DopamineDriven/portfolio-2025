@@ -98,11 +98,11 @@ function LoadingAnimation({ children }: { children: React.ReactNode }) {
     <div className="relative h-full w-full overflow-hidden">
       {children}
       <motion.div
-        className="bg-foreground pointer-events-none fixed inset-0 z-[10000000000]"
+        className="bg-foreground pointer-events-none fixed inset-0 z-10000000000"
         animate={{ opacity: isLoaded ? 0 : 1 }}
       />
       <motion.div
-        className="bg-background pointer-events-none fixed inset-0 z-[10000000001] will-change-[clip-path]"
+        className="bg-background pointer-events-none fixed inset-0 z-10000000001 will-change-[clip-path]"
         style={{ clipPath }}
       />
     </div>
@@ -136,10 +136,10 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   return (
     <Suspense
       fallback={
-        <div className="mx-auto flex min-h-[100dvh] max-w-[96rem] flex-col overflow-x-hidden! sm:px-6 lg:px-8">
-          <div className="bg-background dark:bg-background h-16 w-full animate-pulse" />
-          <div className="bg-background flex-grow" />
-          <div className="bg-background dark:bg-background h-32 w-full animate-pulse" />
+        <div className="mx-auto flex min-h-dvh max-w-8xl flex-col overflow-x-hidden! sm:px-6 lg:px-8">
+          <div className="bg-background h-16 w-full animate-pulse" />
+          <div className="bg-background grow" />
+          <div className="bg-background h-32 w-full animate-pulse" />
         </div>
       }>
       <LoadingAnimation>{children}</LoadingAnimation>

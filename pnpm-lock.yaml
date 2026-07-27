@@ -555,6 +555,10 @@ catalogs:
     '@vercel/speed-insights':
       specifier: ^2.0.0
       version: 2.0.0
+  vfile:
+    vfile:
+      specifier: ^6.0.3
+      version: 6.0.3
   vite:
     '@vitejs/plugin-react':
       specifier: ^6.0.4
@@ -1004,6 +1008,9 @@ importers:
       '@d0paminedriven/redis-utils':
         specifier: catalog:dd
         version: 2.0.0(redis@6.1.0)
+      '@portfolio/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@radix-ui/react-separator':
         specifier: catalog:radix
         version: 1.1.15(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -1181,6 +1188,9 @@ importers:
       topojson-client:
         specifier: catalog:topo
         version: 3.1.0
+      vfile:
+        specifier: catalog:vfile
+        version: 6.0.3
     devDependencies:
       '@csstools/postcss-oklab-function':
         specifier: catalog:css
@@ -1200,18 +1210,15 @@ importers:
       '@portfolio/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
+      '@portfolio/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@portfolio/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest
-      '@tailwindcss/forms':
-        specifier: catalog:tw
-        version: 0.5.11(tailwindcss@4.3.3)
       '@tailwindcss/postcss':
         specifier: catalog:tw
         version: 4.3.3
-      '@tailwindcss/typography':
-        specifier: catalog:tw
-        version: 0.5.20(tailwindcss@4.3.3)
       '@types/d3':
         specifier: catalog:d3
         version: 7.4.3

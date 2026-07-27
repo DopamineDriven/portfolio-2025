@@ -22,7 +22,7 @@ export function CodeBlock({ children, className, ...rest }: CodeBlockProps) {
   };
 
   return (
-    <div className="relative m-0 w-full p-0">
+    <div className="relative my-2 w-full p-0">
       <pre
         ref={codeRef}
         className={cn(className, `overflow-x-auto p-0`)}

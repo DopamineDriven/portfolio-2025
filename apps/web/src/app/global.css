@@ -1,54 +1,18 @@
-@import "tailwindcss";
+@import "tailwindcss" source("../../src");
 @import "tw-animate-css";
+@import "./highlight.css";
+@import "./katex.css";
 
-@config "../../tailwind.config.ts";
-@plugin "@tailwindcss/forms";
-@plugin "@tailwindcss/typography";
 @plugin "tailwindcss-motion";
 @plugin "tailwind-scrollbar";
 
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
 
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
-  }
-}
-
-
-/*
-background ~= #020817
-#030816ff (p3)
-*/
-
-@layer base {
-  :root {
-    --radius: 0.5rem;
-    --theme-transition-duration: 0.5s;
-    --loading-animation-duration: 2s;
-    --animation-duration: 60s;
-    --visible-items: 5;
-  }
-}
-
-/* ---------------------------------------------- */
-/* 1) Declare Basis Grotesque Pro @font-face rules */
-/* ---------------------------------------------- */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @font-face {
   font-family: "BasisGrotesquePro";
   src: url("/fonts/BasisGrotesquePro-Regular.woff2") format("woff2");
-  font-weight: 400; /* Regular */
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
@@ -56,7 +20,7 @@ background ~= #020817
 @font-face {
   font-family: "BasisGrotesquePro";
   src: url("/fonts/BasisGrotesquePro-Italic.woff2") format("woff2");
-  font-weight: 400; /* Regular Italic */
+  font-weight: 400;
   font-style: italic;
   font-display: swap;
 }
@@ -64,7 +28,7 @@ background ~= #020817
 @font-face {
   font-family: "BasisGrotesquePro";
   src: url("/fonts/BasisGrotesquePro-Light.woff2") format("woff2");
-  font-weight: 300; /* Light */
+  font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
@@ -72,7 +36,7 @@ background ~= #020817
 @font-face {
   font-family: "BasisGrotesquePro";
   src: url("/fonts/BasisGrotesquePro-LightItalic.woff2") format("woff2");
-  font-weight: 300; /* Light Italic */
+  font-weight: 300;
   font-style: italic;
   font-display: swap;
 }
@@ -80,7 +44,7 @@ background ~= #020817
 @font-face {
   font-family: "BasisGrotesquePro";
   src: url("/fonts/BasisGrotesquePro-Medium.woff2") format("woff2");
-  font-weight: 500; /* Medium */
+  font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
@@ -88,7 +52,7 @@ background ~= #020817
 @font-face {
   font-family: "BasisGrotesquePro";
   src: url("/fonts/BasisGrotesquePro-MediumItalic.woff2") format("woff2");
-  font-weight: 500; /* Medium Italic */
+  font-weight: 500;
   font-style: italic;
   font-display: swap;
 }
@@ -96,7 +60,7 @@ background ~= #020817
 @font-face {
   font-family: "BasisGrotesquePro";
   src: url("/fonts/BasisGrotesquePro-Bold.woff2") format("woff2");
-  font-weight: 700; /* Bold */
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
@@ -104,7 +68,7 @@ background ~= #020817
 @font-face {
   font-family: "BasisGrotesquePro";
   src: url("/fonts/BasisGrotesquePro-BoldItalic.woff2") format("woff2");
-  font-weight: 700; /* Bold Italic */
+  font-weight: 700;
   font-style: italic;
   font-display: swap;
 }
@@ -112,7 +76,7 @@ background ~= #020817
 @font-face {
   font-family: "BasisGrotesquePro";
   src: url("/fonts/BasisGrotesquePro-Black.woff2") format("woff2");
-  font-weight: 900; /* Black */
+  font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
@@ -120,11 +84,16 @@ background ~= #020817
 @font-face {
   font-family: "BasisGrotesquePro";
   src: url("/fonts/BasisGrotesquePro-BlackItalic.woff2") format("woff2");
-  font-weight: 900; /* Black Italic */
+  font-weight: 900;
   font-style: italic;
   font-display: swap;
 }
 
+
+/*
+background ~= #020817
+#030816ff (p3)
+*/
 
 /* prettier-ignore */
 @theme {
@@ -160,13 +129,15 @@ background ~= #020817
   --color-hue-4: oklch(0.5898 0.211 259.36);
   --color-hue-5: oklch(0.8203 0.141 210.49);
   --color-hue-6: oklch(0.8842 0.107 168.47);
+  --duration-theme: 0.5s
+  --duration-loading: 2s;
+  --duration-animation: 60s;
 
   --radius-sm: 0.25rem;
-
   --container-8xl: 96rem;
   --container-9xl: 120rem;
   --container-10xl: 173.75rem;
-
+  --visible-items: 5;
   --spacing-8xl: 96rem;
   --spacing-9xl: 120rem;
   --spacing-10xl: 173.75rem;
@@ -292,6 +263,30 @@ background ~= #020817
   }
 }
 
+@utility container {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 2rem;
+  @media (width >= 1400px) {
+    max-width: 1400px;
+  }
+}
+
+
+@utility prose-quoteless {
+  & :is(p, li) code::before,
+  & :is(p, li) code::after,
+  & a code:first-of-type::before,
+  & a code:first-of-type::after,
+  & blockquote p:first-of-type::before,
+  & blockquote p:first-of-type::after {
+    content: none;
+  }
+}
+
+@utility visible-items-* {
+  --visible-items: --value(integer);
+}
 
 /* Global scrollbar styling */
 * {
@@ -411,6 +406,11 @@ code > [data-line]::before {
   margin-right: 0.5rem;
   text-align: right;
   color: oklch(55.1% 0.0234 264.36);
+}
+
+/* no gutter when LOC === 1 (single-line blocks and inline code) */
+code > [data-line]:only-child::before {
+  content: none;
 }
 
 .highlighted {

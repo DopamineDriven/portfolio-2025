@@ -201,11 +201,11 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   return (
     <Suspense
       fallback={
-        <div className="mx-auto flex min-h-[100dvh] max-w-[96rem] flex-col overflow-x-hidden! sm:px-6 lg:px-8">
-          <div className="h-16 w-full animate-pulse bg-[#020817] dark:bg-[#020817]" />{" "}
+        <div className="mx-auto flex min-h-dvh max-w-8xl flex-col overflow-x-hidden! sm:px-6 lg:px-8">
+          <div className="h-16 w-full animate-pulse bg-[#020817]" />{" "}
           {/* Navbar placeholder */}
-          <div className="flex-grow bg-[#020817]" /> {/* Content placeholder */}
-          <div className="h-32 w-full animate-pulse bg-[#020817] dark:bg-[#020817]" />{" "}
+          <div className="grow bg-[#020817]" /> {/* Content placeholder */}
+          <div className="h-32 w-full animate-pulse bg-[#020817]" />{" "}
           {/* Footer placeholder */}
         </div>
       }>

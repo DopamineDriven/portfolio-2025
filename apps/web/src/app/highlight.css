@@ -1,0 +1,210 @@
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+/* Tailwind v4 highlights (CSS-first)
+ * MIT — do what you want, just don’t ship it broken.
+ */
+
+/* Keep vars from inheriting weirdly across nested components */
+:root {
+  @property --tw-highlight-color {
+    syntax: "*";
+    inherits: false;
+    initial-value: black;
+  }
+  @property --tw-highlight-variant {
+    syntax: "*";
+    inherits: false;
+    initial-value: url("/highlights/1.svg");
+  }
+  @property --tw-highlight-spread-t {
+    syntax: "*";
+    inherits: false;
+    initial-value: 0;
+  }
+  @property --tw-highlight-spread-b {
+    syntax: "*";
+    inherits: false;
+    initial-value: 0;
+  }
+  @property --tw-highlight-spread-l {
+    syntax: "*";
+    inherits: false;
+    initial-value: 0;
+  }
+  @property --tw-highlight-spread-r {
+    syntax: "*";
+    inherits: false;
+    initial-value: 0;
+  }
+  @property --tw-highlight-z-index {
+    syntax: "*";
+    inherits: false;
+    initial-value: -1;
+  }
+}
+
+/* Theme tokens (values users can override with their own @theme) */
+@theme inline {
+  /* spreads */
+  --highlight-spread-0: 0;
+  --highlight-spread-none: 0;
+  --highlight-spread-sm: -0.25rem;
+  --highlight-spread-md: -0.5rem;
+  --highlight-spread-lg: -0.75rem;
+  --highlight-spread-xl: -1rem;
+
+  /* variants (you saved these into /public/highlights/…) */
+  --highlight-variant-1: url("/highlights/1.svg");
+  --highlight-variant-2: url("/highlights/2.svg");
+  --highlight-variant-3: url("/highlights/3.svg");
+  --highlight-variant-4: url("/highlights/4.svg");
+  --highlight-variant-5: url("/highlights/5.svg");
+  --highlight-variant-6: url("/highlights/6.svg");
+  --highlight-variant-7: url("/highlights/7.svg");
+  --highlight-variant-8: url("/highlights/8.svg");
+  --highlight-variant-9: url("/highlights/9.svg");
+  --highlight-variant-10: url("/highlights/10.svg");
+  --highlight-variant-11: url("/highlights/11.svg");
+  --highlight-variant-12: url("/highlights/12.svg");
+  --highlight-variant-13: url("/highlights/13.svg");
+  --highlight-variant-14: url("/highlights/14.svg");
+  --highlight-variant-15: url("/highlights/15.svg");
+  --highlight-variant-16: url("/highlights/16.svg");
+  --highlight-variant-17: url("/highlights/17.svg");
+  --highlight-variant-18: url("/highlights/18.svg");
+  --highlight-variant-19: url("/highlights/19.svg");
+  --highlight-variant-20: url("/highlights/20.svg");
+}
+
+/* Base utility — gives you the after-mask highlight box */
+@utility highlight {
+  isolation: isolate;
+  position: relative;
+  white-space: nowrap;
+
+  /* sane defaults (can be overridden by utilities below) */
+  --tw-highlight-color: var(--color-black);
+  --tw-highlight-variant: var(--highlight-variant-1);
+  --tw-highlight-spread-t: 0;
+  --tw-highlight-spread-b: 0;
+  --tw-highlight-spread-l: 0;
+  --tw-highlight-spread-r: 0;
+  --tw-highlight-z-index: -1;
+
+  &::after {
+    content: var(--tw-content);
+    position: absolute;
+    z-index: var(--tw-highlight-z-index);
+
+    /* the “spread” */
+    top: var(--tw-highlight-spread-t);
+    bottom: var(--tw-highlight-spread-b);
+    left: var(--tw-highlight-spread-l);
+    right: var(--tw-highlight-spread-r);
+
+    /* color + texture */
+    background-color: var(--tw-highlight-color);
+    mask-image: var(--tw-highlight-variant);
+    -webkit-mask-image: var(--tw-highlight-variant);
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+    -webkit-mask-size: 100% 100%;
+  }
+}
+
+/* Color: highlight-red-500, highlight-[#ff0], highlight-(--my-color) */
+@utility highlight-* {
+  /* match theme colors … */
+  --tw-highlight-color: --value(--color-*);
+  /* …or arbitrary color/var() */
+  --tw-highlight-color: --value([color]);
+}
+
+/* Spread all sides: highlight-spread-md, highlight-spread-[12px], highlight-spread-[10%] */
+@utility highlight-spread-* {
+  --tw-highlight-spread-t: --value(
+    --highlight-spread-*,
+    [length],
+    [percentage]
+  );
+  --tw-highlight-spread-b: --value(
+    --highlight-spread-*,
+    [length],
+    [percentage]
+  );
+  --tw-highlight-spread-l: --value(
+    --highlight-spread-*,
+    [length],
+    [percentage]
+  );
+  --tw-highlight-spread-r: --value(
+    --highlight-spread-*,
+    [length],
+    [percentage]
+  );
+}
+
+/* Axis shorthands */
+@utility highlight-spread-x-* {
+  --tw-highlight-spread-l: --value(
+    --highlight-spread-*,
+    [length],
+    [percentage]
+  );
+  --tw-highlight-spread-r: --value(
+    --highlight-spread-*,
+    [length],
+    [percentage]
+  );
+}
+@utility highlight-spread-y-* {
+  --tw-highlight-spread-t: --value(
+    --highlight-spread-*,
+    [length],
+    [percentage]
+  );
+  --tw-highlight-spread-b: --value(
+    --highlight-spread-*,
+    [length],
+    [percentage]
+  );
+}
+
+/* Individual sides */
+@utility highlight-spread-t-* {
+  --tw-highlight-spread-t: --value(
+    --highlight-spread-*,
+    [length],
+    [percentage]
+  );
+}
+@utility highlight-spread-b-* {
+  --tw-highlight-spread-b: --value(
+    --highlight-spread-*,
+    [length],
+    [percentage]
+  );
+}
+@utility highlight-spread-l-* {
+  --tw-highlight-spread-l: --value(
+    --highlight-spread-*,
+    [length],
+    [percentage]
+  );
+}
+@utility highlight-spread-r-* {
+  --tw-highlight-spread-r: --value(
+    --highlight-spread-*,
+    [length],
+    [percentage]
+  );
+}
+
+/* Texture variant: highlight-variant-7 or highlight-variant-[url("/foo.svg")] */
+@utility highlight-variant-* {
+  /* known tokens 1..20 */
+  --tw-highlight-variant: --value(--highlight-variant-*);
+  /* arbitrary url() if you want to point elsewhere */
+  --tw-highlight-variant: --value([*]);
+}
