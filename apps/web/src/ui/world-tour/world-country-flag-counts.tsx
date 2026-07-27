@@ -55,7 +55,7 @@ export const WorldCountryFlagCounts: FC<WorldCountryFlagCountsProps> = ({
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5 }}>
       <motion.div
-        className={cn("h-auto w-[4.5rem] shrink-0 overflow-hidden")}
+        className={cn("h-auto w-18 shrink-0 overflow-hidden")}
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}>

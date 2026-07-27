@@ -5,7 +5,6 @@ import { Download } from "lucide-react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/atoms/button";
-import { resumeData } from "@/utils/__generated__/resume-blob";
 
 export function DownloadResumeButton() {
   const [isDownloading, setIsDownloading] = useState(false);
@@ -15,11 +14,11 @@ export function DownloadResumeButton() {
     try {
       setIsDownloading(true);
 
-      // Create a temporary link and trigger the download
+      // Same-origin route streams the CDN pdf with Content-Disposition:
+      // attachment — the download attribute is ignored on cross-origin links
       const link = document.createElement("a");
-      link.href = resumeData.resumeBlob.downloadUrl;
-      link.target = "_blank";
-      link.download = "andrew-ross-resume"; // This will be the suggested filename
+      link.href = "/api/resume";
+      link.download = "andrew-ross-resume.pdf";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
