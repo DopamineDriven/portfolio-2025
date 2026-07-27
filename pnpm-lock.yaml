@@ -466,9 +466,18 @@ catalogs:
       specifier: ^2.36.1
       version: 2.36.1
   topo:
+    '@types/topojson':
+      specifier: ^3.2.6
+      version: 3.2.6
     '@types/topojson-client':
       specifier: ^3.1.5
       version: 3.1.5
+    '@types/topojson-specification':
+      specifier: ^1.0.5
+      version: 1.0.5
+    topojson:
+      specifier: ^3.0.2
+      version: 3.0.2
     topojson-client:
       specifier: ^3.1.0
       version: 3.1.0
@@ -1219,6 +1228,9 @@ importers:
       three-stdlib:
         specifier: catalog:three
         version: 2.36.1(three@0.185.1)
+      topojson:
+        specifier: catalog:topo
+        version: 3.0.2
       topojson-client:
         specifier: catalog:topo
         version: 3.1.0
@@ -1298,9 +1310,15 @@ importers:
       '@types/three':
         specifier: catalog:three
         version: 0.185.1
+      '@types/topojson':
+        specifier: catalog:topo
+        version: 3.2.6
       '@types/topojson-client':
         specifier: catalog:topo
         version: 3.1.5
+      '@types/topojson-specification':
+        specifier: catalog:topo
+        version: 1.0.5
       '@types/unist':
         specifier: catalog:unist
         version: 3.0.3
@@ -4111,8 +4129,17 @@ packages:
   '@types/topojson-client@3.1.5':
     resolution: {integrity: sha512-C79rySTyPxnQNNguTZNI1Ct4D7IXgvyAs3p9HPecnl6mNrJ5+UhvGNYcZfpROYV2lMHI48kJPxwR+F9C6c7nmw==}
 
+  '@types/topojson-server@3.0.4':
+    resolution: {integrity: sha512-5+ieK8ePfP+K2VH6Vgs1VCt+fO1U8XZHj0UsF+NktaF0DavAo1q3IvCBXgokk/xmtvoPltSUs6vxuR/zMdOE1g==}
+
+  '@types/topojson-simplify@3.0.3':
+    resolution: {integrity: sha512-sBO5UZ0O2dB0bNwo0vut2yLHhj3neUGi9uL7/ROdm8Gs6dtt4jcB9OGDKr+M2isZwQM2RuzVmifnMZpxj4IGNw==}
+
   '@types/topojson-specification@1.0.5':
     resolution: {integrity: sha512-C7KvcQh+C2nr6Y2Ub4YfgvWvWCgP2nOQMtfhlnwsRL4pYmmwzBS7HclGiS87eQfDOU/DLQpX6GEscviaz4yLIQ==}
+
+  '@types/topojson@3.2.6':
+    resolution: {integrity: sha512-ppfdlxjxofWJ66XdLgIlER/85RvpGyfOf8jrWf+3kVIjEatFxEZYD/Ea83jO672Xu1HRzd/ghwlbcZIUNHTskw==}
 
   '@types/tough-cookie@4.0.5':
     resolution: {integrity: sha512-/Ad8+nIOV7Rl++6f1BdKxFSMgmoqEoYbHRpPcx3JEfv8VRsQe9Z4mCXeJBzxs7mbHY/XOZZuXlRNfhpVPbs6ZA==}
@@ -7586,8 +7613,25 @@ packages:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
     engines: {node: '>=8.0'}
 
+  topojson-client@3.0.0:
+    resolution: {integrity: sha512-2phZ98wg/iKvsWxbB6JQcq0/N0f+sRx8ZogdvjCg+CjaJdmV0knP0OQwK5XbgnytAPx5lPZk41kiWpgH2w9FHg==}
+    hasBin: true
+
   topojson-client@3.1.0:
     resolution: {integrity: sha512-605uxS6bcYxGXw9qi62XyrV6Q3xwbndjachmNxu8HWTtVPxZfEJN9fd/SZS1Q54Sn2y0TMyMxFj/cJINqGHrKw==}
+    hasBin: true
+
+  topojson-server@3.0.0:
+    resolution: {integrity: sha512-UhhwQk4e2+lwhAVYkja3J5nQHQmKwORDuIQPkMnFFZFcLqWKLQWI3u7fZWtNIXTElBjTYdBUL1kzi1+oS/qDQw==}
+    hasBin: true
+
+  topojson-simplify@3.0.2:
+    resolution: {integrity: sha512-gyYSVRt4jO/0RJXKZQPzTDQRWV+D/nOfiljNUv0HBXslFLtq3yxRHrl7jbrjdbda5Ytdr7M8BZUI4OxU7tnbRQ==}
+    hasBin: true
+
+  topojson@3.0.2:
+    resolution: {integrity: sha512-u3zeuL6WEVL0dmsRn7uHZKc4Ao4gpW3sORUv+N3ezLTvY3JdCuyg0hvpWiIfFw8p/JwVN++SvAsFgcFEeR15rQ==}
+    deprecated: Use topojson-client, topojson-server or topojson-simplify directly.
     hasBin: true
 
   totalist@3.0.1:
@@ -10242,9 +10286,27 @@ snapshots:
       '@types/geojson': 7946.0.16
       '@types/topojson-specification': 1.0.5
 
+  '@types/topojson-server@3.0.4':
+    dependencies:
+      '@types/geojson': 7946.0.16
+      '@types/topojson-specification': 1.0.5
+
+  '@types/topojson-simplify@3.0.3':
+    dependencies:
+      '@types/geojson': 7946.0.16
+      '@types/topojson-specification': 1.0.5
+
   '@types/topojson-specification@1.0.5':
     dependencies:
       '@types/geojson': 7946.0.16
+
+  '@types/topojson@3.2.6':
+    dependencies:
+      '@types/geojson': 7946.0.16
+      '@types/topojson-client': 3.1.5
+      '@types/topojson-server': 3.0.4
+      '@types/topojson-simplify': 3.0.3
+      '@types/topojson-specification': 1.0.5
 
   '@types/tough-cookie@4.0.5': {}
 
@@ -14160,9 +14222,28 @@ snapshots:
     dependencies:
       is-number: 7.0.0
 
+  topojson-client@3.0.0:
+    dependencies:
+      commander: 2.20.3
+
   topojson-client@3.1.0:
     dependencies:
       commander: 2.20.3
+
+  topojson-server@3.0.0:
+    dependencies:
+      commander: 2.20.3
+
+  topojson-simplify@3.0.2:
+    dependencies:
+      commander: 2.20.3
+      topojson-client: 3.1.0
+
+  topojson@3.0.2:
+    dependencies:
+      topojson-client: 3.0.0
+      topojson-server: 3.0.0
+      topojson-simplify: 3.0.2
 
   totalist@3.0.1: {}
 

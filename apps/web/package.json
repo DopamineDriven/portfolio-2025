@@ -81,6 +81,7 @@
     "tailwind-merge": "catalog:tw",
     "three": "catalog:three",
     "three-stdlib": "catalog:three",
+    "topojson": "catalog:topo",
     "topojson-client": "catalog:topo",
     "vfile": "catalog:vfile"
   },
@@ -109,6 +110,8 @@
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
     "@types/three": "catalog:three",
+    "@types/topojson": "catalog:topo",
+    "@types/topojson-specification": "catalog:topo",
     "@types/topojson-client": "catalog:topo",
     "@types/unist": "catalog:unist",
     "@types/use-sync-external-store": "catalog:store",
