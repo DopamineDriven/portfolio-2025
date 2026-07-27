@@ -149,11 +149,11 @@ function LoadingAnimation({ children }: { children: React.ReactNode }) {
     <div className="relative h-full w-full overflow-hidden">
       {children}
       <motion.div
-        className="pointer-events-none fixed inset-0 z-[10000000000] bg-[#f8fafc]"
+        className="pointer-events-none fixed inset-0 z-10000000000 bg-[#f8fafc]"
         animate={{ opacity: isLoaded ? 0 : 1 }}
       />
       <motion.div
-        className="pointer-events-none fixed inset-0 z-[10000000001] bg-[#020817] will-change-[clip-path]"
+        className="pointer-events-none fixed inset-0 z-10000000001 bg-[#020817] will-change-[clip-path]"
         style={{ clipPath }}
       />
 
@@ -161,7 +161,7 @@ function LoadingAnimation({ children }: { children: React.ReactNode }) {
       {showPlayButton && !isLoaded && (
         <button
           onClick={handlePlayButtonClick}
-          className="fixed right-4 bottom-4 z-[10000000002] rounded-md bg-[#f8fafc]/10 px-4 py-2 text-[#f8fafc] transition-colors hover:bg-[#f8fafc]/20">
+          className="fixed right-4 bottom-4 z-10000000002 rounded-md bg-[#f8fafc]/10 px-4 py-2 text-[#f8fafc] transition-colors hover:bg-[#f8fafc]/20">
           Play Elevator Sound
         </button>
       )}

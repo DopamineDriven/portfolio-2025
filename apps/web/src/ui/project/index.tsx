@@ -31,7 +31,7 @@ export function Project({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       className="bg-background text-foreground font-basis-grotesque-pro container mx-auto px-2 py-16 text-sm font-normal sm:text-base md:py-24">
-      <div className="mx-auto max-w-[1280px]">
+      <div className="mx-auto max-w-7xl">
         <BreakoutWrapper>
           <div className="mb-4 md:mx-auto md:max-w-[50%]">
             <motion.div
