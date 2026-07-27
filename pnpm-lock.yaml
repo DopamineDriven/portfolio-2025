@@ -900,6 +900,12 @@ importers:
       '@portfolio/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
+      '@portfolio/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@portfolio/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest
       '@tailwindcss/forms':
         specifier: catalog:tw
         version: 0.5.11(tailwindcss@4.3.3)
@@ -912,6 +918,9 @@ importers:
       '@types/gtag.js':
         specifier: catalog:gtag
         version: 0.0.20
+      '@types/js-cookie':
+        specifier: catalog:cookies
+        version: 3.0.6
       '@types/lodash':
         specifier: catalog:lodash
         version: 4.17.24

@@ -8,7 +8,7 @@ import { defineConfig, devices } from "@playwright/test";
 // `pnpm run:web` with its cwd set to the monorepo root.
 const appDir = import.meta.dirname;
 const repoRoot = join(appDir, "..", "..");
-const baseURL = "http://localhost:3008";
+const baseURL = "http://localhost:3010";
 const isCI = !!process.env.CI;
 
 export default defineConfig({

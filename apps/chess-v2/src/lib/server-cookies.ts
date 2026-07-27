@@ -62,7 +62,7 @@ export function detectDeviceAndSetCookies(
   response: NextResponse
 ) {
   const domain =
-    process.env.NODE_ENV !== "development" ? ".asross.com" : undefined;
+    process.env.NODE_ENV !== "development" ? ".nextchessbot.com" : undefined;
   const config = {
     domain,
     path: "/",

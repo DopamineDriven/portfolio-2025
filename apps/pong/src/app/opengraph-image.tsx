@@ -1,6 +1,7 @@
+import { existsSync } from "node:fs";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
-
-export const runtime = "edge";
 
 export const alt = "React Pong";
 export const size = {
@@ -8,32 +9,32 @@ export const size = {
   height: 630
 };
 export const contentType = "image/png";
-export default async function Image() {
-  const absoluteUrl = new URL("./og-img.png", import.meta.url);
 
-  const fontAbsoluteUrl = new URL(
-    "./BasisGrotesquePro-Light.ttf",
-    import.meta.url
-  );
+export default async function Image() {
+  const file = "og-img.png";
+  const filePath = join(process.cwd(), file);
+  const fileExists = existsSync(filePath);
+
+  const fontFile = "BasisGrotesquePro-Light.ttf";
+  const fontFilePath = join(process.cwd(), fontFile);
+  const fontFileExists = existsSync(fontFilePath);
 
   try {
-    const [response, responseFont] = await Promise.all([
-      fetch(absoluteUrl),
-      fetch(fontAbsoluteUrl)
+    if (!fileExists) {
+      throw new Error(`[twitter-image.tsx]: file ${filePath} does not exist`);
+    }
+    if (!fontFileExists) {
+      throw new Error(
+        `[twitter-image.tsx]: font file ${fontFilePath} does not exist`
+      );
+    }
+
+    const [bgImage, ogFont] = await Promise.all([
+      readFile(filePath, "base64"),
+      readFile(fontFilePath)
     ]);
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch Image: ${response.statusText}`);
-    }
-    if (!responseFont.ok) {
-      throw new Error(`Failed to fetch SVG: ${responseFont.statusText}`);
-    }
-    const arrayBuffer = await response.arrayBuffer();
-    const arrayBufferFont = await responseFont.arrayBuffer();
-
-    // Encode to base64
-    const base64Encoded = Buffer.from(arrayBuffer).toString("base64");
-    const ogDataUrl = `data:image/png;base64,${base64Encoded}`;
+    const dataUrl = `data:image/png;base64,${bgImage}` as const;
 
     return new ImageResponse(
       (
@@ -47,7 +48,7 @@ export default async function Image() {
             fontFamily: '"Basis Grotesque Pro", sans-serif'
           }}>
           <img
-            src={ogDataUrl}
+            src={dataUrl}
             style={{
               position: "absolute",
               inset: 0,
@@ -109,8 +110,9 @@ export default async function Image() {
         height: 630,
         fonts: [
           {
+            weight: 300,
             name: "Basis Grotesque Pro",
-            data: arrayBufferFont,
+            data: ogFont,
             style: "normal"
           }
         ]
