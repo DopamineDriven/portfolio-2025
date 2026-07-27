@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import type { InferGSPRT } from "@/types/next";
 import Home from "@/ui/home";
 import { flags } from "@/utils/flags";
+import type { InferGSPRT } from "@portfolio/types";
 
 export async function generateStaticParams() {
   return flags.map(country => {

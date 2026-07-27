@@ -737,6 +737,12 @@ importers:
       '@portfolio/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
+      '@portfolio/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@portfolio/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest
       '@tailwindcss/postcss':
         specifier: catalog:tw
         version: 4.3.3
